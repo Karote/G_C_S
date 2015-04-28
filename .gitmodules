@@ -1,0 +1,3 @@
+[submodule "DroneControlLibrary"]
+	path = DroneControlLibrary
+	url = git@git.coretronic.com:coretronicdrone/dronecontrollibrary.git

@@ -1,0 +1,5 @@
+include ':app', 'ControlCoreLib', ':AndroidLog', ':Mavlink', ':MavlinkMessage' , ':DroneControlLibrary'
+project(':AndroidLog').projectDir = new File('DroneControlLibrary/AndroidLog')
+project(':Mavlink').projectDir = new File('DroneControlLibrary/Mavlink')
+project(':MavlinkMessage').projectDir = new File('DroneControlLibrary/MavlinkMessage')
+project(':ControlCoreLib').projectDir = new File('DroneControlLibrary/ControlCoreLib')

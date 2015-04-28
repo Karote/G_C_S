@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:layout_margin="20dp">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="40dp"
+                  android:orientation="horizontal">
+        <TextView style="@style/settings_title"
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="1"
+                  android:gravity="center|right"
+                  android:layout_marginRight="10dp"
+                  android:text="Drone App Version"/>
+        <FrameLayout android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1">
+            <TextView style="@style/settings_title"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:gravity="left|center"
+                      android:layout_marginRight="10dp"
+                      android:text="1.0.0"
+                      android:textSize="@dimen/settings_title_size"
+                      android:textColor="@android:color/holo_orange_light"/>
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="40dp"
+                  android:orientation="horizontal">
+        <TextView style="@style/settings_title"
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="1"
+                  android:gravity="center|right"
+                  android:layout_marginRight="10dp"
+                  android:text="Drone Hardware Version"/>
+        <FrameLayout android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:gravity="left|center"
+                      android:layout_marginRight="10dp"
+                      android:text="1.0.1"
+                      android:textSize="@dimen/settings_title_size"
+                      android:textColor="@android:color/holo_orange_light"/>
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="40dp"
+                  android:orientation="horizontal">
+        <TextView style="@style/settings_title"
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="1"
+                  android:gravity="center|right"
+                  android:layout_marginRight="10dp"
+                  android:text="Drone Software Version"/>
+        <FrameLayout android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:gravity="left|center"
+                      android:layout_marginRight="10dp"
+                      android:text="2.0.3"
+                      android:textSize="@dimen/settings_title_size"
+                      android:textColor="@android:color/holo_orange_light"/>
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="40dp"
+                  android:orientation="horizontal">
+        <TextView style="@style/settings_title"
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="1"
+                  android:gravity="center|right"
+                  android:layout_marginRight="10dp"
+                  android:text="Drone Motor Version"/>
+        <FrameLayout android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:gravity="left|center"
+                      android:layout_marginRight="10dp"
+                      android:text="1.2.0"
+                      android:textSize="@dimen/settings_title_size"
+                      android:textColor="@android:color/holo_orange_light"/>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
