@@ -29,8 +29,7 @@
                 android:id="@+id/switch_joypad"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center|left"
-                android:checked="true" />
+                android:layout_gravity="center|left" />
         </FrameLayout>
 
     </LinearLayout>

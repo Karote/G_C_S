@@ -62,19 +62,19 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
                                                          @Override
                                                          public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                                                              Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-//                selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
-//
-//                    @Override
-//                    public void onConnected() {
-//                        Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//
-//                    @Override
-//                    public void onConnectFail() {
-//                        Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
-//                    }
-//                });
+                                                             selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
+
+                                                                 @Override
+                                                                 public void onConnected() {
+                                                                     Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
+                                                                             Toast.LENGTH_LONG).show();
+                                                                 }
+
+                                                                 @Override
+                                                                 public void onConnectFail() {
+                                                                     Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
+                                                                 }
+                                                             });
                                                          }
 
                                                          @Override
@@ -124,10 +124,10 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-        if (!droneDevice.getName().equals("Select Device")) {
-            mDroneDevices.add(droneDevice);
-            mDeviceAdapter.notifyDataSetChanged();
-        }
+//        if (!droneDevice.getName().equals("Select Device")) {
+        mDroneDevices.add(droneDevice);
+        mDeviceAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Override
@@ -174,7 +174,7 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
         if (cls != null) startActivity(new Intent(MainActivity.this, cls));
     }
 
-    private class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
+    public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
 
         @Override
         public int getCount() {

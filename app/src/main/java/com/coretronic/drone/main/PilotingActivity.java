@@ -11,9 +11,16 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coretronic.drone.LandscapeFragmentActivity;
 import com.coretronic.drone.R;
@@ -22,6 +29,10 @@ import com.coretronic.drone.settings.SettingViewPagerFragment;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 import com.coretronic.dronecontrol.control.DroneController;
+import com.coretronic.dronecontrol.service.DroneDevice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jiaLian on 15/4/1.
@@ -43,6 +54,9 @@ public class PilotingActivity extends LandscapeFragmentActivity {
     private boolean isOnOrientationSensorMode = false;
     private ControlWrap mControlWrap;
     private int radius = 0;
+    private Spinner spinnerDroneDevice;
+    private List<DroneDevice> mDroneDevices;
+    private DeviceAdapter mDeviceAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +83,20 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         sensorManager.unregisterListener(sensorEventListener);
     }
 
+    @Override
+    public void onDeviceAdded(final DroneDevice droneDevice) {
+//        if (!droneDevice.getName().equals("Select Device")) {
+        mDroneDevices.add(droneDevice);
+        mDeviceAdapter.notifyDataSetChanged();
+//        }
+    }
+
+    @Override
+    public void onDeviceRemoved(final DroneDevice droneDevice) {
+        mDroneDevices.remove(droneDevice);
+        mDeviceAdapter.notifyDataSetChanged();
+    }
+
     private void assignViews() {
         ImageButton btnBack = (ImageButton) findViewById(R.id.btn_back);
         ImageButton btnSettings = (ImageButton) findViewById(R.id.btn_settings);
@@ -90,14 +118,14 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         });
         initialJoystickModule(R.id.module1);
         initialJoystickModule(R.id.module2);
+
+        mControlWrap = new ControlWrap();
+        initialJoypadMode();
         for (int i = 0; i < joyStickSurfaceViews.length; i++) {
             if (radius < joyStickSurfaceViews[i].getRadius()) {
                 radius = joyStickSurfaceViews[i].getRadius();
             }
         }
-        mControlWrap = new ControlWrap(radius);
-        initialJoypadMode();
-
         SemiCircleProgressBarView semiCircleProgressBarView = (SemiCircleProgressBarView) findViewById(R.id.semi_circle_bar);
         semiCircleProgressBarView.setProgressBarColor(Color.RED);
         semiCircleProgressBarView.setProgress(55);
@@ -105,6 +133,61 @@ public class PilotingActivity extends LandscapeFragmentActivity {
 
         tvPitch = (TextView) findViewById(R.id.tv_pitch);
         tvRoll = (TextView) findViewById(R.id.tv_roll);
+
+        spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
+
+        mDroneDevices = new ArrayList<>();
+        mDeviceAdapter = new DeviceAdapter();
+        spinnerDroneDevice.setAdapter(mDeviceAdapter);
+        spinnerDroneDevice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                         @Override
+                                                         public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
+                                                             Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
+                                                             selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
+
+                                                                 @Override
+                                                                 public void onConnected() {
+                                                                     Toast.makeText(PilotingActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
+                                                                             Toast.LENGTH_LONG).show();
+                                                                 }
+
+                                                                 @Override
+                                                                 public void onConnectFail() {
+                                                                     Toast.makeText(PilotingActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
+                                                                 }
+                                                             });
+                                                         }
+
+                                                         @Override
+                                                         public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                                         }
+                                                     }
+        );
+        Button btnEmergency = (Button) findViewById(R.id.emergency);
+        Button btnAction = (Button) findViewById(R.id.take_off);
+        btnEmergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendEmergency();
+                Log.d(TAG, "Emergency");
+            }
+        });
+        btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Button btn = (Button) view;
+                if (btn.getText().equals("Take Off")) {
+                    sendTakeoff();
+                    btn.setText("Landing");
+                    Log.d(TAG, "Take Off");
+                } else {
+                    sendLanding();
+                    btn.setText("Take Off");
+                    Log.d(TAG, "Landing");
+                }
+            }
+        });
     }
 
     private void initialJoystickModule(int moduleViewId) {
@@ -116,13 +199,17 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         joyStickSurfaceViews[moduleIndex].setOnStickListener(
                 new JoyStickSurfaceView.OnStickListener() {
                     @Override
-                    public void onStickEvent(View view, int dx, int dy) {
+                    public void onStickEvent(View view, int action, int dx, int dy) {
                         if (((JoyStickSurfaceView) view).getControlType() == JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL) {
                             tvX.setText("Roll: " + mControlWrap.changeRoll(dx));
                             tvY.setText("Pitch: " + mControlWrap.changePitch(-dy));
                         } else {
                             tvX.setText("Yaw: " + mControlWrap.changeYaw(dx));
-                            tvY.setText("Throttle: " + mControlWrap.changeThrottle(dy));
+                            if (action == MotionEvent.ACTION_UP) {
+                                tvY.setText("Throttle: " + mControlWrap.changeDefaultThrottle());
+                            } else {
+                                tvY.setText("Throttle: " + mControlWrap.changeThrottle(dy));
+                            }
                         }
                     }
 
@@ -305,42 +392,81 @@ public class PilotingActivity extends LandscapeFragmentActivity {
     private class ControlWrap {
         private float pitch = 0;
         private float roll = 0;
-        private float throttle = -80;
+        private float throttle = 0;
         private float yaw = 0;
         private final static int DEFAULT_MAX_VALUE = 100;
         private final static int DEFAULT_MIN_VALUE = -100;
-        private int radius;
-
-        ControlWrap(int radius) {
-            this.radius = radius;
-        }
+        public final static int DEFAULT_THROTTLE_VALUE = -80;
+        private final static int DEFAULT_RADIUS = 100;
+        private int radius = 0;
 
         public int changePitch(float pitch) {
-            this.pitch = pitch;
-//            this.pitch = Math.max(Math.min(this.pitch, DEFAULT_MAX_VALUE), DEFAULT_MIN_VALUE);
+            this.pitch = changeValue(pitch);
             sendControl();
             return (int) this.pitch;
         }
 
         public int changeRoll(float roll) {
-            this.roll = roll;
-//            this.roll = Math.max(Math.min(this.roll, DEFAULT_MAX_VALUE), DEFAULT_MIN_VALUE);
+            this.roll = changeValue(roll);
             sendControl();
             return (int) this.roll;
         }
 
         public int changeThrottle(float throttle) {
-            this.throttle = throttle;
-//            this.throttle = Math.max(Math.min(this.throttle, DEFAULT_MAX_VALUE), DEFAULT_MIN_VALUE);
+            this.throttle = changeValue(throttle);
+            sendControl();
+            return (int) this.throttle;
+        }
+
+        public int changeDefaultThrottle() {
+            this.throttle = DEFAULT_THROTTLE_VALUE;
             sendControl();
             return (int) this.throttle;
         }
 
         public int changeYaw(float yaw) {
-            this.yaw = yaw;
-//            this.yaw = Math.max(Math.min(this.yaw, DEFAULT_MAX_VALUE), DEFAULT_MIN_VALUE);
+            this.yaw = changeValue(yaw);
             sendControl();
             return (int) this.yaw;
+        }
+
+        private float changeValue(float value) {
+            if (radius == 0) {
+                radius = ((DroneG2Application) PilotingActivity.this.getApplicationContext()).joyStickRadius;
+            }
+//            Log.d(TAG, "radius: " + radius);
+            return (value / radius) * DEFAULT_RADIUS;
+        }
+    }
+
+    public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
+
+        @Override
+        public int getCount() {
+            return mDroneDevices.size();
+        }
+
+        @Override
+        public DroneDevice getItem(int position) {
+            return mDroneDevices.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            AbsListView.LayoutParams params = new AbsListView.LayoutParams(
+                    AbsListView.LayoutParams.WRAP_CONTENT,
+                    AbsListView.LayoutParams.MATCH_PARENT);
+            TextView text = new TextView(PilotingActivity.this);
+            text.setLayoutParams(params);
+            text.setText(getItem(position).getName());
+
+            return text;
         }
     }
 }

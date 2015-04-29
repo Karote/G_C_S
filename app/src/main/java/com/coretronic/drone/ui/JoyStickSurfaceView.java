@@ -8,6 +8,7 @@ import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
 
 import com.coretronic.drone.R;
+import com.coretronic.drone.main.DroneG2Application;
 
 import java.io.InputStream;
 
@@ -90,7 +91,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             bgBitmap = null;
         }
         if (stickListener != null) {
-            stickListener.onStickEvent(JoyStickSurfaceView.this, 0, 0);
+            stickListener.onStickEvent(JoyStickSurfaceView.this, MotionEvent.ACTION_UP, 0, 0);
         }
     }
 
@@ -114,6 +115,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         startPoint = new Point(width >> 1, height >> 1);
         rockerPoint = new Point(startPoint);
         radius = (width - resizeStickBitmap.getWidth()) >> 1;
+        ((DroneG2Application) this.getContext().getApplicationContext()).joyStickRadius = radius - 1;
     }
 
     @Override
@@ -167,13 +169,13 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
             if (Math.abs(dx) >= DISTANCE_TOLERANCE || Math.abs(dy) >= DISTANCE_TOLERANCE) {
                 if (stickListener != null && isJoypadMode) {
-                    stickListener.onStickEvent(JoyStickSurfaceView.this, dx, -dy);
+                    stickListener.onStickEvent(JoyStickSurfaceView.this, action, dx, -dy);
                 }
             }
         } else if (action == MotionEvent.ACTION_UP) {
             rockerPoint.set(startPoint.x, startPoint.y);
             if (stickListener != null && isJoypadMode) {
-                stickListener.onStickEvent(JoyStickSurfaceView.this, 0, 0);
+                stickListener.onStickEvent(JoyStickSurfaceView.this, action, 0, 0);
             } else if (stickListener != null && !isJoypadMode) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_UP);
             }
@@ -225,7 +227,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
 
     public static interface OnStickListener {
-        void onStickEvent(View view, int dx, int dy);
+        void onStickEvent(View view, int action, int dx, int dy);
 
         void onOrientationSensorMode(int action);
 
