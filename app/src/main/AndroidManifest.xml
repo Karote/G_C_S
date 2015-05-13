@@ -27,7 +27,7 @@
         <service android:name="com.coretronic.drone.communication.SocketService" />
         <receiver android:name="com.coretronic.drone.SocketStatusReceiver" />
 
-        <service android:name="com.coretronic.dronecontrol.service.DroneConnectionService" />
+        <service android:name="com.coretronic.drone.service.DroneConnectionService" />
         <service android:name="com.parrot.arsdk.ardiscovery.ARDiscoveryService" />
 
     </application>

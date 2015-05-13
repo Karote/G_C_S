@@ -17,12 +17,12 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.Drone;
 import com.coretronic.drone.LandscapeActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.WifiRssiReceiver;
 import com.coretronic.drone.communication.SocketService;
-import com.coretronic.dronecontrol.control.DroneController;
-import com.coretronic.dronecontrol.service.DroneDevice;
+import com.coretronic.drone.service.DroneDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,13 +136,7 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
         mDeviceAdapter.notifyDataSetChanged();
     }
 
-
-    @Override
-    public void OnBatteryUpdate(int battery) {
-
-    }
-
-    public DroneController getDroneController() {
+    public Drone getDroneController() {
         return this;
     }
 
