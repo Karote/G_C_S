@@ -1,14 +1,13 @@
 package com.coretronic.drone;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.coretronic.drone.activity.MiniDronesActivity;
+import com.coretronic.drone.service.DroneDevice;
 import com.coretronic.drone.ui.ViewManager;
-import com.coretronic.dronecontrol.activity.MiniDronesActivity;
-import com.coretronic.dronecontrol.service.DroneDevice;
 
 /**
  * Created by jiaLian on 15/4/1.
@@ -40,7 +39,22 @@ public class LandscapeActivity extends MiniDronesActivity {
     }
 
     @Override
-    public void OnBatteryUpdate(int battery) {
+    public void onBatteryUpdate(int battery) {
+
+    }
+
+    @Override
+    public void onAltitudeUpdate(float altitude) {
+
+    }
+
+    @Override
+    public void onRadioSignalUpdate(int rssi) {
+
+    }
+
+    @Override
+    public void onSpeedUpdate(float groundSpeed) {
 
     }
 }

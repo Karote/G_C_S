@@ -22,14 +22,14 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.Drone;
 import com.coretronic.drone.LandscapeFragmentActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.WifiRssiReceiver;
+import com.coretronic.drone.service.DroneDevice;
 import com.coretronic.drone.settings.SettingViewPagerFragment;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
-import com.coretronic.dronecontrol.control.DroneController;
-import com.coretronic.dronecontrol.service.DroneDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -385,7 +385,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         }
     }
 
-    private DroneController getController() {
+    private Drone getController() {
         return this;
     }
 
@@ -396,7 +396,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         private float yaw = 0;
         private final static int DEFAULT_MAX_VALUE = 100;
         private final static int DEFAULT_MIN_VALUE = -100;
-        public final static int DEFAULT_THROTTLE_VALUE = -80;
+        public final static int DEFAULT_THROTTLE_VALUE = 0;
         private final static int DEFAULT_RADIUS = 100;
         private int radius = 0;
 
