@@ -1,6 +1,8 @@
 package com.coretronic.drone.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -13,10 +15,13 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -64,7 +69,6 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         setContentView(R.layout.activity_piloting);
         assignViews();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
     }
 
     @Override
@@ -73,7 +77,6 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         registerReceiver(wifiRssiReceiver, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-
     }
 
     @Override
@@ -134,35 +137,65 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         tvPitch = (TextView) findViewById(R.id.tv_pitch);
         tvRoll = (TextView) findViewById(R.id.tv_roll);
 
+        int size = (int) (getResources().getDimension(R.dimen.joystick_size) / getResources().getDisplayMetrics().density) / 2;
+        final String[] stickList = new String[(size / 5) - 3];
+        for (int i = 0; i < stickList.length; i++) {
+            stickList[i] = String.valueOf(size);
+            size -= 5;
+        }
+        Spinner spinnerStickSize = (Spinner) findViewById(R.id.spinner_stick_size);
+        ArrayAdapter<String> stickSizeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, stickList);
+        spinnerStickSize.setAdapter(stickSizeAdapter);
+        spinnerStickSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                for (JoyStickSurfaceView joyStickSurfaceView : joyStickSurfaceViews) {
+                   if(((DroneG2Application)getApplication()).isUITesting) joyStickSurfaceView.changeStickSize(Integer.valueOf(stickList[i]));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
 
         mDroneDevices = new ArrayList<>();
         mDeviceAdapter = new DeviceAdapter();
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
-        spinnerDroneDevice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                         @Override
-                                                         public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
-                                                             Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-                                                             selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
+        spinnerDroneDevice.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
+                        Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
+//                        if (i == mDroneDevices.size() - 1) {
+//                           spinnerDroneDevice.setSelection(0);
+//                            showAddNewDroneDialog();
+//
+//                        }
+                        selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
 
-                                                                 @Override
-                                                                 public void onConnected() {
-                                                                     Toast.makeText(PilotingActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
-                                                                             Toast.LENGTH_LONG).show();
-                                                                 }
+                            @Override
+                            public void onConnected() {
+                                Toast.makeText(PilotingActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
+                                        Toast.LENGTH_LONG).show();
+                            }
 
-                                                                 @Override
-                                                                 public void onConnectFail() {
-                                                                     Toast.makeText(PilotingActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
-                                                                 }
-                                                             });
-                                                         }
+                            @Override
+                            public void onConnectFail() {
+                                Toast.makeText(PilotingActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
 
-                                                         @Override
-                                                         public void onNothingSelected(AdapterView<?> adapterView) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
 
-                                                         }
-                                                     }
+                    }
+                }
+
         );
         Button btnEmergency = (Button) findViewById(R.id.emergency);
         Button btnAction = (Button) findViewById(R.id.take_off);
@@ -238,9 +271,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         final int size = (int) getResources().getDimension(R.dimen.joystick_size);
         final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size, size);
         final FrameLayout frameLayout = (FrameLayout) moduleView.findViewById(R.id.frame_layout);
-        frameLayout.setOnTouchListener(new View.OnTouchListener()
-
-                                       {
+        frameLayout.setOnTouchListener(new View.OnTouchListener() {
                                            @Override
                                            public boolean onTouch(View v, MotionEvent event) {
                                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -256,7 +287,6 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                                                return true;
                                            }
                                        }
-
         );
     }
 
@@ -388,7 +418,41 @@ public class PilotingActivity extends LandscapeFragmentActivity {
     private DroneController getController() {
         return this;
     }
-
+//    private void showAddNewDroneDialog() {
+//
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//        alertDialog.setTitle("Add Device");
+//        alertDialog.setMessage("Enter Device ip");
+//
+//        final EditText input = new EditText(this);
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.MATCH_PARENT);
+//        input.setLayoutParams(lp);
+//        alertDialog.setView(input);
+//        alertDialog.setIcon(R.drawable.ic_drawer);
+//
+//        alertDialog.setPositiveButton("Add",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        String deviceIp = input.getText().toString();
+//                        if (deviceIp.trim().length() <= 0) {
+//                            return;
+//                        }
+//                        addDevice(deviceIp);
+//                    }
+//
+//                });
+//
+//        alertDialog.setNegativeButton("Cancel",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//        alertDialog.show();
+//    }
     private class ControlWrap {
         private float pitch = 0;
         private float roll = 0;
@@ -396,7 +460,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         private float yaw = 0;
         private final static int DEFAULT_MAX_VALUE = 100;
         private final static int DEFAULT_MIN_VALUE = -100;
-        public final static int DEFAULT_THROTTLE_VALUE = -80;
+        public final static int DEFAULT_THROTTLE_VALUE = 0;
         private final static int DEFAULT_RADIUS = 100;
         private int radius = 0;
 

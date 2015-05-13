@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
 
@@ -38,6 +39,8 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     private GestureDetector gestureDetector;
     private boolean isJoypadMode;
     private int controlType;
+    private float stickSize = 30;
+    private Paint bgPaint;
 
     public JoyStickSurfaceView(Context context) {
         super(context);
@@ -68,6 +71,13 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         paint.setColor(Color.GREEN);
         paint.setAntiAlias(true);
         paint.setAlpha(50);
+
+        if (((DroneG2Application) context.getApplicationContext()).isUITesting) {
+            bgPaint = new Paint();
+            bgPaint.setColor(Color.RED);
+            bgPaint.setAntiAlias(true);
+            bgPaint.setAlpha(50);
+        }
 //        setAlpha(0.3f);
 
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
@@ -114,7 +124,12 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
         startPoint = new Point(width >> 1, height >> 1);
         rockerPoint = new Point(startPoint);
-        radius = (width - resizeStickBitmap.getWidth()) >> 1;
+
+        if (((DroneG2Application) getContext().getApplicationContext()).isUITesting) {
+            radius = width >> 1;
+        } else {
+            radius = (width - resizeStickBitmap.getWidth()) >> 1;
+        }
         ((DroneG2Application) this.getContext().getApplicationContext()).joyStickRadius = radius - 1;
     }
 
@@ -155,6 +170,8 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         int distance = getDistance(startPoint.x, startPoint.y, x, y);
         if (action == MotionEvent.ACTION_DOWN) {
             paint.setAlpha(200);
+            if (((DroneG2Application) getContext().getApplicationContext()).isUITesting)
+                bgPaint.setAlpha(200);
             if (stickListener != null && !isJoypadMode) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_DOWN);
             }
@@ -180,6 +197,8 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_UP);
             }
             paint.setAlpha(50);
+            if (((DroneG2Application) getContext().getApplicationContext()).isUITesting)
+                bgPaint.setAlpha(50);
         }
         return gestureDetector.onTouchEvent(event);
     }
@@ -205,18 +224,32 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         this.stickListener = stickListener;
     }
 
+    public void changeStickSize(float stickSize) {
+        this.stickSize = stickSize;
+    }
+
     private void draw() {
         if (resizeStickBitmap == null) return;
         Canvas canvas = null;
         try {
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-
+            float circleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, stickSize / 2, getResources().getDisplayMetrics());
             if (isJoypadMode) {
-                canvas.drawBitmap(reSizeBgBitmap, startPoint.x - (reSizeBgBitmap.getWidth() >> 1), startPoint.y - (reSizeBgBitmap.getHeight() >> 1), paint);
-                canvas.drawBitmap(resizeStickBitmap, rockerPoint.x - (resizeStickBitmap.getWidth() >> 1), rockerPoint.y - (resizeStickBitmap.getHeight() >> 1), paint);
+                if (((DroneG2Application) getContext().getApplicationContext()).isUITesting) {
+                    canvas.drawCircle(startPoint.x, startPoint.y, radius, bgPaint);
+                    canvas.drawCircle(rockerPoint.x, rockerPoint.y, circleRadius, paint);
+                } else {
+                    canvas.drawBitmap(reSizeBgBitmap, startPoint.x - (reSizeBgBitmap.getWidth() >> 1), startPoint.y - (reSizeBgBitmap.getHeight() >> 1), paint);
+                    canvas.drawBitmap(resizeStickBitmap, rockerPoint.x - (resizeStickBitmap.getWidth() >> 1), rockerPoint.y - (resizeStickBitmap.getHeight() >> 1), paint);
+                }
+
             } else {
-                canvas.drawCircle(startPoint.x, startPoint.y, radius / 2, paint);
+                if (((DroneG2Application) getContext().getApplicationContext()).isUITesting) {
+                    canvas.drawCircle(startPoint.x, startPoint.y, circleRadius, paint);
+                } else {
+                    canvas.drawCircle(startPoint.x, startPoint.y, radius / 2, paint);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

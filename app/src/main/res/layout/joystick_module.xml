@@ -33,7 +33,6 @@
                 android:layout_gravity="center"
                 android:text="x: 0"
                 android:textColor="@android:color/white" />
-
         </LinearLayout>
 
         <com.coretronic.drone.ui.JoyStickSurfaceView
@@ -41,6 +40,6 @@
             android:layout_width="@dimen/joystick_size"
             android:layout_height="@dimen/joystick_size"
             android:layout_gravity="center|bottom"
-            android:layout_margin="36dp" />
+            android:layout_margin="36dp"/>
     </FrameLayout>
 </FrameLayout>

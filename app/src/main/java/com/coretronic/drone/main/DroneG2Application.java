@@ -12,6 +12,7 @@ public class DroneG2Application extends Application {
     public static boolean isSettingsMode = false;
     public static boolean isJoypadMode = true;
     public static int joyStickRadius = 0;
+    public static final boolean isUITesting = false;
 
     @Override
     public void onCreate() {
