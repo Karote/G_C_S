@@ -1,8 +1,6 @@
 package com.coretronic.drone.main;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -18,10 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -150,7 +146,8 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 for (JoyStickSurfaceView joyStickSurfaceView : joyStickSurfaceViews) {
-                   if(((DroneG2Application)getApplication()).isUITesting) joyStickSurfaceView.changeStickSize(Integer.valueOf(stickList[i]));
+                    if (((DroneG2Application) getApplication()).isUITesting)
+                        joyStickSurfaceView.changeStickSize(Integer.valueOf(stickList[i]));
                 }
             }
 
@@ -236,13 +233,18 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                         if (((JoyStickSurfaceView) view).getControlType() == JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL) {
                             tvX.setText("Roll: " + mControlWrap.changeRoll(dx));
                             tvY.setText("Pitch: " + mControlWrap.changePitch(-dy));
+
+                            Log.d(TAG, "onStickEvent Pitch: " + (-dy));
+                            Log.d(TAG, "onStickEvent Roll: " + dx);
                         } else {
                             tvX.setText("Yaw: " + mControlWrap.changeYaw(dx));
-                            if (action == MotionEvent.ACTION_UP) {
-                                tvY.setText("Throttle: " + mControlWrap.changeDefaultThrottle());
-                            } else {
-                                tvY.setText("Throttle: " + mControlWrap.changeThrottle(dy));
-                            }
+//                            if (action == MotionEvent.ACTION_UP) {
+//                                tvY.setText("Throttle: " + mControlWrap.changeDefaultThrottle());
+//                            } else {
+                            tvY.setText("Throttle: " + mControlWrap.changeThrottle(dy));
+//                            }
+                            Log.d(TAG, "onStickEvent Throttle: " + dy);
+                            Log.d(TAG, "onStickEvent Yaw: " + dx);
                         }
                     }
 
@@ -394,6 +396,10 @@ public class PilotingActivity extends LandscapeFragmentActivity {
     private void sendControl() {
         if (getController() != null) {
             getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
+            Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
+            Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
+            Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
+            Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
         }
     }
 
@@ -418,7 +424,8 @@ public class PilotingActivity extends LandscapeFragmentActivity {
     private Drone getController() {
         return this;
     }
-//    private void showAddNewDroneDialog() {
+
+    //    private void showAddNewDroneDialog() {
 //
 //        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //        alertDialog.setTitle("Add Device");
@@ -460,9 +467,18 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         private float yaw = 0;
         private final static int DEFAULT_MAX_VALUE = 100;
         private final static int DEFAULT_MIN_VALUE = -100;
-        public final static int DEFAULT_THROTTLE_VALUE = 0;
+        public final static int DEFAULT_VALUE = 0;
         private final static int DEFAULT_RADIUS = 100;
         private int radius = 0;
+
+//        public ControlWrap() {
+//            initial();
+//        }
+//
+//        private void initial() {
+//            pitch = roll = throttle = yaw = DEFAULT_VALUE;
+//            sendControl();
+//        }
 
         public int changePitch(float pitch) {
             this.pitch = changeValue(pitch);
@@ -483,7 +499,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         }
 
         public int changeDefaultThrottle() {
-            this.throttle = DEFAULT_THROTTLE_VALUE;
+            this.throttle = DEFAULT_VALUE;
             sendControl();
             return (int) this.throttle;
         }
@@ -498,8 +514,12 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             if (radius == 0) {
                 radius = ((DroneG2Application) PilotingActivity.this.getApplicationContext()).joyStickRadius;
             }
+            if (value == DEFAULT_VALUE) {
+                return DEFAULT_VALUE;
+            } else {
 //            Log.d(TAG, "radius: " + radius);
-            return (value / radius) * DEFAULT_RADIUS;
+                return (value / radius) * DEFAULT_RADIUS;
+            }
         }
     }
 
