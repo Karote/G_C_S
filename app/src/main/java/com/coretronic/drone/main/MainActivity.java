@@ -124,10 +124,8 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-//        if (!droneDevice.getName().equals("Select Device")) {
-        mDroneDevices.add(droneDevice);
-        mDeviceAdapter.notifyDataSetChanged();
-//        }
+//        mDroneDevices.add(droneDevice);
+//        mDeviceAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.coretronic.drone.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -16,8 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -40,6 +44,7 @@ import java.util.List;
  */
 public class PilotingActivity extends LandscapeFragmentActivity {
     private static final String TAG = PilotingActivity.class.getSimpleName();
+    public static final int DRONE_TEST_TYPE = 456;
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
     private WifiRssiReceiver wifiRssiReceiver;
@@ -160,6 +165,9 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
 
         mDroneDevices = new ArrayList<>();
+        mDroneDevices.add(new DroneDevice(DRONE_TEST_TYPE, "null", 77));
+        mDroneDevices.add(new DroneDevice(DRONE_TEST_TYPE, "Add New Device", 88));
+
         mDeviceAdapter = new DeviceAdapter();
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
         spinnerDroneDevice.setOnItemSelectedListener(
@@ -172,19 +180,26 @@ public class PilotingActivity extends LandscapeFragmentActivity {
 //                            showAddNewDroneDialog();
 //
 //                        }
-                        selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
-
-                            @Override
-                            public void onConnected() {
-                                Toast.makeText(PilotingActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
-                                        Toast.LENGTH_LONG).show();
+                        if (mDroneDevices.get(i).getDroneType() == DRONE_TEST_TYPE) {
+                            if (mDroneDevices.get(i).getName().equals("Add New Device")) {
+                                showAddNewDroneDialog();
+                                spinnerDroneDevice.setSelection(0);
                             }
+                        } else {
+                            selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
 
-                            @Override
-                            public void onConnectFail() {
-                                Toast.makeText(PilotingActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                                @Override
+                                public void onConnected() {
+                                    Toast.makeText(PilotingActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onConnectFail() {
+                                    Toast.makeText(PilotingActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -261,8 +276,17 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                             startRoll = roll;
                             isOnOrientationSensorMode = true;
                         } else if (action == MotionEvent.ACTION_UP) {
-                            tvPitch.setText("pitch: " + 0 + "º");
-                            tvRoll.setText("roll: " + 0 + "º");
+                            if (getController() != null) {
+                                mControlWrap.pitch = 0;
+                                mControlWrap.roll = 0;
+                                tvPitch.setText("pitch: " + mControlWrap.pitch);
+                                tvRoll.setText("roll: " + mControlWrap.roll);
+                                getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
+                                Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
+                                Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
+                                Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
+                                Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
+                            }
                             isOnOrientationSensorMode = false;
                         }
                     }
@@ -363,12 +387,12 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             final int rotation = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
             switch (rotation) {
                 case Surface.ROTATION_0:
-                    pitch = result[1];
+                    pitch = -result[1];
                     roll = result[2];
 //                    Log.d(TAG, "portrait");
                     break;
                 case Surface.ROTATION_90:
-                    pitch = result[2];
+                    pitch = -result[2];
                     roll = -result[1];
 //                    Log.d(TAG, "landscape");
                     break;
@@ -382,8 +406,29 @@ public class PilotingActivity extends LandscapeFragmentActivity {
 //            tvPitch.setText("pitch: " + pitch + "º");
 //            tvRoll.setText("roll: " + roll + "º");
             if (isOnOrientationSensorMode) {
-                tvPitch.setText("pitch: " + (pitch - startPitch) + "º");
-                tvRoll.setText("roll: " + (roll - startRoll) + "º");
+                int rcPitch = pitch - startPitch;
+                int rcRoll = roll - startRoll;
+                if (getController() != null) {
+                    if (rcPitch > 30) {
+                        rcPitch = 30;
+                    } else if (rcPitch < -30) {
+                        rcPitch = -30;
+                    }
+                    if (rcRoll > 30) {
+                        rcRoll = 30;
+                    } else if (roll < -30) {
+                        rcRoll = -30;
+                    }
+                    mControlWrap.pitch = rcPitch * 2;
+                    mControlWrap.roll = rcRoll * 2;
+                    tvPitch.setText("pitch: " + mControlWrap.pitch);
+                    tvRoll.setText("roll: " + mControlWrap.roll);
+                    getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
+                    Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
+                    Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
+                    Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
+                    Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
+                }
             }
         }
 
@@ -425,41 +470,42 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         return this;
     }
 
-    //    private void showAddNewDroneDialog() {
-//
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-//        alertDialog.setTitle("Add Device");
-//        alertDialog.setMessage("Enter Device ip");
-//
-//        final EditText input = new EditText(this);
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.MATCH_PARENT);
-//        input.setLayoutParams(lp);
-//        alertDialog.setView(input);
+    private void showAddNewDroneDialog() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Add Device");
+        alertDialog.setMessage("Enter Device ip");
+
+        final EditText input = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
 //        alertDialog.setIcon(R.drawable.ic_drawer);
-//
-//        alertDialog.setPositiveButton("Add",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        String deviceIp = input.getText().toString();
-//                        if (deviceIp.trim().length() <= 0) {
-//                            return;
-//                        }
-//                        addDevice(deviceIp);
-//                    }
-//
-//                });
-//
-//        alertDialog.setNegativeButton("Cancel",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//        alertDialog.show();
-//    }
+
+        alertDialog.setPositiveButton("Add",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String deviceIp = input.getText().toString();
+                        if (deviceIp.trim().length() <= 0) {
+                            return;
+                        }
+                        addDevice(deviceIp);
+                    }
+
+                });
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
     private class ControlWrap {
         private float pitch = 0;
         private float roll = 0;
