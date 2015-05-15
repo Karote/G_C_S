@@ -89,10 +89,8 @@ public class PilotingActivity extends LandscapeFragmentActivity {
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-//        if (!droneDevice.getName().equals("Select Device")) {
         mDroneDevices.add(droneDevice);
         mDeviceAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Override
@@ -175,11 +173,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                         Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-//                        if (i == mDroneDevices.size() - 1) {
-//                           spinnerDroneDevice.setSelection(0);
-//                            showAddNewDroneDialog();
-//
-//                        }
+
                         if (mDroneDevices.get(i).getDroneType() == DRONE_TEST_TYPE) {
                             if (mDroneDevices.get(i).getName().equals("Add New Device")) {
                                 showAddNewDroneDialog();
@@ -253,11 +247,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                             Log.d(TAG, "onStickEvent Roll: " + dx);
                         } else {
                             tvX.setText("Yaw: " + mControlWrap.changeYaw(dx));
-//                            if (action == MotionEvent.ACTION_UP) {
-//                                tvY.setText("Throttle: " + mControlWrap.changeDefaultThrottle());
-//                            } else {
                             tvY.setText("Throttle: " + mControlWrap.changeThrottle(dy));
-//                            }
                             Log.d(TAG, "onStickEvent Throttle: " + dy);
                             Log.d(TAG, "onStickEvent Yaw: " + dx);
                         }
@@ -403,8 +393,6 @@ public class PilotingActivity extends LandscapeFragmentActivity {
 //                    Log.d(TAG, "reverse landscape");
 //                    break;
             }
-//            tvPitch.setText("pitch: " + pitch + "º");
-//            tvRoll.setText("roll: " + roll + "º");
             if (isOnOrientationSensorMode) {
                 int rcPitch = pitch - startPitch;
                 int rcRoll = roll - startRoll;
@@ -416,7 +404,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                     }
                     if (rcRoll > 30) {
                         rcRoll = 30;
-                    } else if (roll < -30) {
+                    } else if (rcRoll < -30) {
                         rcRoll = -30;
                     }
                     mControlWrap.pitch = rcPitch * 2;
@@ -482,7 +470,6 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(lp);
         alertDialog.setView(input);
-//        alertDialog.setIcon(R.drawable.ic_drawer);
 
         alertDialog.setPositiveButton("Add",
                 new DialogInterface.OnClickListener() {
@@ -511,20 +498,9 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         private float roll = 0;
         private float throttle = 0;
         private float yaw = 0;
-        private final static int DEFAULT_MAX_VALUE = 100;
-        private final static int DEFAULT_MIN_VALUE = -100;
         public final static int DEFAULT_VALUE = 0;
         private final static int DEFAULT_RADIUS = 100;
         private int radius = 0;
-
-//        public ControlWrap() {
-//            initial();
-//        }
-//
-//        private void initial() {
-//            pitch = roll = throttle = yaw = DEFAULT_VALUE;
-//            sendControl();
-//        }
 
         public int changePitch(float pitch) {
             this.pitch = changeValue(pitch);
@@ -544,13 +520,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             return (int) this.throttle;
         }
 
-        public int changeDefaultThrottle() {
-            this.throttle = DEFAULT_VALUE;
-            sendControl();
-            return (int) this.throttle;
-        }
-
-        public int changeYaw(float yaw) {
+               public int changeYaw(float yaw) {
             this.yaw = changeValue(yaw);
             sendControl();
             return (int) this.yaw;
