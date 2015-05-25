@@ -89,7 +89,7 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         assignViews();
-
+//        ((DroneG2Application) getApplication()).loadSettingsValue();
     }
 
     @Override

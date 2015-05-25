@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.coretronic.drone.Drone;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
+import com.coretronic.drone.main.DroneG2Application;
 import com.coretronic.drone.main.PilotingActivity;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 
@@ -69,6 +71,12 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     public void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((DroneG2Application) getActivity().getApplication()).saveSettingsValue();
     }
 
     @Override

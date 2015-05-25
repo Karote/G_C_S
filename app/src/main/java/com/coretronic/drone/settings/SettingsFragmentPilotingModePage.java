@@ -21,8 +21,9 @@ public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_piloting_mode_page, container, false);
 
         ViewManager.assignSwitchView(fragmentView, R.id.switch_joypad, DroneG2Application.SettingType.JOYPAD_MODE);
+        ViewManager.assignSwitchView(fragmentView, R.id.switch_headless, DroneG2Application.SettingType.HEADLESS);
         ViewManager.assignSwitchView(fragmentView, R.id.switch_left_handed, DroneG2Application.SettingType.LEFT_HANDED);
-
+        ViewManager.assignSeekBarView(fragmentView, R.id.phone_tilt_max, DroneG2Application.SettingType.PHONE_TILT);
         return fragmentView;
     }
 }

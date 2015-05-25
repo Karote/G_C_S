@@ -311,8 +311,11 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         boolean[] isJoyModes;
         int[] bgDrawableIds;
         int[] stickDrawableIds;
-        if (DroneG2Application.isSettings[DroneG2Application.SettingType.JOYPAD_MODE.ordinal()]) {
-            if (DroneG2Application.isSettings[DroneG2Application.SettingType.LEFT_HANDED.ordinal()]) {
+        boolean joypadMode = DroneG2Application.settings[DroneG2Application.SettingType.JOYPAD_MODE.ordinal()].getValue() == DroneG2Application.ON ? true : false;
+        boolean leftHanded = DroneG2Application.settings[DroneG2Application.SettingType.LEFT_HANDED.ordinal()].getValue() == DroneG2Application.ON ? true : false;
+
+        if (joypadMode) {
+            if (leftHanded) {
                 controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL, JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW};
             } else {
                 controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW, JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL};
@@ -321,7 +324,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             bgDrawableIds = new int[]{R.drawable.image_button_bg, R.drawable.image_button_bg};
             stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
         } else {
-            if (DroneG2Application.isSettings[DroneG2Application.SettingType.LEFT_HANDED.ordinal()]) {
+            if (leftHanded) {
                 controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL, JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW};
                 isJoyModes = new boolean[]{false, true};
                 bgDrawableIds = new int[]{0, R.drawable.image_button_bg};
@@ -520,7 +523,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             return (int) this.throttle;
         }
 
-               public int changeYaw(float yaw) {
+        public int changeYaw(float yaw) {
             this.yaw = changeValue(yaw);
             sendControl();
             return (int) this.yaw;

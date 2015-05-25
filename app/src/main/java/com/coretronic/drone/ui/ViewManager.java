@@ -5,9 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
 import com.coretronic.drone.main.DroneG2Application;
+import com.coretronic.drone.struct.Setting;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,28 +26,51 @@ public class ViewManager {
     public static void assignSwitchView(View view, int id, DroneG2Application.SettingType settingType) {
         Switch sw = (Switch) view.findViewById(id);
         final int type = settingType.ordinal();
-        sw.setChecked(DroneG2Application.isSettings[type]);
+        sw.setChecked(DroneG2Application.settings[type].getValue() == DroneG2Application.ON ? true : false);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isPressed()) {
-                    DroneG2Application.isSettings[type] = isChecked;
-                    Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.isSettings[type]);
+                    DroneG2Application.settings[type].setValue(isChecked == true ? DroneG2Application.ON : DroneG2Application.OFF);
+                    Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.settings[type].getValue());
                 }
             }
         });
     }
 
-    public static void assignSwitchView(Switch sw, DroneG2Application.SettingType settingType) {
-        final int type = settingType.ordinal();
-        sw.setChecked(DroneG2Application.isSettings[type]);
-        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//    public static void assignSwitchView(Switch sw, DroneG2Application.SettingType settingType) {
+//        final int type = settingType.ordinal();
+//        sw.setChecked(DroneG2Application.settings[type]);
+//        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (buttonView.isPressed()) {
+//                    DroneG2Application.settings[type] = isChecked;
+//                    Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.settings[type]);
+//                }
+//            }
+//        });
+//    }
+
+    public static void assignSeekBarView(View view, int id, DroneG2Application.SettingType settingType) {
+        SeekBar seekBar = (SeekBar) view.findViewById(id);
+        final Setting setting = DroneG2Application.settings[settingType.ordinal()];
+        seekBar.setMax(setting.getMaxValue() - setting.getMinVale());
+        seekBar.setProgress(setting.getValue() - setting.getMinVale());
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isPressed()) {
-                    DroneG2Application.isSettings[type] = isChecked;
-                    Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.isSettings[type]);
-                }
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                setting.setValue(seekBar.getProgress() + setting.getMinVale());
             }
         });
     }
