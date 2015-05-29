@@ -9,7 +9,7 @@ import android.view.*;
 import android.view.GestureDetector.SimpleOnGestureListener;
 
 import com.coretronic.drone.R;
-import com.coretronic.drone.main.DroneG2Application;
+import com.coretronic.drone.DroneG2Application;
 
 import java.io.InputStream;
 

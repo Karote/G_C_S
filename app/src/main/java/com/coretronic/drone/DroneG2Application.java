@@ -1,10 +1,10 @@
-package com.coretronic.drone.main;
+package com.coretronic.drone;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.coretronic.drone.struct.Setting;
+import com.coretronic.drone.piloting.Setting;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,24 +14,22 @@ import org.json.JSONException;
  */
 public class DroneG2Application extends Application {
     private static final String TAG = DroneG2Application.class.getSimpleName();
-    public static final int ON = 1;
-    public static final int OFF = 0;
+
     public static final String SETTINGS_VALUE = "settings_value";
     public static final String SETTING = "setting";
 
-    public enum SettingType {JOYPAD_MODE, HEADLESS, LEFT_HANDED, PHONE_TILT, LENGTH}
+    public static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
 
-    public static Setting[] settings = new Setting[SettingType.LENGTH.ordinal()];
     public static int joyStickRadius = 0;
     public static final boolean isUITesting = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        settings[SettingType.JOYPAD_MODE.ordinal()] = new Setting(ON);
-        settings[SettingType.HEADLESS.ordinal()] = new Setting(OFF);
-        settings[SettingType.LEFT_HANDED.ordinal()] = new Setting(OFF);
-        settings[SettingType.PHONE_TILT.ordinal()] = new Setting(0, 50, 20, "º");
+        settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.ON);
+        settings[Setting.SettingType.HEADLESS.ordinal()] = new Setting(Setting.OFF);
+        settings[Setting.SettingType.LEFT_HANDED.ordinal()] = new Setting(Setting.OFF);
+        settings[Setting.SettingType.PHONE_TILT.ordinal()] = new Setting(0, 50, 20, "º");
         loadSettingsValue();
     }
 
@@ -51,8 +49,12 @@ public class DroneG2Application extends Application {
         try {
             if (json != null) {
                 JSONArray jsonArray = new JSONArray(json);
-                for (int i = 0; i < settings.length; i++) {
-                    settings[i].setValue(jsonArray.getInt(i));
+//                for (int i = 0; i < settings.length; i++) {
+//                    settings[i].setValue(jsonArray.getInt(i));
+//                }
+                int i = 0;
+                for (Setting setting : settings) {
+                    setting.setValue(jsonArray.getInt(i++));
                 }
             } else {
                 Log.d(TAG, "Json Null");

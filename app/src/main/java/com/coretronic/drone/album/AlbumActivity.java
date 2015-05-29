@@ -1,14 +1,13 @@
-package com.coretronic.drone.main;
+package com.coretronic.drone.album;
 
 import android.os.Bundle;
-
-import com.coretronic.drone.LandscapeActivity;
+import com.coretronic.drone.LandscapeFragmentActivity;
 import com.coretronic.drone.R;
 
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class AlbumActivity extends LandscapeActivity {
+public class AlbumActivity extends LandscapeFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

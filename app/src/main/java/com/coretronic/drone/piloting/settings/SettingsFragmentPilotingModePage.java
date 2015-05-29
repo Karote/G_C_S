@@ -1,4 +1,4 @@
-package com.coretronic.drone.settings;
+package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.main.DroneG2Application;
+import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.ui.ViewManager;
 
 /**
@@ -20,10 +20,10 @@ public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_piloting_mode_page, container, false);
 
-        ViewManager.assignSwitchView(fragmentView, R.id.switch_joypad, DroneG2Application.SettingType.JOYPAD_MODE);
-        ViewManager.assignSwitchView(fragmentView, R.id.switch_headless, DroneG2Application.SettingType.HEADLESS);
-        ViewManager.assignSwitchView(fragmentView, R.id.switch_left_handed, DroneG2Application.SettingType.LEFT_HANDED);
-        ViewManager.assignSeekBarView(fragmentView, R.id.phone_tilt_max, DroneG2Application.SettingType.PHONE_TILT);
+        ViewManager.assignSwitchView(fragmentView, R.id.switch_joypad, Setting.SettingType.JOYPAD_MODE);
+        ViewManager.assignSwitchView(fragmentView, R.id.switch_headless, Setting.SettingType.HEADLESS);
+        ViewManager.assignSwitchView(fragmentView, R.id.switch_left_handed, Setting.SettingType.LEFT_HANDED);
+        ViewManager.assignSeekBarView(fragmentView, R.id.phone_tilt_max,Setting.SettingType.PHONE_TILT);
         return fragmentView;
     }
 }

@@ -1,4 +1,4 @@
-package com.coretronic.drone.settings;
+package com.coretronic.drone.piloting.settings;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.coretronic.drone.Drone;
+import com.coretronic.drone.DroneG2Application;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.main.DroneG2Application;
-import com.coretronic.drone.main.PilotingActivity;
+import com.coretronic.drone.piloting.PilotingFragment;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 
 /**
@@ -52,16 +51,17 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
+//                getActivity().getSupportFragmentManager().popBackStack();
 //                DroneG2Application.isSettingsMode=false;
             }
         });
         tvTitle = (TextView) fragmentView.findViewById(R.id.tv_title);
         tvTitle.setText(titleString[mViewPager.getCurrentItem()]);
 
-        PilotingActivity.markView.setBackgroundColor(Color.BLACK);
-        PilotingActivity.markView.setAlpha(0.7f);
-        for (JoyStickSurfaceView joyStickSurfaceView : PilotingActivity.joyStickSurfaceViews) {
+        PilotingFragment.markView.setBackgroundColor(Color.BLACK);
+        PilotingFragment.markView.setAlpha(0.7f);
+        for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
             joyStickSurfaceView.setVisibility(View.INVISIBLE);
         }
         return fragmentView;
@@ -82,12 +82,12 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        PilotingActivity.markView.setBackgroundColor(Color.TRANSPARENT);
-        PilotingActivity.markView.setAlpha(1);
-        for (JoyStickSurfaceView joyStickSurfaceView : PilotingActivity.joyStickSurfaceViews) {
+        PilotingFragment.markView.setBackgroundColor(Color.TRANSPARENT);
+        PilotingFragment.markView.setAlpha(1);
+        for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
             joyStickSurfaceView.setVisibility(View.VISIBLE);
         }
-        PilotingActivity.initialJoypadMode();
+        PilotingFragment.initialJoypadMode();
     }
 
     @Override

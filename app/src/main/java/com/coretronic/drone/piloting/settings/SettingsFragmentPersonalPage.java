@@ -1,4 +1,4 @@
-package com.coretronic.drone.settings;
+package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

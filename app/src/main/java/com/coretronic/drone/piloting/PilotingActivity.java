@@ -1,4 +1,4 @@
-package com.coretronic.drone.main;
+package com.coretronic.drone.piloting;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,8 +31,9 @@ import com.coretronic.drone.Drone;
 import com.coretronic.drone.LandscapeFragmentActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.WifiRssiReceiver;
+import com.coretronic.drone.DroneG2Application;
 import com.coretronic.drone.service.DroneDevice;
-import com.coretronic.drone.settings.SettingViewPagerFragment;
+import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 
@@ -45,6 +46,8 @@ import java.util.List;
 public class PilotingActivity extends LandscapeFragmentActivity {
     private static final String TAG = PilotingActivity.class.getSimpleName();
     public static final int DRONE_TEST_TYPE = 456;
+    private static final float M_S2KM_H = 3.6f;
+    public static final int MAX_SPEED_KMH = 100;
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
     private WifiRssiReceiver wifiRssiReceiver;
@@ -63,6 +66,9 @@ public class PilotingActivity extends LandscapeFragmentActivity {
     private Spinner spinnerDroneDevice;
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
+    private SemiCircleProgressBarView semiCircleProgressBarView;
+    private TextView tvBattery;
+    private TextView tvAltitude;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +105,41 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         mDeviceAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onBatteryUpdate(final int battery) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvBattery.setText(battery + "%");
+            }
+        });
+    }
+
+    @Override
+    public void onAltitudeUpdate(final float altitude) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvAltitude.setText(String.format("%.1fm", altitude));
+            }
+        });
+    }
+
+    @Override
+    public void onRadioSignalUpdate(int rssi) {
+
+    }
+
+    @Override
+    public void onSpeedUpdate(final float groundSpeed) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                semiCircleProgressBarView.setProgress((int) (groundSpeed * M_S2KM_H));
+            }
+        });
+    }
+
     private void assignViews() {
         ImageButton btnBack = (ImageButton) findViewById(R.id.btn_back);
         ImageButton btnSettings = (ImageButton) findViewById(R.id.btn_settings);
@@ -128,9 +169,9 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                 radius = joyStickSurfaceViews[i].getRadius();
             }
         }
-        SemiCircleProgressBarView semiCircleProgressBarView = (SemiCircleProgressBarView) findViewById(R.id.semi_circle_bar);
+        semiCircleProgressBarView = (SemiCircleProgressBarView) findViewById(R.id.semi_circle_bar);
         semiCircleProgressBarView.setProgressBarColor(Color.RED);
-        semiCircleProgressBarView.setProgress(55);
+        semiCircleProgressBarView.setProgress(0);
         wifiRssiReceiver = new WifiRssiReceiver(btnBack);
 
         tvPitch = (TextView) findViewById(R.id.tv_pitch);
@@ -142,23 +183,26 @@ public class PilotingActivity extends LandscapeFragmentActivity {
             stickList[i] = String.valueOf(size);
             size -= 5;
         }
-        Spinner spinnerStickSize = (Spinner) findViewById(R.id.spinner_stick_size);
-        ArrayAdapter<String> stickSizeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, stickList);
-        spinnerStickSize.setAdapter(stickSizeAdapter);
-        spinnerStickSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                for (JoyStickSurfaceView joyStickSurfaceView : joyStickSurfaceViews) {
-                    if (((DroneG2Application) getApplication()).isUITesting)
-                        joyStickSurfaceView.changeStickSize(Integer.valueOf(stickList[i]));
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        tvBattery = (TextView) findViewById(R.id.tv_battery);
+        tvAltitude = (TextView) findViewById(R.id.tv_altitude);
+//        Spinner spinnerStickSize = (Spinner) findViewById(R.id.spinner_stick_size);
+//        ArrayAdapter<String> stickSizeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, stickList);
+//        spinnerStickSize.setAdapter(stickSizeAdapter);
+//        spinnerStickSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                for (JoyStickSurfaceView joyStickSurfaceView : joyStickSurfaceViews) {
+//                    if (((DroneG2Application) getApplication()).isUITesting)
+//                        joyStickSurfaceView.changeStickSize(Integer.valueOf(stickList[i]));
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
 
@@ -267,15 +311,16 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                             isOnOrientationSensorMode = true;
                         } else if (action == MotionEvent.ACTION_UP) {
                             if (getController() != null) {
-                                mControlWrap.pitch = 0;
-                                mControlWrap.roll = 0;
+                                mControlWrap.pitch = ControlWrap.DEFAULT_VALUE;
+                                mControlWrap.roll = ControlWrap.DEFAULT_VALUE;
                                 tvPitch.setText("pitch: " + mControlWrap.pitch);
                                 tvRoll.setText("roll: " + mControlWrap.roll);
-                                getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
-                                Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
-                                Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
-                                Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
-                                Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
+//                                getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
+//                                Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
+//                                Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
+//                                Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
+//                                Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
+                                sendControl();
                             }
                             isOnOrientationSensorMode = false;
                         }
@@ -311,8 +356,8 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         boolean[] isJoyModes;
         int[] bgDrawableIds;
         int[] stickDrawableIds;
-        boolean joypadMode = DroneG2Application.settings[DroneG2Application.SettingType.JOYPAD_MODE.ordinal()].getValue() == DroneG2Application.ON ? true : false;
-        boolean leftHanded = DroneG2Application.settings[DroneG2Application.SettingType.LEFT_HANDED.ordinal()].getValue() == DroneG2Application.ON ? true : false;
+        boolean joypadMode = DroneG2Application.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue() == Setting.ON ? true : false;
+        boolean leftHanded = DroneG2Application.settings[Setting.SettingType.LEFT_HANDED.ordinal()].getValue() == Setting.ON ? true : false;
 
         if (joypadMode) {
             if (leftHanded) {
@@ -414,11 +459,12 @@ public class PilotingActivity extends LandscapeFragmentActivity {
                     mControlWrap.roll = rcRoll * 2;
                     tvPitch.setText("pitch: " + mControlWrap.pitch);
                     tvRoll.setText("roll: " + mControlWrap.roll);
-                    getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
-                    Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
-                    Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
-                    Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
-                    Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
+//                    getController().control(mControlWrap.roll, mControlWrap.pitch, mControlWrap.throttle, mControlWrap.yaw);
+//                    Log.d(TAG, "sendControl Throttle: " + mControlWrap.throttle);
+//                    Log.d(TAG, "sendControl Yaw: " + mControlWrap.yaw);
+//                    Log.d(TAG, "sendControl Pitch: " + mControlWrap.pitch);
+//                    Log.d(TAG, "sendControl Roll: " + mControlWrap.roll);
+                    sendControl();
                 }
             }
         }
@@ -524,7 +570,7 @@ public class PilotingActivity extends LandscapeFragmentActivity {
         }
 
         public int changeYaw(float yaw) {
-            this.yaw = changeValue(yaw);
+            this.yaw = changeValue(yaw) * 0.75f;
             sendControl();
             return (int) this.yaw;
         }

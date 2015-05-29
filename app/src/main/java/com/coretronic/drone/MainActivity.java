@@ -1,9 +1,13 @@
-package com.coretronic.drone.main;
+package com.coretronic.drone;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,27 +15,24 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coretronic.drone.Drone;
-import com.coretronic.drone.LandscapeActivity;
-import com.coretronic.drone.R;
-import com.coretronic.drone.WifiRssiReceiver;
 import com.coretronic.drone.communication.SocketService;
+import com.coretronic.drone.piloting.PilotingFragment;
 import com.coretronic.drone.service.DroneDevice;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends LandscapeActivity implements View.OnClickListener {
+public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Button btnPiloting;
-    private Button btnAlbum;
-    private Button btnUpdate;
+    public static final int DRONE_TEST_TYPE = 456;
     private ImageView imgWifiSignal;
     private ImageView imgGpsSignal;
     private TextView tvTime;
@@ -42,10 +43,12 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
     private DeviceAdapter mDeviceAdapter;
 
     private void assignViews() {
-        btnPiloting = (Button) findViewById(R.id.btn_piloting);
-        btnAlbum = (Button) findViewById(R.id.btn_album);
-        btnUpdate = (Button) findViewById(R.id.btn_update);
+        Button btnPiloting = (Button) findViewById(R.id.btn_piloting);
+        Button btnMissionPlan = (Button) findViewById(R.id.btn_mission_plan);
+        Button btnAlbum = (Button) findViewById(R.id.btn_album);
+        Button btnUpdate = (Button) findViewById(R.id.btn_update);
         btnPiloting.setOnClickListener(this);
+        btnMissionPlan.setOnClickListener(this);
         btnAlbum.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
 
@@ -56,32 +59,45 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
 
         mDroneDevices = new ArrayList<>();
+        mDroneDevices.add(new DroneDevice(DRONE_TEST_TYPE, "null", 77));
+        mDroneDevices.add(new DroneDevice(DRONE_TEST_TYPE, "Add New Device", 88));
+
         mDeviceAdapter = new DeviceAdapter();
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
-        spinnerDroneDevice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                         @Override
-                                                         public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
-                                                             Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-                                                             selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
+        spinnerDroneDevice.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
+                        Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
 
-                                                                 @Override
-                                                                 public void onConnected() {
-                                                                     Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
-                                                                             Toast.LENGTH_LONG).show();
-                                                                 }
+                        if (mDroneDevices.get(i).getDroneType() == DRONE_TEST_TYPE) {
+                            if (mDroneDevices.get(i).getName().equals("Add New Device")) {
+                                showAddNewDroneDialog();
+                                spinnerDroneDevice.setSelection(0);
+                            }
+                        } else {
+                            selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
 
-                                                                 @Override
-                                                                 public void onConnectFail() {
-                                                                     Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
-                                                                 }
-                                                             });
-                                                         }
+                                @Override
+                                public void onConnected() {
+                                    Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
+                                            Toast.LENGTH_LONG).show();
+                                }
 
-                                                         @Override
-                                                         public void onNothingSelected(AdapterView<?> adapterView) {
+                                @Override
+                                public void onConnectFail() {
+                                    Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
 
-                                                         }
-                                                     }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                }
+
         );
     }
 
@@ -122,10 +138,11 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
         stopService(new Intent(this, SocketService.class));
     }
 
+
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-//        mDroneDevices.add(droneDevice);
-//        mDeviceAdapter.notifyDataSetChanged();
+        mDroneDevices.add(droneDevice);
+        mDeviceAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -140,30 +157,29 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Class cls = null;
+//        Class cls = null;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = null;
         switch (v.getId()) {
             case R.id.btn_piloting:
-//                if (isSocketConnected) {
-                cls = PilotingActivity.class;
-//                }
-
-//                Timer timer = new Timer();
-//                timer.schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        startService(new Intent(MainActivity.this, SocketService.class));
-//                    }
-//                }, 0, 2000);
-
+//                cls = PilotingActivity.class;
+                fragment = new PilotingFragment();
+                break;
+            case R.id.btn_mission_plan:
                 break;
             case R.id.btn_album:
-                cls = AlbumActivity.class;
+//                cls = AlbumActivity.class;
                 break;
             case R.id.btn_update:
-                cls = UpdateActivity.class;
+//                cls = UpdateActivity.class;
                 break;
         }
-        if (cls != null) startActivity(new Intent(MainActivity.this, cls));
+        if (fragment != null) {
+            transaction.replace(R.id.frame_view, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+//        if (cls != null) startActivity(new Intent(MainActivity.this, cls));
     }
 
     public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
@@ -197,7 +213,40 @@ public class MainActivity extends LandscapeActivity implements View.OnClickListe
         }
     }
 
+    private void showAddNewDroneDialog() {
 
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Add Device");
+        alertDialog.setMessage("Enter Device ip");
+
+        final EditText input = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setPositiveButton("Add",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String deviceIp = input.getText().toString();
+                        if (deviceIp.trim().length() <= 0) {
+                            return;
+                        }
+                        addDevice(deviceIp);
+                    }
+
+                });
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
 //    private BroadcastReceiver socketStatusReceiver = new BroadcastReceiver() {
 //        @Override
 //        public void onReceive(Context context, Intent intent) {

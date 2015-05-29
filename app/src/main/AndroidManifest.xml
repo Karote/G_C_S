@@ -9,20 +9,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.coretronic.drone.main.DroneG2Application"
+        android:name=".DroneG2Application"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
-        <activity android:name="com.coretronic.drone.main.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.coretronic.drone.main.PilotingActivity" />
-        <activity android:name="com.coretronic.drone.main.UpdateActivity" />
-        <activity android:name="com.coretronic.drone.main.AlbumActivity" />
+        <activity android:name=".piloting.PilotingActivity" />
+        <activity android:name=".UpdateActivity" />
+        <activity android:name=".album.AlbumActivity" />
 
         <service android:name="com.coretronic.drone.communication.SocketService" />
         <receiver android:name="com.coretronic.drone.SocketStatusReceiver" />

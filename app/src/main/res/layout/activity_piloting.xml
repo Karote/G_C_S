@@ -30,7 +30,14 @@
                 android:layout_height="50dp"
                 android:background="@drawable/btn_bg"
                 android:src="@android:drawable/ic_menu_set_as" />
-
+            <TextView
+                android:id="@+id/tv_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="0%"
+                android:textColor="@android:color/white" />
             <TextView
                 android:id="@+id/tv_pitch"
                 android:layout_width="wrap_content"
@@ -48,11 +55,18 @@
                 android:layout_margin="10dp"
                 android:text="roll: 0"
                 android:textColor="@android:color/white" />
-
-            <Spinner
-                android:id="@+id/spinner_drone_device"
+            <TextView
+                android:id="@+id/tv_altitude"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="0m"
+                android:textColor="@android:color/white" />
+            <!--<Spinner-->
+                <!--android:id="@+id/spinner_drone_device"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent" />-->
 
         </LinearLayout>
 
@@ -96,12 +110,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:orientation="vertical">
-        <Spinner
-            android:id="@+id/spinner_stick_size"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@android:color/white"/>
+        <!--<Spinner-->
+            <!--android:id="@+id/spinner_stick_size"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@android:color/white"/>-->
         <Button
             android:id="@+id/emergency"
             android:layout_width="match_parent"

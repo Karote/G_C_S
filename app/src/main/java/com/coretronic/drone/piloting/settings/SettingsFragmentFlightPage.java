@@ -1,4 +1,4 @@
-package com.coretronic.drone.settings;
+package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,10 +11,10 @@ import com.coretronic.drone.UnBindDrawablesFragment;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentStatusPage extends UnBindDrawablesFragment {
+public class SettingsFragmentFlightPage extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_settings_status_page, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_settings_flight_page, container, false);
         return fragmentView;
     }
 }

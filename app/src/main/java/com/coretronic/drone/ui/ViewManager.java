@@ -8,8 +8,8 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
-import com.coretronic.drone.main.DroneG2Application;
-import com.coretronic.drone.struct.Setting;
+import com.coretronic.drone.DroneG2Application;
+import com.coretronic.drone.piloting.Setting;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,15 +23,15 @@ public class ViewManager {
     public static final float HALF_ALPHA = 0.3f;
     public static final float NON_ALPHA = 1f;
 
-    public static void assignSwitchView(View view, int id, DroneG2Application.SettingType settingType) {
+    public static void assignSwitchView(View view, int id, Setting.SettingType settingType) {
         Switch sw = (Switch) view.findViewById(id);
         final int type = settingType.ordinal();
-        sw.setChecked(DroneG2Application.settings[type].getValue() == DroneG2Application.ON ? true : false);
+        sw.setChecked(DroneG2Application.settings[type].getValue() == Setting.ON ? true : false);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isPressed()) {
-                    DroneG2Application.settings[type].setValue(isChecked == true ? DroneG2Application.ON : DroneG2Application.OFF);
+                    DroneG2Application.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
                     Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.settings[type].getValue());
                 }
             }
@@ -52,7 +52,7 @@ public class ViewManager {
 //        });
 //    }
 
-    public static void assignSeekBarView(View view, int id, DroneG2Application.SettingType settingType) {
+    public static void assignSeekBarView(View view, int id, Setting.SettingType settingType) {
         SeekBar seekBar = (SeekBar) view.findViewById(id);
         final Setting setting = DroneG2Application.settings[settingType.ordinal()];
         seekBar.setMax(setting.getMaxValue() - setting.getMinVale());
