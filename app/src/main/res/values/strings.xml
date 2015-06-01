@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Drone G2.0</string>
+    <string-array name="mission_plan_menu">
+        <item>Waypoint Editor</item>
+        <item>Flight History</item>
+        <item>Follow Me</item>
+    </string-array>
+    <string name="delete_all">Delete All</string>
+    <string name="delete_done">Done</string>
 </resources>

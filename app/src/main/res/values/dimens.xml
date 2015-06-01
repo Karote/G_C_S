@@ -3,4 +3,6 @@
     <dimen name="joystick_size">150dp</dimen>
     <dimen name="settings_margin">10dp</dimen>
     <dimen name="settings_title_size">20sp</dimen>
+    <dimen name="recyclerview_item_width">110dp</dimen>
+    <dimen name="recyclerview_deleteitem_width">180dp</dimen>
 </resources>

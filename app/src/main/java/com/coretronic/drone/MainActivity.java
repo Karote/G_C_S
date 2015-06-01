@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.communication.SocketService;
+import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.PilotingFragment;
 import com.coretronic.drone.service.DroneDevice;
 
@@ -164,7 +165,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
-//                fragment = new MissionPlanFragment();
+                fragment = new WaypointEditorFragment();
                 break;
             case R.id.btn_album:
 //                cls = AlbumActivity.class;

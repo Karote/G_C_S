@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<title>Google Map</title>
+		<style>
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0
+			}
+		</style>
+		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw"></script>
+		<script src="geolocationmarker-compiled.js"></script>
+		<script>
+            var map, GeoMarker;
+            var markers = [];
+            var poly;
+            var polylines = [];
+            
+            function initialize() {
+                var latlng;
+                //latlng = new google.maps.LatLng(24.712299, 120.916408); // 中強光電竹南廠
+                latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
+
+                var styleArray = [
+                		{
+                    		featureType : "poi",
+                    		elementType : "all",
+                    		stylers : [{
+                        			visibility : "off"
+                    		}]
+                		}, 
+                		{
+                    		featureType : "transit",
+                    		elementType : "all",
+                    		stylers : [{
+                        			visibility : "off"
+                    		}]
+                		}];
+
+                var styledMap = new google.maps.StyledMapType(styleArray, {name : "Styled Map"});
+
+                var mapOptions = {
+                    	center : latlng,
+                    	zoom : 15,
+                    	mapTypeId : google.maps.MapTypeId.ROAD,
+                    	disableDefaultUI : true,
+                    	mapTypeControlOptions : {
+                        	mapTypeIds : [google.maps.MapTypeId.ROADMAP, 'map_style']
+                    	},
+                    	zoomControl : true,
+                    	zoomControlOptions : {
+                        	style : google.maps.ZoomControlStyle.SMALL,
+                        	position: google.maps.ControlPosition.LEFT_CENTER
+                    	},
+                	};
+                map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                
+                GeoMarker = new GeolocationMarker(map);
+                
+                map.mapTypes.set('map_style', styledMap);
+                map.setMapTypeId('map_style');
+
+                var polyOptions = {
+                    strokeColor : '#000000',
+                    strokeOpacity : 1.0,
+                    strokeWeight : 3,
+                    map: map
+                };
+                poly = new google.maps.Polyline(polyOptions);
+                
+                google.maps.event.addListener(map, 'click', addLatLng);
+            }
+
+            function addLatLng(event) {
+                var marker = new google.maps.Marker({
+                    position : event.latLng,
+                    title : '#' + poly.getPath().getLength(),
+                    map : map
+                });
+                markers.push(marker);
+                
+            	var path = poly.getPath();
+                path.push(event.latLng);
+                poly.setMap(map);
+                AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
+                polylines.push(poly);
+                
+                //AndroidFunction.openAndroidDialog();
+            }
+            
+            function setMapToMyLocation(){
+            	var currPosition =null;
+            	
+            	currPosition = GeoMarker.getPosition();
+            	if(currPosition != null){
+            		setMapTo(currPosition.lat(), currPosition.lng());
+            	}else{
+            		AndroidFunction.showToast("無法取得現在位置");
+            	}
+            }
+            
+            function setMapTo(nowLatget, nowLngget){
+            	map.setCenter(new google.maps.LatLng(nowLatget, nowLngget));
+            	map.setZoom(15);
+            }
+            
+            function clearMarkers(){
+            	var i, j;
+            	for(i = 0, j = markers.length; i < j; i++){
+            		markers[i].setMap(null);
+            	}
+            	markers = [];
+            	
+            	for(i = 0, j = polylines.length; i < j; i++){
+            		polylines[i].setMap(null);
+            		polylines[i].setPath([]);
+            	}
+            	polylines = [];
+            }
+
+		</script>
+	</head>
+	<body onload="initialize()">
+		<div id="map" style="width: 100%; height: 100%;"> </div>
+	</body>
+</html>
