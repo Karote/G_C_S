@@ -3,8 +3,6 @@ package com.coretronic.drone;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -53,7 +51,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         btnUpdate.setOnClickListener(this);
 
         imgWifiSignal = (ImageView) findViewById(R.id.img_wifi_signal);
-        wifiRssiReceiver = new WifiRssiReceiver(imgWifiSignal);
+//        wifiRssiReceiver = new WifiRssiReceiver(imgWifiSignal);
         imgGpsSignal = (ImageView) findViewById(R.id.img_gps_signal);
 //        tvTime = (TextView) findViewById(R.id.tv_time);
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
@@ -117,7 +115,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(wifiRssiReceiver, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
+//        registerReceiver(wifiRssiReceiver, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
 //        registerReceiver(socketStatusReceiver, new IntentFilter(SocketThread.BROADCAST_ACTION_SOCKET_STATUS));
 
 //        Intent intent = new Intent(this, SocketService.class);
@@ -128,7 +126,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(wifiRssiReceiver);
+//        unregisterReceiver(wifiRssiReceiver);
 //        unregisterReceiver(socketStatusReceiver);
     }
 
@@ -166,6 +164,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
+//                fragment = new MissionPlanFragment();
                 break;
             case R.id.btn_album:
 //                cls = AlbumActivity.class;

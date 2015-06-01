@@ -1,20 +1,24 @@
 package com.coretronic.drone.piloting;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.wifi.WifiManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -38,7 +42,9 @@ import com.coretronic.drone.service.DroneDevice;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * Created by jiaLian on 15/4/1.
@@ -48,12 +54,29 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     //    public static final int DRONE_TEST_TYPE = 456;
     private static final float M_S2KM_H = 3.6f;
     public static final int MAX_SPEED_KMH = 100;
+//    private static final String VIDEO_FILE_PATH = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
+    private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
+
+    private WifiRssiReceiver wifiRssiReceiver;
+
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
-    private WifiRssiReceiver wifiRssiReceiver;
     private TextView tvPitch;
     private TextView tvRoll;
+    private Spinner spinnerDroneDevice;
+    private List<DroneDevice> mDroneDevices;
+    private DeviceAdapter mDeviceAdapter;
+    private SemiCircleProgressBarView semiCircleProgressBarView;
+    private TextView tvBattery;
+    private TextView tvAltitude;
+
+    private MediaPlayer mediaPlayer;
+    private SurfaceView surfaceView;
+
+    private FragmentManager childFragmentManager;
     private SensorManager sensorManager;
+    private FragmentActivity fragmentActivity;
+
     private float[] magneticValues = new float[3];
     private float[] accelerometerValues = new float[3];
     private int pitch;
@@ -63,27 +86,28 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private boolean isOnOrientationSensorMode = false;
     private ControlWrap mControlWrap;
     private int radius = 0;
-    private Spinner spinnerDroneDevice;
-    private List<DroneDevice> mDroneDevices;
-    private DeviceAdapter mDeviceAdapter;
-    private SemiCircleProgressBarView semiCircleProgressBarView;
-    private TextView tvBattery;
-    private TextView tvAltitude;
-    private FragmentActivity fragmentActivity;
-     FragmentManager childFragmentManager;
+    private FrameLayout rtspFrameLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_piloting);
+//        setContentView(R.layout.fragment_piloting);
         fragmentActivity = getActivity();
         childFragmentManager = getChildFragmentManager();
         sensorManager = (SensorManager) fragmentActivity.getSystemService(Context.SENSOR_SERVICE);
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                Log.d(TAG, "onPrepared");
+                mediaPlayer.start();
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_piloting, container, false);
+        View view = inflater.inflate(R.layout.fragment_piloting, container, false);
         assignViews(view);
         return view;
     }
@@ -92,6 +116,18 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity) fragmentActivity).registerStatusChanged(this);
+//        if (surfaceView == null) {
+//            surfaceView = new SurfaceView(getActivity());
+//            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//            rtspFrameLayout.addView(surfaceView, layoutParams);
+//        }
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        setSurfaceViewLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     @Override
@@ -100,6 +136,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 //        fragmentActivity.registerReceiver(wifiRssiReceiver, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+//        if(mediaPlayer!=null){
+//            mediaPlayer.start();
+//        }
     }
 
     @Override
@@ -119,6 +158,14 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 //        mDroneDevices.remove(droneDevice);
 //        mDeviceAdapter.notifyDataSetChanged();
 //    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+    }
 
     @Override
     public void onBatteryUpdate(final int battery) {
@@ -158,7 +205,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private void assignViews(View view) {
         ImageButton btnBack = (ImageButton) view.findViewById(R.id.btn_back);
         ImageButton btnSettings = (ImageButton) view.findViewById(R.id.btn_settings);
-        markView = view.findViewById(R.id.mark_view);
+        markView = view.findViewById(R.id.settings_mark_view);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,7 +218,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             @Override
             public void onClick(View v) {
                 android.support.v4.app.FragmentTransaction transaction = childFragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_view, new SettingViewPagerFragment());
+                transaction.replace(R.id.settings_framelayout, new SettingViewPagerFragment());
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -228,6 +275,43 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 }
             }
         });
+//        rtspFrameLayout = (FrameLayout) view.findViewById(R.id.rtsp_framelayout);
+        surfaceView = (SurfaceView) view.findViewById(R.id.rtsp_surfaceview);
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                try {
+                    mediaPlayer.reset();
+                    Log.d(TAG, "setDisplay");
+                    mediaPlayer.setDisplay(surfaceHolder);
+                    Log.d(TAG, "setDataSource");
+//                    mediaPlayer.setDataSource(getActivity(), Uri.parse(VIDEO_FILE_PATH));
+                    mediaPlayer.setDataSource(VIDEO_FILE_PATH);
+                    Log.d(TAG, "prepareAsync");
+                    mediaPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+            }
+        });
+    }
+
+    private void setSurfaceViewLayoutParams(int width, int height) {
+        ViewGroup.LayoutParams layoutParams = surfaceView.getLayoutParams();
+        layoutParams.width = width;
+        layoutParams.height = height;
+        surfaceView.setLayoutParams(layoutParams);
     }
 
     private void initialJoystickModule(View rootView, int moduleViewId) {
@@ -463,6 +547,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private Drone getController() {
         return ((MainActivity) fragmentActivity).getDroneController();
     }
+
 
     //    private void showAddNewDroneDialog() {
 //

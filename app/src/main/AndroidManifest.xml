@@ -20,9 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".piloting.PilotingActivity" />
         <activity android:name=".UpdateActivity" />
-        <activity android:name=".album.AlbumActivity" />
+        <!--<activity android:name=".album.AlbumFragment" />-->
 
         <service android:name="com.coretronic.drone.communication.SocketService" />
         <receiver android:name="com.coretronic.drone.SocketStatusReceiver" />
