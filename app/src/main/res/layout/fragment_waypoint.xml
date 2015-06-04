@@ -12,7 +12,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#FF888888">
-        <Button android:id="@+id/button_previous"
+        <Button android:id="@+id/button_back_to_main"
                 android:background="@drawable/ic_action_previous_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
                  android:layout_height="wrap_content"
                  android:spinnerMode="dropdown"
                  android:layout_centerVertical="true"
-                 android:layout_toRightOf="@id/button_previous">
+                 android:layout_toRightOf="@id/button_back_to_main">
         </Spinner>
         <FrameLayout
                 android:id="@+id/framelayout_edit_marker"
