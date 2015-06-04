@@ -20,7 +20,6 @@
             var map, GeoMarker;
             var markers = [];
             var poly;
-            var polylines = [];
             
             function initialize() {
                 var latlng;
@@ -89,7 +88,6 @@
                 path.push(event.latLng);
                 poly.setMap(map);
                 AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
-                polylines.push(poly);
                 
                 //AndroidFunction.openAndroidDialog();
             }
@@ -117,11 +115,17 @@
             	}
             	markers = [];
             	
-            	for(i = 0, j = polylines.length; i < j; i++){
-            		polylines[i].setMap(null);
-            		polylines[i].setPath([]);
-            	}
-            	polylines = [];
+            	poly.setMap(null);
+            	poly.setPath([]);
+            }
+            
+            function deleteSelectMarker(selected){
+            	markers[selected].setMap(null);
+            	var path = poly.getPath();
+            	path.removeAt(selected);
+            	markers.splice(selected, 1);
+            	poly.setpath(path);
+            	poly.setMap(map);
             }
 
 		</script>
