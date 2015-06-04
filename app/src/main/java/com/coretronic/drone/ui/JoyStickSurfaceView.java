@@ -101,7 +101,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             bgBitmap = null;
         }
         if (stickListener != null) {
-            stickListener.onStickEvent(JoyStickSurfaceView.this, MotionEvent.ACTION_UP, 0, 0);
+            stickListener.onStickMoveEvent(JoyStickSurfaceView.this, MotionEvent.ACTION_UP, 0, 0);
         }
     }
 
@@ -186,13 +186,13 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
             if (Math.abs(dx) >= DISTANCE_TOLERANCE || Math.abs(dy) >= DISTANCE_TOLERANCE) {
                 if (stickListener != null && isJoypadMode) {
-                    stickListener.onStickEvent(JoyStickSurfaceView.this, action, dx, -dy);
+                    stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, dx, -dy);
                 }
             }
         } else if (action == MotionEvent.ACTION_UP) {
             rockerPoint.set(startPoint.x, startPoint.y);
             if (stickListener != null && isJoypadMode) {
-                stickListener.onStickEvent(JoyStickSurfaceView.this, action, 0, 0);
+                stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, 0, 0);
             } else if (stickListener != null && !isJoypadMode) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_UP);
             }
@@ -260,7 +260,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
 
     public static interface OnStickListener {
-        void onStickEvent(View view, int action, int dx, int dy);
+        void onStickMoveEvent(View view, int action, int dx, int dy);
 
         void onOrientationSensorMode(int action);
 

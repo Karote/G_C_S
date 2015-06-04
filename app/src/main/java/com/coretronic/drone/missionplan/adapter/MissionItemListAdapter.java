@@ -16,17 +16,17 @@ import java.util.List;
 /**
  * Created by karot.chuang on 2015/5/15.
  */
-public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder>{
+public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
     private List<Waypoint> waypointList;
 //    OnItemClickListener mItemClickListener;
 
-
-    public MissionItemListAdapter(List<Waypoint> waypointList){
+    public MissionItemListAdapter(List<Waypoint> waypointList) {
         this.waypointList = waypointList;
     }
 
     public Boolean isVisible = false;
-    public class MissionItemListViewHolder extends RecyclerView.ViewHolder/* implements View.OnClickListener*/{
+
+    public class MissionItemListViewHolder extends RecyclerView.ViewHolder/* implements View.OnClickListener*/ {
         final TextView nameView;
         final TextView altitudeView;
         final FrameLayout deleteLayout;
@@ -34,11 +34,11 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
         MissionItemListViewHolder(View itemView) {
             super(itemView);
-            nameView = (TextView)itemView.findViewById(R.id.rowNameView);
-            altitudeView = (TextView)itemView.findViewById(R.id.rowAltitudeView);
-            deleteLayout = (FrameLayout)itemView.findViewById(R.id.rowDeleteLayout);
+            nameView = (TextView) itemView.findViewById(R.id.rowNameView);
+            altitudeView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
+            deleteLayout = (FrameLayout) itemView.findViewById(R.id.rowDeleteLayout);
             deleteLayout.setVisibility(FrameLayout.GONE);
-            deleteButton = (Button)itemView.findViewById(R.id.button_delete_marker);
+            deleteButton = (Button) itemView.findViewById(R.id.button_delete_marker);
 
 //            deleteButton.setOnClickListener(this);
 //            itemView.setOnClickListener(this);
@@ -54,6 +54,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         }
         */
     }
+
     /*
     public interface OnItemClickListener {
         public void onItemClick(View view , int position);
@@ -79,9 +80,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     public void onBindViewHolder(MissionItemListViewHolder viewHolder, int i) {
         viewHolder.nameView.setText(String.format("%2d", i + 1));
         viewHolder.altitudeView.setText(String.valueOf(waypointList.get(i).getAltitude()));
-        if( isVisible == false ){
+        if (isVisible == false) {
             viewHolder.deleteLayout.setVisibility(FrameLayout.GONE);
-        }else{
+        } else {
             viewHolder.deleteLayout.setVisibility(FrameLayout.VISIBLE);
         }
     }

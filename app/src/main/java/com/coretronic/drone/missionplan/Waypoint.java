@@ -1,8 +1,5 @@
 package com.coretronic.drone.missionplan;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by karot.chuang on 2015/5/15.
  */
