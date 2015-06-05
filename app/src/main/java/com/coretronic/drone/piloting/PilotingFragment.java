@@ -640,7 +640,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
 
         public int changeYaw(float yaw) {
-            this.yaw = changeValue(yaw) * 0.8f;
+            this.yaw = changeValue(yaw) * 0.7f;
             sendControl();
             return (int) this.yaw;
         }

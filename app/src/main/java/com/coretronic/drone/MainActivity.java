@@ -162,25 +162,24 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     public void onClick(View v) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
+        String backStackName = null;
         switch (v.getId()) {
             case R.id.btn_piloting:
                 fragment = new PilotingFragment();
-                transaction.addToBackStack(null);
                 break;
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
-                transaction.addToBackStack(null);
                 break;
             case R.id.btn_album:
                 fragment = new AlbumFragment();
-                transaction.addToBackStack("AlbumFragment");
+                backStackName = "AlbumFragment";
                 break;
             case R.id.btn_update:
-                transaction.addToBackStack(null);
                 break;
         }
         if (fragment != null) {
             transaction.replace(R.id.frame_view, fragment, "fragment");
+            transaction.addToBackStack(backStackName);
             transaction.commit();
         }
     }
