@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.model.ImageItem;
+import com.coretronic.drone.utility.AppUtils;
+import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,7 @@ public class AlbumSmartPhoneTagFragment extends Fragment {
     private AlbumGridViewAdapter albumGridViewAdapter = null;
     private ArrayList<ImageItem> albumImgList = new ArrayList<ImageItem>();
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +58,13 @@ public class AlbumSmartPhoneTagFragment extends Fragment {
         albumGridView.setLayoutManager(gridLayoutManager);
 
 
+
         // get media array list
         getData();
 
         albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
         albumGridView.setAdapter(albumGridViewAdapter);
+
 
 
         return view;
@@ -276,6 +281,8 @@ public class AlbumSmartPhoneTagFragment extends Fragment {
 //        albumGridViewAdapter.notifyDataSetChanged();
         Log.i(TAG, "path list:" + albumGridViewAdapter.getSelectedPathAryList());
     }
+
+
 
 
 }

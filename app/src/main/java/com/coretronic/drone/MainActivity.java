@@ -21,6 +21,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.communication.SocketService;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.PilotingFragment;
@@ -169,7 +170,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new WaypointEditorFragment();
                 break;
             case R.id.btn_album:
-
+                fragment = new AlbumFragment();
                 break;
             case R.id.btn_update:
                 break;

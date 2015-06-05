@@ -1,5 +1,6 @@
 package com.coretronic.drone.album;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
+import com.coretronic.drone.utility.AppUtils;
+import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
 
 /**
  * Created by jiaLian on 15/4/1.
@@ -21,32 +24,29 @@ import com.coretronic.drone.UnBindDrawablesFragment;
 public class AlbumFragment extends UnBindDrawablesFragment {
 
     private static String TAG = AlbumFragment.class.getSimpleName();
-    private FragmentManager fragmentChildManager             = null;
-    private FragmentTransaction albumFragmentTransaction     = null;
-    private Fragment smartPhoneAlbumFragment                 = null;
-    private Fragment droneAlbumFragment                      = null;
-    private FragmentActivity fragmentActivity                = null;
-
+    // fragment declare
+    private Context mContext = null;
+    private FragmentManager fragmentChildManager = null;
+    private FragmentTransaction albumFragmentTransaction = null;
+    private Fragment smartPhoneAlbumFragment = null;
+    private Fragment droneAlbumFragment = null;
+    private FragmentActivity fragmentActivity = null;
+    // ui declare
     private Switch albumSwitch = null;
     private ImageButton rubbishBinBtn = null;
     private LinearLayout deleteOptionLayout = null;
     private Button deleteBtn = null;
     private Button cancelDeleteBtn = null;
+    private CustomerTwoBtnAlertDialog deleteDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.fragment_album);
 
         fragmentActivity = getActivity();
         fragmentChildManager = getChildFragmentManager();
-//
-//        findViews();
 
-//        albumFragmentManager = getFragmentManager();
         albumFragmentTransaction = fragmentChildManager.beginTransaction();
-//        fragment = getReplaceTargetFragment(targetFragment);
-//        fragment.setArguments(bundle);
         smartPhoneAlbumFragment = new AlbumSmartPhoneTagFragment();
 
 
@@ -64,6 +64,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_album, container, false);
+        mContext = fragmentView.getContext();
+
         findViews(fragmentView);
 
         return fragmentView;
@@ -82,6 +84,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         deleteBtn.setOnClickListener(deleteGroupAction);
         cancelDeleteBtn.setOnClickListener(deleteGroupAction);
 
+        deleteDialog = AppUtils.getAlertDialog(mContext, mContext.getResources().getString(R.string.delete_files), mContext.getResources().getString(R.string.btn_ok), mContext.getResources().getString(R.string.btn_cancel), deleteDialogOKListener);
     }
 
 
@@ -89,7 +92,6 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
 
 
     private View.OnClickListener rubbishBinBtnAction = new View.OnClickListener() {
@@ -112,7 +114,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
 
             switch (v.getId()) {
                 case R.id.delete_btn:
-                    ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectMediaFile();
+
+                    deleteDialog.show();
                     break;
                 case R.id.cancel_btn:
 
@@ -162,4 +165,24 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     };
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).hideDeleteOption();
+        // set delete option and hide the rubbish bin button
+        deleteOptionLayout.setVisibility(View.GONE);
+        rubbishBinBtn.setVisibility(View.VISIBLE);
+        ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectedPathAryList();
+
+    }
+
+    // delete dialog ok listener
+    private View.OnClickListener deleteDialogOKListener = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View v) {
+            ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectMediaFile();
+            deleteDialog.dismiss();
+        }
+    };
 }
