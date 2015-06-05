@@ -8,4 +8,7 @@
     </string-array>
     <string name="delete_all">Delete All</string>
     <string name="delete_done">Done</string>
+    <string name="album_toggle_drone">Drone</string>
+    <string name="album_toggle_smartphone">Smartphone</string>
+
 </resources>
