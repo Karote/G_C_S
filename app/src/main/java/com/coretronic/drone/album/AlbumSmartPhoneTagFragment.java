@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.coretronic.drone.R;
+import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.model.ImageItem;
 import com.coretronic.drone.utility.AppUtils;
@@ -32,14 +34,15 @@ import java.util.TimeZone;
  * Created by james on 15/6/1.
  * test git
  */
-public class AlbumSmartPhoneTagFragment extends Fragment {
+public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
+    private final static  String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView albumGridView = null;
     private AlbumGridViewAdapter albumGridViewAdapter = null;
     private ArrayList<ImageItem> albumImgList = new ArrayList<ImageItem>();
-
+    private FragmentManager fragmentManager = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,9 @@ public class AlbumSmartPhoneTagFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_album_smartphonetag, container, false);
         mContext = view.getContext();
+
+        fragmentManager = getChildFragmentManager();
+
 
         albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
@@ -120,7 +126,7 @@ public class AlbumSmartPhoneTagFragment extends Fragment {
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
-            if( !fileFullPath.contains("/DCIM/100ANDRO/"))
+            if( !fileFullPath.contains(FILTER_MEDIA_FOLDER))
             {
                 return;
             }
@@ -242,6 +248,8 @@ public class AlbumSmartPhoneTagFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        hideDeleteOption();
+        deleteSelectedPathAryList();
     }
 
     @Override

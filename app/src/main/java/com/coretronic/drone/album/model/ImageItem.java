@@ -1,5 +1,6 @@
 package com.coretronic.drone.album.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**

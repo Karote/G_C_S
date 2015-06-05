@@ -104,6 +104,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
             // set delete option and hide the rubbish bin button
             deleteOptionLayout.setVisibility(View.VISIBLE);
             rubbishBinBtn.setVisibility(View.GONE);
+            albumSwitch.setVisibility(View.GONE);
         }
     };
 
@@ -123,6 +124,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
                     // set delete option and hide the rubbish bin button
                     deleteOptionLayout.setVisibility(View.GONE);
                     rubbishBinBtn.setVisibility(View.VISIBLE);
+                    albumSwitch.setVisibility(View.VISIBLE);
                     ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectedPathAryList();
                     break;
             }
@@ -168,11 +170,10 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     @Override
     public void onPause() {
         super.onPause();
-        ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).hideDeleteOption();
+
         // set delete option and hide the rubbish bin button
         deleteOptionLayout.setVisibility(View.GONE);
         rubbishBinBtn.setVisibility(View.VISIBLE);
-        ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectedPathAryList();
 
     }
 
@@ -182,7 +183,11 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         @Override
         public void onClick(View v) {
             ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectMediaFile();
+            ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).hideDeleteOption();
             deleteDialog.dismiss();
+            albumSwitch.setVisibility(View.VISIBLE);
+            rubbishBinBtn.setVisibility(View.VISIBLE);
+            deleteOptionLayout.setVisibility(View.GONE);
         }
     };
 }

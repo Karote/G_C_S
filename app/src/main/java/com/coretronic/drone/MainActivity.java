@@ -165,19 +165,22 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         switch (v.getId()) {
             case R.id.btn_piloting:
                 fragment = new PilotingFragment();
+                transaction.addToBackStack(null);
                 break;
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
+                transaction.addToBackStack(null);
                 break;
             case R.id.btn_album:
                 fragment = new AlbumFragment();
+                transaction.addToBackStack("AlbumFragment");
                 break;
             case R.id.btn_update:
+                transaction.addToBackStack(null);
                 break;
         }
         if (fragment != null) {
-            transaction.replace(R.id.frame_view, fragment);
-            transaction.addToBackStack(null);
+            transaction.replace(R.id.frame_view, fragment, "fragment");
             transaction.commit();
         }
     }
