@@ -37,6 +37,7 @@ import java.util.TimeZone;
 public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
     private final static  String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
+//    private final static  String FILTER_MEDIA_FOLDER = "external/";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView albumGridView = null;
@@ -128,7 +129,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
             if( !fileFullPath.contains(FILTER_MEDIA_FOLDER))
             {
-                return;
+//                return;
             }
             long fileId = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
             int imgType = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)));

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/holo_blue_dark">
+
+    <ImageView android:id="@+id/preview_showimage"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:src="@mipmap/ic_launcher"
+               android:visibility="visible"/>
+
+
+    <LinearLayout android:id="@+id/preview_showvideo_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:visibility="gone">
+
+        <VideoView android:id="@+id/preview_video"
+                   android:layout_width="match_parent"
+                   android:layout_height="0dp"
+                   android:layout_weight="1"
+                />
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center">
+
+            <ImageButton android:id="@+id/video_play_ib"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:src="@drawable/ic_album_preview_play_n"
+                         android:layout_margin="8dp"/>
+            <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/progressBar"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+            <TextView android:id="@+id/preview_play_time_tv"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="02:40"
+                      android:textSize="28sp"
+                      android:gravity="center"
+                      android:layout_margin="8dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
