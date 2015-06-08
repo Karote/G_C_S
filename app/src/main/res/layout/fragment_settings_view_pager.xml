@@ -7,11 +7,10 @@
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="50dp"
                   android:orientation="horizontal">
-        <ImageButton android:id="@+id/btn_back"
+        <Button android:id="@+id/btn_back"
                      android:layout_width="50dp"
                      android:layout_height="match_parent"
-                     android:background="@drawable/btn_bg"
-                     android:src="@android:drawable/ic_menu_revert"/>
+                     android:background="@drawable/btn_pilot_back"/>
         <TextView android:id="@+id/tv_title"
                   android:layout_width="0dp"
                   android:layout_height="match_parent"

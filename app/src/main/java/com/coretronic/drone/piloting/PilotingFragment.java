@@ -56,11 +56,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     //    private static final String VIDEO_FILE_PATH = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
     private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
 
-    public static final float ORIENTATION_SENSOR_SCALE = 2.5f;
-    public static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
-
-    public static final String TAKE_OFF = "Take Off";
-    public static final String LANDING = "Landing";
+    private static final float ORIENTATION_SENSOR_SCALE = 2.5f;
+    private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
@@ -207,7 +204,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             public void onClick(View view) {
                 sendEmergency();
                 isTakeOff = false;
-                btnAction.setText(TAKE_OFF);
+                btnAction.setBackgroundResource(R.drawable.btn_pilot_takeoff);
                 Log.d(TAG, "Emergency");
             }
         });
@@ -215,21 +212,21 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                if (btn.getText().equals(TAKE_OFF)) {
+                if (!isTakeOff) {
                     sendTakeoff();
                     isTakeOff = true;
-                    btn.setText(LANDING);
-                    Log.d(TAG, TAKE_OFF);
+                    btn.setBackgroundResource(R.drawable.btn_pilot_landing);
+                    Log.d(TAG, "take off");
                 } else {
                     sendLanding();
                     isTakeOff = false;
-                    btn.setText(TAKE_OFF);
-                    Log.d(TAG, LANDING);
+                    btn.setBackgroundResource(R.drawable.btn_pilot_takeoff);
+                    Log.d(TAG, "landing");
                 }
             }
         });
-        ImageButton btnBack = (ImageButton) view.findViewById(R.id.btn_back);
-        ImageButton btnSettings = (ImageButton) view.findViewById(R.id.btn_settings);
+        Button btnBack = (Button) view.findViewById(R.id.btn_back);
+        Button btnSettings = (Button) view.findViewById(R.id.btn_settings);
         markView = view.findViewById(R.id.settings_mark_view);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -575,7 +572,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         private WeakReference<PilotingFragment> mOwner;
 
         public VlcHandler(PilotingFragment owner) {
-            mOwner = new WeakReference<PilotingFragment> (owner);
+            mOwner = new WeakReference<PilotingFragment>(owner);
         }
 
         @Override
