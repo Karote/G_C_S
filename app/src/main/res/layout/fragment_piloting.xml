@@ -16,25 +16,14 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_back"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_pilot_back"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent" />
-
-            <Button
-                android:id="@+id/btn_settings"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_pilot_setting" />
 
             <TextView
                 android:id="@+id/tv_battery"
@@ -114,32 +103,120 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="125dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/emergency"
-            android:layout_width="match_parent"
+
+        <FrameLayout
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@drawable/btn_pilot_engine_stop" />
+            android:layout_marginBottom="5dp">
 
-        <com.coretronic.drone.ui.SemiCircleProgressBarView
-            android:id="@+id/semi_circle_bar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            <com.coretronic.drone.ui.SemiCircleProgressBarView
+                android:id="@+id/semi_circle_bar"
+                android:layout_width="125dp"
+                android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/take_off"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:text="0"
+                android:textColor="@android:color/holo_green_light"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:paddingRight="15dp"
+                android:text="km/h"
+                android:textColor="@android:color/white"
+                android:textSize="10sp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@drawable/btn_pilot_takeoff"/>
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_home"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_pilot_home" />
+
+            <Button
+                android:id="@+id/take_off"
+                android:layout_width="125dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@drawable/btn_pilot_takeoff" />
+
+            <Button
+                android:id="@+id/btn_docking"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_pilot_docking" />
+        </LinearLayout>
+
     </LinearLayout>
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_pilot_back" />
+
+    <Button
+        android:id="@+id/emergency"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center|top"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_pilot_engine_stop" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/btn_settings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            android:background="@drawable/btn_pilot_setting" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_selfie"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_pilot_selfie" />
+
+            <Button
+                android:id="@+id/btn_recording"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_pilot_recording" />
+
+            <Button
+                android:id="@+id/btn_camera"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_pilot_camera" />
+        </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/settings_framelayout"
