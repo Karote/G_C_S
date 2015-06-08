@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.coretronic.drone.Drone;
@@ -53,14 +52,13 @@ import java.lang.ref.WeakReference;
 public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final float M_S2KM_H = 3.6f;
-    //    private static final String VIDEO_FILE_PATH = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
-    private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
+    private static final String VIDEO_FILE_PATH = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
+//    private static final String VIDEO_FILE_PATH = "rtsp://192.168.42.1/live";
+//    private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
 
-    public static final float ORIENTATION_SENSOR_SCALE = 2.5f;
-    public static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
-
-    public static final String TAKE_OFF = "Take Off";
-    public static final String LANDING = "Landing";
+    private static final float ORIENTATION_SENSOR_SCALE = 2.5f;
+    private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
+    public static final int MAX_SPEED = 50;
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
@@ -69,6 +67,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private SemiCircleProgressBarView semiCircleProgressBarView;
     private TextView tvBattery;
     private TextView tvAltitude;
+    private TextView tvSpeed;
     private Button btnAction;
 
     private MediaPlayer mediaPlayer;
@@ -194,7 +193,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                semiCircleProgressBarView.setProgress((int) (groundSpeed * M_S2KM_H));
+                int speed = (int) (groundSpeed * M_S2KM_H);
+                semiCircleProgressBarView.setProgress(speed);
+                tvSpeed.setText(speed + "");
             }
         });
     }
@@ -207,7 +208,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             public void onClick(View view) {
                 sendEmergency();
                 isTakeOff = false;
-                btnAction.setText(TAKE_OFF);
+                btnAction.setBackgroundResource(R.drawable.btn_pilot_takeoff);
                 Log.d(TAG, "Emergency");
             }
         });
@@ -215,21 +216,21 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                if (btn.getText().equals(TAKE_OFF)) {
+                if (!isTakeOff) {
                     sendTakeoff();
                     isTakeOff = true;
-                    btn.setText(LANDING);
-                    Log.d(TAG, TAKE_OFF);
+                    btn.setBackgroundResource(R.drawable.btn_pilot_landing);
+                    Log.d(TAG, "take off");
                 } else {
                     sendLanding();
                     isTakeOff = false;
-                    btn.setText(TAKE_OFF);
-                    Log.d(TAG, LANDING);
+                    btn.setBackgroundResource(R.drawable.btn_pilot_takeoff);
+                    Log.d(TAG, "landing");
                 }
             }
         });
-        ImageButton btnBack = (ImageButton) view.findViewById(R.id.btn_back);
-        ImageButton btnSettings = (ImageButton) view.findViewById(R.id.btn_settings);
+        Button btnBack = (Button) view.findViewById(R.id.btn_back);
+        Button btnSettings = (Button) view.findViewById(R.id.btn_settings);
         markView = view.findViewById(R.id.settings_mark_view);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,8 +259,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
         semiCircleProgressBarView = (SemiCircleProgressBarView) view.findViewById(R.id.semi_circle_bar);
         semiCircleProgressBarView.setProgressBarColor(Color.RED);
-        semiCircleProgressBarView.setProgress(0);
-
+        semiCircleProgressBarView.setMaxProgress(MAX_SPEED);
+        tvSpeed = (TextView) view.findViewById(R.id.tv_speed);
         tvPitch = (TextView) view.findViewById(R.id.tv_pitch);
         tvRoll = (TextView) view.findViewById(R.id.tv_roll);
 
@@ -575,7 +576,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         private WeakReference<PilotingFragment> mOwner;
 
         public VlcHandler(PilotingFragment owner) {
-            mOwner = new WeakReference<PilotingFragment> (owner);
+            mOwner = new WeakReference<PilotingFragment>(owner);
         }
 
         @Override
@@ -635,6 +636,11 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
         public int changeThrottle(float throttle) {
             this.throttle = changeValue(throttle);
+//            if (this.throttle > 0) {
+//                int speed = (int) mControlWrap.throttle / 2;
+//                semiCircleProgressBarView.setProgress(speed);
+//                tvSpeed.setText(speed + "");
+//            }
             sendControl();
             return (int) this.throttle;
         }

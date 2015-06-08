@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -47,7 +48,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         mViewPager.setOnPageChangeListener(this);
         mViewPager.setAdapter(pagerAdapter);
 
-        ImageButton btnBack = (ImageButton) fragmentView.findViewById(R.id.btn_back);
+        Button btnBack = (Button) fragmentView.findViewById(R.id.btn_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

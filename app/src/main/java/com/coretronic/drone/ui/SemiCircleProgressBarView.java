@@ -12,6 +12,7 @@ import android.view.ViewGroup;
  */
 public class SemiCircleProgressBarView extends View {
     private int mProgress;
+    private int maxProgress=100;
     private RectF mOval;
     private RectF mOvalInner;
     private Paint mPaintProgress;
@@ -19,6 +20,7 @@ public class SemiCircleProgressBarView extends View {
     private Paint mPaintClip;
     private float ovalsDiff;
     private Path clipPath;
+
 
     public SemiCircleProgressBarView(Context context) {
         super(context);
@@ -82,6 +84,10 @@ public class SemiCircleProgressBarView extends View {
         this.mPaintProgress.setColor(color);
     }
 
+    public void setMaxProgress(int maxProgress) {
+        this.maxProgress = maxProgress;
+    }
+
     @Override
     public void onDraw(Canvas c) {
         super.onDraw(c);
@@ -90,7 +96,7 @@ public class SemiCircleProgressBarView extends View {
         clipPath.addArc(mOvalInner, 180, 180);
         c.clipPath(clipPath, Region.Op.DIFFERENCE);
         c.drawArc(mOval, 180, 180f, true, mPaintBase);
-        c.drawArc(mOval, 180, 180f * ((float) mProgress / 100), true, mPaintProgress);
+        c.drawArc(mOval, 180, 180f * ((float) mProgress / maxProgress), true, mPaintProgress);
 //        c.drawArc(mOvalInner, 180, 180f, true, mPaintClip);
     }
 
