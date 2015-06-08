@@ -53,14 +53,17 @@ import java.lang.ref.WeakReference;
 public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final float M_S2KM_H = 3.6f;
+
     //    private static final String VIDEO_FILE_PATH = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
-    private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
+    private static final String VIDEO_FILE_PATH = "rtsp://192.168.42.1/live";
+//    private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
 
     public static final float ORIENTATION_SENSOR_SCALE = 2.5f;
     public static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
 
     public static final String TAKE_OFF = "Take Off";
     public static final String LANDING = "Landing";
+    public static final int MAX_SPEED = 50;
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
@@ -258,7 +261,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
         semiCircleProgressBarView = (SemiCircleProgressBarView) view.findViewById(R.id.semi_circle_bar);
         semiCircleProgressBarView.setProgressBarColor(Color.RED);
-        semiCircleProgressBarView.setProgress(0);
+        semiCircleProgressBarView.setMaxProgress(MAX_SPEED);
 
         tvPitch = (TextView) view.findViewById(R.id.tv_pitch);
         tvRoll = (TextView) view.findViewById(R.id.tv_roll);
@@ -575,7 +578,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         private WeakReference<PilotingFragment> mOwner;
 
         public VlcHandler(PilotingFragment owner) {
-            mOwner = new WeakReference<PilotingFragment> (owner);
+            mOwner = new WeakReference<PilotingFragment>(owner);
         }
 
         @Override
