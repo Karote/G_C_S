@@ -34,6 +34,7 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
+import com.coretronic.drone.service.DroneDevice;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 
@@ -52,9 +53,9 @@ import java.lang.ref.WeakReference;
 public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final float M_S2KM_H = 3.6f;
-    private static final String VIDEO_FILE_PATH = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
-//    private static final String VIDEO_FILE_PATH = "rtsp://192.168.42.1/live";
-//    private static final String VIDEO_FILE_PATH = "rtsp://192.168.1.171:8086";
+    private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
+    private static final String VIDEO_FILE_PATH_G2 = "rtsp://192.168.42.1/live";
+    private static final String VIDEO_FILE_PATH_2015 = "rtsp://192.168.1.171:8086";
 
     private static final float ORIENTATION_SENSOR_SCALE = 2.5f;
     private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
@@ -92,6 +93,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private boolean isTakeOff = false;
     private ControlWrap mControlWrap;
     private int radius = 0;
+    private int connectedDroneType = DroneDevice.DRONE_TYPE_FAKE;
+    private String mrl = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,12 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         fragmentActivity = getActivity();
         childFragmentManager = getChildFragmentManager();
         sensorManager = (SensorManager) fragmentActivity.getSystemService(Context.SENSOR_SERVICE);
+        connectedDroneType = ((MainActivity) fragmentActivity).getConnectedDroneType();
+        if (connectedDroneType == DroneDevice.DRONE_TYPE_CORETRONIC) {
+//            mrl = VIDEO_FILE_PATH_2015;
+        } else if (connectedDroneType == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
+            mrl = VIDEO_FILE_PATH_G2;
+        }
 //        mediaPlayer = new MediaPlayer();
 //        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
@@ -133,7 +142,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         super.onResume();
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        createPlayer(VIDEO_FILE_PATH);
+        createPlayer(mrl);
     }
 
     @Override
@@ -200,9 +209,23 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         });
     }
 
+    @Override
+    public void onLocationUpdate(long lat, long lon, int eph) {
+
+    }
+
     private void assignViews(View view) {
-        Button btnEmergency = (Button) view.findViewById(R.id.emergency);
-        btnAction = (Button) view.findViewById(R.id.take_off);
+        Button btnHome = (Button) view.findViewById(R.id.btn_home);
+        Button btnEmergency = (Button) view.findViewById(R.id.btn_emergency);
+        Button btnDocking = (Button) view.findViewById(R.id.btn_docking);
+        Button btnSelfie = (Button) view.findViewById(R.id.btn_selfie);
+        Button btnRecording = (Button) view.findViewById(R.id.btn_recording);
+        Button btnCamera = (Button) view.findViewById(R.id.btn_camera);
+        btnAction = (Button) view.findViewById(R.id.btn_take_off);
+        if (connectedDroneType == DroneDevice.DRONE_TYPE_CORETRONIC) {
+            btnDocking.setVisibility(View.VISIBLE);
+            btnSelfie.setVisibility(View.VISIBLE);
+        }
         btnEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -539,6 +562,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     }
 
     private void createPlayer(String media) {
+        if (mrl == null) {
+            return;
+        }
         releasePlayer();
         try {
             // Create a new media player

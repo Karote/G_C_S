@@ -41,6 +41,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     private DeviceAdapter mDeviceAdapter;
     private StatusChangedListener mStatusChangedListener;
 
+    private int connectedDroneType = DroneDevice.DRONE_TYPE_FAKE;
+
     private void assignViews() {
         Button btnPiloting = (Button) findViewById(R.id.btn_piloting);
         Button btnMissionPlan = (Button) findViewById(R.id.btn_mission_plan);
@@ -56,8 +58,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
 
         mDroneDevices = new ArrayList<>();
-        mDroneDevices.add(new DroneDevice(DRONE_TEST_TYPE, "null", 77));
-        mDroneDevices.add(new DroneDevice(DRONE_TEST_TYPE, "Add New Device", 88));
+        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "null", 77));
+        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
 
         mDeviceAdapter = new DeviceAdapter();
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
@@ -66,8 +68,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                         Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-
-                        if (mDroneDevices.get(i).getDroneType() == DRONE_TEST_TYPE) {
+                        final int droneType = mDroneDevices.get(i).getDroneType();
+                        if (mDroneDevices.get(i).getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
                             if (mDroneDevices.get(i).getName().equals("Add New Device")) {
                                 showAddNewDroneDialog();
                                 spinnerDroneDevice.setSelection(0);
@@ -79,6 +81,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                                 public void onConnected() {
                                     Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
                                             Toast.LENGTH_LONG).show();
+                                    connectedDroneType = droneType;
+                                    Log.i(TAG, "Drone Type: " + droneType);
                                 }
 
                                 @Override
@@ -182,6 +186,10 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
             transaction.addToBackStack(backStackName);
             transaction.commit();
         }
+    }
+
+    public int getConnectedDroneType() {
+        return connectedDroneType;
     }
 
     public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {

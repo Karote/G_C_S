@@ -151,7 +151,7 @@
                 android:background="@drawable/btn_pilot_home" />
 
             <Button
-                android:id="@+id/take_off"
+                android:id="@+id/btn_take_off"
                 android:layout_width="125dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -162,7 +162,8 @@
                 android:id="@+id/btn_docking"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/btn_pilot_docking" />
+                android:background="@drawable/btn_pilot_docking"
+                android:visibility="invisible"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -173,7 +174,7 @@
         android:background="@drawable/btn_pilot_back" />
 
     <Button
-        android:id="@+id/emergency"
+        android:id="@+id/btn_emergency"
         android:layout_width="125dp"
         android:layout_height="50dp"
         android:layout_gravity="center|top"
@@ -202,7 +203,8 @@
                 android:id="@+id/btn_selfie"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/btn_pilot_selfie" />
+                android:background="@drawable/btn_pilot_selfie"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btn_recording"
