@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
+import com.coretronic.drone.g2.command.body.BooleanBody;
 import com.coretronic.drone.utility.AppUtils;
 import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
 
@@ -38,6 +39,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     private Button deleteBtn = null;
     private Button cancelDeleteBtn = null;
     private CustomerTwoBtnAlertDialog deleteDialog = null;
+    // mode
+    private Boolean isDroneOrSmartphoneMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         albumFragmentTransaction = fragmentChildManager.beginTransaction();
         smartPhoneAlbumFragment = new AlbumSmartPhoneTagFragment();
 
+        fragmentActivity.getSupportFragmentManager().addOnBackStackChangedListener(backStackChangedListener());
+//        fragmentChildManager.addOnBackStackChangedListener( backStackChangedListener());
 
         droneAlbumFragment = new AlbumDroneTagFragment();
         if (droneAlbumFragment != null) {
@@ -140,9 +145,10 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             Log.i(TAG, "isChecked:" + isChecked);
 
+            isDroneOrSmartphoneMode = isChecked;
             albumFragmentTransaction = fragmentChildManager.beginTransaction();
             // switch to smart phone album fragment
-            if (isChecked) {
+            if (isDroneOrSmartphoneMode) {
                 if (smartPhoneAlbumFragment != null) {
                     albumFragmentTransaction
                             .replace(R.id.album_fragment_container, smartPhoneAlbumFragment, "SmartPhoneFragment")
@@ -177,8 +183,16 @@ public class AlbumFragment extends UnBindDrawablesFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (smartPhoneAlbumFragment != null && isDroneOrSmartphoneMode) {
+            ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).refreshData();
+        }
+    }
+
     // delete dialog ok listener
-    private View.OnClickListener deleteDialogOKListener = new View.OnClickListener(){
+    private View.OnClickListener deleteDialogOKListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -190,4 +204,19 @@ public class AlbumFragment extends UnBindDrawablesFragment {
             deleteOptionLayout.setVisibility(View.GONE);
         }
     };
+
+
+    private FragmentManager.OnBackStackChangedListener backStackChangedListener() {
+        FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (isDroneOrSmartphoneMode) {
+                    if (smartPhoneAlbumFragment != null) {
+                        ((AlbumSmartPhoneTagFragment)smartPhoneAlbumFragment).refreshData();
+                    }
+                }
+            }
+        };
+        return result;
+    }
 }

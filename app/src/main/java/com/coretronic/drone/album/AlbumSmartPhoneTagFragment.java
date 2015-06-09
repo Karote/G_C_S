@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +38,7 @@ import java.util.TimeZone;
 public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
     private final static  String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
-//    private final static  String FILTER_MEDIA_FOLDER = "external/";
+    //    private final static  String FILTER_MEDIA_FOLDER = "external/";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView albumGridView = null;
@@ -54,6 +55,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        Log.i(TAG, TAG + " onCreateView ");
         View view = inflater.inflate(R.layout.fragment_album_smartphonetag, container, false);
         mContext = view.getContext();
 
@@ -71,7 +73,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
         albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
         albumGridView.setAdapter(albumGridViewAdapter);
-
+        albumGridViewAdapter.notifyDataSetChanged();
 
 
         return view;
@@ -256,8 +258,8 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getData();
-        albumGridViewAdapter.notifyDataSetChanged();
+        Log.i(TAG, TAG + " onResume");
+
     }
 
 
@@ -269,15 +271,13 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     public void showDeleteOption() {
         // show delete option elements visible
         albumGridViewAdapter.setIsShowDeleteOption(true);
-        getData();
-        albumGridViewAdapter.notifyDataSetChanged();
+        refreshData();
     }
 
     public void hideDeleteOption() {
         // hide delete option elements visible
         albumGridViewAdapter.setIsShowDeleteOption(false);
-        getData();
-        albumGridViewAdapter.notifyDataSetChanged();
+       refreshData();
     }
 
     public void deleteSelectedPathAryList() {
@@ -293,5 +293,9 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
 
 
-
+    public void refreshData()
+    {
+        getData();
+        albumGridViewAdapter.notifyDataSetChanged();
+    }
 }

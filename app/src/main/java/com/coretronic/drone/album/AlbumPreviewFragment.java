@@ -1,7 +1,10 @@
 package com.coretronic.drone.album;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -11,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.coretronic.drone.R;
@@ -31,8 +33,9 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
     private static String TAG = AlbumPreviewFragment.class.getSimpleName();
     private Context context = null;
+
+    private MediaPreviewAdapter mediaPreviewAdapter = null;
     // fragment declare
-    private Context mContext = null;
     private FragmentManager fragmentManager = null;
     private FragmentTransaction previewFragmentTransaction = null;
     private FragmentActivity fragmentActivity = null;
@@ -45,7 +48,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     private CustomerTwoBtnAlertDialog removeDialog = null;
 
     private long selectedMediaId = 0;
-    private int currentMediaNum = 0;
+    private int currentMediaIdx = 0;
     private ArrayList<ImageItem> imageItems = null;
 
     @Override
@@ -79,18 +82,19 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
 
         // get number count
-        currentMediaNum = getSerialNumber(selectedMediaId);
-        if (currentMediaNum != -1) {
-            previewCountTitle.setText((currentMediaNum + 1) + "/" + imageItems.size());
+        currentMediaIdx = getSerialNumber(selectedMediaId);
+        if (currentMediaIdx != -1) {
+            previewCountTitle.setText((currentMediaIdx + 1) + "/" + imageItems.size());
         }
 
-        MediaPreviewAdapter mediaPreviewAdapter = new MediaPreviewAdapter(getChildFragmentManager(), imageItems, currentMediaNum);
+        mediaPreviewAdapter = new MediaPreviewAdapter(getChildFragmentManager(), imageItems, currentMediaIdx);
         previewPager.setAdapter(mediaPreviewAdapter);
         // move to touch item
-        previewPager.setCurrentItem(currentMediaNum, false);
+        previewPager.setCurrentItem(currentMediaIdx, false);
         previewPager.setOnPageChangeListener(this);
         removeDialog = AppUtils.getAlertDialog(context, context.getResources().getString(R.string.delete_files), context.getResources().getString(R.string.btn_ok), context.getResources().getString(R.string.btn_cancel), removeDialogOKListener);
 
+        Log.i(TAG, "imageItems.get(currentMediaIdx).getMediaId():" + imageItems.get(currentMediaIdx).getMediaId() +"/currentMediaIdx:" + currentMediaIdx);
         return view;
     }
 
@@ -142,6 +146,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         public void onClick(View v) {
 
             removeDialog.show();
+
         }
     };
 
@@ -160,13 +165,14 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         Log.i(TAG, "onPageScrolled position:" + position);
-        currentMediaNum = position + 1;
-        previewCountTitle.setText( (position + 1) + "/" + imageItems.size());
+
     }
 
     @Override
     public void onPageSelected(int position) {
+
         Log.i(TAG, "onPageSelected position:" + position);
+        previewCountTitle.setText((position + 1) + "/" + imageItems.size());
     }
 
     @Override
@@ -176,12 +182,21 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     }
 
     // delete dialog ok listener
-    private View.OnClickListener removeDialogOKListener = new View.OnClickListener(){
+    private View.OnClickListener removeDialogOKListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
 
+            Log.i(TAG, "currentMediaIdx:" + currentMediaIdx + "/ imageItems.get(currentMediaIdx).getMediaId():" + imageItems.get(currentMediaIdx).getMediaId());
+            ContentResolver cr = context.getContentResolver(); // in an Activity
+            cr.delete(MediaStore.Files.getContentUri("external"),
+                    MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) imageItems.get(currentMediaIdx).getMediaId()});
+            imageItems.remove(currentMediaIdx);
+            previewCountTitle.setText((currentMediaIdx + 1) + "/" + imageItems.size());
+            mediaPreviewAdapter.notifyDataSetChanged();
+            previewPager.invalidate();
             removeDialog.dismiss();
+
         }
     };
 
