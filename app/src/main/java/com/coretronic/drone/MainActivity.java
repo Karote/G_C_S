@@ -2,7 +2,6 @@ package com.coretronic.drone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -22,41 +20,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.album.AlbumFragment;
-import com.coretronic.drone.communication.SocketService;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.PilotingFragment;
 import com.coretronic.drone.service.DroneDevice;
+import com.coretronic.drone.ui.StatusView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final int DRONE_TEST_TYPE = 456;
-    private ImageView imgWifiSignal;
-    private ImageView imgGpsSignal;
-    private TextView tvTime;
+
     private Spinner spinnerDroneDevice;
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
     private StatusChangedListener mStatusChangedListener;
 
     private int connectedDroneType = DroneDevice.DRONE_TYPE_FAKE;
+    private StatusView statusView;
 
     private void assignViews() {
         Button btnPiloting = (Button) findViewById(R.id.btn_piloting);
         Button btnMissionPlan = (Button) findViewById(R.id.btn_mission_plan);
-        Button btnAlbum = (Button) findViewById(R.id.btn_album);
-        Button btnUpdate = (Button) findViewById(R.id.btn_update);
+        LinearLayout llAlbum = (LinearLayout) findViewById(R.id.ll_album);
+        LinearLayout llUpdate = (LinearLayout) findViewById(R.id.ll_updates);
         btnPiloting.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
-        btnAlbum.setOnClickListener(this);
-        btnUpdate.setOnClickListener(this);
+        llAlbum.setOnClickListener(this);
+        llUpdate.setOnClickListener(this);
 
-        imgWifiSignal = (ImageView) findViewById(R.id.img_wifi_signal);
-        imgGpsSignal = (ImageView) findViewById(R.id.img_gps_signal);
+        statusView = (StatusView) findViewById(R.id.status);
+
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
-
         mDroneDevices = new ArrayList<>();
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "null", 77));
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
@@ -121,10 +116,16 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     }
 
     @Override
-    public void onBatteryUpdate(int battery) {
+    public void onBatteryUpdate(final int battery) {
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onBatteryUpdate(battery);
         }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusView.setBatteryStatus(battery);
+            }
+        });
     }
 
     @Override
@@ -174,11 +175,11 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
                 break;
-            case R.id.btn_album:
+            case R.id.ll_album:
                 fragment = new AlbumFragment();
                 backStackName = "AlbumFragment";
                 break;
-            case R.id.btn_update:
+            case R.id.ll_updates:
                 break;
         }
         if (fragment != null) {

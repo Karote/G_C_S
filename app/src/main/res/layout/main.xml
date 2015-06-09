@@ -2,121 +2,171 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:alpha="0.5"
+        android:background="#34a7ff"
+        android:orientation="horizontal">
+
+        <DigitalClock
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|top"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <com.coretronic.drone.ui.StatusView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp" />
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginTop="25dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner_drone_device"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/img_wifi_signal"
-                android:layout_width="40dp"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/img_gps_signal"
-                android:layout_width="40dp"
-                android:layout_height="match_parent" />
-            <!--<DigitalClock android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:textColor="@android:color/black"-->
-            <!--android:textSize="15sp"/>-->
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/spinner_drone_device"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Coretronic Drone"
-            android:textColor="@android:color/holo_orange_light"
-            android:textSize="40sp" />
+            android:layout_gravity="left|top" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="30dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btn_piloting"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@drawable/btn_bg"
-                android:gravity="center"
-                android:text="Piloting"
-                android:textColor="@android:color/black"
-                android:textSize="25sp" />
-            <Button
-                android:id="@+id/btn_mission_plan"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@drawable/btn_bg"
-                android:gravity="center"
-                android:text="Mission Plan"
-                android:textColor="@android:color/black"
-                android:textSize="25sp" />
+            <ImageView
+                android:layout_width="528dp"
+                android:layout_height="90dp"
+                android:background="@drawable/main_bg" />
+
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_width="wrap_content"
+                android:layout_height="136dp"
+                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_album"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:id="@+id/btn_piloting"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_bg"
-                    android:text="Video/ Photo"
-                    android:textColor="@android:color/black"
-                    android:textSize="25sp" />
+                    android:background="@drawable/main_btn_larg"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="Piloting"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp" />
 
                 <Button
-                    android:id="@+id/btn_preferences"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:id="@+id/btn_mission_plan"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_bg"
-                    android:text="Preferences"
-                    android:textColor="@android:color/black"
-                    android:textSize="25sp" />
+                    android:background="@drawable/main_btn_larg"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="Mission\nPlan"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp" />
 
-                <Button
-                    android:id="@+id/btn_update"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_bg"
-                    android:text="Update"
-                    android:textColor="@android:color/black"
-                    android:textSize="25sp" />
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/ll_album"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/main_btn_sml"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="2dp"
+                            android:background="@drawable/ico_main_photo" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:text="Photos/ Video"
+                            android:textColor="#FFFFFF"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_updates"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/main_btn_sml"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="2dp"
+                            android:background="@drawable/ico_main_updates" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:text="Updates"
+                            android:textColor="#FFFFFF"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_preference"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/main_btn_sml"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="2dp"
+                            android:background="@drawable/ico_main_preference" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:text="Preference"
+                            android:textColor="#FFFFFF"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frame_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </FrameLayout>

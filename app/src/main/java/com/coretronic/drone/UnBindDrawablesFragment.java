@@ -1,6 +1,7 @@
 package com.coretronic.drone;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.coretronic.drone.ui.ViewManager;
 
