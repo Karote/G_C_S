@@ -84,4 +84,9 @@ public class LandscapeFragmentActivity extends MiniDronesActivity {
     public void onSpeedUpdate(float groundSpeed) {
 
     }
+
+    @Override
+    public void onLocationUpdate(long lat, long lon, int eph) {
+
+    }
 }
