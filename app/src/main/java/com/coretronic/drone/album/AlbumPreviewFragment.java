@@ -114,6 +114,14 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     @Override
     public void onPause() {
         super.onPause();
+
+        Log.i(TAG, "==== on pause ====");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "==== onResume ====");
     }
 
     @Override
@@ -187,7 +195,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         @Override
         public void onClick(View v) {
 
-            Log.i(TAG, "currentMediaIdx:" + currentMediaIdx + "/ imageItems.get(currentMediaIdx).getMediaId():" + imageItems.get(currentMediaIdx).getMediaId());
+//            Log.i(TAG, "currentMediaIdx:" + currentMediaIdx + "/ imageItems.get(currentMediaIdx).getMediaId():" + imageItems.get(currentMediaIdx).getMediaId());
             ContentResolver cr = context.getContentResolver(); // in an Activity
             cr.delete(MediaStore.Files.getContentUri("external"),
                     MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) imageItems.get(currentMediaIdx).getMediaId()});
