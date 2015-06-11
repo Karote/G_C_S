@@ -13,119 +13,159 @@
 				margin: 0;
 				padding: 0
 			}
+			.mapIconLabel {
+				font-size: 15px;
+				font-weight: bold;
+				color: #FFFFFF;
+			}
 		</style>
 		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw"></script>
 		<script src="geolocationmarker-compiled.js"></script>
+		<script src="markerwithlabel.js"></script>
 		<script>
-            var map, GeoMarker;
+            var map, GeoMarker, droneMarker;
             var markers = [];
             var poly;
-            
+
             function initialize() {
                 var latlng;
-                //latlng = new google.maps.LatLng(24.712299, 120.916408); // 中強光電竹南廠
-                latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
+                latlng = new google.maps.LatLng(24.712299, 120.916408); // 中強光電竹南廠
+                //latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
 
-                var styleArray = [
-                		{
-                    		featureType : "poi",
-                    		elementType : "all",
-                    		stylers : [{
-                        			visibility : "off"
-                    		}]
-                		}, 
-                		{
-                    		featureType : "transit",
-                    		elementType : "all",
-                    		stylers : [{
-                        			visibility : "off"
-                    		}]
-                		}];
-
-                var styledMap = new google.maps.StyledMapType(styleArray, {name : "Styled Map"});
+                var styleArray = [{
+                    featureType : "poi",
+                    elementType : "all",
+                    stylers : [{
+                        visibility : "off"
+                    }]
+                }, {
+                    featureType : "transit",
+                    elementType : "all",
+                    stylers : [{
+                        visibility : "off"
+                    }]
+                }];
 
                 var mapOptions = {
-                    	center : latlng,
-                    	zoom : 15,
-                    	mapTypeId : google.maps.MapTypeId.ROAD,
-                    	disableDefaultUI : true,
-                    	mapTypeControlOptions : {
-                        	mapTypeIds : [google.maps.MapTypeId.ROADMAP, 'map_style']
-                    	},
-                    	zoomControl : true,
-                    	zoomControlOptions : {
-                        	style : google.maps.ZoomControlStyle.SMALL,
-                        	position: google.maps.ControlPosition.LEFT_CENTER
-                    	},
-                	};
+                    center : latlng,
+                    zoom : 15,
+                    mapTypeId : google.maps.MapTypeId.ROAD,
+                    disableDefaultUI : true,
+                    mapTypeControl : true,
+                    mapTypeControlOptions : {
+                        position : google.maps.ControlPosition.LEFT_CENTER
+                    },
+                    zoomControl : true,
+                    zoomControlOptions : {
+                        style : google.maps.ZoomControlStyle.SMALL,
+                        position : google.maps.ControlPosition.LEFT_CENTER
+                    },
+                    styles : styleArray
+                };
                 map = new google.maps.Map(document.getElementById("map"), mapOptions);
-                
+
                 GeoMarker = new GeolocationMarker(map);
-                
-                map.mapTypes.set('map_style', styledMap);
-                map.setMapTypeId('map_style');
 
                 var polyOptions = {
-                    strokeColor : '#000000',
+                    strokeColor : '#4EC3F5',
                     strokeOpacity : 1.0,
                     strokeWeight : 3,
-                    map: map
+                    map : map
                 };
                 poly = new google.maps.Polyline(polyOptions);
                 
+                var droneMarkerOption = {
+                    icon : {
+                        path : google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                        strokeColor : '#FF0000',
+                        fillColor : '#FF0000',
+                        fillOpacity : 1,
+                        scale : 4
+                    },
+                    map : map
+                };
+                
+                droneMarker = new google.maps.Marker(droneMarkerOption);
+
                 google.maps.event.addListener(map, 'click', addLatLng);
+                
+                // updateDroneLocation(24.712299, 120.916408);
             }
 
             function addLatLng(event) {
-                var marker = new google.maps.Marker({
-                    position : event.latLng,
-                    title : '#' + poly.getPath().getLength(),
+                AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
+
+                // addMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
+            }
+
+            function addMarker(lat, lng, sn) {
+            	var x = 4;
+            	if(sn > 9){
+            		x = 8;
+            	}
+                var marker = new MarkerWithLabel({
+                    position : new google.maps.LatLng(lat, lng),
+                    icon : {
+                        path : google.maps.SymbolPath.CIRCLE,
+                        strokeColor : '#4EC3F5',
+                        fillColor : '#4EC3F5',
+                        fillOpacity : 1,
+                        scale : 8
+                    },
+                    labelContent : sn,
+                    labelAnchor : new google.maps.Point(x, 8),
+                    labelClass : "mapIconLabel",
+                    labelInBackground : false,
                     map : map
                 });
                 markers.push(marker);
-                
-            	var path = poly.getPath();
-                path.push(event.latLng);
+
+                var path = poly.getPath();
+                path.push(new google.maps.LatLng(lat, lng));
                 poly.setMap(map);
-                AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
-                
-                //AndroidFunction.openAndroidDialog();
+            }
+
+            function setMapToMyLocation() {
+                var currPosition = null;
+
+                currPosition = GeoMarker.getPosition();
+                if (currPosition != null) {
+                    setMapTo(currPosition.lat(), currPosition.lng());
+                } else {
+                    AndroidFunction.showToast("無法取得現在位置");
+                }
+                map.setZoom(15);
+            }
+
+            function setMapTo(nowLatget, nowLngget) {
+                map.setCenter(new google.maps.LatLng(nowLatget, nowLngget));
+            }
+
+            function clearMarkers() {
+                var i, j;
+                for ( i = 0,
+                j = markers.length; i < j; i++) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                poly.setMap(null);
+                poly.setPath([]);
+            }
+
+            function deleteSelectMarker(selected) {
+                markers[selected].setMap(null);
+                var path = poly.getPath();
+                path.removeAt(selected);
+                markers.splice(selected, 1);
+                poly.setpath(path);
+                poly.setMap(map);
             }
             
-            function setMapToMyLocation(){
-            	var currPosition =null;
-            	
-            	currPosition = GeoMarker.getPosition();
-            	if(currPosition != null){
-            		setMapTo(currPosition.lat(), currPosition.lng());
-            	}else{
-            		AndroidFunction.showToast("無法取得現在位置");
-            	}
-            }
-            
-            function setMapTo(nowLatget, nowLngget){
-            	map.setCenter(new google.maps.LatLng(nowLatget, nowLngget));
-            	map.setZoom(15);
-            }
-            
-            function clearMarkers(){
-            	var i, j;
-            	for(i = 0, j = markers.length; i < j; i++){
-            		markers[i].setMap(null);
-            	}
-            	markers = [];
-            	
-            	poly.setMap(null);
-            	poly.setPath([]);
-            }
-            
-            function deleteSelectMarker(selected){
-            	markers[selected].setMap(null);
-            	var path = poly.getPath();
-            	path.removeAt(selected);
-            	markers.splice(selected, 1);
-            	poly.setpath(path);
-            	poly.setMap(map);
+            function updateDroneLocation(droneLat, droneLng){
+            	droneMarker.setMap(null);
+            	droneMarker.setPosition(new google.maps.LatLng(droneLat, droneLng));
+            	droneMarker.setMap(map);
             }
 
 		</script>

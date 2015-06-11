@@ -149,6 +149,13 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
+    @Override
+    public void onLocationUpdate(long lat, long lon, int eph) {
+        if (mStatusChangedListener != null) {
+            mStatusChangedListener.onLocationUpdate(lat, lon, eph);
+        }
+    }
+
     public void registerDroneStatusChangedListener(StatusChangedListener statusChangedListener) {
         this.mStatusChangedListener = statusChangedListener;
     }

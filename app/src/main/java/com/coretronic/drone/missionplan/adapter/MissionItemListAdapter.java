@@ -87,16 +87,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         public void onClick(View v) {
             if(v.equals(deleteButton)){
                 mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
-                removeAt(getAdapterPosition());
             }else if (mItemClickListener != null) {
                 mItemClickListener.onItemPlanClick(v, getAdapterPosition());
             }
-        }
-
-        public void removeAt(int position) {
-            mMissionList.remove(position);
-//            notifyItemRemoved(position);
-            notifyDataSetChanged();
         }
     }
 
@@ -106,6 +99,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void addAt(Mission mission, int position){
         mMissionList.add(position, mission);
+    }
+
+    public void remove(int position){
+        mMissionList.remove(position);
     }
 
     public void clearMission(){

@@ -117,7 +117,7 @@
                      android:layout_marginLeft="10dp"
                      android:layout_width="50dp"
                      android:layout_height="50dp"/>
-        <ImageButton android:id="@+id/button_mav_location"
+        <ImageButton android:id="@+id/button_drone_location"
                      android:background="#FF888888"
                      android:src="@drawable/ic_action_send"
                      android:layout_marginTop="10dp"
