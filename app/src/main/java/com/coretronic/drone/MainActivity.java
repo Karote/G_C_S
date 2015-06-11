@@ -30,13 +30,14 @@ import java.util.List;
 
 public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String G2_IP = "192.168.42.1";
 
     private Spinner spinnerDroneDevice;
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
     private StatusChangedListener mStatusChangedListener;
 
-    private int connectedDroneType = DroneDevice.DRONE_TYPE_FAKE;
+    private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private StatusView statusView;
 
     private void assignViews() {
@@ -63,7 +64,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                         Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-                        final int droneType = mDroneDevices.get(i).getDroneType();
+                        final DroneDevice droneDevice = mDroneDevices.get(i);
                         if (mDroneDevices.get(i).getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
                             if (mDroneDevices.get(i).getName().equals("Add New Device")) {
                                 showAddNewDroneDialog();
@@ -76,8 +77,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                                 public void onConnected() {
                                     Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
                                             Toast.LENGTH_LONG).show();
-                                    connectedDroneType = droneType;
-                                    Log.i(TAG, "Drone Type: " + droneType);
+                                    connectedDroneDevice = droneDevice;
+//                                    Log.i(TAG, "Drone Type: " + droneDevice);
                                 }
 
                                 @Override
@@ -180,9 +181,15 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
+                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
+                    return;
+                }
                 fragment = new WaypointEditorFragment();
                 break;
             case R.id.ll_album:
+                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
+                    return;
+                }
                 fragment = new AlbumFragment();
                 backStackName = "AlbumFragment";
                 break;
@@ -196,8 +203,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
-    public int getConnectedDroneType() {
-        return connectedDroneType;
+    public DroneDevice getConnectedDroneDevice() {
+        return connectedDroneDevice;
     }
 
     public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
@@ -225,7 +232,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
             TextView text = new TextView(MainActivity.this);
             text.setLayoutParams(params);
             text.setText(getItem(position).getName());
-
             return text;
         }
     }
@@ -236,6 +242,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         alertDialog.setMessage("Enter Device ip");
 
         final EditText input = new EditText(this);
+        input.setText(G2_IP);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);

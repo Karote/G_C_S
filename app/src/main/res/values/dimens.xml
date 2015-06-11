@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="joystick_size">150dp</dimen>
+    <dimen name="joystick_size">168dp</dimen>
     <dimen name="settings_margin">10dp</dimen>
     <dimen name="settings_title_size">20sp</dimen>
     <dimen name="recyclerview_item_width">110dp</dimen>
