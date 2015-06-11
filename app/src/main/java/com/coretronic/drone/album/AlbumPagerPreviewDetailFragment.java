@@ -188,7 +188,7 @@ public class AlbumPagerPreviewDetailFragment extends Fragment {
                 videoBigControlBtn.setVisibility(View.VISIBLE);
                 if( progressAsync != null )
                 {
-                    progressAsync.isCancelled();
+                    progressAsync.cancel(true);
                     progressAsync = null;
                 }
 
@@ -201,6 +201,12 @@ public class AlbumPagerPreviewDetailFragment extends Fragment {
 
         int duration = 0;
         int current = 0;
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            this.cancel(true);
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
