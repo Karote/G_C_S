@@ -21,7 +21,7 @@ public class StatusView extends LinearLayout {
     private TextView tvBattery;
     public StatusView(Context context) {
         super(context);
-        initView();
+//        initView();
     }
 
     public StatusView(Context context, AttributeSet attrs) {
@@ -31,7 +31,7 @@ public class StatusView extends LinearLayout {
 
     public StatusView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView();
+//        initView();
     }
 
     private void initView() {
