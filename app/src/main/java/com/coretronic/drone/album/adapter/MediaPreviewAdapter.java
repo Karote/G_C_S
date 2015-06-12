@@ -1,12 +1,12 @@
 package com.coretronic.drone.album.adapter;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import com.coretronic.drone.album.AlbumPagerPreviewDetailFragment;
-import com.coretronic.drone.album.model.ImageItem;
+import com.coretronic.drone.album.model.MediaItem;
 
 import java.util.ArrayList;
 
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 public class MediaPreviewAdapter extends FragmentStatePagerAdapter {
 
     private String TAG = MediaPreviewAdapter.class.getName();
-    private ArrayList<ImageItem> imageItems = null;
+    private ArrayList<MediaItem> mediaItems = null;
     private int currentMediaNum = 0;
 
-    public MediaPreviewAdapter(FragmentManager fm, ArrayList<ImageItem> imageItems, int currentMediaNum) {
+    public MediaPreviewAdapter(FragmentManager fm, ArrayList<MediaItem> mediaItems, int currentMediaNum) {
         super(fm);
         Log.i(TAG, "MediaPreviewAdapter initial");
-        this.imageItems = imageItems;
+        this.mediaItems = mediaItems;
         this.currentMediaNum = currentMediaNum;
 
     }
@@ -31,16 +31,23 @@ public class MediaPreviewAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        Log.i(TAG, "imageItems.get(currentMediaNum).getMediaPath():" + imageItems.get(currentMediaNum).getMediaPath());
+        Log.i(TAG, "imageItems.get(currentMediaNum).getMediaPath():" + mediaItems.get(currentMediaNum).getMediaPath());
+        Bundle bundle = new Bundle();
+        bundle.putInt("mediaType",mediaItems.get(position).getMediaType());
+        bundle.putString("mediaPath",mediaItems.get(position).getMediaPath());
         Fragment fragment = null;
-        fragment = new AlbumPagerPreviewDetailFragment(imageItems.get(position).getMediaType(),
-                                                 imageItems.get(position).getMediaPath());
+        fragment = new AlbumPagerPreviewDetailFragment();
+        fragment.setArguments(bundle);
+
+//        AlbumPagerPreviewDetailFragment.newInstance(mediaItems.get(position).getMediaType(),
+//                mediaItems.get(position).getMediaPath());
+
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return imageItems.size();
+        return mediaItems.size();
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.coretronic.drone.album;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -19,7 +20,7 @@ import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.MediaPreviewAdapter;
-import com.coretronic.drone.album.model.ImageItem;
+import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.album.model.MediaObject;
 import com.coretronic.drone.utility.AppUtils;
 import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
@@ -49,7 +50,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
     private long selectedMediaId = 0;
     private int currentMediaIdx = 0;
-    private ArrayList<ImageItem> imageItems = null;
+    private ArrayList<MediaItem> mediaItems = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
             return;
         }
         MediaObject mediaObject = (MediaObject) bundle.getSerializable("mediaObject");
-        imageItems = mediaObject.getImageItems();
+        mediaItems = mediaObject.getImageItems();
         selectedMediaId = bundle.getLong("selectMediaId");
 
     }
@@ -84,17 +85,17 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         // get number count
         currentMediaIdx = getSerialNumber(selectedMediaId);
         if (currentMediaIdx != -1) {
-            previewCountTitle.setText((currentMediaIdx + 1) + "/" + imageItems.size());
+            previewCountTitle.setText((currentMediaIdx + 1) + "/" + mediaItems.size());
         }
 
-        mediaPreviewAdapter = new MediaPreviewAdapter(getChildFragmentManager(), imageItems, currentMediaIdx);
+        mediaPreviewAdapter = new MediaPreviewAdapter(getChildFragmentManager(), mediaItems, currentMediaIdx);
         previewPager.setAdapter(mediaPreviewAdapter);
         // move to touch item
         previewPager.setCurrentItem(currentMediaIdx, false);
         previewPager.setOnPageChangeListener(this);
         removeDialog = AppUtils.getAlertDialog(context, context.getResources().getString(R.string.delete_files), context.getResources().getString(R.string.btn_ok), context.getResources().getString(R.string.btn_cancel), removeDialogOKListener);
 
-        Log.i(TAG, "imageItems.get(currentMediaIdx).getMediaId():" + imageItems.get(currentMediaIdx).getMediaId() +"/currentMediaIdx:" + currentMediaIdx);
+        Log.i(TAG, "imageItems.get(currentMediaIdx).getMediaId():" + mediaItems.get(currentMediaIdx).getMediaId() +"/currentMediaIdx:" + currentMediaIdx);
         return view;
     }
 
@@ -143,8 +144,21 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
         @Override
         public void onClick(View v) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
 
+            if( mediaItems.get(currentMediaIdx).getMediaType() ==  MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
+            {
+                shareIntent.setType("image/*");
+            }
+            else if( mediaItems.get(currentMediaIdx).getMediaType() ==  MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO )
+            {
+                shareIntent.setType("video/*");
+            }
+            Uri uri = Uri.parse( mediaItems.get(currentMediaIdx).getMediaPath() );
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(shareIntent);
         }
     };
 
@@ -160,8 +174,8 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
     // get current media index in arraylist
     private int getSerialNumber(long mediaId) {
-        for (int i = 0; i < imageItems.size(); i++) {
-            if ((long) imageItems.get(i).getMediaId() == mediaId) {
+        for (int i = 0; i < mediaItems.size(); i++) {
+            if ((long) mediaItems.get(i).getMediaId() == mediaId) {
                 return i;
             }
         }
@@ -172,20 +186,26 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     //  --- viewpager interface methods  ---
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.i(TAG, "onPageScrolled position:" + position);
+//        Log.i(TAG, "onPageScrolled position:" + position);
+
 
     }
 
     @Override
     public void onPageSelected(int position) {
 
-        Log.i(TAG, "onPageSelected position:" + position);
-        previewCountTitle.setText((position + 1) + "/" + imageItems.size());
+//        Log.i(TAG, "onPageSelected position:" + position);
+        currentMediaIdx = position;
+        previewCountTitle.setText((position + 1) + "/" + mediaItems.size());
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        Log.i(TAG, "onPageScrollStateChanged state:" + state);
+//        Log.i(TAG, "onPageScrollStateChanged state:" + state);
+        if( state == ViewPager.SCROLL_STATE_DRAGGING)
+        {
+
+        }
 
     }
 
@@ -198,14 +218,16 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 //            Log.i(TAG, "currentMediaIdx:" + currentMediaIdx + "/ imageItems.get(currentMediaIdx).getMediaId():" + imageItems.get(currentMediaIdx).getMediaId());
             ContentResolver cr = context.getContentResolver(); // in an Activity
             cr.delete(MediaStore.Files.getContentUri("external"),
-                    MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) imageItems.get(currentMediaIdx).getMediaId()});
-            imageItems.remove(currentMediaIdx);
-            previewCountTitle.setText((currentMediaIdx + 1) + "/" + imageItems.size());
+                    MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) mediaItems.get(currentMediaIdx).getMediaId()});
+            mediaItems.remove(currentMediaIdx);
+            previewCountTitle.setText((currentMediaIdx + 1) + "/" + mediaItems.size());
             mediaPreviewAdapter.notifyDataSetChanged();
             previewPager.invalidate();
             removeDialog.dismiss();
 
         }
     };
+
+
 
 }

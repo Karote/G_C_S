@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/darker_gray"
+              android:background="@android:color/white"
               android:clickable="true">
     <RelativeLayout android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -18,6 +18,7 @@
                 android:textOff="@string/album_toggle_drone"
                 android:textOn="@string/album_toggle_smartphone"/>
 
+
         <ImageButton android:id="@+id/rubbish_bin_btn"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
@@ -25,7 +26,13 @@
                      android:layout_marginRight="20dp"
                      android:src="@drawable/ic_album_delete_n"
                      android:visibility="visible"/>
-
+        <ImageButton android:id="@+id/list_share_btn"
+                     android:src="@drawable/ic_album_share_n"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_toLeftOf="@id/rubbish_bin_btn"
+                     android:layout_marginRight="0dp"
+                />
         <LinearLayout android:id="@+id/delete_option_layout"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"

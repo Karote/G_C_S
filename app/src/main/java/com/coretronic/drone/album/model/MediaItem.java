@@ -6,16 +6,19 @@ import java.util.Date;
 /**
  * Created by james on 15/6/1.
  */
-public class ImageItem {
+public class MediaItem {
 
-    private String mediaPath;
-    private Date mediaDate;
-    private String mediaTitle;
-    private long mediaId;
-    private int mediaType;
+    private String mediaPath = "";
+    private Date mediaDate = null;
+    private String mediaTitle = "";
+    private long mediaId = 0;
+    private int mediaType = 0;
     private boolean isMediaSelect = false;
+    private String mediaFileName = "";
+    private String mediaSize = "";
 
-    public ImageItem(String mediaPath, Date date, String mediaTitle, long imgId, int mediaType, boolean isMediaSelect)
+
+    public MediaItem(String mediaPath, Date date, String mediaTitle, long imgId, int mediaType, boolean isMediaSelect)
     {
         super();
         this.mediaTitle = mediaTitle;
@@ -70,4 +73,17 @@ public class ImageItem {
         this.isMediaSelect = isMediaSelect;
     }
 
+    public String getMediaFileName() {
+        return mediaFileName;
+    }
+    public void setMediaFileName(String mediaFileName) {
+        this.mediaFileName = mediaFileName;
+    }
+
+    public String getMediaSize() {
+        return mediaSize;
+    }
+    public void setMediaSize(String mediaSize) {
+        this.mediaSize = mediaSize;
+    }
 }

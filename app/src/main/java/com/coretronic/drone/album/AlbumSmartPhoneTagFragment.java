@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,9 +18,7 @@ import android.view.ViewGroup;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
-import com.coretronic.drone.album.model.ImageItem;
-import com.coretronic.drone.utility.AppUtils;
-import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
+import com.coretronic.drone.album.model.MediaItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +39,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private Context mContext = null;
     private RecyclerView albumGridView = null;
     private AlbumGridViewAdapter albumGridViewAdapter = null;
-    private ArrayList<ImageItem> albumImgList = new ArrayList<ImageItem>();
+    private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
 
     @Override
@@ -152,7 +148,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             }
             Log.i(TAG, "filePath/fileId/imgType/mediaFileDate:" + fileFullPath + fileId + imgType + timeStamp);
 
-            albumImgList.add(new ImageItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, false));
+            albumImgList.add(new MediaItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, false));
         }
 
         cursor.close();
