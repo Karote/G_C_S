@@ -54,7 +54,7 @@ import java.lang.ref.WeakReference;
 public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final String SEND_DRONE_CONTROL = "send drone control: ";
-//    private static final float M_S2KM_H = 3.6f;
+    //    private static final float M_S2KM_H = 3.6f;
     private static final String VIDEO_FILE_PATH_RTSP_PREFIX = "rtsp://";
     private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
     private static final String VIDEO_FILE_PATH_G2_SUFFIX = "/live";
@@ -66,10 +66,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
-//    private TextView tvPitch;
+    //    private TextView tvPitch;
 //    private TextView tvRoll;
     private SemiCircleProgressBarView semiCircleProgressBarView;
-//    private TextView tvBattery;
+    //    private TextView tvBattery;
     private TextView tvAltitude;
     private TextView tvSpeed;
     private Button btnAction;
@@ -109,7 +109,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         connectedDroneDevice = ((MainActivity) fragmentActivity).getConnectedDroneDevice();
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
 //            mrl =VIDEO_FILE_PATH_RTSP_PREFIX+connectedDroneDevice.getName()+VIDEO_FILE_PATH_2015_SUFFIX ;
-            mrl = VIDEO_FILE_PATH_TEST;
+//            mrl = VIDEO_FILE_PATH_TEST;
         } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_G2_SUFFIX;
         }
@@ -219,6 +219,11 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     }
 
+    @Override
+    public void onHeadingUpdate(int heading) {
+
+    }
+
     private void assignViews(View view) {
         Button btnHome = (Button) view.findViewById(R.id.btn_home);
         Button btnEmergency = (Button) view.findViewById(R.id.btn_emergency);
@@ -293,7 +298,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 //        tvPitch = (TextView) view.findViewById(R.id.tv_pitch);
 //        tvRoll = (TextView) view.findViewById(R.id.tv_roll);
 
-        int size = (int) (getResources().getDimension(R.dimen.joystick_size) / getResources().getDisplayMetrics().density) / 2;
+        int size = (int) (getResources().getDimension(R.dimen.joypad_size) / getResources().getDisplayMetrics().density) / 2;
         final String[] stickList = new String[(size / 5) - 3];
         for (int i = 0; i < stickList.length; i++) {
             stickList[i] = String.valueOf(size);
@@ -391,7 +396,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
         );
         final ViewGroup.LayoutParams originalParams = joyStickSurfaceViews[moduleIndex].getLayoutParams();
-        final int size = (int) getResources().getDimension(R.dimen.joystick_size);
+        final int size = (int) getResources().getDimension(R.dimen.joypad_size);
         final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size, size);
         final FrameLayout frameLayout = (FrameLayout) moduleView.findViewById(R.id.frame_layout);
         frameLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -416,8 +421,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     public static void initialJoypadMode() {
         int[] controlType;
         boolean[] isJoyModes;
-        int[] bgDrawableIds;
-        int[] stickDrawableIds;
+//        int[] bgDrawableIds;
+//        int[] stickDrawableIds;
         boolean joypadMode = DroneG2Application.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue() == Setting.ON ? true : false;
         boolean leftHanded = DroneG2Application.settings[Setting.SettingType.LEFT_HANDED.ordinal()].getValue() == Setting.ON ? true : false;
 
@@ -428,24 +433,24 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW, JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL};
             }
             isJoyModes = new boolean[]{true, true};
-            bgDrawableIds = new int[]{R.drawable.image_button_bg, R.drawable.image_button_bg};
-            stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
+//            bgDrawableIds = new int[]{R.drawable.image_button_bg, R.drawable.image_button_bg};
+//            stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
         } else {
             if (leftHanded) {
                 controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL, JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW};
                 isJoyModes = new boolean[]{false, true};
-                bgDrawableIds = new int[]{0, R.drawable.image_button_bg};
-                stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
+//                bgDrawableIds = new int[]{0, R.drawable.image_button_bg};
+//                stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
             } else {
                 controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW, JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL};
                 isJoyModes = new boolean[]{true, false};
-                bgDrawableIds = new int[]{R.drawable.image_button_bg, 0};
-                stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
+//                bgDrawableIds = new int[]{R.drawable.image_button_bg, 0};
+//                stickDrawableIds = new int[]{R.drawable.redpoint, R.drawable.redpoint};
             }
         }
 
         for (int i = 0; i < joyStickSurfaceViews.length; i++) {
-            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoyModes[i], bgDrawableIds[i], stickDrawableIds[i]);
+            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoyModes[i]);
         }
     }
 
@@ -682,7 +687,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
 
         public int changeYaw(float yaw) {
-            this.yaw = changeValue(yaw) * 0.7f;
+            this.yaw = changeValue(yaw);// * 0.7f;
             sendControl();
             return (int) this.yaw;
         }
