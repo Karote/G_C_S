@@ -6,6 +6,16 @@
         <item>Flight History</item>
         <item>Follow Me</item>
     </string-array>
+    <string-array name="waypoint_type">
+        <item>Waypoint</item>
+        <item>Spline waypoint</item>
+        <item>Circle</item>
+        <item>Region of Interest</item>
+        <item>Change Speed</item>
+        <item>Take Off</item>
+        <item>Structure Scanner</item>
+        <item>Land</item>
+    </string-array>
     <string name="delete_all">Delete All</string>
     <string name="delete_done">Done</string>
     <string name="album_toggle_drone">Drone</string>

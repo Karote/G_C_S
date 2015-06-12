@@ -156,6 +156,13 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
+    @Override
+    public void onHeadingUpdate(int heading){
+        if(mStatusChangedListener != null){
+            mStatusChangedListener.onHeadingUpdate(heading);
+        }
+    }
+
     public void registerDroneStatusChangedListener(StatusChangedListener statusChangedListener) {
         this.mStatusChangedListener = statusChangedListener;
     }

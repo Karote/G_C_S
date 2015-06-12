@@ -76,10 +76,11 @@
                 
                 var droneMarkerOption = {
                     icon : {
-                        path : google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                        path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                         strokeColor : '#FF0000',
                         fillColor : '#FF0000',
                         fillOpacity : 1,
+                        rotation : 0,
                         scale : 4
                     },
                     map : map
@@ -162,8 +163,9 @@
                 poly.setMap(map);
             }
             
-            function updateDroneLocation(droneLat, droneLng){
+            function updateDroneLocation(droneLat, droneLng, heading){
             	droneMarker.setMap(null);
+            	droneMarker.icon.rotation = heading;
             	droneMarker.setPosition(new google.maps.LatLng(droneLat, droneLng));
             	droneMarker.setMap(map);
             }

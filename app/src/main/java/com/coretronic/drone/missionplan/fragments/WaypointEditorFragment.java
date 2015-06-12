@@ -33,6 +33,7 @@ import com.coretronic.drone.Mission.Builder;
 import com.coretronic.drone.Mission.Type;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.drone.ui.StatusView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -46,8 +47,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +58,6 @@ public class WaypointEditorFragment extends Fragment
     private static MissionItemListAdapter mMissionItemAdapter;
     private WebView webview_WayPoint;
     private TextView tv_droneSpeed, tv_droneLatLng;
-    private static final float M_S2KM_H = 3.6f;
     private LinearLayout deleteIconLayout, deleteOptionLayout;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
@@ -68,10 +66,12 @@ public class WaypointEditorFragment extends Fragment
     final static long LOCATION_UPDATE_MIN_TIME = 1000;
     final static int REQUEST_CHECK_SETTINGS = 1000;
     public double nowLatget, nowLngget, droneLat, droneLng;
+    public int droneHeading;
     public Drone drone;
     public boolean isGO;
     private ProgressDialog progressDialog;
     private FragmentActivity fragmentActivity;
+    private StatusView statusView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,6 @@ public class WaypointEditorFragment extends Fragment
             public void onBackPressed() {
                 super.onBackPressed();
                 dismiss();
-//                Log.d(TAG, "onBackPressed");
             }
         };
         progressDialog.setCancelable(false);
@@ -103,6 +102,7 @@ public class WaypointEditorFragment extends Fragment
         setUpButtomBarButton(view);
         setUpTopBarButton(view);
         setUpMavInfo(view);
+        statusView = (StatusView) view.findViewById(R.id.status);
     }
 
     @Override
@@ -216,8 +216,13 @@ public class WaypointEditorFragment extends Fragment
     // implement Drone.StatusChangedListener Method
     //
     @Override
-    public void onBatteryUpdate(int battery) {
-
+    public void onBatteryUpdate(final int battery) {
+        fragmentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusView.setBatteryStatus(battery);
+            }
+        });
     }
 
     @Override
@@ -235,22 +240,31 @@ public class WaypointEditorFragment extends Fragment
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                int speed = (int) (groundSpeed * M_S2KM_H);
-                tv_droneSpeed.setText(speed + " km/h");
+                tv_droneSpeed.setText(groundSpeed + " km/h");
             }
         });
     }
 
     @Override
     public void onLocationUpdate(final long lat, final long lon, final int eph) {
+        droneLat = (double) (lat * Math.pow(10, -7));
+        droneLng = (double) (lon * Math.pow(10, -7));
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                double droneLat = (double) (lat * Math.pow(10, -7));
-                double droneLng = (double) (lon * Math.pow(10, -7));
-//                Log.d(TAG, "(droneLat, droneLng):(" + droneLat + ", " + droneLng + ")");
                 tv_droneLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
-                webview_WayPoint.loadUrl("javascript:updateDroneLocation("+ droneLat + "," + droneLng + ")");
+                webview_WayPoint.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
+            }
+        });
+    }
+
+    @Override
+    public void onHeadingUpdate(final int heading) {
+        droneHeading = heading;
+        fragmentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                webview_WayPoint.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
             }
         });
     }
@@ -319,16 +333,16 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void setUpButtomBarButton(View view) {
-        final ImageButton myLocationButton = (ImageButton)view.findViewById(R.id.button_my_location);
+        final ImageButton myLocationButton = (ImageButton) view.findViewById(R.id.button_my_location);
         myLocationButton.setOnClickListener(this);
 
-        final Button goButton = (Button)view.findViewById(R.id.button_go);
+        final Button goButton = (Button) view.findViewById(R.id.button_go);
         goButton.setOnClickListener(this);
 
-        final ImageButton droneLocationButton = (ImageButton)view.findViewById(R.id.button_drone_location);
+        final ImageButton droneLocationButton = (ImageButton) view.findViewById(R.id.button_drone_location);
         droneLocationButton.setOnClickListener(this);
 
-        final ImageButton fitMapButton = (ImageButton)view.findViewById(R.id.button_fit_map);
+        final ImageButton fitMapButton = (ImageButton) view.findViewById(R.id.button_fit_map);
         fitMapButton.setOnClickListener(this);
     }
 
@@ -353,10 +367,10 @@ public class WaypointEditorFragment extends Fragment
         b_deleteAll.setOnClickListener(this);
     }
 
-    private void setUpMavInfo(View view){
-        tv_droneSpeed = (TextView)view.findViewById(R.id.speed_text);
+    private void setUpMavInfo(View view) {
+        tv_droneSpeed = (TextView) view.findViewById(R.id.speed_text);
         tv_droneSpeed.setText("0 km/h");
-        tv_droneLatLng = (TextView)view.findViewById(R.id.location_text);
+        tv_droneLatLng = (TextView) view.findViewById(R.id.location_text);
         tv_droneLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
     }
 
@@ -474,7 +488,7 @@ public class WaypointEditorFragment extends Fragment
                 webview_WayPoint.loadUrl("javascript:setMapToMyLocation()");
                 break;
             case R.id.button_drone_location:
-                webview_WayPoint.loadUrl("javascript:setMapTo(" + droneLat + "," + droneLng +")");
+                webview_WayPoint.loadUrl("javascript:setMapTo(" + droneLat + "," + droneLng + ")");
                 break;
             case R.id.button_fit_map:
                 drone.readMissions(WaypointEditorFragment.this);
