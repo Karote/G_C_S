@@ -66,10 +66,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
-    //    private TextView tvPitch;
-//    private TextView tvRoll;
+
     private SemiCircleProgressBarView semiCircleProgressBarView;
-    //    private TextView tvBattery;
+
     private TextView tvAltitude;
     private TextView tvSpeed;
     private Button btnAction;
@@ -96,7 +95,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private boolean isOnOrientationSensorMode = false;
     private boolean isTakeOff = false;
     private ControlWrap controlWrap;
-    private int radius = 0;
+    private int stickShiftRadius = 0;
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private String mrl = null;
 
@@ -109,7 +108,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         connectedDroneDevice = ((MainActivity) fragmentActivity).getConnectedDroneDevice();
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
 //            mrl =VIDEO_FILE_PATH_RTSP_PREFIX+connectedDroneDevice.getName()+VIDEO_FILE_PATH_2015_SUFFIX ;
-//            mrl = VIDEO_FILE_PATH_TEST;
+            mrl = VIDEO_FILE_PATH_TEST;
         } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_G2_SUFFIX;
         }
@@ -286,17 +285,11 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
         controlWrap = new ControlWrap();
         initialJoypadMode();
-        for (int i = 0; i < joyStickSurfaceViews.length; i++) {
-            if (radius < joyStickSurfaceViews[i].getRadius()) {
-                radius = joyStickSurfaceViews[i].getRadius();
-            }
-        }
+
         semiCircleProgressBarView = (SemiCircleProgressBarView) view.findViewById(R.id.semi_circle_bar);
         semiCircleProgressBarView.setProgressBarColor(Color.RED);
         semiCircleProgressBarView.setMaxProgress(MAX_SPEED);
         tvSpeed = (TextView) view.findViewById(R.id.tv_speed);
-//        tvPitch = (TextView) view.findViewById(R.id.tv_pitch);
-//        tvRoll = (TextView) view.findViewById(R.id.tv_roll);
 
         int size = (int) (getResources().getDimension(R.dimen.joypad_size) / getResources().getDisplayMetrics().density) / 2;
         final String[] stickList = new String[(size / 5) - 3];
@@ -305,7 +298,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             size -= 5;
         }
 
-//        tvBattery = (TextView) view.findViewById(R.id.tv_battery);
         tvAltitude = (TextView) view.findViewById(R.id.tv_altitude);
 
         surfaceView = (SurfaceView) view.findViewById(R.id.rtsp_surfaceview);
@@ -661,7 +653,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         private float yaw = 0;
         public final static int DEFAULT_VALUE = 0;
         private final static int DEFAULT_RADIUS = 100;
-        private int radius = 0;
+//        private int stickShiftRadius = 0;
 
         public int changePitch(float pitch) {
             this.pitch = changeValue(pitch);
@@ -693,14 +685,14 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
 
         private float changeValue(float value) {
-            if (radius == 0) {
-                radius = ((DroneG2Application) fragmentActivity.getApplicationContext()).joyStickRadius;
+            if (stickShiftRadius == 0) {
+                stickShiftRadius = joyStickSurfaceViews[0].getStickShiftRadius();
             }
             if (value == DEFAULT_VALUE) {
                 return DEFAULT_VALUE;
             } else {
-//            Log.d(TAG, "radius: " + radius);
-                return (value / radius) * DEFAULT_RADIUS;
+//            Log.d(TAG, "stickShiftRadius: " + stickShiftRadius);
+                return (value / stickShiftRadius) * DEFAULT_RADIUS;
             }
         }
     }

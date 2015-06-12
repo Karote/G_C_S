@@ -11,7 +11,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -19,7 +18,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.coretronic.drone.DroneG2Application;
 import com.coretronic.drone.R;
 
 /**
@@ -53,11 +51,10 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
     private SurfaceHolder surfaceHolder;
 
-    private Thread thread;
-
     private Point startPoint;
     private Point rockerPoint;
-    private int radius;
+    private int padRadius;
+    private int stickShiftRadius;
 
     private boolean isStop;
     private boolean isJoypadMode;
@@ -69,7 +66,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     private OnStickListener stickListener;
     private GestureDetector gestureDetector;
 
-
     public JoyStickSurfaceView(Context context) {
         super(context);
         init(context);
@@ -79,7 +75,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         super(context, attrs);
         init(context);
     }
-
 
     private void init(Context context) {
         setKeepScreenOn(true);
@@ -96,7 +91,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint.setAlpha(paintNormalAlpha);
 
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
-
     }
 
     public void setPaintPressedAlpha(int alpha) {
@@ -128,13 +122,14 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
         startPoint = new Point(width >> 1, height >> 1);
         rockerPoint = new Point(startPoint);
-        radius = (int) ((width >> 1) -getResources().getDimension(R.dimen.joypad_rim_width)/2f);
-        ((DroneG2Application) this.getContext().getApplicationContext()).joyStickRadius = radius;
+        padRadius = (int) ((width >> 1) - getResources().getDimension(R.dimen.joypad_rim_width) / 2f);
+        stickShiftRadius = (int) (padRadius - getResources().getDimension(R.dimen.stick_size) / 2f);
+//        ((DroneG2Application) getContext().getApplicationContext()).joyStickRadius = padRadius;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         isStop = false;
         thread.start();
     }
@@ -169,15 +164,14 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         int distance = getDistance(startPoint.x, startPoint.y, x, y);
         if (action == MotionEvent.ACTION_DOWN) {
             stickPaint.setAlpha(paintPressedAlpha);
-//            bgPaint.setAlpha(200 / 4);
             if (stickListener != null && !isJoypadMode) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_DOWN);
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
-            if (distance <= radius) {
+            if (distance <= stickShiftRadius) {
                 rockerPoint.set(x, y);
             } else {
-                rockerPoint = getBorderPoint(startPoint, new Point(x, y), radius);
+                rockerPoint = getBorderPoint(startPoint, new Point(x, y), stickShiftRadius);
             }
             int dx = rockerPoint.x - startPoint.x;
             int dy = rockerPoint.y - startPoint.y;
@@ -207,10 +201,9 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         }
     };
 
-    public int getRadius() {
-        return radius;
+    public int getStickShiftRadius() {
+        return stickShiftRadius;
     }
-
     public int getControlType() {
         return controlType;
     }
@@ -228,13 +221,13 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             if (isJoypadMode) {
                 Paint padPaint = new Paint(stickPaint);
                 padPaint.setAlpha((int) (stickPaint.getAlpha() * ALPHA_SCALE));
-                canvas.drawCircle(startPoint.x, startPoint.y, radius, padPaint);
-                canvas.drawCircle(rockerPoint.x, rockerPoint.y, circleRadius, this.stickPaint);
+                canvas.drawCircle(startPoint.x, startPoint.y, padRadius, padPaint);
+                canvas.drawCircle(rockerPoint.x, rockerPoint.y, circleRadius, stickPaint);
 
                 padPaint.setStrokeWidth(getResources().getDimension(R.dimen.joypad_rim_width));
                 padPaint.setStyle(Paint.Style.STROKE);
                 padPaint.setAlpha(stickPaint.getAlpha());
-                canvas.drawCircle(startPoint.x, startPoint.y, radius, padPaint);
+                canvas.drawCircle(startPoint.x, startPoint.y, padRadius, padPaint);
 
                 if (controlType == JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW) {
                     drawIndicator(canvas, throttleUpBitmap, yawRightBitmap);
@@ -254,14 +247,14 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     private void drawIndicator(Canvas canvas, Bitmap... src) {
         int indicatorSize = src[0].getWidth();
         int halfIndicatorSize = indicatorSize >> 1;
-        canvas.drawBitmap(src[0], radius - halfIndicatorSize, 0, this.stickPaint);
-        canvas.drawBitmap(rotateBitmap(src[0], 180), radius - halfIndicatorSize, (radius << 1) - indicatorSize, this.stickPaint);
+        canvas.drawBitmap(src[0], padRadius - halfIndicatorSize, 0, this.stickPaint);
+        canvas.drawBitmap(rotateBitmap(src[0], 180), padRadius - halfIndicatorSize, (padRadius << 1) - indicatorSize, this.stickPaint);
         if (src.length == 1) {
-            canvas.drawBitmap(rotateBitmap(src[0], 90), (radius << 1) - indicatorSize, radius - halfIndicatorSize, this.stickPaint);
-            canvas.drawBitmap(rotateBitmap(src[0], 270), 0, radius - halfIndicatorSize, this.stickPaint);
+            canvas.drawBitmap(rotateBitmap(src[0], 90), (padRadius << 1) - indicatorSize, padRadius - halfIndicatorSize, this.stickPaint);
+            canvas.drawBitmap(rotateBitmap(src[0], 270), 0, padRadius - halfIndicatorSize, this.stickPaint);
         } else {
-            canvas.drawBitmap(src[1], (radius << 1) - indicatorSize, radius - halfIndicatorSize, this.stickPaint);
-            canvas.drawBitmap(mirrorXBitmap(src[1]), 0, radius - halfIndicatorSize, this.stickPaint);
+            canvas.drawBitmap(src[1], (padRadius << 1) - indicatorSize, padRadius - halfIndicatorSize, this.stickPaint);
+            canvas.drawBitmap(mirrorXBitmap(src[1]), 0, padRadius - halfIndicatorSize, this.stickPaint);
 
         }
     }

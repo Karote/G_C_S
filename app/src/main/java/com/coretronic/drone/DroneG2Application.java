@@ -20,9 +20,6 @@ public class DroneG2Application extends Application {
 
     public static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
 
-    public static int joyStickRadius = 0;
-//    public static final boolean isUITesting = true;
-
     @Override
     public void onCreate() {
         super.onCreate();
