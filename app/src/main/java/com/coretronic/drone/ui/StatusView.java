@@ -35,7 +35,7 @@ public class StatusView extends LinearLayout {
     }
 
     private void initView() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.custom_layout_status, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.status_view, null);
         wifiStatus= (ImageView) view.findViewById(R.id.iv_wifi);
         gpsStatus= (ImageView) view.findViewById(R.id.iv_gps);
         batteryProgress=(ProgressBar)view.findViewById(R.id.progress_battery);

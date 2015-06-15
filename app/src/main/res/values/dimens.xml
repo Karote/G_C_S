@@ -5,7 +5,7 @@
     <dimen name="joypad_rim_width">1dp</dimen>
     <dimen name="joypad_indicator_size">30dp</dimen>
     <dimen name="settings_margin">10dp</dimen>
-    <dimen name="settings_title_size">20sp</dimen>
+    <dimen name="settings_title_size">18sp</dimen>
     <dimen name="recyclerview_item_width">110dp</dimen>
     <dimen name="recyclerview_deleteitem_width">180dp</dimen>
 </resources>
