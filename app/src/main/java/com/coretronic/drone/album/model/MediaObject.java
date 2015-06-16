@@ -5,14 +5,15 @@ import java.util.ArrayList;
 
 /**
  * Created by james on 15/6/5.
+ * using pass custom class to other page(bundle)
  */
 public class MediaObject implements Serializable {
-    private static ArrayList<ImageItem> imageItems;
+    private static ArrayList<MediaItem> mediaItems;
 
-    public void setImageItems(ArrayList<ImageItem> imageItems) {
-        MediaObject.imageItems = imageItems;
+    public void setImageItems(ArrayList<MediaItem> mediaItems) {
+        MediaObject.mediaItems = mediaItems;
     }
-    public ArrayList<ImageItem> getImageItems() {
-        return imageItems;
+    public ArrayList<MediaItem> getImageItems() {
+        return mediaItems;
     }
 }

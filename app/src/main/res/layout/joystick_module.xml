@@ -37,8 +37,8 @@
 
         <com.coretronic.drone.ui.JoyStickSurfaceView
             android:id="@+id/joystick"
-            android:layout_width="@dimen/joystick_size"
-            android:layout_height="@dimen/joystick_size"
+            android:layout_width="@dimen/joypad_size"
+            android:layout_height="@dimen/joypad_size"
             android:layout_gravity="center|bottom"
             android:layout_margin="65dp"/>
     </FrameLayout>

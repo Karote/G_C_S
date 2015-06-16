@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 
 import com.coretronic.drone.DroneG2Application;
+import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
 
 import java.util.ArrayList;
@@ -38,26 +39,10 @@ public class ViewManager {
         });
     }
 
-//    public static void assignSwitchView(Switch sw, DroneG2Application.SettingType settingType) {
-//        final int type = settingType.ordinal();
-//        sw.setChecked(DroneG2Application.settings[type]);
-//        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (buttonView.isPressed()) {
-//                    DroneG2Application.settings[type] = isChecked;
-//                    Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.settings[type]);
-//                }
-//            }
-//        });
-//    }
-
-    public static void assignSeekBarView(View view, int id, Setting.SettingType settingType) {
-        SeekBar seekBar = (SeekBar) view.findViewById(id);
-        final Setting setting = DroneG2Application.settings[settingType.ordinal()];
-        seekBar.setMax(setting.getMaxValue() - setting.getMinVale());
-        seekBar.setProgress(setting.getValue() - setting.getMinVale());
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    public static void assignSettingSeekBarView(View view, int id, Setting.SettingType settingType) {
+        SettingSeekBar settingSeekBar = (SettingSeekBar) view.findViewById(id);
+        settingSeekBar.setConfig(20, 80, "%");
+        settingSeekBar.registerSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
@@ -70,10 +55,34 @@ public class ViewManager {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                setting.setValue(seekBar.getProgress() + setting.getMinVale());
+                Log.d(TAG, "onStopTrackingTouch");
             }
         });
+        settingSeekBar.setValue(60);
     }
+
+//    public static void assignSeekBarView(View view, int id, Setting.SettingType settingType) {
+//        SeekBar seekBar = (SeekBar) view.findViewById(id);
+//        final Setting setting = DroneG2Application.settings[settingType.ordinal()];
+//        seekBar.setMax(setting.getMaxValue() - setting.getMinVale());
+//        seekBar.setProgress(setting.getValue() - setting.getMinVale());
+//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                setting.setValue(seekBar.getProgress() + setting.getMinVale());
+//            }
+//        });
+//    }
 
     public static void setEnabled(boolean enabled, View[] viewArray, View... views) {
         List<View> combineAll = new ArrayList<View>(viewArray.length + views.length);

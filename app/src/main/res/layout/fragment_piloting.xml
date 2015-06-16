@@ -25,8 +25,8 @@
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_gravity="center"
             android:background="@drawable/ico_pilot_rec_time" />
 
@@ -231,7 +231,7 @@
 
             <Button
                 android:id="@+id/btn_take_off"
-                android:layout_width="112dp"
+                android:layout_width="100dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="4dp"

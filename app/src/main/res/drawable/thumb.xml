@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <color android:color="@android:color/transparent"/>
+            <size android:height="38dp"
+                  android:width="38dp"/>
+        </shape>
+    </item>
+    <item android:drawable="@drawable/control_progress_circle" />
+
+</layer-list>

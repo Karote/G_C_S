@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.AlbumPreviewFragment;
 import com.coretronic.drone.album.model.MediaObject;
-import com.coretronic.drone.album.model.ImageItem;
+import com.coretronic.drone.album.model.MediaItem;
 
 import java.util.ArrayList;
 
@@ -30,16 +30,16 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
     private static String TAG = AlbumGridViewAdapter.class.getSimpleName();
     private static Context context;
     private int resourceId;
-    private static ArrayList<ImageItem> imageItems = new ArrayList<ImageItem>();
+    private static ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>();
     private static Boolean isShowDeleteOption = false;
     private static ArrayList selectedPathAryList = new ArrayList();
 
-    public AlbumGridViewAdapter(Context context, int resource, ArrayList<ImageItem> data) {
+    public AlbumGridViewAdapter(Context context, int resource, ArrayList<MediaItem> data) {
 
         this.context = context;
         this.resourceId = resource;
 
-        this.imageItems = data;
+        this.mediaItems = data;
 //        Collections.sort(this.data, new CustomComparator());
     }
 
@@ -56,7 +56,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
-        ImageItem item = (ImageItem) imageItems.get(i);
+        MediaItem item = (MediaItem) mediaItems.get(i);
         Bitmap bitmap = null;
 
         // set thumbnails images
@@ -79,7 +79,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
         viewHolder.mediaImage.setImageBitmap(bitmap);
 
         viewHolder.selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);
-        ((ImageItem) imageItems.get(i)).setIsMediaSelect(false);
+        ((MediaItem) mediaItems.get(i)).setIsMediaSelect(false);
 
         // set delete option
         if (isShowDeleteOption) {
@@ -91,7 +91,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     @Override
     public int getItemCount() {
-        return imageItems.size();
+        return mediaItems.size();
     }
 
 
@@ -120,27 +120,27 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
             int itemPos = getAdapterPosition();
 
             Log.i(TAG, "itemPos:" + itemPos +
-                    "/ click path: " + ((ImageItem) imageItems.get(itemPos)).getMediaPath() +
-                    "/ click id: " + ((ImageItem) imageItems.get(itemPos)).getMediaId());
+                    "/ click path: " + ((MediaItem) mediaItems.get(itemPos)).getMediaPath() +
+                    "/ click id: " + ((MediaItem) mediaItems.get(itemPos)).getMediaId());
 
 
             // delete option menu status
             if (isShowDeleteOption) {
 
-                if (((ImageItem) imageItems.get(itemPos)).getIsMediaSelect()) {
+                if (((MediaItem) mediaItems.get(itemPos)).getIsMediaSelect()) {
 
                     selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);
-                    ((ImageItem) imageItems.get(itemPos)).setIsMediaSelect(false);
+                    ((MediaItem) mediaItems.get(itemPos)).setIsMediaSelect(false);
                     // if selected path is contain arraylist
-                    if (selectedPathAryList.contains(((ImageItem) imageItems.get(itemPos)).getMediaId())) {
-                        selectedPathAryList.remove(((ImageItem) imageItems.get(itemPos)).getMediaId());
+                    if (selectedPathAryList.contains(((MediaItem) mediaItems.get(itemPos)).getMediaId())) {
+                        selectedPathAryList.remove(((MediaItem) mediaItems.get(itemPos)).getMediaId());
                     }
 
                 } else {
-                    ((ImageItem) imageItems.get(itemPos)).setIsMediaSelect(true);
+                    ((MediaItem) mediaItems.get(itemPos)).setIsMediaSelect(true);
                     selectTagImg.setImageResource(R.drawable.ic_album_check_n);
 
-                    selectedPathAryList.add(((ImageItem) imageItems.get(itemPos)).getMediaId());
+                    selectedPathAryList.add(((MediaItem) mediaItems.get(itemPos)).getMediaId());
                 }
 
                 Log.i(TAG, "selectedPathAryList:" + selectedPathAryList);
@@ -149,11 +149,11 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
             } else {
                 // preview status
                 MediaObject mediaObject = new MediaObject();
-                mediaObject.setImageItems(imageItems);
+                mediaObject.setImageItems(mediaItems);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("mediaObject", mediaObject);
-                bundle.putLong("selectMediaId", ((ImageItem) imageItems.get(itemPos)).getMediaId() );
+                bundle.putLong("selectMediaId", ((MediaItem) mediaItems.get(itemPos)).getMediaId() );
                 Fragment cuttentFragment = ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("fragment");
 
                 AlbumPreviewFragment albumPreviewFragment = new AlbumPreviewFragment();
@@ -187,16 +187,16 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public void deleteSelectMediaFile() {
         ContentResolver cr = context.getContentResolver(); // in an Activity
-        for (int i = 0; i < imageItems.size(); i++) {
+        for (int i = 0; i < mediaItems.size(); i++) {
             for (int j = 0; j < selectedPathAryList.size(); j++) {
-                if ((long) (selectedPathAryList.get(j)) == imageItems.get(i).getMediaId()) {
+                if ((long) (selectedPathAryList.get(j)) == mediaItems.get(i).getMediaId()) {
 
-                    Log.i(TAG, "(long) imageItems.get(i).getMediaId():" + (long) imageItems.get(i).getMediaId());
+                    Log.i(TAG, "(long) imageItems.get(i).getMediaId():" + (long) mediaItems.get(i).getMediaId());
 //                        selectedPathAryList.remove((long) imageItems.get(i).getMediaId());
 
                     int deletedNum = cr.delete(MediaStore.Files.getContentUri("external"),
-                            MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) imageItems.get(i).getMediaId()});
-                    imageItems.remove(imageItems.get(i));
+                            MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) mediaItems.get(i).getMediaId()});
+                    mediaItems.remove(mediaItems.get(i));
                     Log.i(TAG, "deletedNum:" + deletedNum);
                     notifyItemRemoved(i);
                 }
@@ -206,7 +206,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
     }
 
     public void deleteSelectedPathAryList() {
-        for (ImageItem item : imageItems) {
+        for (MediaItem item : mediaItems) {
             item.setIsMediaSelect(false);
 
         }
@@ -220,6 +220,6 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
     }
 
     public void clearData() {
-        imageItems.clear();
+        mediaItems.clear();
     }
 }

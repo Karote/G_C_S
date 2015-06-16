@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="settings_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textSize">@dimen/settings_title_size</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
+
+    <style name="setting_flip_orientation">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginRight">2dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/btn_bg</item>
+        <item name="android:text">Front</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="progress_style">
+        <item name="android:progressDrawable">@drawable/progress_drawable</item>
+        <item name="android:thumb">@drawable/thumb</item>
+        <!--<item name="android:thumbOffset">9dp</item>-->
+        <!--<item name="android:paddingLeft">9dp</item>-->
+        <!--<item name="android:paddingRight">9dp</item>-->
+    </style>
+
     <style name="Theme.Default" parent="@android:style/Theme.Holo.Light"></style>
+
     <style name="Theme.NoTitle" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>
+
     <style name="Theme.FullScreen" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"></style>
 </resources>
