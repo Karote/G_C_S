@@ -67,7 +67,7 @@
                     layout="@layout/switch_module" />
             </FrameLayout>
 
-            <com.coretronic.drone.ui.SettingSeekBar
+            <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_phone_tilt_max"
                 android:layout_width="match_parent"
                 android:layout_height="38dp" />

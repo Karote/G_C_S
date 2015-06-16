@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.coretronic.drone.Drone;
-import com.coretronic.drone.Drone.MissionLoaderListener;
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.Mission.Builder;
@@ -48,7 +48,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class WaypointEditorFragment extends Fragment
-        implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, MissionLoaderListener {
+        implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, DroneController.MissionLoaderListener {
     private static final String TAG=WaypointEditorFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private static MissionItemListAdapter mMissionItemAdapter;
@@ -61,7 +61,7 @@ public class WaypointEditorFragment extends Fragment
     final static long LOCATION_UPDATE_MIN_TIME = 1000;
     final static int REQUEST_CHECK_SETTINGS = 1000;
     public double nowLatget, nowLngget;
-    public Drone drone;
+    public DroneController drone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

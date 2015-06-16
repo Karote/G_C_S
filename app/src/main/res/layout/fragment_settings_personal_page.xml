@@ -60,7 +60,7 @@
                     android:textSize="@dimen/settings_title_size" />
             </LinearLayout>
 
-            <com.coretronic.drone.ui.SettingSeekBar
+            <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_opacity"
                 android:layout_width="match_parent"
                 android:layout_height="38dp" />

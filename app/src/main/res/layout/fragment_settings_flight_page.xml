@@ -47,12 +47,12 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <com.coretronic.drone.ui.SettingSeekBar
+            <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_rotation_max"
                 android:layout_width="match_parent"
                 android:layout_height="38dp" />
 
-            <com.coretronic.drone.ui.SettingSeekBar
+            <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_tilt_angle_max"
                 android:layout_width="match_parent"
                 android:layout_height="38dp" />
