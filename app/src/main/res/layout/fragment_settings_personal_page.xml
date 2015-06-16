@@ -1,105 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="226dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="36dp"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/settings_title"
-            android:text="Drone G 2.0 Network Name" />
-
-        <TextView
-            style="@style/settings_title"
-            android:text="Interface Opacity" />
-
-        <TextView
-            style="@style/settings_title"
-            android:text="SD Card Record" />
-
-        <TextView
-            style="@style/settings_title"
-            android:text="Flip Enable" />
-
-        <TextView
-            style="@style/settings_title"
-            android:text="Flip Orientation" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginRight="68dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="38dp">
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36dp"
+            android:orientation="vertical">
 
-            <EditText
+            <TextView
+                style="@style/settings_title"
+                android:text="DRONE G2.0 NETWORK NAME" />
+
+            <TextView
+                style="@style/settings_title"
+                android:text="INTERFACE OPACITY" />
+
+            <TextView
+                style="@style/settings_title"
+                android:text="SD CARD RECORD" />
+
+            <TextView
+                style="@style/settings_title"
+                android:text="FLIP ENABLE" />
+
+            <TextView
+                style="@style/settings_title"
+                android:text="FLIP ORIENTATION" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="68dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:background="@drawable/edit_text_bg"
-                android:fontFamily="sans-serif-condensed"
-                android:gravity="center|left"
-                android:paddingLeft="12dp"
-                android:text="conidroneg2_12345"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/settings_title_size" />
-        </LinearLayout>
+                android:layout_height="38dp">
 
-        <com.coretronic.drone.ui.SettingSeekBar
-            android:id="@+id/setting_bar_opacity"
-            android:layout_width="match_parent"
-            android:layout_height="38dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/edit_text_bg"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="center|left"
+                    android:paddingLeft="12dp"
+                    android:text="conidroneg2_12345"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/settings_title_size" />
+            </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="38dp">
+            <com.coretronic.drone.ui.SettingSeekBar
+                android:id="@+id/setting_bar_opacity"
+                android:layout_width="match_parent"
+                android:layout_height="38dp" />
 
-            <include
-                android:id="@+id/sdcard_enable"
-                layout="@layout/switch_module" />
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="38dp">
+                <include
+                    android:id="@+id/switch_sdcard_enable"
+                    layout="@layout/switch_module" />
+            </FrameLayout>
 
-            <include
-                android:id="@+id/flip_enable"
-                layout="@layout/switch_module" />
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:orientation="horizontal">
+                <include
+                    android:id="@+id/switch_flip_enable"
+                    layout="@layout/switch_module" />
+            </FrameLayout>
 
-            <Button
-                style="@style/setting_flip_orientation"
-                android:text="Front" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:orientation="horizontal">
 
-            <Button
-                style="@style/setting_flip_orientation"
-                android:text="Back" />
+                <Button
+                    style="@style/setting_flip_orientation"
+                    android:text="FRONT" />
 
-            <Button
-                style="@style/setting_flip_orientation"
-                android:text="Left" />
+                <Button
+                    style="@style/setting_flip_orientation"
+                    android:text="BACK" />
 
-            <Button
-                style="@style/setting_flip_orientation"
-                android:text="Right" />
+                <Button
+                    style="@style/setting_flip_orientation"
+                    android:text="LEFT" />
 
-
+                <Button
+                    style="@style/setting_flip_orientation"
+                    android:text="RIGHT" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

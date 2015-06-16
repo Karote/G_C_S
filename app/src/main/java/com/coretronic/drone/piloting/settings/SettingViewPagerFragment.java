@@ -29,10 +29,10 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     private static final int PAGE_COUNT = 4;
     public static final int STSUS_PAGE = 3;
     private static String[] titleString = {
-            "Personal Settings",
-            "Flight Settings",
-            "Piloting Mode",
-            "Status"
+            "PERSONAL SETTINGS",
+            "FLIGHT SETTINGS",
+            "PILOTING MODE",
+            "STATUS"
     };
     private ViewPager mViewPager;
     private TextView tvTitle;

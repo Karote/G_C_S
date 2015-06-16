@@ -157,6 +157,13 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
+    @Override
+    public void onHeadingUpdate(int heading) {
+        if (mStatusChangedListener != null) {
+            mStatusChangedListener.onHeadingUpdate(heading);
+        }
+    }
+
     public void registerDroneStatusChangedListener(StatusChangedListener statusChangedListener) {
         this.mStatusChangedListener = statusChangedListener;
     }
@@ -181,15 +188,15 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
-                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-                    return;
-                }
+//                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
+//                    return;
+//                }
                 fragment = new WaypointEditorFragment();
                 break;
             case R.id.ll_album:
-                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-                    return;
-                }
+//                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
+//                    return;
+//                }
                 fragment = new AlbumFragment();
                 backStackName = "AlbumFragment";
                 break;
