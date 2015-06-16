@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="158dp"
+    android:layout_height="48dp"
+    android:background="#00000000"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/undo"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/btn_action_plan_undo" />
+
+    <FrameLayout
+        android:layout_width="116dp"
+        android:layout_height="48dp">
+
+        <LinearLayout
+            android:id="@+id/delete_icon_layout"
+            android:layout_width="116dp"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_delete_marker"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/btn_action_plan_delete" />
+
+            <LinearLayout
+                android:layout_width="78dp"
+                android:layout_height="48dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="4dp"
+                android:background="#66000000"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp">
+
+                <Button
+                    android:id="@+id/button_drawline"
+                    android:layout_width="32dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/btn_action_plan_draw" />
+
+                <Button
+                    android:id="@+id/button_marker"
+                    android:layout_width="32dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/btn_action_plan_point" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/delete_option_layout"
+            android:layout_width="116dp"
+            android:layout_height="48dp"
+            android:background="#66000000"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <Button
+                android:id="@+id/button_delete_done"
+                android:layout_width="52dp"
+                android:layout_height="44dp"
+                android:layout_marginLeft="4dp"
+                android:layout_gravity="bottom"
+                android:text="@string/delete_done"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/btn_delete_bg"
+                android:textSize="12sp" />
+            <Button
+                android:id="@+id/button_delete_all"
+                android:layout_width="52dp"
+                android:layout_height="44dp"
+                android:layout_marginLeft="4dp"
+                android:layout_gravity="bottom"
+                android:text="@string/delete_all"
+                android:gravity="center"
+                android:background="@drawable/btn_delete_bg"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

@@ -19,9 +19,10 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class WaypointEditorFragment extends Fragment
     private Location nowlocation;
     final static long LOCATION_UPDATE_MIN_TIME = 1000;
     final static int REQUEST_CHECK_SETTINGS = 1000;
+    private static final String[] SPINNER_MENU = {"PLANNING", "FOLLOW ME", "FLIGHT HISTORY"};
     public double nowLatget, nowLngget, droneLat, droneLng;
     public int droneHeading;
     public Drone drone;
@@ -264,6 +266,7 @@ public class WaypointEditorFragment extends Fragment
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "onHeadingUpdate");
                 webview_WayPoint.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
             }
         });
@@ -333,16 +336,16 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void setUpButtomBarButton(View view) {
-        final ImageButton myLocationButton = (ImageButton) view.findViewById(R.id.button_my_location);
+        final Button myLocationButton = (Button) view.findViewById(R.id.button_my_location);
         myLocationButton.setOnClickListener(this);
 
         final Button goButton = (Button) view.findViewById(R.id.button_go);
         goButton.setOnClickListener(this);
 
-        final ImageButton droneLocationButton = (ImageButton) view.findViewById(R.id.button_drone_location);
+        final Button droneLocationButton = (Button) view.findViewById(R.id.button_drone_location);
         droneLocationButton.setOnClickListener(this);
 
-        final ImageButton fitMapButton = (ImageButton) view.findViewById(R.id.button_fit_map);
+        final Button fitMapButton = (Button) view.findViewById(R.id.button_fit_map);
         fitMapButton.setOnClickListener(this);
     }
 
@@ -350,6 +353,11 @@ public class WaypointEditorFragment extends Fragment
         setUpDeleteLayout(view);
         final Button backToMainButton = (Button) view.findViewById(R.id.button_back_to_main);
         backToMainButton.setOnClickListener(this);
+
+        Spinner spinnerView = (Spinner)view.findViewById(R.id.mission_plan_spinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
+        spinnerView.setAdapter(spinnerAdapter);
     }
 
     private void setUpDeleteLayout(View view) {

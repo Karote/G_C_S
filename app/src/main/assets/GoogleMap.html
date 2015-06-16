@@ -14,7 +14,7 @@
 				padding: 0
 			}
 			.mapIconLabel {
-				font-size: 15px;
+				font-size: 14px;
 				font-weight: bold;
 				color: #FFFFFF;
 			}
@@ -23,13 +23,17 @@
 		<script src="geolocationmarker-compiled.js"></script>
 		<script src="markerwithlabel.js"></script>
 		<script>
-            var map, GeoMarker, droneMarker;
+            var map,
+                GeoMarker,
+                droneMarker,
+                markIcon;
             var markers = [];
             var poly;
 
             function initialize() {
                 var latlng;
-                latlng = new google.maps.LatLng(24.712299, 120.916408); // 中強光電竹南廠
+                latlng = new google.maps.LatLng(24.712299, 120.916408);
+                // 中強光電竹南廠
                 //latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
 
                 var styleArray = [{
@@ -51,15 +55,15 @@
                     zoom : 15,
                     mapTypeId : google.maps.MapTypeId.ROAD,
                     disableDefaultUI : true,
-                    mapTypeControl : true,
-                    mapTypeControlOptions : {
-                        position : google.maps.ControlPosition.LEFT_CENTER
-                    },
-                    zoomControl : true,
-                    zoomControlOptions : {
-                        style : google.maps.ZoomControlStyle.SMALL,
-                        position : google.maps.ControlPosition.LEFT_CENTER
-                    },
+                    // mapTypeControl : true,
+                    // mapTypeControlOptions : {
+                    // position : google.maps.ControlPosition.LEFT_CENTER
+                    // },
+                    // zoomControl : true,
+                    // zoomControlOptions : {
+                    // style : google.maps.ZoomControlStyle.SMALL,
+                    // position : google.maps.ControlPosition.LEFT_CENTER
+                    // },
                     styles : styleArray
                 };
                 map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -74,22 +78,33 @@
                 };
                 poly = new google.maps.Polyline(polyOptions);
                 
+                var droneImage = {
+                    url : 'ico_indicator_waypoint_current',
+                    // This marker is 20 pixels wide by 32 pixels tall.
+                    size : new google.maps.Size(42, 42),
+                    // The origin for this image is 0,0.
+                    origin : new google.maps.Point(0, 0),
+                    // The anchor for this image is the base of the flagpole at 0,32.
+                    anchor : new google.maps.Point(21, 21)
+                };
+
                 var droneMarkerOption = {
-                    icon : {
-                        path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                        strokeColor : '#FF0000',
-                        fillColor : '#FF0000',
-                        fillOpacity : 1,
-                        rotation : 0,
-                        scale : 4
-                    },
+                    // icon : {
+                        // path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                        // strokeColor : '#FF0000',
+                        // fillColor : '#FF0000',
+                        // fillOpacity : 1,
+                        // rotation : 0,
+                        // scale : 4
+                    // },
+                    icon : droneImage,
                     map : map
                 };
-                
+
                 droneMarker = new google.maps.Marker(droneMarkerOption);
 
                 google.maps.event.addListener(map, 'click', addLatLng);
-                
+
                 // updateDroneLocation(24.712299, 120.916408);
             }
 
@@ -100,19 +115,29 @@
             }
 
             function addMarker(lat, lng, sn) {
-            	var x = 4;
-            	if(sn > 9){
-            		x = 8;
-            	}
+                var x = 4;
+                if (sn > 9) {
+                    x = 8;
+                }
+                var markerImage = {
+                    url : 'ico_indicator_waypoint_circle.png',
+                    // This marker is 20 pixels wide by 32 pixels tall.
+                    size : new google.maps.Size(40, 40),
+                    // The origin for this image is 0,0.
+                    origin : new google.maps.Point(0, 0),
+                    // The anchor for this image is the base of the flagpole at 0,32.
+                    anchor : new google.maps.Point(20, 20)
+                };
                 var marker = new MarkerWithLabel({
                     position : new google.maps.LatLng(lat, lng),
-                    icon : {
-                        path : google.maps.SymbolPath.CIRCLE,
-                        strokeColor : '#4EC3F5',
-                        fillColor : '#4EC3F5',
-                        fillOpacity : 1,
-                        scale : 8
-                    },
+                    // icon : {
+                    // path : google.maps.SymbolPath.CIRCLE,
+                    // strokeColor : '#4EC3F5',
+                    // fillColor : '#4EC3F5',
+                    // fillOpacity : 1,
+                    // scale : 8
+                    // },
+                    icon : markerImage,
                     labelContent : sn,
                     labelAnchor : new google.maps.Point(x, 8),
                     labelClass : "mapIconLabel",
@@ -143,7 +168,8 @@
             }
 
             function clearMarkers() {
-                var i, j;
+                var i,
+                    j;
                 for ( i = 0,
                 j = markers.length; i < j; i++) {
                     markers[i].setMap(null);
@@ -162,17 +188,17 @@
                 poly.setpath(path);
                 poly.setMap(map);
             }
-            
-            function updateDroneLocation(droneLat, droneLng, heading){
-            	droneMarker.setMap(null);
-            	droneMarker.icon.rotation = heading;
-            	droneMarker.setPosition(new google.maps.LatLng(droneLat, droneLng));
-            	droneMarker.setMap(map);
+
+            function updateDroneLocation(droneLat, droneLng, heading) {
+                droneMarker.setMap(null);
+                droneMarker.icon.rotation = heading;
+                droneMarker.setPosition(new google.maps.LatLng(droneLat, droneLng));
+                droneMarker.setMap(map);
             }
 
 		</script>
 	</head>
 	<body onload="initialize()">
-		<div id="map" style="width: 100%; height: 100%;"> </div>
+		<div id="map" style="width: 100%; height: 100%;"></div>
 	</body>
 </html>

@@ -1,87 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:layout_margin="20dp">
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="1"
-                  android:orientation="horizontal">
-        <TextView
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36dp"
+            android:orientation="vertical">
+
+            <TextView
                 style="@style/settings_title"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|right"
-                android:layout_marginRight="10dp"
-                android:text="Altitude Limit"/>
-        <FrameLayout android:layout_width="0dp"
-                     android:layout_height="match_parent"
-                     android:layout_weight="1">
-            <SeekBar android:layout_width="250dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center|left"/>
-        </FrameLayout>
+                android:text="ROTATION SPEED MAX" />
 
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="1"
-                  android:orientation="horizontal">
-        <TextView style="@style/settings_title"
-                  android:layout_width="0dp"
-                  android:layout_height="match_parent"
-                  android:layout_weight="1"
-                  android:gravity="center|right"
-                  android:layout_marginRight="10dp"
-                  android:text="Vertical Speed Max"/>
-        <FrameLayout android:layout_width="0dp"
-                     android:layout_height="match_parent"
-                     android:layout_weight="1">
-            <SeekBar android:layout_width="250dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center|left"/>
-        </FrameLayout>
+            <TextView
+                style="@style/settings_title"
+                android:text="TILT ANGLE MAX" />
 
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="1"
-                  android:orientation="horizontal">
-        <TextView style="@style/settings_title"
-                  android:layout_width="0dp"
-                  android:layout_height="match_parent"
-                  android:layout_weight="1"
-                  android:gravity="center|right"
-                  android:layout_marginRight="10dp"
-                  android:text="Rotation Speed Max"/>
-        <FrameLayout android:layout_width="0dp"
-                     android:layout_height="match_parent"
-                     android:layout_weight="1">
-            <SeekBar android:layout_width="250dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center|left"/>
-        </FrameLayout>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="1"
-                  android:orientation="horizontal">
-        <TextView style="@style/settings_title"
-                  android:layout_width="0dp"
-                  android:layout_height="match_parent"
-                  android:layout_weight="1"
-                  android:gravity="center|right"
-                  android:layout_marginRight="10dp"
-                  android:text="Tilt Angle Max"/>
-        <FrameLayout android:layout_width="0dp"
-                     android:layout_height="match_parent"
-                     android:layout_weight="1">
-            <SeekBar android:layout_width="250dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center|left"/>
-        </FrameLayout>
-    </LinearLayout>
+            <TextView
+                style="@style/settings_title"
+                android:text="AUTO OBSTANCLE AVOIDANCE" />
 
-</LinearLayout>
+            <TextView
+                style="@style/settings_title"
+                android:text="ALTITUDE LOCK" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="38dp" />
+
+            <TextView
+                style="@style/settings_title"
+                android:text="FLAT TRIM" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="68dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.coretronic.drone.ui.SettingSeekBar
+                android:id="@+id/setting_bar_rotation_max"
+                android:layout_width="match_parent"
+                android:layout_height="38dp" />
+
+            <com.coretronic.drone.ui.SettingSeekBar
+                android:id="@+id/setting_bar_tilt_angle_max"
+                android:layout_width="match_parent"
+                android:layout_height="38dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp">
+
+                <include
+                    android:id="@+id/switch_avoidance"
+                    layout="@layout/switch_module" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="76dp"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp">
+
+                    <include
+                        android:id="@+id/switch_altitude_lock"
+                        layout="@layout/switch_module" />
+                </FrameLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
