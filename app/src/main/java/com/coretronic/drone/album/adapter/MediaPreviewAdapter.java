@@ -31,7 +31,8 @@ public class MediaPreviewAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        Log.i(TAG, "imageItems.get(currentMediaNum).getMediaPath():" + mediaItems.get(currentMediaNum).getMediaPath());
+        Log.i(TAG,"position:"+position);
+        Log.i(TAG, "imageItems.get(currentMediaNum).getMediaPath():" + mediaItems.get(position).getMediaPath());
         Bundle bundle = new Bundle();
         bundle.putInt("mediaType",mediaItems.get(position).getMediaType());
         bundle.putString("mediaPath",mediaItems.get(position).getMediaPath());

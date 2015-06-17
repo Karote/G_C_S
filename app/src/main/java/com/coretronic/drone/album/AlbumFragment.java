@@ -13,16 +13,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.coretronic.drone.Drone;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.g2.command.body.BooleanBody;
+import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppUtils;
 import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
 
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class AlbumFragment extends UnBindDrawablesFragment {
+public class AlbumFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener{
 
     private static String TAG = AlbumFragment.class.getSimpleName();
     // fragment declare
@@ -33,12 +35,14 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     private Fragment droneAlbumFragment = null;
     private FragmentActivity fragmentActivity = null;
     // ui declare
+    private StatusView statusView = null;
     private Switch albumSwitch = null;
     private ImageButton rubbishBinBtn = null;
     private LinearLayout deleteOptionLayout = null;
     private RelativeLayout albumMenuOption = null;
     private Button deleteBtn = null;
     private Button cancelDeleteBtn = null;
+    private Button albumListBackBtn = null;
     private CustomerTwoBtnAlertDialog deleteDialog = null;
     // mode
     private Boolean isDroneOrSmartphoneMode = false;
@@ -79,6 +83,9 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     }
 
     private void findViews(View fragmentView) {
+
+        statusView = (StatusView) fragmentView.findViewById(R.id.status);
+        albumListBackBtn = (Button) fragmentView.findViewById(R.id.album_backbtn);
         albumSwitch = (Switch) fragmentView.findViewById(R.id.album_toggle);
         albumSwitch.setOnCheckedChangeListener(albumSwitchListener);
 
@@ -91,6 +98,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         cancelDeleteBtn = (Button) fragmentView.findViewById(R.id.cancel_btn);
         deleteBtn.setOnClickListener(deleteGroupAction);
         cancelDeleteBtn.setOnClickListener(deleteGroupAction);
+        albumListBackBtn.setOnClickListener(albumListBackBtnAction);
 
         deleteDialog = AppUtils.getAlertDialog(mContext, mContext.getResources().getString(R.string.delete_files), mContext.getResources().getString(R.string.btn_ok), mContext.getResources().getString(R.string.btn_cancel), deleteDialogOKListener);
     }
@@ -115,6 +123,15 @@ public class AlbumFragment extends UnBindDrawablesFragment {
             albumSwitch.setVisibility(View.GONE);
         }
     };
+
+    private View.OnClickListener albumListBackBtnAction = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            getFragmentManager().popBackStack();
+        }
+
+    };
+
 
     private View.OnClickListener deleteGroupAction = new View.OnClickListener() {
 
@@ -157,6 +174,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
                     albumFragmentTransaction
                             .replace(R.id.album_fragment_container, smartPhoneAlbumFragment, "SmartPhoneFragment")
                             .commit();
+
                 } else {
                     Log.e(TAG, "Error in creating fragment");
                 }
@@ -170,6 +188,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
                     albumFragmentTransaction
                             .replace(R.id.album_fragment_container, droneAlbumFragment, "DroneAlbumFragment")
                             .commit();
+
                 } else {
                     Log.e(TAG, "Error in creating fragment");
                 }
@@ -227,4 +246,53 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         };
         return result;
     }
+
+    @Override
+    public void onBatteryUpdate(final int battery) {
+        fragmentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusView.setBatteryStatus(battery);
+            }
+        });
+
+    }
+
+    @Override
+    public void onAltitudeUpdate(float altitude) {
+
+    }
+
+
+    @Override
+    public void onRadioSignalUpdate(int rssi) {
+
+    }
+
+    @Override
+    public void onSpeedUpdate(float groundSpeed) {
+
+    }
+
+    @Override
+    public void onLocationUpdate(long lat, long lon, int eph) {
+
+    }
+
+    @Override
+    public void onHeadingUpdate(int heading) {
+
+    }
+
+    public void updateTrashUI()
+    {
+        if( ((AlbumSmartPhoneTagFragment)smartPhoneAlbumFragment).getAlbumImgList().size() != 0 )
+        {
+            rubbishBinBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            rubbishBinBtn.setVisibility(View.GONE);
+        }
+    }
+
 }

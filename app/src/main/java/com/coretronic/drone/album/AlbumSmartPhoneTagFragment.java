@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +37,7 @@ import java.util.TimeZone;
  */
 public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
-    private final static  String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
+    private final static String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
     //    private final static  String FILTER_MEDIA_FOLDER = "external/";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
@@ -67,7 +69,6 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         albumGridView.setLayoutManager(gridLayoutManager);
 
 
-
         // get media array list
         getData();
 
@@ -75,6 +76,9 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         albumGridView.setAdapter(albumGridViewAdapter);
         albumGridViewAdapter.notifyDataSetChanged();
 
+        // AlbumFragment
+//        Fragment cuttentFragment = ((FragmentActivity) mContext).getSupportFragmentManager().findFragmentByTag("fragment");
+//        ((AlbumFragment) cuttentFragment).updateTrashUI();
 
         return view;
     }
@@ -83,7 +87,6 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private void getData() {
 //        final ArrayList<ImageItem> imageItems = new ArrayList<>();
         albumImgList.clear();
-        ;
 
         ContentResolver cr = mContext.getContentResolver();
 
@@ -102,9 +105,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
                 + " OR "
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
-                ;
-
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
@@ -126,15 +127,13 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
         Cursor cursor = cursorLoader.loadInBackground();
 //        Log.i(TAG,"cursor.getCount():"+cursor.getCount());
-        if( cursor == null )
-        {
+        if (cursor == null) {
             return;
         }
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
-            if( !fileFullPath.contains(FILTER_MEDIA_FOLDER))
-            {
+            if (!fileFullPath.contains(FILTER_MEDIA_FOLDER)) {
 //                return;
             }
             long fileId = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
@@ -251,12 +250,10 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         }*/
 //        return imageItems;
 
-        if( albumImgList.size() == 0)
-        {
+        if (albumImgList.size() == 0) {
             noMediaTV.setVisibility(View.VISIBLE);
             albumGridView.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             noMediaTV.setVisibility(View.GONE);
             albumGridView.setVisibility(View.VISIBLE);
 
@@ -293,7 +290,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     public void hideDeleteOption() {
         // hide delete option elements visible
         albumGridViewAdapter.setIsShowDeleteOption(false);
-       refreshData();
+        refreshData();
     }
 
     public void deleteSelectedPathAryList() {
@@ -308,10 +305,12 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     }
 
 
-
-    public void refreshData()
-    {
+    public void refreshData() {
         getData();
         albumGridViewAdapter.notifyDataSetChanged();
+    }
+
+    public ArrayList<MediaItem> getAlbumImgList() {
+        return albumImgList;
     }
 }

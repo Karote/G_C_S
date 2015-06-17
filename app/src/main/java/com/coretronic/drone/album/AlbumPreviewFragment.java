@@ -69,6 +69,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         mediaItems = mediaObject.getImageItems();
         selectedMediaId = bundle.getLong("selectMediaId");
 
+
     }
 
 
@@ -96,7 +97,8 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         previewPager.setOffscreenPageLimit(0);
         removeDialog = AppUtils.getAlertDialog(context, context.getResources().getString(R.string.delete_files), context.getResources().getString(R.string.btn_ok), context.getResources().getString(R.string.btn_cancel), removeDialogOKListener);
 
-        Log.i(TAG, "imageItems.get(currentMediaIdx).getMediaId():" + mediaItems.get(currentMediaIdx).getMediaId() +"/currentMediaIdx:" + currentMediaIdx);
+
+        Log.i(TAG, "imageItems.get(currentMediaIdx).getMediaId():" + mediaItems.get(currentMediaIdx).getMediaId() + "/currentMediaIdx:" + currentMediaIdx);
         return view;
     }
 
@@ -116,7 +118,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     @Override
     public void onPause() {
         super.onPause();
-        fragmentManager.popBackStack();
+//        fragmentManager.popBackStack();
         Log.i(TAG, "==== on pause ====");
     }
 
@@ -129,6 +131,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.i(TAG, "==== onDestroyView ====");
     }
 
     private View.OnClickListener previewBackBtnListener = new View.OnClickListener() {
@@ -136,7 +139,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         @Override
         public void onClick(View v) {
             Log.i(TAG, "fragmentManager:" + fragmentManager);
-                    fragmentManager.popBackStack();
+            fragmentManager.popBackStack();
 
         }
     };
@@ -149,15 +152,12 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
 
-            if( mediaItems.get(currentMediaIdx).getMediaType() ==  MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
-            {
+            if (mediaItems.get(currentMediaIdx).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                 shareIntent.setType("image/*");
-            }
-            else if( mediaItems.get(currentMediaIdx).getMediaType() ==  MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO )
-            {
+            } else if (mediaItems.get(currentMediaIdx).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                 shareIntent.setType("video/*");
             }
-            Uri uri = Uri.parse( mediaItems.get(currentMediaIdx).getMediaPath() );
+            Uri uri = Uri.parse(mediaItems.get(currentMediaIdx).getMediaPath());
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
             startActivity(shareIntent);
         }
@@ -203,8 +203,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     @Override
     public void onPageScrollStateChanged(int state) {
 //        Log.i(TAG, "onPageScrollStateChanged state:" + state);
-        if( state == ViewPager.SCROLL_STATE_DRAGGING)
-        {
+        if (state == ViewPager.SCROLL_STATE_DRAGGING) {
 
         }
 
@@ -220,10 +219,20 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
             ContentResolver cr = context.getContentResolver(); // in an Activity
             cr.delete(MediaStore.Files.getContentUri("external"),
                     MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) mediaItems.get(currentMediaIdx).getMediaId()});
+
+            Log.i(TAG, "mediaItems/currentMediaIdx:" + mediaItems + "/currentMediaIdx:" + currentMediaIdx);
+
             mediaItems.remove(currentMediaIdx);
             previewCountTitle.setText((currentMediaIdx + 1) + "/" + mediaItems.size());
-            mediaPreviewAdapter.notifyDataSetChanged();
 
+            Log.i(TAG, "mediaItems.size():" + mediaItems.size());
+            if (mediaItems.size() == 0) {
+                fragmentManager.popBackStack();
+            } else {
+                mediaPreviewAdapter.notifyDataSetChanged();
+            }
+
+            Log.i(TAG, "currentMediaIdx:" + currentMediaIdx);
 
             previewPager.invalidate();
             removeDialog.dismiss();
@@ -231,6 +240,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
         }
     };
+
 
 
 
