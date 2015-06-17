@@ -16,12 +16,12 @@ import com.coretronic.drone.R;
 public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
     //    private int maxValue;
     private int minValue;
-    private String unit="";
+    private String unit = "";
 
     private TextView tvValue;
     private SeekBar seekBar;
 
-    private SeekBar.OnSeekBarChangeListener seekBarChangeListener;
+    private SeekBarTextViewChangeListener seekBarTextViewChangeListener;
 
     public SeekBarTextView(Context context) {
         super(context);
@@ -40,8 +40,8 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         addView(view);
     }
 
-    public void registerSeekBarChangeListener(SeekBar.OnSeekBarChangeListener seekBarChangeListener) {
-        this.seekBarChangeListener = seekBarChangeListener;
+    public void registerSeekBarTextViewChangeListener(SeekBarTextViewChangeListener seekBarTextViewChangeListener) {
+        this.seekBarTextViewChangeListener = seekBarTextViewChangeListener;
     }
 
     public void setConfig(int minValue, int maxValue, String unit) {
@@ -53,6 +53,7 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
 
     public void setValue(int value) {
         seekBar.setProgress(value - minValue);
+        tvValue.setText(value + unit);
     }
 
 //    public void setUnit(String unit) {
@@ -71,8 +72,12 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (seekBarChangeListener != null) {
-            seekBarChangeListener.onStopTrackingTouch(seekBar);
+        if (seekBarTextViewChangeListener != null) {
+            seekBarTextViewChangeListener.onStopTrackingTouch(seekBar.getProgress() + minValue);
         }
+    }
+
+    public interface SeekBarTextViewChangeListener {
+        void onStopTrackingTouch(int value);
     }
 }

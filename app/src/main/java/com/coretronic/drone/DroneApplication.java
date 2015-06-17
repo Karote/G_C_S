@@ -1,6 +1,7 @@
 package com.coretronic.drone;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -9,11 +10,13 @@ import com.coretronic.drone.piloting.Setting;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
+
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class DroneG2Application extends Application {
-    private static final String TAG = DroneG2Application.class.getSimpleName();
+public class DroneApplication extends Application {
+    private static final String TAG = DroneApplication.class.getSimpleName();
 
     public static final String SETTINGS_VALUE = "settings_value";
     public static final String SETTING = "setting";
@@ -23,6 +26,11 @@ public class DroneG2Application extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()] = new Setting(20, 100, 70, "%");
+        settings[Setting.SettingType.SD_RECORD.ordinal()] = new Setting(Setting.ON);
+        settings[Setting.SettingType.FLIP_ENABLE.ordinal()] = new Setting(Setting.OFF);
+        settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()] = new Setting(Setting.FLIP_ORIENTATION_LEFT);
+
         settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.ON);
         settings[Setting.SettingType.HEADLESS.ordinal()] = new Setting(Setting.OFF);
         settings[Setting.SettingType.LEFT_HANDED.ordinal()] = new Setting(Setting.OFF);
@@ -46,9 +54,6 @@ public class DroneG2Application extends Application {
         try {
             if (json != null) {
                 JSONArray jsonArray = new JSONArray(json);
-//                for (int i = 0; i < settings.length; i++) {
-//                    settings[i].setValue(jsonArray.getInt(i));
-//                }
                 int i = 0;
                 for (Setting setting : settings) {
                     setting.setValue(jsonArray.getInt(i++));
@@ -61,4 +66,5 @@ public class DroneG2Application extends Application {
         }
         return true;
     }
+
 }

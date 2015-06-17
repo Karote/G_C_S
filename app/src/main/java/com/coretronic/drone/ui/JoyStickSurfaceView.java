@@ -18,12 +18,16 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.R;
+import com.coretronic.drone.piloting.Setting;
 
 /**
  * Created by jiaLian on 15/3/30.
  */
 public class JoyStickSurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+
+    public static final int ALPHA_MAX = 255;
 
     public interface OnStickListener {
         void onStickMoveEvent(View view, int action, int dx, int dy);
@@ -60,8 +64,8 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     private boolean isJoypadMode;
     private int controlType;
 
-    private int paintPressedAlpha = 180;
-    private int paintNormalAlpha = (int) (PAINT_PRESSED_ALPHA_DEFAULT * ALPHA_SCALE);
+    private int paintPressedAlpha;
+    private int paintNormalAlpha;
 
     private OnStickListener stickListener;
     private GestureDetector gestureDetector;
@@ -85,17 +89,20 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         setZOrderOnTop(true);
         surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
 
+
         stickPaint = new Paint();
         stickPaint.setColor(Color.WHITE);
         stickPaint.setAntiAlias(true);
-        stickPaint.setAlpha(paintNormalAlpha);
+//        stickPaint.setAlpha(paintNormalAlpha);
+        setPaintPressedAlpha(DroneApplication.settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()].getValue() / 100f);
 
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
     }
 
-    public void setPaintPressedAlpha(int alpha) {
-        paintPressedAlpha = alpha;
+    public void setPaintPressedAlpha(float rate) {
+        paintPressedAlpha = (int)(rate* ALPHA_MAX);
         paintNormalAlpha = (int) (paintPressedAlpha * ALPHA_SCALE);
+        stickPaint.setAlpha(paintNormalAlpha);
     }
 
     public void initJoyMode(int controlType, boolean isJoypadMode) {
@@ -204,6 +211,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     public int getStickShiftRadius() {
         return stickShiftRadius;
     }
+
     public int getControlType() {
         return controlType;
     }

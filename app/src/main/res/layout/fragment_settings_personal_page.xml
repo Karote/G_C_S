@@ -89,18 +89,22 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btn_front"
                     style="@style/setting_flip_orientation"
                     android:text="FRONT" />
 
                 <Button
+                    android:id="@+id/btn_back"
                     style="@style/setting_flip_orientation"
                     android:text="BACK" />
 
                 <Button
+                    android:id="@+id/btn_left"
                     style="@style/setting_flip_orientation"
                     android:text="LEFT" />
 
                 <Button
+                    android:id="@+id/btn_right"
                     style="@style/setting_flip_orientation"
                     android:text="RIGHT" />
             </LinearLayout>

@@ -1,14 +1,14 @@
 package com.coretronic.drone.ui;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Switch;
 
-import com.coretronic.drone.DroneG2Application;
+import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
 
@@ -27,45 +27,40 @@ public class ViewManager {
     public static void assignSwitchView(View view, int id, Setting.SettingType settingType) {
         Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
         final int type = settingType.ordinal();
-        sw.setChecked(DroneG2Application.settings[type].getValue() == Setting.ON ? true : false);
+        sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isPressed()) {
-                    DroneG2Application.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
-                    Log.d(TAG, "isSetting[" + type + "]: " + DroneG2Application.settings[type].getValue());
+                    DroneApplication.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
+                    Log.d(TAG, "isSetting[" + type + "]: " + DroneApplication.settings[type].getValue());
                 }
             }
         });
     }
 
-    public static void assignSettingSeekBarView(View view, int id, Setting.SettingType settingType) {
+    public static void assignSettingSeekBarTextView(final View view, int id, final Setting.SettingType settingType) {
+        final Setting setting = DroneApplication.settings[settingType.ordinal()];
+        Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
         SeekBarTextView seekBarTextView = (SeekBarTextView) view.findViewById(id);
-        seekBarTextView.setConfig(20, 80, "%");
-        seekBarTextView.registerSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-            }
+        seekBarTextView.setConfig(setting.getMinValue(), setting.getMaxValue(), setting.getUnit());
+        seekBarTextView.setValue(setting.getValue());
+        seekBarTextView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(int value) {
                 Log.d(TAG, "onStopTrackingTouch");
+                DroneApplication.settings[settingType.ordinal()].setValue(value);
             }
         });
-        seekBarTextView.setValue(60);
+
     }
 
 //    public static void assignSeekBarView(View view, int id, Setting.SettingType settingType) {
 //        SeekBar seekBar = (SeekBar) view.findViewById(id);
 //        final Setting setting = DroneG2Application.settings[settingType.ordinal()];
-//        seekBar.setMax(setting.getMaxValue() - setting.getMinVale());
-//        seekBar.setProgress(setting.getValue() - setting.getMinVale());
+//        seekBar.setMax(setting.getMaxValue() - setting.getMinValue());
+//        seekBar.setProgress(setting.getValue() - setting.getMinValue());
 //        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override
 //            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -79,7 +74,7 @@ public class ViewManager {
 //
 //            @Override
 //            public void onStopTrackingTouch(SeekBar seekBar) {
-//                setting.setValue(seekBar.getProgress() + setting.getMinVale());
+//                setting.setValue(seekBar.getProgress() + setting.getMinValue());
 //            }
 //        });
 //    }
