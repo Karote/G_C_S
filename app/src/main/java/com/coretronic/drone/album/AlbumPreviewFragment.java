@@ -135,8 +135,8 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
         @Override
         public void onClick(View v) {
-
-            fragmentManager.popBackStack();
+            Log.i(TAG, "fragmentManager:" + fragmentManager);
+                    fragmentManager.popBackStack();
 
         }
     };
@@ -223,8 +223,11 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
             mediaItems.remove(currentMediaIdx);
             previewCountTitle.setText((currentMediaIdx + 1) + "/" + mediaItems.size());
             mediaPreviewAdapter.notifyDataSetChanged();
+
+
             previewPager.invalidate();
             removeDialog.dismiss();
+
 
         }
     };

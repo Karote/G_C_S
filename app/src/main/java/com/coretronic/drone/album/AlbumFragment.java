@@ -72,6 +72,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_album, container, false);
         mContext = fragmentView.getContext();
 
+        Log.i(TAG, TAG + "===onCreateView===");
         findViews(fragmentView);
 
         return fragmentView;
@@ -215,6 +216,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
+
+                Log.i(TAG, TAG + "===backStackChangedListener===");
                 if (isDroneOrSmartphoneMode) {
                     if (smartPhoneAlbumFragment != null) {
                         ((AlbumSmartPhoneTagFragment)smartPhoneAlbumFragment).refreshData();

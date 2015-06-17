@@ -13,5 +13,6 @@
     <string name="btn_cancel">cancel</string>
     <string name="btn_ok">ok</string>
     <string name="delete_files">Delte files</string>
+    <string name="album_no_files_insmartphone">No Photos or Videos in the folder</string>
 
 </resources>

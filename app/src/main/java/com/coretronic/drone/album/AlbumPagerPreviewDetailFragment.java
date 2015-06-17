@@ -22,7 +22,7 @@ import com.coretronic.drone.utility.AppUtils;
 /**
  * Created by james on 15/6/8.
  */
-public class AlbumPagerPreviewDetailFragment extends Fragment {
+public class AlbumPagerPreviewDetailFragment extends UnBindDrawablesFragment {
 
     private String TAG = AlbumPagerPreviewDetailFragment.class.getName();
     private final static int INIT_MILLINSECS = 500;
