@@ -23,11 +23,11 @@
                      android:layout_gravity="center"
                      android:layout_weight="1">
 
-            <SurfaceView android:id="@+id/preview_video_sv"
-                         android:layout_width="match_parent"
-                         android:layout_marginTop="4dp"
-                         android:layout_height="match_parent"
-                         android:layout_gravity="center"/>
+            <VideoView android:id="@+id/preview_video"
+                       android:layout_width="match_parent"
+                       android:layout_marginTop="4dp"
+                       android:layout_height="match_parent"
+                       android:layout_gravity="center"/>
 
             <ImageButton android:id="@+id/video_controller_big_ib"
                          android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/seekBar"
+                    android:id="@+id/progressBar"
                     android:layout_weight="1"
                     android:gravity="center"/>
             <TextView android:id="@+id/preview_play_time_tv"

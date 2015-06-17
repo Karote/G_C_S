@@ -36,6 +36,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     private Switch albumSwitch = null;
     private ImageButton rubbishBinBtn = null;
     private LinearLayout deleteOptionLayout = null;
+    private RelativeLayout albumMenuOption = null;
     private Button deleteBtn = null;
     private Button cancelDeleteBtn = null;
     private CustomerTwoBtnAlertDialog deleteDialog = null;
@@ -71,6 +72,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_album, container, false);
         mContext = fragmentView.getContext();
 
+        Log.i(TAG, TAG + "===onCreateView===");
         findViews(fragmentView);
 
         return fragmentView;
@@ -83,6 +85,7 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         rubbishBinBtn = (ImageButton) fragmentView.findViewById(R.id.rubbish_bin_btn);
         rubbishBinBtn.setOnClickListener(rubbishBinBtnAction);
 
+        albumMenuOption = (RelativeLayout) fragmentView.findViewById(R.id.album_menu_option);
         deleteOptionLayout = (LinearLayout) fragmentView.findViewById(R.id.delete_option_layout);
         deleteBtn = (Button) fragmentView.findViewById(R.id.delete_btn);
         cancelDeleteBtn = (Button) fragmentView.findViewById(R.id.cancel_btn);
@@ -143,8 +146,9 @@ public class AlbumFragment extends UnBindDrawablesFragment {
     private CompoundButton.OnCheckedChangeListener albumSwitchListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            // switch to smartphone album fragment
             Log.i(TAG, "isChecked:" + isChecked);
-
+            albumMenuOption.setVisibility(View.VISIBLE);
             isDroneOrSmartphoneMode = isChecked;
             albumFragmentTransaction = fragmentChildManager.beginTransaction();
             // switch to smart phone album fragment
@@ -160,6 +164,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
             }
             // switch to drone album fragment
             else {
+                albumMenuOption.setVisibility(View.INVISIBLE);
+
                 if (droneAlbumFragment != null) {
                     albumFragmentTransaction
                             .replace(R.id.album_fragment_container, droneAlbumFragment, "DroneAlbumFragment")
@@ -210,6 +216,8 @@ public class AlbumFragment extends UnBindDrawablesFragment {
         FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
+
+                Log.i(TAG, TAG + "===backStackChangedListener===");
                 if (isDroneOrSmartphoneMode) {
                     if (smartPhoneAlbumFragment != null) {
                         ((AlbumSmartPhoneTagFragment)smartPhoneAlbumFragment).refreshData();

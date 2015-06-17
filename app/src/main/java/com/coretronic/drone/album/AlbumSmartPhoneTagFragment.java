@@ -15,10 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.model.MediaItem;
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +43,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private AlbumGridViewAdapter albumGridViewAdapter = null;
     private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
+    private TextView noMediaTV = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         fragmentManager = getChildFragmentManager();
 
 
+        noMediaTV = (TextView) view.findViewById(R.id.no_mediainfolder_tv);
         albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
         albumGridView.setLayoutManager(gridLayoutManager);
@@ -122,6 +126,10 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
         Cursor cursor = cursorLoader.loadInBackground();
 //        Log.i(TAG,"cursor.getCount():"+cursor.getCount());
+        if( cursor == null )
+        {
+            return;
+        }
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
@@ -242,6 +250,18 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             }
         }*/
 //        return imageItems;
+
+        if( albumImgList.size() == 0)
+        {
+            noMediaTV.setVisibility(View.VISIBLE);
+            albumGridView.setVisibility(View.GONE);
+        }
+        else {
+            noMediaTV.setVisibility(View.GONE);
+            albumGridView.setVisibility(View.VISIBLE);
+
+        }
+
     }
 
     @Override

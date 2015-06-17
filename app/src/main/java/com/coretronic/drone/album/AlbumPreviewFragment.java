@@ -93,6 +93,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         // move to touch item
         previewPager.setCurrentItem(currentMediaIdx, false);
         previewPager.setOnPageChangeListener(this);
+        previewPager.setOffscreenPageLimit(0);
         removeDialog = AppUtils.getAlertDialog(context, context.getResources().getString(R.string.delete_files), context.getResources().getString(R.string.btn_ok), context.getResources().getString(R.string.btn_cancel), removeDialogOKListener);
 
         Log.i(TAG, "imageItems.get(currentMediaIdx).getMediaId():" + mediaItems.get(currentMediaIdx).getMediaId() +"/currentMediaIdx:" + currentMediaIdx);
@@ -115,7 +116,7 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     @Override
     public void onPause() {
         super.onPause();
-
+        fragmentManager.popBackStack();
         Log.i(TAG, "==== on pause ====");
     }
 
@@ -134,8 +135,8 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
         @Override
         public void onClick(View v) {
-
-            fragmentManager.popBackStack();
+            Log.i(TAG, "fragmentManager:" + fragmentManager);
+                    fragmentManager.popBackStack();
 
         }
     };
@@ -222,8 +223,11 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
             mediaItems.remove(currentMediaIdx);
             previewCountTitle.setText((currentMediaIdx + 1) + "/" + mediaItems.size());
             mediaPreviewAdapter.notifyDataSetChanged();
+
+
             previewPager.invalidate();
             removeDialog.dismiss();
+
 
         }
     };
