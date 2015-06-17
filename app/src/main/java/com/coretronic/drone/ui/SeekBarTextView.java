@@ -13,21 +13,21 @@ import com.coretronic.drone.R;
 /**
  * Created by jiaLian on 15/6/15.
  */
-public class SettingSeekBar extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
+public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
     //    private int maxValue;
     private int minValue;
-    private String unit;
+    private String unit="";
 
     private TextView tvValue;
     private SeekBar seekBar;
 
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener;
 
-    public SettingSeekBar(Context context) {
+    public SeekBarTextView(Context context) {
         super(context);
     }
 
-    public SettingSeekBar(Context context, AttributeSet attrs) {
+    public SeekBarTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }

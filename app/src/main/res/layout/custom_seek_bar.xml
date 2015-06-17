@@ -6,12 +6,11 @@
 
         <TextView
             android:id="@+id/tv_value"
-            android:layout_width="wrap_content"
+            android:layout_width="35dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|right"
             android:layout_marginRight="8dp"
             android:gravity="center"
-            android:text="50%"
             android:textColor="@color/bule_sky"
             android:textSize="14sp"
             android:textStyle="bold" />

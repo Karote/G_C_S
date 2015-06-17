@@ -29,6 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.Drone;
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneG2Application;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
@@ -539,7 +540,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
     }
 
-    private Drone getController() {
+    private DroneController getController() {
         return ((MainActivity) fragmentActivity).getDroneController();
     }
 

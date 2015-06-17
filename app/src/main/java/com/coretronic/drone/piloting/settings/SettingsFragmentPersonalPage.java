@@ -1,16 +1,12 @@
 package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.piloting.Setting;
-import com.coretronic.drone.ui.SettingSeekBar;
 import com.coretronic.drone.ui.ViewManager;
 
 /**
