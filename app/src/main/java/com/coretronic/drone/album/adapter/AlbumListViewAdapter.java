@@ -27,6 +27,21 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
     private static Context context;
     private static ArrayList<MediaListItem> mediaListItems = new ArrayList<MediaListItem>();
 
+
+    public interface OnItemClickListener {
+        void onItemDeleteClick(View view, int position);
+        void onDownloadClick(View view, int position);
+    }
+
+    public static OnItemClickListener mItemClickListener = null;
+
+    public void SetOnItemClickListener(final OnItemClickListener listener) {
+        mItemClickListener = listener;
+    }
+
+
+
+
     public AlbumListViewAdapter(Context context, ArrayList<MediaListItem> data) {
         this.context = context;
 
@@ -52,33 +67,18 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
 
         holder.mediaDeleteIBtn.setTag(position);
         holder.mediaDownloadIBtn.setTag(position);
-        holder.mediaDeleteIBtn.setOnClickListener(deleteBtnListener);
-        holder.mediaDownloadIBtn.setOnClickListener(downloadBtnListener);
+
+
     }
+
 
     @Override
     public int getItemCount() {
         return mediaListItems.size();
     }
 
-    public View.OnClickListener downloadBtnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
 
-            Log.i(TAG, "download btn click pos:" + v.getTag() );
-            Toast.makeText(context, "download " + v.getTag() ,Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    public View.OnClickListener deleteBtnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.i(TAG, "delete btn click pos:" + v.getTag());
-            Toast.makeText(context, "delete " + v.getTag() ,Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    public static class ViewHolder extends RecyclerView.ViewHolder  {
+    public static class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
 
         TextView mediaFilename = null;
         TextView mediaDate  = null;
@@ -94,13 +94,19 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
             mediaDeleteIBtn = (ImageButton) itemView.findViewById(R.id.media_listdelete_btn);
             mediaDownloadIBtn = (ImageButton) itemView.findViewById(R.id.media_download_btn);
 
+           mediaDeleteIBtn.setOnClickListener(this);
+           mediaDownloadIBtn.setOnClickListener(this);
+
         }
 
 
-
+        public void onClick(View v) {
+            if(v.equals(mediaDeleteIBtn)){
+                mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
+            }else if (v.equals(mediaDownloadIBtn)) {
+                mItemClickListener.onDownloadClick(v, getAdapterPosition());
+            }
+        }
     }
-
-  
-
 
 }

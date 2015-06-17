@@ -188,7 +188,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 break;
             case R.id.ll_album:
                 if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-                    return;
+//                    return;
                 }
                 fragment = new AlbumFragment();
                 backStackName = "AlbumFragment";

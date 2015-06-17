@@ -18,21 +18,30 @@
                 android:textOff="@string/album_toggle_drone"
                 android:textOn="@string/album_toggle_smartphone"/>
 
+        <RelativeLayout android:id="@+id/album_menu_option"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:visibility="invisible">
 
-        <ImageButton android:id="@+id/rubbish_bin_btn"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_alignParentRight="true"
-                     android:layout_marginRight="20dp"
-                     android:src="@drawable/ic_album_delete_n"
-                     android:visibility="visible"/>
-        <ImageButton android:id="@+id/list_share_btn"
-                     android:src="@drawable/ic_album_share_n"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_toLeftOf="@id/rubbish_bin_btn"
-                     android:layout_marginRight="0dp"
-                />
+            <ImageButton android:id="@+id/rubbish_bin_btn"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentRight="true"
+                         android:layout_marginRight="20dp"
+                         android:src="@drawable/ic_album_delete_n"
+                         android:visibility="visible"/>
+
+            <!--now no function , so I set visibility gone-->
+            <ImageButton android:id="@+id/list_share_btn"
+                         android:src="@drawable/ic_album_share_n"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_toLeftOf="@id/rubbish_bin_btn"
+                         android:layout_marginRight="0dp"
+                         android:visibility="gone"
+                    />
+        </RelativeLayout>
         <LinearLayout android:id="@+id/delete_option_layout"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"

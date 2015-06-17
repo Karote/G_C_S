@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
@@ -33,9 +35,6 @@ public class AlbumDroneTagFragment extends Fragment {
     private AlbumListViewAdapter albumListViewAdapter = null;
     private ArrayList<MediaListItem> albumImgList = new ArrayList<MediaListItem>();
 
-    public interface BtnClickListener{
-        public abstract void downloadBtnClickListener(int position);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +57,26 @@ public class AlbumDroneTagFragment extends Fragment {
 
         albumListViewAdapter = new AlbumListViewAdapter(mContext, albumImgList);
         albumListView.setAdapter(albumListViewAdapter);
+        albumListViewAdapter.SetOnItemClickListener(recyclerItemClickListener);
         albumListViewAdapter.notifyDataSetChanged();
         return view;
     }
+
+    AlbumListViewAdapter.OnItemClickListener recyclerItemClickListener = new AlbumListViewAdapter.OnItemClickListener()
+    {
+
+        @Override
+        public void onItemDeleteClick(View view, int position) {
+            Log.i(TAG, "delete:" + position);
+            Toast.makeText(mContext, "delete " + view.getTag(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onDownloadClick(View view, int position) {
+            Log.i(TAG, "download:" + position);
+            Toast.makeText(mContext, "download " + view.getTag(), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     private void getDate()
     {

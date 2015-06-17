@@ -1,49 +1,43 @@
 package com.coretronic.drone.album;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.coretronic.drone.R;
+import android.os.Handler;
+import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.utility.AppUtils;
-
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by james on 15/6/8.
  */
-public class AlbumPagerPreviewDetailFragment extends Fragment implements MediaPlayer.OnCompletionListener,
-        SeekBar.OnSeekBarChangeListener,
-        MediaPlayer.OnPreparedListener,
-        SurfaceHolder.Callback {
+public class AlbumPagerPreviewDetailFragment extends Fragment {
 
     private String TAG = AlbumPagerPreviewDetailFragment.class.getName();
+    private final static int INIT_MILLINSECS = 500;
     private Context context = null;
     private int mediaType = 0;
     private String previewShowMeidaPath = "";
 
-    private Bundle bundle = null;
-    private MediaController mediaControls;
-    private MediaPlayer mediaPlayer = null;
-    private SurfaceHolder surfaceHolder = null;
-    private int width=0,height=0;
-    private Timer mTimer;
-    private TimerTask mTimerTask;
-    private boolean progressFlag = false;
 
     // ui elements
     private ImageView showImage = null;
     private LinearLayout showVideoLayout = null;
-    private SurfaceView surfaceView = null;
+    private VideoView previewVideo = null;
     private ImageButton videoControlBtn = null;
     private ImageButton videoBigControlBtn = null;
-    private SeekBar seekBar = null;
+    private SeekBar progressBar = null;
     private TextView videoTimerTV = null;
 
 
@@ -51,55 +45,26 @@ public class AlbumPagerPreviewDetailFragment extends Fragment implements MediaPl
 
     }
 
-    public static AlbumPagerPreviewDetailFragment newInstance(int mediaType, String previewShowMeidaPath) {
-        AlbumPagerPreviewDetailFragment albumPagerPreviewDetailFragment = new AlbumPagerPreviewDetailFragment();
-
-        Bundle args = new Bundle();
-        args.putInt("mediaType", mediaType);
-        args.putString("previewShowMeidaPath", previewShowMeidaPath);
-        albumPagerPreviewDetailFragment.setArguments(args);
-
-        return albumPagerPreviewDetailFragment;
-    }
-
-//    public AlbumPagerPreviewDetailFragment(int mediaType, String previewShowMeidaPath) {
-//        Log.i(TAG, "mediaType:" + mediaType + "/meidaPath:" + previewShowMeidaPath);
-//        this.mediaType = mediaType;
-//        this.previewShowMeidaPath = previewShowMeidaPath;
-//    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_album_preview_pagercontent, container, false);
         context = fragmentView.getContext();
 
-        Log.i(TAG, "===onCreateView===");
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            this.mediaType = bundle.getInt("mediaType");
+            this.previewShowMeidaPath = bundle.getString("mediaPath");
+//            Log.i(TAG, "mediaType:" + mediaType + "/meidaPath:" + previewShowMeidaPath);
+        }
+
+        Log.i(TAG, "====onCreateView/previewShowMeidaPath:" + previewShowMeidaPath);
         findViews(fragmentView);
 
-        bundle = getArguments();
-        if( bundle != null )
-        {
-            this.mediaType = bundle.getInt("mediaType",0);
-            this.previewShowMeidaPath = bundle.getString("mediaPath","");
-        }
-        Log.i(TAG,"bundle:"+bundle+"/this.mediaType:"+this.mediaType+"/this.previewShowMeidaPath:"+this.previewShowMeidaPath);
-//        this.mediaType = getArguments().getInt("mediaType",0);
-//        this.previewShowMeidaPath = getArguments().getString("previewShowMeidaPath","");
-
         if (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
-            if( mTimerTask != null)
-            {
-                mTimerTask.cancel();
-                mTimerTask = null;
-            }
-            if( mTimer != null )
-            {
-                mTimer.cancel();
-                mTimer = null;
-            }
 
             showImage.setVisibility(View.VISIBLE);
             showVideoLayout.setVisibility(View.GONE);
-
 
             showImage.setImageBitmap(AppUtils.rotateAndResizeBitmap(previewShowMeidaPath, 1024, 768));
 
@@ -108,14 +73,19 @@ public class AlbumPagerPreviewDetailFragment extends Fragment implements MediaPl
             showImage.setVisibility(View.GONE);
             showVideoLayout.setVisibility(View.VISIBLE);
 
-            mediaPlayer = new MediaPlayer();
+            try {
+//                previewVideo.setVideoPath(previewShowMeidaPath);
+                previewVideo.setVideoURI(Uri.parse(previewShowMeidaPath));
+                previewVideo.seekTo(INIT_MILLINSECS);
+                previewVideo.requestFocus();
+                progressBar.setMax(previewVideo.getDuration());
+//                progressAsync = new ProgressAsync();
+//                progressAsync.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "preview video error:" + e.getMessage());
+            }
 
-            surfaceHolder = surfaceView.getHolder();
-
-            surfaceHolder.addCallback(this);
-            seekBar.setOnSeekBarChangeListener(this);
-
-//            playViedo();
 
         }
 
@@ -125,14 +95,17 @@ public class AlbumPagerPreviewDetailFragment extends Fragment implements MediaPl
     private void findViews(View fragmentView) {
         showImage = (ImageView) fragmentView.findViewById(R.id.preview_showimage);
         showVideoLayout = (LinearLayout) fragmentView.findViewById(R.id.preview_showvideo_layout);
-        surfaceView = (SurfaceView) fragmentView.findViewById(R.id.preview_video_sv);
-        seekBar = (SeekBar) fragmentView.findViewById(R.id.seekBar);
+        previewVideo = (VideoView) fragmentView.findViewById(R.id.preview_video);
+        progressBar = (SeekBar) fragmentView.findViewById(R.id.progressBar);
         videoTimerTV = (TextView) fragmentView.findViewById(R.id.preview_play_time_tv);
         videoControlBtn = (ImageButton) fragmentView.findViewById(R.id.video_controller_ib);
         videoBigControlBtn = (ImageButton) fragmentView.findViewById(R.id.video_controller_big_ib);
 
-//        videoControlBtn.setOnClickListener(videoControlBtnClickListener);
-//        videoBigControlBtn.setOnClickListener(videoControlBtnClickListener);
+        previewVideo.setOnTouchListener(videoViewClickListener);
+        previewVideo.setOnCompletionListener(previewVideoCompletionListener);
+//        previewVideo.setOnPreparedListener(previewVideoOnPreparedListener);
+        videoControlBtn.setOnClickListener(videoControlBtnClickListener);
+        videoBigControlBtn.setOnClickListener(videoControlBtnClickListener);
     }
 
     private View.OnClickListener videoControlBtnClickListener = new View.OnClickListener() {
@@ -152,165 +125,149 @@ public class AlbumPagerPreviewDetailFragment extends Fragment implements MediaPl
 
 
     private void handleVideoControllerAction() {
-        Log.i(TAG,"===handleVideoControllerAction===");
-        if( mediaPlayer != null && mediaPlayer.isPlaying())
-        {
 
+        Log.i(TAG, "previewVideo.isPlaying():" + previewVideo.isPlaying());
+        if (previewVideo.isPlaying()) {
             videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
             videoBigControlBtn.setVisibility(View.VISIBLE);
-            mediaPlayer.pause();
 
-        }
-        else
-        {
+            previewVideo.pause();
+            previewVideo.seekTo(INIT_MILLINSECS);
+
+        } else {
             videoControlBtn.setBackgroundResource(R.drawable.ic_album_pause_n);
             videoBigControlBtn.setVisibility(View.GONE);
-//            playViedo();
-            mediaPlayer.start();
-//            mediaPlayer.start();
+
+            previewVideo.start();
+            previewVideo.requestFocus();
+            progressBar.setMax(previewVideo.getDuration());
+            handler.post(runnable);
         }
 
-//        if (surfaceView.isPlaying()) {
-//            videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
-//            videoBigControlBtn.setVisibility(View.VISIBLE);
-//            surfaceView.pause();
-//        } else {
-//            videoControlBtn.setBackgroundResource(R.drawable.ic_album_pause_n);
-//            videoBigControlBtn.setVisibility(View.GONE);
-//
-//
-//        }
     }
 
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && isResumed()) {
-            Log.i(TAG, "===isResumed ===");
-            if (seekBar != null) {
-                Log.i(TAG, "progress async == null");
-//                playViedo();
-            }
-        } else if (isVisibleToUser) {
-            Log.i(TAG, "===only at fragment on created ===");
-            if (seekBar != null) {
-                Log.i(TAG, "progress async == null");
-//                playViedo();
+//        super.setUserVisibleHint(isVisibleToUser);
+        if (progressBar != null) {
+            progressBar.setMax(previewVideo.getDuration());
+        }
+
+        if (isVisibleToUser) {
+            if (previewVideo != null) {
+                previewVideo.pause();
+                previewVideo.seekTo(INIT_MILLINSECS);
+                progressBar.setProgress(0);
+                Log.i(TAG, "===is UserVisibleHint/previewShowMeidaPath:" + previewShowMeidaPath);
             }
         } else {
-            Log.i(TAG, "===isPaused ===");
-            if (videoControlBtn != null && videoBigControlBtn != null) {
-
+            if (previewVideo != null) {
                 videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
                 videoBigControlBtn.setVisibility(View.VISIBLE);
+                previewVideo.seekTo(INIT_MILLINSECS);
+                previewVideo.pause();
+                progressBar.setProgress(0);
 
-                if( mediaPlayer != null )
-                {
-                    mediaPlayer.seekTo(100);
-
-                }
-
-//                mediaPlayer.pause();
+                Log.i(TAG, "===not is UserVisibleHint/previewShowMeidaPath:" + previewShowMeidaPath);
             }
 
-            if( mediaPlayer != null )
-            {
-//                mediaPlayer.release();
+            if (videoTimerTV != null) {
+                videoTimerTV.setText("0:00");
             }
         }
 
+
     }
 
+    private MediaPlayer.OnCompletionListener previewVideoCompletionListener = new MediaPlayer.OnCompletionListener() {
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        Log.i(TAG, "-----surfaceCreated-----");
-        playViedo();
-    }
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
+            videoBigControlBtn.setVisibility(View.VISIBLE);
+            previewVideo.pause();
+            handler.removeCallbacks(runnable);
+        }
+    };
 
-    private void playViedo() {
-        try {
-            Log.i(TAG, "-----playViedo-----");
-            Log.i(TAG, "-----previewShowMeidaPath-----:" + previewShowMeidaPath);
-            mediaPlayer.setDataSource(previewShowMeidaPath);
-            mediaPlayer.setDisplay(surfaceHolder);
-            mediaPlayer.prepare();
-//            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(this);
-            mediaPlayer.setOnPreparedListener(this);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    private VideoView.OnTouchListener videoViewClickListener = new VideoView.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
+            videoBigControlBtn.setVisibility(View.VISIBLE);
+            previewVideo.pause();
+            return true;
+        }
+    };
+
+    /*
+        private MediaPlayer.OnPreparedListener previewVideoOnPreparedListener = new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Log.i(TAG, "===on prepared ===");
+                videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
+                videoBigControlBtn.setVisibility(View.VISIBLE);
+                progressBar.setProgress(0);
+                progressBar.setMax(100);
+                previewVideo.seekTo(100);
+                previewVideo.pause();
+
+            }
+        };
+    */
+    public String milliSecondsToTimer(long milliseconds) {
+        String finalTimerString = "";
+        String secondsString = "";
+
+        // Convert total duration into time
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
+        // Add hours if there
+        if (hours > 0) {
+            finalTimerString = hours + ":";
         }
 
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.i(TAG, "===surfaceDestroyed===");
-        if( mediaPlayer != null )
-        {
-            mediaPlayer.release();
-            mediaPlayer = null;
+        // Prepending 0 to seconds if it is one digit
+        if (seconds < 10) {
+            secondsString = "0" + seconds;
+        } else {
+            secondsString = "" + seconds;
         }
 
+        finalTimerString = finalTimerString + minutes + ":" + secondsString;
+
+        // return timer string
+        return finalTimerString;
     }
 
+    private Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+
+        @Override
+        public void run() {
+            if (previewVideo.isPlaying()) {
+                int current = previewVideo.getCurrentPosition();
+                videoTimerTV.setText(milliSecondsToTimer(current));
+                progressBar.setProgress(current);
+                handler.postDelayed(runnable, 500);
+            }
+        }
+    };
+
+
     @Override
-    public void onCompletion(MediaPlayer mp) {
-        mp.seekTo(100);
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG, "===onDestroyView/previewShowMeidaPath:" + previewShowMeidaPath);
         videoControlBtn.setBackgroundResource(R.drawable.ic_album_preview_play_n);
         videoBigControlBtn.setVisibility(View.VISIBLE);
+        previewVideo.pause();
+        previewVideo.seekTo(INIT_MILLINSECS);
+        handler.removeCallbacks(runnable);
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        Log.i(TAG, "-----onPrepared-----");
-
-        width = mediaPlayer.getVideoWidth();
-        height = mediaPlayer.getVideoHeight();
-
-        if (width != 0 && height != 0) {
-            Log.i(TAG, "-----width != 0 && height != 0-----");
-            surfaceHolder.setFixedSize(width,height);
-            seekBar.setMax(mediaPlayer.getDuration());
-            mp.seekTo(100);
-            mTimer = new Timer();
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    if( progressFlag == true )
-                    {
-                        return;
-                    }
-                    seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                }
-            };
-
-//            mTimer.schedule(mTimerTask,0,10);
-//            mediaPlayer.start();
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        progressFlag = true;
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        mediaPlayer.seekTo(seekBar.getProgress());
-        progressFlag = false;
-    }
 }
