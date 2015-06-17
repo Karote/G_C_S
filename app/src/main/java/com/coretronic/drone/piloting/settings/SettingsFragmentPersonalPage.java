@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
+import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.ui.ViewManager;
 
 /**
@@ -18,7 +19,9 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_personal_page, container, false);
-        ViewManager.assignSettingSeekBarView(fragmentView,R.id.setting_bar_opacity, null);
+        ViewManager.assignSettingSeekBarTextView(fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACTITY);
+        ViewManager.assignSwitchView(fragmentView, R.id.switch_sdcard_enable, Setting.SettingType.SD_RECORD);
+        ViewManager.assignSwitchView(fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE);
 
         return fragmentView;
     }

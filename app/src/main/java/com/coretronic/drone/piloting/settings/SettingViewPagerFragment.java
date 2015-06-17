@@ -11,14 +11,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.coretronic.drone.DroneG2Application;
+import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.piloting.PilotingFragment;
+import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.PageIndicator;
 
@@ -89,7 +89,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        ((DroneG2Application) getActivity().getApplication()).saveSettingsValue();
+        ((DroneApplication) getActivity().getApplication()).saveSettingsValue();
     }
 
     @Override
@@ -98,6 +98,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         PilotingFragment.markView.setBackgroundColor(Color.TRANSPARENT);
         PilotingFragment.markView.setAlpha(1);
         for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
+            joyStickSurfaceView.setPaintPressedAlpha(DroneApplication.settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()].getValue()/100f);
             joyStickSurfaceView.setVisibility(View.VISIBLE);
         }
         PilotingFragment.initialJoypadMode();
@@ -112,9 +113,9 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     public void onPageSelected(int i) {
         tvTitle.setText(titleString[i]);
         pageIndicator.setCurrentItem(i);
-        if(i== STSUS_PAGE){
+        if (i == STSUS_PAGE) {
             defaultSetting.setVisibility(View.GONE);
-        }else{
+        } else {
             defaultSetting.setVisibility(View.VISIBLE);
         }
     }

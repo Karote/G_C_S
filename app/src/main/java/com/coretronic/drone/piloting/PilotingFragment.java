@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import com.coretronic.drone.Drone;
 import com.coretronic.drone.DroneController;
-import com.coretronic.drone.DroneG2Application;
+import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
@@ -405,8 +405,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     public static void initialJoypadMode() {
         int[] controlType;
         boolean[] isJoyModes;
-        boolean joypadMode = DroneG2Application.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue() == Setting.ON ? true : false;
-        boolean leftHanded = DroneG2Application.settings[Setting.SettingType.LEFT_HANDED.ordinal()].getValue() == Setting.ON ? true : false;
+        boolean joypadMode = DroneApplication.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue() == Setting.ON ? true : false;
+        boolean leftHanded = DroneApplication.settings[Setting.SettingType.LEFT_HANDED.ordinal()].getValue() == Setting.ON ? true : false;
 
         if (joypadMode) {
             if (leftHanded) {
