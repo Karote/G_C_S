@@ -21,6 +21,9 @@ import com.coretronic.drone.album.model.MediaObject;
 import com.coretronic.drone.album.model.MediaItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by james on 15/6/1.
@@ -153,7 +156,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("mediaObject", mediaObject);
-                bundle.putLong("selectMediaId", ((MediaItem) mediaItems.get(itemPos)).getMediaId() );
+                bundle.putLong("selectMediaId", ((MediaItem) mediaItems.get(itemPos)).getMediaId());
                 Fragment cuttentFragment = ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("fragment");
 
                 AlbumPreviewFragment albumPreviewFragment = new AlbumPreviewFragment();
@@ -185,8 +188,19 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 //        }
 //    }
 
+    public class CustomComparator implements Comparator<Long> {
+
+
+        @Override
+        public int compare(Long lhs, Long rhs) {
+            return lhs.compareTo(rhs);
+        }
+    }
+
     public void deleteSelectMediaFile() {
         ContentResolver cr = context.getContentResolver(); // in an Activity
+        Collections.sort(selectedPathAryList, new CustomComparator());
+        List<Integer> tempDelAry = new ArrayList<Integer>();
         for (int i = 0; i < mediaItems.size(); i++) {
             for (int j = 0; j < selectedPathAryList.size(); j++) {
                 if ((long) (selectedPathAryList.get(j)) == mediaItems.get(i).getMediaId()) {
@@ -196,12 +210,14 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
                     int deletedNum = cr.delete(MediaStore.Files.getContentUri("external"),
                             MediaStore.Files.FileColumns._ID + " = ?", new String[]{"" + (long) mediaItems.get(i).getMediaId()});
-                    mediaItems.remove(mediaItems.get(i));
+                    tempDelAry.add(i);
+//                    mediaItems.remove(mediaItems.get(i));
                     Log.i(TAG, "deletedNum:" + deletedNum);
                     notifyItemRemoved(i);
                 }
             }
         }
+        Log.i(TAG,"tempDelAry:"+tempDelAry);
         deleteSelectedPathAryList();
     }
 

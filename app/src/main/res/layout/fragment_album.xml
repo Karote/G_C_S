@@ -34,14 +34,43 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:clickable="true">
-        <Switch
-                android:id="@+id/album_toggle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textOff="@string/album_toggle_drone"
-                android:textOn="@string/album_toggle_smartphone"/>
+        <!--<Switch-->
+                <!--android:id="@+id/album_toggle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:textOff="@string/album_toggle_drone"-->
+                <!--android:textOn="@string/album_toggle_smartphone"/>-->
+        <LinearLayout android:id="@+id/switch_layout"
+                      android:layout_width="fill_parent"
+                      android:layout_height="54dp"
+                      android:orientation="horizontal"
+                      android:layout_centerInParent="true"
+                      >
+            <Button android:id="@+id/drone_switchbtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="170dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/album_left_switch_selector"
+                    android:text="@string/album_toggle_drone"
+                    android:textColor="@drawable/selector_buttons_text"/>
+            <Button android:id="@+id/smartphone_switchbtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="170dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/album_right_switch_selector"
+                    android:textColor="@drawable/selector_buttons_text"
+                    android:text="@string/album_toggle_smartphone"
+                    android:layout_weight="1"/>
+
+
+        </LinearLayout>
 
         <RelativeLayout android:id="@+id/album_menu_option"
                         android:layout_width="wrap_content"
@@ -91,7 +120,7 @@
                  android:orientation="horizontal"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 android:layout_marginTop="10dp"
+                 android:layout_marginTop="0dp"
                  android:background="@android:color/white">
 
     </FrameLayout>

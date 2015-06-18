@@ -24,7 +24,7 @@ import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class AlbumFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener{
+public class AlbumFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
 
     private static String TAG = AlbumFragment.class.getSimpleName();
     // fragment declare
@@ -36,7 +36,9 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     private FragmentActivity fragmentActivity = null;
     // ui declare
     private StatusView statusView = null;
-    private Switch albumSwitch = null;
+//        private Switch albumSwitch = null;
+    private Button albumDroneSwitchBtn = null;
+    private Button albumSmartPhoneSwitchBtn = null;
     private ImageButton rubbishBinBtn = null;
     private LinearLayout deleteOptionLayout = null;
     private RelativeLayout albumMenuOption = null;
@@ -86,13 +88,19 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
 
         statusView = (StatusView) fragmentView.findViewById(R.id.status);
         albumListBackBtn = (Button) fragmentView.findViewById(R.id.album_backbtn);
-        albumSwitch = (Switch) fragmentView.findViewById(R.id.album_toggle);
-        albumSwitch.setOnCheckedChangeListener(albumSwitchListener);
+        albumMenuOption = (RelativeLayout) fragmentView.findViewById(R.id.album_menu_option);
+//        albumSwitch = (Switch) fragmentView.findViewById(R.id.album_toggle);
+//        albumSwitch.setOnCheckedChangeListener(albumSwitchListener);
+        albumDroneSwitchBtn = (Button) fragmentView.findViewById(R.id.drone_switchbtn);
+        albumSmartPhoneSwitchBtn = (Button) fragmentView.findViewById(R.id.smartphone_switchbtn);
+        albumSmartPhoneSwitchBtn.setOnClickListener(albumSwitchBtnListener);
+        albumDroneSwitchBtn.setOnClickListener(albumSwitchBtnListener);
+        albumDroneSwitchBtn.performClick();
 
         rubbishBinBtn = (ImageButton) fragmentView.findViewById(R.id.rubbish_bin_btn);
         rubbishBinBtn.setOnClickListener(rubbishBinBtnAction);
 
-        albumMenuOption = (RelativeLayout) fragmentView.findViewById(R.id.album_menu_option);
+
         deleteOptionLayout = (LinearLayout) fragmentView.findViewById(R.id.delete_option_layout);
         deleteBtn = (Button) fragmentView.findViewById(R.id.delete_btn);
         cancelDeleteBtn = (Button) fragmentView.findViewById(R.id.cancel_btn);
@@ -120,7 +128,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
             // set delete option and hide the rubbish bin button
             deleteOptionLayout.setVisibility(View.VISIBLE);
             rubbishBinBtn.setVisibility(View.GONE);
-            albumSwitch.setVisibility(View.GONE);
+//            albumSwitch.setVisibility(View.GONE);
         }
     };
 
@@ -149,7 +157,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
                     // set delete option and hide the rubbish bin button
                     deleteOptionLayout.setVisibility(View.GONE);
                     rubbishBinBtn.setVisibility(View.VISIBLE);
-                    albumSwitch.setVisibility(View.VISIBLE);
+//                    albumSwitch.setVisibility(View.VISIBLE);
                     ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectedPathAryList();
                     break;
             }
@@ -160,6 +168,53 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
 
 
     // album switch listener
+    private View.OnClickListener albumSwitchBtnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            albumFragmentTransaction = fragmentChildManager.beginTransaction();
+
+            if (v.getId() ==  R.id.drone_switchbtn) {
+
+                albumDroneSwitchBtn.setSelected(true);
+                albumSmartPhoneSwitchBtn.setSelected(false);
+                albumMenuOption.setVisibility(View.INVISIBLE);
+
+                if( isDroneOrSmartphoneMode == false)
+                    return;
+                Log.d(TAG, "---click on the drone switch button---");
+                if (droneAlbumFragment != null) {
+                    albumFragmentTransaction
+                            .replace(R.id.album_fragment_container, droneAlbumFragment, "DroneAlbumFragment")
+                            .commit();
+
+                } else {
+                    Log.e(TAG, "Error in creating fragment");
+                }
+                isDroneOrSmartphoneMode = false;
+
+
+            } else {
+
+                albumDroneSwitchBtn.setSelected(false);
+                albumSmartPhoneSwitchBtn.setSelected(true);
+                albumMenuOption.setVisibility(View.VISIBLE);
+
+                if( isDroneOrSmartphoneMode == true)
+                    return;
+                Log.d(TAG, "---click on the smartphone switch button---");
+                if (smartPhoneAlbumFragment != null) {
+                    albumFragmentTransaction
+                            .replace(R.id.album_fragment_container, smartPhoneAlbumFragment, "SmartPhoneFragment")
+                            .commit();
+
+                } else {
+                    Log.e(TAG, "Error in creating fragment");
+                }
+                isDroneOrSmartphoneMode = true;
+            }
+        }
+    };
+
     private CompoundButton.OnCheckedChangeListener albumSwitchListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -224,7 +279,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
             ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).deleteSelectMediaFile();
             ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).hideDeleteOption();
             deleteDialog.dismiss();
-            albumSwitch.setVisibility(View.VISIBLE);
+//            albumSwitch.setVisibility(View.VISIBLE);
             rubbishBinBtn.setVisibility(View.VISIBLE);
             deleteOptionLayout.setVisibility(View.GONE);
         }
@@ -239,7 +294,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
                 Log.i(TAG, TAG + "===backStackChangedListener===");
                 if (isDroneOrSmartphoneMode) {
                     if (smartPhoneAlbumFragment != null) {
-                        ((AlbumSmartPhoneTagFragment)smartPhoneAlbumFragment).refreshData();
+                        ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).refreshData();
                     }
                 }
             }
@@ -284,13 +339,10 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
 
     }
 
-    public void updateTrashUI()
-    {
-        if( ((AlbumSmartPhoneTagFragment)smartPhoneAlbumFragment).getAlbumImgList().size() != 0 )
-        {
+    public void updateTrashUI() {
+        if (((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).getAlbumImgList().size() != 0) {
             rubbishBinBtn.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             rubbishBinBtn.setVisibility(View.GONE);
         }
     }
