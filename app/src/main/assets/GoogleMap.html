@@ -25,7 +25,9 @@
 		<script>
             var map,
                 GeoMarker,
-                droneMarker,
+                droneMarkerOuter,
+                droneMarkerInner,
+                droneMarkerArrow,
                 markIcon;
             var markers = [];
             var poly;
@@ -74,34 +76,55 @@
                     strokeColor : '#4EC3F5',
                     strokeOpacity : 1.0,
                     strokeWeight : 3,
+                    clickable : false,
                     map : map
                 };
                 poly = new google.maps.Polyline(polyOptions);
                 
-                var droneImage = {
-                    url : 'ico_indicator_waypoint_current',
-                    // This marker is 20 pixels wide by 32 pixels tall.
-                    size : new google.maps.Size(42, 42),
-                    // The origin for this image is 0,0.
-                    origin : new google.maps.Point(0, 0),
-                    // The anchor for this image is the base of the flagpole at 0,32.
-                    anchor : new google.maps.Point(21, 21)
+                var droneMarkerOuterOption = {
+                	icon : {
+                		path : 'M40,14.7c3.5,10.5-2.2,21.8-12.7,25.3C16.8,43.5,5.5,37.8,2,27.3S4.2,5.5,14.7,2C25.2-1.5,36.5,4.2,40,14.7L40,14.7z',
+                		strokeColor : '#000000',
+                		strokeOpacity : 0.4,
+                		fillColor : '#000000',
+                		fillOpacity : 0.4,
+                        anchor: new google.maps.Point(21, 21),
+                		scale : 1
+                	},
+                	zIndex : 97,
+                	map : map
+                };
+                
+                var droneMarkerInnerOption = {
+                	icon : {
+                		path : 'M30.5,17.9c1.7,5.2-1.1,10.9-6.4,12.6c-5.2,1.7-10.9-1.1-12.6-6.4c-1.7-5.2,1.1-10.9,6.4-12.6C23.1,9.8,28.8,12.6,30.5,17.9L30.5,17.9z',
+                		strokeColor : '#ffffff',
+                		fillColor : '#ffffff',
+                		fillOpacity : 1,
+                        anchor: new google.maps.Point(21, 21),
+                		scale : 1
+                	},
+                	zIndex : 98,
+                	map : map
                 };
 
-                var droneMarkerOption = {
-                    // icon : {
-                        // path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                        // strokeColor : '#FF0000',
-                        // fillColor : '#FF0000',
-                        // fillOpacity : 1,
-                        // rotation : 0,
-                        // scale : 4
-                    // },
-                    icon : droneImage,
+                var droneMarkerArrowOption = {
+                    icon : {
+                        path :'M20.9,13L26,26.9c0,0-5-3.7-5.1-3.7c0,0-4.9,3.8-4.9,3.8L20.9,13L20.9,13z',
+                        strokeColor : '#ff8800',
+                        fillColor : '#ff8800',
+                        fillOpacity : 1,
+                        anchor: new google.maps.Point(21, 21),
+                        rotation : 0,
+                        scale : 1
+                    },
+                	zIndex : 99,
                     map : map
                 };
-
-                droneMarker = new google.maps.Marker(droneMarkerOption);
+                
+                droneMarkerOuter = new google.maps.Marker(droneMarkerOuterOption);
+                droneMarkerInner = new google.maps.Marker(droneMarkerInnerOption);
+                droneMarkerArrow = new google.maps.Marker(droneMarkerArrowOption);
 
                 google.maps.event.addListener(map, 'click', addLatLng);
 
@@ -130,13 +153,6 @@
                 };
                 var marker = new MarkerWithLabel({
                     position : new google.maps.LatLng(lat, lng),
-                    // icon : {
-                    // path : google.maps.SymbolPath.CIRCLE,
-                    // strokeColor : '#4EC3F5',
-                    // fillColor : '#4EC3F5',
-                    // fillOpacity : 1,
-                    // scale : 8
-                    // },
                     icon : markerImage,
                     labelContent : sn,
                     labelAnchor : new google.maps.Point(x, 8),
@@ -160,7 +176,9 @@
                 } else {
                     AndroidFunction.showToast("無法取得現在位置");
                 }
-                map.setZoom(15);
+                if(map.getZoom() <15 ){
+                	map.setZoom(15);
+                }
             }
 
             function setMapTo(nowLatget, nowLngget) {
@@ -190,15 +208,46 @@
             }
 
             function updateDroneLocation(droneLat, droneLng, heading) {
-                droneMarker.setMap(null);
-                droneMarker.icon.rotation = heading;
-                droneMarker.setPosition(new google.maps.LatLng(droneLat, droneLng));
-                droneMarker.setMap(map);
+            	droneMarkerOuter.setMap(null);
+            	droneMarkerInner.setMap(null);
+                droneMarkerArrow.setMap(null);
+                droneMarkerArrow.icon.rotation = heading;
+                droneMarkerOuter.setPosition(new google.maps.LatLng(droneLat, droneLng));
+                droneMarkerInner.setPosition(new google.maps.LatLng(droneLat, droneLng));
+                droneMarkerArrow.setPosition(new google.maps.LatLng(droneLat, droneLng));
+                droneMarkerOuter.setMap(map);
+                droneMarkerInner.setMap(map);
+                droneMarkerArrow.setMap(map);
             }
 
+            function fitMapShowAll() {
+            	var i, j;
+                var bounds = new google.maps.LatLngBounds();
+                for (i = 0, j = markers.length; i < j; i++) {
+                    bounds.extend(markers[i].position);
+                }
+                map.fitBounds(bounds);
+            }
+            
+            function hideMarkerOnMap(){
+            	var i, j;
+            	for (i = 0, j = markers.length; i < j; i++){
+            		markers[i].setMap(null);
+            	}
+            	poly.setMap(null);
+            }
+            
+            function showMarkerOnMap(){
+            	var i, j;
+            	for (i = 0, j = markers.length; i < j; i++){
+            		markers[i].setMap(map);
+            	}
+            	poly.setMap(map);            	
+            }
+            
 		</script>
 	</head>
 	<body onload="initialize()">
-		<div id="map" style="width: 100%; height: 100%;"></div>
+		<div id="map" style="width: 100%; height: 100%;"> </div>
 	</body>
 </html>

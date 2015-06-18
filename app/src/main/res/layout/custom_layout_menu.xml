@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <Button
         android:id="@+id/button_back_to_main"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginLeft="4dp"
+        android:layout_gravity="bottom"
         android:background="@drawable/btn_action_back" />
 
     <View
@@ -17,14 +18,12 @@
         android:layout_height="20dp"
         android:background="#ffffff"
         android:layout_marginLeft="8dp"
-        android:layout_gravity="center_vertical"
-        android:layout_toRightOf="@id/button_back_to_main"/>
+        android:layout_gravity="center_vertical"/>
 
     <Spinner
         android:id="@+id/mission_plan_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:layout_marginBottom="4dp"
-        android:layout_toRightOf="@id/divider_view"/>
+        android:layout_gravity="bottom"/>
 </LinearLayout>

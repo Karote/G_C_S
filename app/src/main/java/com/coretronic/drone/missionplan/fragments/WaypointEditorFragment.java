@@ -19,6 +19,7 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -59,7 +60,7 @@ public class WaypointEditorFragment extends Fragment
     private static MissionItemListAdapter mMissionItemAdapter;
     private WebView webview_WayPoint;
     private TextView tv_droneSpeed, tv_droneLatLng;
-    private LinearLayout deleteIconLayout, deleteOptionLayout;
+    private LinearLayout layout_editMarker, layout_deleteIcon, layout_deleteOption, layout_planControl, layout_buttomBar;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequestHighAccuracy;
@@ -67,7 +68,7 @@ public class WaypointEditorFragment extends Fragment
     final static long LOCATION_UPDATE_MIN_TIME = 1000;
     final static int REQUEST_CHECK_SETTINGS = 1000;
     private static final String[] SPINNER_MENU = {"PLANNING", "FOLLOW ME", "FLIGHT HISTORY"};
-    public double nowLatget, nowLngget, droneLat, droneLng;
+    public double nowLatget, nowLngget, droneLat = 0, droneLng = 0;
     public int droneHeading;
     public Drone drone;
     public boolean isGO;
@@ -266,7 +267,7 @@ public class WaypointEditorFragment extends Fragment
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "onHeadingUpdate");
+//                Log.d(TAG, "onHeadingUpdate: " + droneLat + "," + droneLng + "," + droneHeading);
                 webview_WayPoint.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
             }
         });
@@ -336,11 +337,17 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void setUpButtomBarButton(View view) {
+        layout_buttomBar = (LinearLayout)view.findViewById(R.id.bottom_bar);
+
         final Button myLocationButton = (Button) view.findViewById(R.id.button_my_location);
         myLocationButton.setOnClickListener(this);
 
-        final Button goButton = (Button) view.findViewById(R.id.button_go);
+        layout_planControl = (LinearLayout)view.findViewById(R.id.layout_plan_control);
+
+        final Button goButton = (Button) view.findViewById(R.id.btn_plan_go);
         goButton.setOnClickListener(this);
+        final Button stopButton = (Button) view.findViewById(R.id.btn_plan_stop);
+        stopButton.setOnClickListener(this);
 
         final Button droneLocationButton = (Button) view.findViewById(R.id.button_drone_location);
         droneLocationButton.setOnClickListener(this);
@@ -354,25 +361,59 @@ public class WaypointEditorFragment extends Fragment
         final Button backToMainButton = (Button) view.findViewById(R.id.button_back_to_main);
         backToMainButton.setOnClickListener(this);
 
-        Spinner spinnerView = (Spinner)view.findViewById(R.id.mission_plan_spinner);
+
+        Spinner spinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
         spinnerView.setAdapter(spinnerAdapter);
+        spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: // PLANNING
+                        layout_editMarker.setVisibility(LinearLayout.VISIBLE);
+                        recyclerView.setVisibility(RecyclerView.VISIBLE);
+                        layout_buttomBar.setVisibility(LinearLayout.VISIBLE);
+                        layout_planControl.setVisibility(LinearLayout.VISIBLE);
+                        webview_WayPoint.loadUrl("javascript:showMarkerOnMap()");
+                        break;
+                    case 1: // FOLLOW ME
+                        layout_editMarker.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(RecyclerView.GONE);
+                        layout_buttomBar.setVisibility(LinearLayout.VISIBLE);
+                        layout_planControl.setVisibility(LinearLayout.GONE);
+                        webview_WayPoint.loadUrl("javascript:hideMarkerOnMap()");
+                        break;
+                    case 2: // FLIGHT HISTORY
+                        layout_editMarker.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(RecyclerView.GONE);
+                        layout_buttomBar.setVisibility(LinearLayout.GONE);
+                        webview_WayPoint.loadUrl("javascript:hideMarkerOnMap()");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setUpDeleteLayout(View view) {
-        deleteIconLayout = (LinearLayout) view.findViewById(R.id.delete_icon_layout);
-        deleteOptionLayout = (LinearLayout) view.findViewById(R.id.delete_option_layout);
-        deleteOptionLayout.setVisibility(LinearLayout.INVISIBLE);
+        layout_editMarker = (LinearLayout) view.findViewById(R.id.custom_layout_edit_marker);
+        layout_deleteIcon = (LinearLayout) view.findViewById(R.id.layout_delete_icon);
+        layout_deleteOption = (LinearLayout) view.findViewById(R.id.layout_delete_option);
+        layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
 
-        final Button b_deleteIcon = (Button) view.findViewById(R.id.button_delete_marker);
-        b_deleteIcon.setOnClickListener(this);
+        final Button b_action_plan_delete = (Button) view.findViewById(R.id.btn_action_plan_delete);
+        b_action_plan_delete.setOnClickListener(this);
 
-        final Button b_deleteDone = (Button) view.findViewById(R.id.button_delete_done);
-        b_deleteDone.setOnClickListener(this);
+        final Button b_delete_done = (Button) view.findViewById(R.id.btn_delete_done);
+        b_delete_done.setOnClickListener(this);
 
-        final Button b_deleteAll = (Button) view.findViewById(R.id.button_delete_all);
-        b_deleteAll.setOnClickListener(this);
+        final Button b_delete_all = (Button) view.findViewById(R.id.btn_delete_all);
+        b_delete_all.setOnClickListener(this);
     }
 
     private void setUpMavInfo(View view) {
@@ -464,26 +505,26 @@ public class WaypointEditorFragment extends Fragment
             case R.id.button_back_to_main:
                 getFragmentManager().popBackStack();
                 break;
-            case R.id.button_delete_all:
+            case R.id.btn_delete_all:
                 webview_WayPoint.loadUrl("javascript:clearMarkers()");
                 mMissionItemAdapter.clearMission();
                 mMissionItemAdapter.notifyDataSetChanged();
                 break;
-            case R.id.button_delete_marker:
-                deleteOptionLayout.setVisibility(LinearLayout.VISIBLE);
-                deleteIconLayout.setVisibility(LinearLayout.INVISIBLE);
+            case R.id.btn_action_plan_delete:
+                layout_deleteOption.setVisibility(LinearLayout.VISIBLE);
+                layout_deleteIcon.setVisibility(LinearLayout.INVISIBLE);
                 recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_deleteitem_width);
                 mMissionItemAdapter.isVisible = true;
                 mMissionItemAdapter.notifyDataSetChanged();
                 break;
-            case R.id.button_delete_done:
-                deleteOptionLayout.setVisibility(LinearLayout.INVISIBLE);
-                deleteIconLayout.setVisibility(LinearLayout.VISIBLE);
+            case R.id.btn_delete_done:
+                layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
+                layout_deleteIcon.setVisibility(LinearLayout.VISIBLE);
                 recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_item_width);
                 mMissionItemAdapter.isVisible = false;
                 mMissionItemAdapter.notifyDataSetChanged();
                 break;
-            case R.id.button_go:
+            case R.id.btn_plan_go:
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissionList();
                 droneMissionList.add(0, createNewMission(0, 0, 0, 0, false, 0, Type.WAY_POINT));
                 drone.writeMissions(droneMissionList, WaypointEditorFragment.this);
@@ -492,6 +533,13 @@ public class WaypointEditorFragment extends Fragment
                 progressDialog.show();
                 isGO = true;
                 break;
+            case R.id.btn_plan_stop:
+                drone.readMissions(WaypointEditorFragment.this);
+                progressDialog.setTitle("Loading");
+                progressDialog.setMessage("Please wait...");
+                progressDialog.show();
+                isGO = false;
+                break;
             case R.id.button_my_location:
                 webview_WayPoint.loadUrl("javascript:setMapToMyLocation()");
                 break;
@@ -499,11 +547,9 @@ public class WaypointEditorFragment extends Fragment
                 webview_WayPoint.loadUrl("javascript:setMapTo(" + droneLat + "," + droneLng + ")");
                 break;
             case R.id.button_fit_map:
-                drone.readMissions(WaypointEditorFragment.this);
-                progressDialog.setTitle("Loading");
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
-                isGO = false;
+                if (mMissionItemAdapter.getItemCount() > 0) {
+                    webview_WayPoint.loadUrl("javascript:fitMapShowAll()");
+                }
                 break;
         }
     }
