@@ -25,7 +25,7 @@ public class ViewManager {
     public static final float NON_ALPHA = 1f;
 
     public static void assignSwitchView(View view, int id, Setting.SettingType settingType) {
-        Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
+        Switch sw = (Switch) view.findViewById(id);
         final int type = settingType.ordinal();
         sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
