@@ -28,7 +28,7 @@
                 droneMarkerOuter,
                 droneMarkerInner,
                 droneMarkerArrow,
-                markIcon;
+                mapClickable;
             var markers = [];
             var poly;
 
@@ -37,6 +37,8 @@
                 latlng = new google.maps.LatLng(24.712299, 120.916408);
                 // 中強光電竹南廠
                 //latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
+                
+                mapClickable = true;
 
                 var styleArray = [{
                     featureType : "poi",
@@ -130,11 +132,17 @@
 
                 // updateDroneLocation(24.712299, 120.916408);
             }
+            
+            function setMapClickable(isClickable){
+            	mapClickable = isClickable;
+            }
 
             function addLatLng(event) {
-                AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
-
-                // addMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
+            	if(mapClickable){
+                	AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
+                	
+                	// addMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
+               }
             }
 
             function addMarker(lat, lng, sn) {
@@ -243,6 +251,19 @@
             		markers[i].setMap(map);
             	}
             	poly.setMap(map);            	
+            }
+            
+            function setMarkerShow(isMarkerShow){
+            	var i, j, option;
+            	if(isMarkerShow){
+            		option = map;
+            	}else{
+            		option = null;
+            	}
+            	for(i=0, j = markers.length; i < j; i++){
+            		markers[i].setMap(option);
+            	}
+            	poly.setMap(option);
             }
             
 		</script>
