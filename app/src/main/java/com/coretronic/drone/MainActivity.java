@@ -54,7 +54,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
         mDroneDevices = new ArrayList<>();
-        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "null", 77));
+        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Select Device", 77));
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
 
         mDeviceAdapter = new DeviceAdapter();
@@ -127,6 +127,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 statusView.setBatteryStatus(battery);
             }
         });
+        Log.d(TAG, "Drone Status: Battery " + battery);
     }
 
     @Override
@@ -134,6 +135,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onAltitudeUpdate(altitude);
         }
+        Log.d(TAG, "Drone Status: Altitude " + altitude);
     }
 
     @Override
@@ -148,6 +150,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onSpeedUpdate(groundSpeed);
         }
+        Log.d(TAG, "Drone Status: Speed " + groundSpeed);
     }
 
     @Override
@@ -158,8 +161,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     }
 
     @Override
-    public void onHeadingUpdate(int heading){
-        if(mStatusChangedListener != null){
+    public void onHeadingUpdate(int heading) {
+        if (mStatusChangedListener != null) {
             mStatusChangedListener.onHeadingUpdate(heading);
         }
     }
