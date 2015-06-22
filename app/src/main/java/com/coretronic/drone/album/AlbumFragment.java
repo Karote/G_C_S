@@ -36,7 +36,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     private FragmentActivity fragmentActivity = null;
     // ui declare
     private StatusView statusView = null;
-//        private Switch albumSwitch = null;
     private Button albumDroneSwitchBtn = null;
     private Button albumSmartPhoneSwitchBtn = null;
     private ImageButton rubbishBinBtn = null;
@@ -89,8 +88,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
         statusView = (StatusView) fragmentView.findViewById(R.id.status);
         albumListBackBtn = (Button) fragmentView.findViewById(R.id.album_backbtn);
         albumMenuOption = (RelativeLayout) fragmentView.findViewById(R.id.album_menu_option);
-//        albumSwitch = (Switch) fragmentView.findViewById(R.id.album_toggle);
-//        albumSwitch.setOnCheckedChangeListener(albumSwitchListener);
         albumDroneSwitchBtn = (Button) fragmentView.findViewById(R.id.drone_switchbtn);
         albumSmartPhoneSwitchBtn = (Button) fragmentView.findViewById(R.id.smartphone_switchbtn);
         albumSmartPhoneSwitchBtn.setOnClickListener(albumSwitchBtnListener);
@@ -135,6 +132,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     private View.OnClickListener albumListBackBtnAction = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             getFragmentManager().popBackStack();
         }
 
@@ -215,42 +213,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
         }
     };
 
-    private CompoundButton.OnCheckedChangeListener albumSwitchListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            // switch to smartphone album fragment
-            Log.i(TAG, "isChecked:" + isChecked);
-            albumMenuOption.setVisibility(View.VISIBLE);
-            isDroneOrSmartphoneMode = isChecked;
-            albumFragmentTransaction = fragmentChildManager.beginTransaction();
-            // switch to smart phone album fragment
-            if (isDroneOrSmartphoneMode) {
-                if (smartPhoneAlbumFragment != null) {
-                    albumFragmentTransaction
-                            .replace(R.id.album_fragment_container, smartPhoneAlbumFragment, "SmartPhoneFragment")
-                            .commit();
-
-                } else {
-                    Log.e(TAG, "Error in creating fragment");
-                }
-
-            }
-            // switch to drone album fragment
-            else {
-                albumMenuOption.setVisibility(View.INVISIBLE);
-
-                if (droneAlbumFragment != null) {
-                    albumFragmentTransaction
-                            .replace(R.id.album_fragment_container, droneAlbumFragment, "DroneAlbumFragment")
-                            .commit();
-
-                } else {
-                    Log.e(TAG, "Error in creating fragment");
-                }
-
-            }
-        }
-    };
 
 
     @Override
@@ -267,8 +229,14 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     public void onResume() {
         super.onResume();
         if (smartPhoneAlbumFragment != null && isDroneOrSmartphoneMode) {
+            Log.i(TAG, TAG +"smartPhoneAlbumFragment onResume");
             ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).refreshData();
         }
+
+//        if (droneAlbumFragment != null && (!isDroneOrSmartphoneMode)) {
+//            Log.i(TAG, TAG +"droneAlbumFragment onResume");
+//            ((AlbumDroneTagFragment) droneAlbumFragment).refreshListData();
+//        }
     }
 
     // delete dialog ok listener
@@ -284,7 +252,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
             deleteOptionLayout.setVisibility(View.GONE);
         }
     };
-
 
     private FragmentManager.OnBackStackChangedListener backStackChangedListener() {
         FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
@@ -337,14 +304,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     @Override
     public void onHeadingUpdate(int heading) {
 
-    }
-
-    public void updateTrashUI() {
-        if (((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).getAlbumImgList().size() != 0) {
-            rubbishBinBtn.setVisibility(View.VISIBLE);
-        } else {
-            rubbishBinBtn.setVisibility(View.GONE);
-        }
     }
 
 }
