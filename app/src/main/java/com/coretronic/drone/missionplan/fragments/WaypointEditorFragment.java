@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.Drone;
-import com.coretronic.drone.Drone.MissionLoaderListener;
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.Mission.Builder;
@@ -54,7 +54,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class WaypointEditorFragment extends Fragment
-        implements Drone.StatusChangedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, MissionLoaderListener {
+        implements Drone.StatusChangedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, DroneController.MissionLoaderListener {
     private static final String TAG = WaypointEditorFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private static MissionItemListAdapter mMissionItemAdapter;
@@ -70,7 +70,7 @@ public class WaypointEditorFragment extends Fragment
     private static final String[] SPINNER_MENU = {"PLANNING", "FOLLOW ME", "FLIGHT HISTORY"};
     public double nowLatget, nowLngget, droneLat = 0, droneLng = 0;
     public int droneHeading;
-    public Drone drone;
+    public DroneController drone;
     public boolean isGO, canMapAddMarker, isShowMarker;
     private ProgressDialog progressDialog;
     private FragmentActivity fragmentActivity;
