@@ -1,5 +1,7 @@
 package com.coretronic.drone.album.model;
 
+import com.coretronic.drone.ambarlla.message.FileItem;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,4 +42,13 @@ public class MediaListItem implements Serializable {
     public void setMediaSize(String mediaSize) {
         this.mediaSize = mediaSize;
     }
+
+
+    public MediaListItem(FileItem fileItem)
+    {
+        this.mediaDate = fileItem.getMediaDate();
+        this.mediaFileName = fileItem.getMediaFileName();
+        this.mediaSize = fileItem.getMediaSize();
+    }
+
 }

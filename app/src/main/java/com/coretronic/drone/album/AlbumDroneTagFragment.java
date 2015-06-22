@@ -20,11 +20,18 @@ import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
 import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.album.model.MediaListItem;
+import com.coretronic.drone.ambarlla.message.AMBACmdClient;
+import com.coretronic.drone.ambarlla.message.AMBACommand;
+import com.coretronic.drone.ambarlla.message.FileItem;
+import com.coretronic.drone.util.ColorLog;
+import com.coretronic.drone.utility.AppUtils;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by james on 15/6/1.
@@ -38,6 +45,8 @@ public class AlbumDroneTagFragment extends Fragment {
     private AlbumListViewAdapter albumListViewAdapter = null;
     private ArrayList<MediaListItem> albumImgList = new ArrayList<MediaListItem>();
 
+    // AMBAClient
+    AMBACmdClient cmdClient = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,8 @@ public class AlbumDroneTagFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album_dronetag, container, false);
         mContext = view.getContext();
 
-        getDate();
+        connectToAMBA();
+
 
         albumListView = (RecyclerView) view.findViewById(R.id.album_list_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -67,9 +77,7 @@ public class AlbumDroneTagFragment extends Fragment {
     }
 
 
-
-    AlbumListViewAdapter.OnItemClickListener recyclerItemClickListener = new AlbumListViewAdapter.OnItemClickListener()
-    {
+    AlbumListViewAdapter.OnItemClickListener recyclerItemClickListener = new AlbumListViewAdapter.OnItemClickListener() {
 
         @Override
         public void onItemDeleteClick(View view, int position) {
@@ -98,15 +106,11 @@ public class AlbumDroneTagFragment extends Fragment {
         }
     };
 
-    private void getDate()
-    {
+    private void getDate(List<FileItem> listItems) {
         albumImgList.clear();
-        for( int i = 0 ; i<= 99;i++)
-        {
+        for (int i = 0; i <= listItems.size(); i++) {
 
-            albumImgList.add(new MediaListItem("coretronicDrone"+ i +".png",
-                    (int)(Math.random()*99+101)+" MB",
-                    (new SimpleDateFormat("yyyy/MM/dd")).format(new Date())));
+            albumImgList.add(new MediaListItem(listItems.get(i)));
 //            albumImgList.get(i).setMediaFileName("coretronicDrone"+"i"+".png");
 //            albumImgList.get(i).setMediaSize((int)(Math.random()*99+101)+" MB");
 //            albumImgList.get(i).setMediaDate(new Date());
@@ -132,4 +136,41 @@ public class AlbumDroneTagFragment extends Fragment {
 //        getDate();
 //        albumListViewAdapter.notifyDataSetChanged();
 //    }
+
+
+    private void connectToAMBA() {
+        cmdClient = new AMBACmdClient();
+
+
+        AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
+            @Override
+            public void onMessage(AMBACommand objMessage) {
+//                objMessage.toLog();
+            }
+
+        };
+
+
+        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+            @Override
+            public void onCompleted(List<FileItem> listItems) {
+                getDate(listItems);
+            }
+        };
+
+
+        try {
+            cmdClient.connectToServer(AppUtils.SERVER_IP, AppUtils.COMMAND_PORT, AppUtils.DATA_PORT);
+            cmdClient.start();
+            cmdClient.cmdStartSession();
+            cmdClient.getFileList(cmdListFileReceiver);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            cmdClient.close();
+            Log.e(TAG, "connect error:" + e.getMessage());
+        }
+
+
+    }
 }

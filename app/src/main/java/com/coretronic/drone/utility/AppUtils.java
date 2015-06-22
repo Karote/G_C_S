@@ -17,6 +17,11 @@ import static android.graphics.BitmapFactory.decodeFile;
  */
 public class AppUtils {
 
+    public static String SERVER_IP ="192.168.42.1";
+    public static String COMMAND_PORT = "7878";
+    public static String DATA_PORT = "8787";
+
+
     private static String TAG = AppUtils.class.getSimpleName();
 
     public static CustomerTwoBtnAlertDialog getAlertDialog(final Context mContext, String msg, String okStr, String cancelStr, View.OnClickListener listener) {
