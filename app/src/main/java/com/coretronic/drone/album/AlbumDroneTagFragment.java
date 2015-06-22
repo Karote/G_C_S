@@ -1,13 +1,11 @@
 package com.coretronic.drone.album;
 
 import android.content.Context;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,21 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.coretronic.drone.R;
-import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
-import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.album.model.MediaListItem;
 import com.coretronic.drone.ambarlla.message.AMBACmdClient;
 import com.coretronic.drone.ambarlla.message.AMBACommand;
 import com.coretronic.drone.ambarlla.message.FileItem;
-import com.coretronic.drone.util.ColorLog;
 import com.coretronic.drone.utility.AppUtils;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,6 +36,18 @@ public class AlbumDroneTagFragment extends Fragment {
     private RecyclerView albumListView = null;
     private AlbumListViewAdapter albumListViewAdapter = null;
     private ArrayList<MediaListItem> albumImgList = new ArrayList<MediaListItem>();
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            if( msg.obj == "complete" )
+            {
+                Log.i(TAG,"handler message:"+ msg.obj);
+                albumListViewAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     // AMBAClient
     AMBACmdClient cmdClient = null;
@@ -59,8 +63,6 @@ public class AlbumDroneTagFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album_dronetag, container, false);
         mContext = view.getContext();
 
-        connectToAMBA();
-
 
         albumListView = (RecyclerView) view.findViewById(R.id.album_list_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -72,7 +74,15 @@ public class AlbumDroneTagFragment extends Fragment {
         albumListViewAdapter = new AlbumListViewAdapter(mContext, albumImgList);
         albumListView.setAdapter(albumListViewAdapter);
         albumListViewAdapter.SetOnItemClickListener(recyclerItemClickListener);
-        albumListViewAdapter.notifyDataSetChanged();
+//        albumListViewAdapter.notifyDataSetChanged();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                connectToAMBA();
+            }
+        }).start();
+
         return view;
     }
 
@@ -108,14 +118,18 @@ public class AlbumDroneTagFragment extends Fragment {
 
     private void getDate(List<FileItem> listItems) {
         albumImgList.clear();
-        for (int i = 0; i <= listItems.size(); i++) {
 
+        for (int i = 0; i < listItems.size(); i++) {
             albumImgList.add(new MediaListItem(listItems.get(i)));
 //            albumImgList.get(i).setMediaFileName("coretronicDrone"+"i"+".png");
 //            albumImgList.get(i).setMediaSize((int)(Math.random()*99+101)+" MB");
 //            albumImgList.get(i).setMediaDate(new Date());
 
         }
+        Message message = new Message();
+        message = handler.obtainMessage(0, "complete");
+        handler.sendMessage(message);
+
     }
 
 
@@ -155,12 +169,15 @@ public class AlbumDroneTagFragment extends Fragment {
             @Override
             public void onCompleted(List<FileItem> listItems) {
                 getDate(listItems);
+
             }
         };
 
 
         try {
             cmdClient.connectToServer(AppUtils.SERVER_IP, AppUtils.COMMAND_PORT, AppUtils.DATA_PORT);
+            cmdClient.setFileSavePath("/Users/leokao/Desktop/");
+            cmdClient.setClientIP("192.168.42.6");
             cmdClient.start();
             cmdClient.cmdStartSession();
             cmdClient.getFileList(cmdListFileReceiver);
