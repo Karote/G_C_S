@@ -5,5 +5,7 @@
     android:layout_height="wrap_content"
     android:fontFamily="sans-serif"
     android:textColor="#FFFFFF"
-    android:textSize="20sp">
+    android:textSize="20sp"
+    android:drawableRight="@drawable/ico_action_down_arrow"
+    android:drawablePadding="12dp">
 </TextView>

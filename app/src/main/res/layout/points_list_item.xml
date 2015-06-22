@@ -41,6 +41,7 @@
             tools:text="44" />
 
         <View
+            android:id="@+id/icon_waypoint_type"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:background="@drawable/ico_indicator_plan_waypoint"

@@ -362,7 +362,6 @@ public class WaypointEditorFragment extends Fragment
         final Button backToMainButton = (Button) view.findViewById(R.id.button_back_to_main);
         backToMainButton.setOnClickListener(this);
 
-
         Spinner spinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
@@ -407,6 +406,8 @@ public class WaypointEditorFragment extends Fragment
 
             }
         });
+
+
     }
 
     private void setUpDeleteLayout(View view) {
