@@ -59,7 +59,7 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
 
     private void refreshBackground(int currentValue, Button btn) {
         if ((int) btn.getTag() == currentValue) {
-            btn.setBackgroundColor(getResources().getColor(R.color.bule_sky));
+            btn.setBackgroundColor(getResources().getColor(R.color.blue_sky));
         } else {
             btn.setBackgroundResource(R.drawable.btn_bg);
         }

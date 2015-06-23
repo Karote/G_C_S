@@ -127,7 +127,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 statusView.setBatteryStatus(battery);
             }
         });
-        Log.d(TAG, "Drone Status: Battery " + battery);
     }
 
     @Override
@@ -135,7 +134,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onAltitudeUpdate(altitude);
         }
-        Log.d(TAG, "Drone Status: Altitude " + altitude);
     }
 
     @Override
@@ -150,7 +148,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onSpeedUpdate(groundSpeed);
         }
-        Log.d(TAG, "Drone Status: Speed " + groundSpeed);
     }
 
     @Override

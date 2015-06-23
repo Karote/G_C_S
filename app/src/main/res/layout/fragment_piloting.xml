@@ -80,10 +80,12 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/btn_hold_altitude"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="right"
-            android:background="@drawable/ico_pilot_altitude_unlock" />
+            android:background="@drawable/ico_pilot_altitude_unlock"
+            android:visibility="gone"/>
     </FrameLayout>
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
