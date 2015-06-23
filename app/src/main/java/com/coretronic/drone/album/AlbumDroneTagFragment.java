@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
@@ -19,8 +20,10 @@ import com.coretronic.drone.album.model.MediaListItem;
 import com.coretronic.drone.ambarlla.message.AMBACmdClient;
 import com.coretronic.drone.ambarlla.message.AMBACommand;
 import com.coretronic.drone.ambarlla.message.FileItem;
-import com.coretronic.drone.utility.AppUtils;
+import com.coretronic.drone.log.ColorLog;
+import com.coretronic.drone.utility.AppConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +36,27 @@ public class AlbumDroneTagFragment extends Fragment {
     private static String TAG = AlbumDroneTagFragment.class.getSimpleName();
 
     private Context mContext = null;
+    private ProgressBar progressbar = null;
     private RecyclerView albumListView = null;
     private AlbumListViewAdapter albumListViewAdapter = null;
     private ArrayList<MediaListItem> albumImgList = new ArrayList<MediaListItem>();
+    private String albumFilePath = "";
 
+    private Thread connectThread = null;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
-            if( msg.obj == "complete" )
-            {
-                Log.i(TAG,"handler message:"+ msg.obj);
+            if (msg.obj == "complete") {
+                Log.i(TAG, "handler message:" + msg.obj);
                 albumListViewAdapter.notifyDataSetChanged();
+                albumListView.setVisibility(View.VISIBLE);
             }
+
+            progressbar.setVisibility(View.GONE);
+//            connectThread.interrupt();
+//            cmdClient.close();
+
         }
     };
 
@@ -60,28 +71,38 @@ public class AlbumDroneTagFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "=== AlbumDroneTagFragment onCreateView===");
         View view = inflater.inflate(R.layout.fragment_album_dronetag, container, false);
         mContext = view.getContext();
 
+        albumFilePath = mContext.getExternalCacheDir() + AppConfig.ALBUM_PATH_SD_CARD;
 
+        progressbar = (ProgressBar) view.findViewById(R.id.progressbar);
         albumListView = (RecyclerView) view.findViewById(R.id.album_list_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         albumListView.setLayoutManager(linearLayoutManager);
 
+        Log.i(TAG, "albumFilePath:" + albumFilePath);
+        File albumFolder = new File(albumFilePath);
+        if (!albumFolder.exists()) {
+            albumFolder.mkdir();
+        }
 
-        Log.i(TAG, "=== AlbumDroneTagFragment onCreateView===");
+
         albumListViewAdapter = new AlbumListViewAdapter(mContext, albumImgList);
         albumListView.setAdapter(albumListViewAdapter);
         albumListViewAdapter.SetOnItemClickListener(recyclerItemClickListener);
-//        albumListViewAdapter.notifyDataSetChanged();
 
-        new Thread(new Runnable() {
+        progressbar.setVisibility(View.VISIBLE);
+
+        connectThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 connectToAMBA();
             }
-        }).start();
+        });
+        connectThread.start();
 
         return view;
     }
@@ -113,6 +134,8 @@ public class AlbumDroneTagFragment extends Fragment {
                     .replace(R.id.frame_view, downloadWarningFragment, "DownloadWarningFragment")
                     .addToBackStack("DownloadWarningFragment")
                     .commit();
+
+            connectThread.interrupt();
         }
     };
 
@@ -121,11 +144,8 @@ public class AlbumDroneTagFragment extends Fragment {
 
         for (int i = 0; i < listItems.size(); i++) {
             albumImgList.add(new MediaListItem(listItems.get(i)));
-//            albumImgList.get(i).setMediaFileName("coretronicDrone"+"i"+".png");
-//            albumImgList.get(i).setMediaSize((int)(Math.random()*99+101)+" MB");
-//            albumImgList.get(i).setMediaDate(new Date());
-
         }
+
         Message message = new Message();
         message = handler.obtainMessage(0, "complete");
         handler.sendMessage(message);
@@ -141,25 +161,31 @@ public class AlbumDroneTagFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        cmdClient.close();
     }
-
-
-//
-//    public void refreshListData()
-//    {
-//        getDate();
-//        albumListViewAdapter.notifyDataSetChanged();
-//    }
 
 
     private void connectToAMBA() {
         cmdClient = new AMBACmdClient();
 
+        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
+
+            @Override
+            public void onNotify(int status, String strMsg) {
+                Log.i(TAG, "on Notify status:" + status + " / strMsg:" + strMsg);
+                // 0 is error, 1 is ok
+                if (status == 0) {
+                    cmdClient.close();
+                    progressbar.setVisibility(View.GONE);
+                }
+            }
+        };
 
         AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
             @Override
             public void onMessage(AMBACommand objMessage) {
 //                objMessage.toLog();
+                Log.i(TAG, "objMessage:" + objMessage);
             }
 
         };
@@ -175,16 +201,35 @@ public class AlbumDroneTagFragment extends Fragment {
 
 
         try {
-            cmdClient.connectToServer(AppUtils.SERVER_IP, AppUtils.COMMAND_PORT, AppUtils.DATA_PORT);
-            cmdClient.setFileSavePath("/Users/leokao/Desktop/");
-            cmdClient.setClientIP("192.168.42.6");
-            cmdClient.start();
-            cmdClient.cmdStartSession();
-            cmdClient.getFileList(cmdListFileReceiver);
+            cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+            if (cmdClient.isRun) {
+                cmdClient.setFileSavePath(albumFilePath);
+                cmdClient.start();
+                cmdClient.cmdStartSession();
+                cmdClient.getFileList(cmdListFileReceiver);
+                cmdClient.cmdGetFile("AMBA0004.jpg", new AMBACmdClient.GetFileListener() {
+                    @Override
+                    public void onProgress(float downloadPercentage) {
+                        ColorLog.debug("Progress:" + downloadPercentage);
+                        Log.i(TAG, "Progress:" + downloadPercentage);
+                    }
+
+                    @Override
+                    public void onCompleted(long size) {
+                        Log.i(TAG, "downlaod image onCompleted/size:" + size);
+                    }
+                });
+            }
+            else
+            {
+                cmdClient.close();
+                progressbar.setVisibility(View.GONE);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
             cmdClient.close();
+            progressbar.setVisibility(View.GONE);
             Log.e(TAG, "connect error:" + e.getMessage());
         }
 

@@ -64,7 +64,7 @@ public class MediaListItem implements Serializable {
         }
 //        this.mediaDate =  fileItem.getMediaDate() + "";
         this.mediaFileName = fileItem.getMediaFileName();
-        this.mediaSize = AppUtils.readableFileSize(fileItem.getMediaSize());
+        this.mediaSize = fileItem.getMediaSize();
 
     }
 

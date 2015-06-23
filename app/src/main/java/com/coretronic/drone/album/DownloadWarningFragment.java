@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,14 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.model.MediaListItem;
-import com.coretronic.drone.album.model.MediaObject;
+import com.coretronic.drone.ambarlla.message.AMBACmdClient;
+import com.coretronic.drone.ambarlla.message.AMBACommand;
+import com.coretronic.drone.ambarlla.message.FileItem;
+import com.coretronic.drone.log.ColorLog;
+import com.coretronic.drone.utility.AppConfig;
+
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -27,6 +33,8 @@ public class DownloadWarningFragment extends Fragment {
 
     private static String TAG = DownloadWarningFragment.class.getSimpleName();
     private Context context = null;
+    MediaListItem mediaListItem = null;
+
     // fragment declare
     private FragmentManager fragmentManager = null;
     private FragmentTransaction previewFragmentTransaction = null;
@@ -55,6 +63,11 @@ public class DownloadWarningFragment extends Fragment {
     };
 
 
+    // AMBAClient
+    AMBACmdClient cmdClient = null;
+    private String albumFilePath = "";
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +85,14 @@ public class DownloadWarningFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album_warning, container, false);
         context = view.getContext();
+        albumFilePath = context.getExternalCacheDir()+AppConfig.ALBUM_PATH_SD_CARD;
 
         // get media list data
         Bundle bundle = getArguments();
         if (bundle == null) {
             return view;
         }
-        MediaListItem mediaListItem = (MediaListItem) bundle.getSerializable("mediaListItemData");
+        mediaListItem = (MediaListItem) bundle.getSerializable("mediaListItemData");
         Log.i(TAG, "file name:" + mediaListItem.getMediaFileName());
         Log.i(TAG, "file size:" + mediaListItem.getMediaSize());
         Log.i(TAG, "file date:" + mediaListItem.getMediaDate());
@@ -86,6 +100,7 @@ public class DownloadWarningFragment extends Fragment {
 
         findViews(view);
 
+//        if( mediaListItem.getMediaSize())
         // set if warning
         wraningLL.setVisibility(View.VISIBLE);
 //        wraningLL.setVisibility(View.GONE);
@@ -95,6 +110,7 @@ public class DownloadWarningFragment extends Fragment {
         progressRunnable = new Runnable() {
             @Override
             public void run() {
+                connectToAMBA();
                 while(progressValue < 100 ){
                     try{
                         progressHandler.sendMessage(progressHandler.obtainMessage());
@@ -139,6 +155,7 @@ public class DownloadWarningFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "==== onDestroyView ====");
+        cmdClient.close();
     }
 
     View.OnClickListener stopbtnListner = new View.OnClickListener() {
@@ -160,6 +177,67 @@ public class DownloadWarningFragment extends Fragment {
         fragmentManager.popBackStack();
 //        AlbumFragment albumFragment = new AlbumFragment();
 //        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_view, albumFragment).commit();
+    }
+
+    private void connectToAMBA() {
+        cmdClient = new AMBACmdClient();
+
+        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer(){
+
+            @Override
+            public void onNotify(int status, String strMsg) {
+                // 0 is error, 1 is ok
+                if( status == 0 )
+                {
+                    cmdClient.close();
+                }
+            }
+        };
+
+
+        AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
+            @Override
+            public void onMessage(AMBACommand objMessage) {
+//                objMessage.toLog();
+                Log.i(TAG,"objMessage:"+objMessage);
+            }
+
+        };
+
+
+        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+            @Override
+            public void onCompleted(List<FileItem> listItems) {
+
+            }
+        };
+
+
+        try {
+            cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT,errReceiver);
+            cmdClient.setFileSavePath(albumFilePath);
+            cmdClient.start();
+            cmdClient.cmdStartSession();
+            Log.i(TAG,"mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
+            cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
+                @Override
+                public void onProgress(float downloadPercentage) {
+                    ColorLog.debug("Progress:" + downloadPercentage);
+                    Log.i(TAG,"Progress:" + downloadPercentage);
+                }
+
+                @Override
+                public void onCompleted(long size) {
+                    Log.i(TAG,"downlaod image onCompleted");
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            cmdClient.close();
+            Log.e(TAG, "connect error:" + e.getMessage());
+        }
+
+
     }
 
 }

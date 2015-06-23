@@ -15,6 +15,7 @@ import com.coretronic.drone.album.AlbumPreviewFragment;
 import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.album.model.MediaListItem;
 import com.coretronic.drone.album.model.MediaObject;
+import com.coretronic.drone.utility.AppUtils;
 
 import java.util.ArrayList;
 
@@ -63,7 +64,7 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
         MediaListItem listItem = (MediaListItem) mediaListItems.get(position);
         holder.mediaFilename.setText(listItem.getMediaFileName());
         holder.mediaDate.setText(listItem.getMediaDate().toString());
-        holder.mediaFilesize.setText(listItem.getMediaSize());
+        holder.mediaFilesize.setText(AppUtils.readableFileSize(listItem.getMediaSize()));
 
         holder.mediaDeleteIBtn.setTag(position);
         holder.mediaDownloadIBtn.setTag(position);
