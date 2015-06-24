@@ -1,6 +1,8 @@
 package com.coretronic.drone.album;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,7 +25,10 @@ import com.coretronic.drone.log.ColorLog;
 import com.coretronic.drone.utility.AppConfig;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -49,16 +54,35 @@ public class DownloadWarningFragment extends Fragment {
     private Runnable progressRunnable = null;
     private ProgressBar downloadBar = null;
     private int progressValue = 0;
+    private long totalFileSize = 0;
+    private long getFileSize = 0;
 
+    // speed thread and timer
+    private Handler speedHandler = null;
+    private Runnable speedRunnaable = null;
+    private Thread speedThread = null;
+    private Timer speedTimer = null;
+    private float tempIntervalSize = 0;
     Handler progressHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            progressValue++;
+
+            progressValue = msg.arg1;
+//            progressValue++;
             downloadBar.setProgress(progressValue);
+            Log.i(TAG,"progressValue:"+progressValue);
             if( progressValue == 100)
             {
                 closeDownloadFragment();
             }
+        }
+    };
+
+
+    public Handler timeHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            int wasteTime = msg.what;
+            timeTV.setText(millisecondsToHumanRead((int)wasteTime));
         }
     };
 
@@ -85,7 +109,7 @@ public class DownloadWarningFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album_warning, container, false);
         context = view.getContext();
-        albumFilePath = context.getExternalCacheDir()+AppConfig.ALBUM_PATH_SD_CARD;
+        albumFilePath = AppConfig.getMediaFolderPosition(context);
 
         // get media list data
         Bundle bundle = getArguments();
@@ -111,21 +135,75 @@ public class DownloadWarningFragment extends Fragment {
             @Override
             public void run() {
                 connectToAMBA();
-                while(progressValue < 100 ){
-                    try{
-                        progressHandler.sendMessage(progressHandler.obtainMessage());
-                        Thread.sleep(1000);
-                    }catch (Throwable t)
-                    {
-
-                    }
-                }
+//                while(progressValue < 100 ){
+//                    try{
+//                        progressHandler.sendMessage(progressHandler.obtainMessage());
+//                        Thread.sleep(1000);
+//                    }catch (Throwable t)
+//                    {
+//
+//                    }
+//                }
             }
         };
         progressThread = new Thread(progressRunnable);
         progressThread.start();
 
+        speedThread = new Thread();
+        speedTimer = new Timer();
+        speedTimer.schedule(new SpeedTimerTask(), 500,5000);
+
         return view;
+    }
+
+    private float wasteTime = 0;
+    class SpeedTimerTask extends java.util.TimerTask
+    {
+
+        @Override
+        public void run() {
+            Log.i(TAG,"== speed timer ==");
+            Log.i(TAG,"getFileSize:"+getFileSize+"/totalFileSize:"+totalFileSize);
+            if( getFileSize != 0 && totalFileSize!=0) {
+                float wasteTime = ((float)(totalFileSize - getFileSize) / ((float)(getFileSize - tempIntervalSize) / 500)) ;
+                Log.i(TAG, "sec:" + ((float) totalFileSize / ((float) (getFileSize - tempIntervalSize) / 500)) );
+
+
+
+                Message msg = new Message();
+                msg.what = (int)wasteTime;
+                Log.i(TAG, "msg.arg1:" + msg.what);
+                timeHandler.sendMessage(msg);
+                tempIntervalSize = (float)getFileSize;
+            }
+        }
+    }
+
+
+    private String millisecondsToHumanRead(float mills)
+    {
+        int seconds = (int) (mills / 1000) % 60 ;
+        int minutes = (int) ((mills / (1000*60)) % 60);
+        int hours   = (int) ((mills / (1000*60*60)) % 24);
+        Log.i(TAG,"mills:"+mills+" /seconds:"+seconds +" /minutes:"+minutes +" /hours:"+hours);
+        String returnValue = "calculate the download time..";
+        if( seconds >=0 )
+        {
+            returnValue =  seconds + " seconds";
+        }else if( minutes >=0 )
+        {
+            returnValue = seconds+" minutes"+ seconds + " seconds";
+        }
+        else if(hours >= 0)
+        {
+            returnValue = hours + " hours" + seconds+" minutes"+ seconds + " seconds";
+        }
+        if( seconds ==0 && seconds ==0 && hours == 0)
+        {
+            returnValue = "calculate the download time..";
+        }
+        Log.i(TAG,"waste download time returnValue:"+returnValue);
+        return returnValue;
     }
 
     private void findViews(View view) {
@@ -173,7 +251,7 @@ public class DownloadWarningFragment extends Fragment {
             progressThread.interrupt();
             progressThread = null;
         }
-
+        speedTimer.cancel();
         fragmentManager.popBackStack();
 //        AlbumFragment albumFragment = new AlbumFragment();
 //        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_view, albumFragment).commit();
@@ -214,21 +292,44 @@ public class DownloadWarningFragment extends Fragment {
 
 
         try {
-            cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT,errReceiver);
+            cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
             cmdClient.setFileSavePath(albumFilePath);
             cmdClient.start();
             cmdClient.cmdStartSession();
-            Log.i(TAG,"mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
+            Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
             cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
+
                 @Override
-                public void onProgress(float downloadPercentage) {
-                    ColorLog.debug("Progress:" + downloadPercentage);
-                    Log.i(TAG,"Progress:" + downloadPercentage);
+                public void onProgress(long downloadedSize, long fileSize) {
+                    ColorLog.debug("Progress:" + downloadedSize);
+                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + fileSize + "/"+(downloadedSize/fileSize)+"/"+(int)(downloadedSize *100 / fileSize));
+
+                    getFileSize = downloadedSize;
+                    totalFileSize = fileSize;
+
+                    Message msg = new Message();
+                    msg.arg1 =    (int)(downloadedSize *100 / fileSize);
+                    Log.i(TAG,"msg.arg1:"+msg.arg1);
+//                    msg.arg1 = downloadedSize/fileSize;
+                    progressHandler.sendMessage(msg);
                 }
 
                 @Override
                 public void onCompleted(long size) {
                     Log.i(TAG,"downlaod image onCompleted");
+
+                    ArrayList<String> toBeScanned = new ArrayList<String>();
+                    toBeScanned.add(albumFilePath+mediaListItem.getMediaFileName());
+                    String[] toBeScannedStr = new String[toBeScanned.size()];
+                    toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
+                    MediaScannerConnection.scanFile(getActivity(), toBeScannedStr, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            System.out.println("SCAN COMPLETED: " + path);
+
+                        }
+                    });
                 }
             });
         } catch (IOException e) {

@@ -75,7 +75,7 @@ public class AlbumDroneTagFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album_dronetag, container, false);
         mContext = view.getContext();
 
-        albumFilePath = mContext.getExternalCacheDir() + AppConfig.ALBUM_PATH_SD_CARD;
+        albumFilePath =  AppConfig.getMediaFolderPosition(mContext);
 
         progressbar = (ProgressBar) view.findViewById(R.id.progressbar);
         albumListView = (RecyclerView) view.findViewById(R.id.album_list_view);
@@ -203,22 +203,23 @@ public class AlbumDroneTagFragment extends Fragment {
         try {
             cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
             if (cmdClient.isRun) {
-                cmdClient.setFileSavePath(albumFilePath);
+                cmdClient.setFileSavePath( albumFilePath );
                 cmdClient.start();
                 cmdClient.cmdStartSession();
                 cmdClient.getFileList(cmdListFileReceiver);
-                cmdClient.cmdGetFile("AMBA0004.jpg", new AMBACmdClient.GetFileListener() {
-                    @Override
-                    public void onProgress(float downloadPercentage) {
-                        ColorLog.debug("Progress:" + downloadPercentage);
-                        Log.i(TAG, "Progress:" + downloadPercentage);
-                    }
-
-                    @Override
-                    public void onCompleted(long size) {
-                        Log.i(TAG, "downlaod image onCompleted/size:" + size);
-                    }
-                });
+//                cmdClient.cmdGetFile("AMBA0004.jpg", new AMBACmdClient.GetFileListener() {
+//
+//                    @Override
+//                    public void onProgress(long downloadedSize, long fileSize) {
+//                        ColorLog.debug("Progress:" + downloadedSize);
+//                        Log.i(TAG, "downloadedSize/fileSize:" + downloadedSize +" / "+fileSize);
+//                    }
+//
+//                    @Override
+//                    public void onCompleted(long size) {
+//                        Log.i(TAG, "downlaod image onCompleted/size:" + size);
+//                    }
+//                });
             }
             else
             {
