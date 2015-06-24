@@ -19,9 +19,9 @@ public class StatusView extends LinearLayout {
     private ImageView gpsStatus;
     private ProgressBar batteryProgress;
     private TextView tvBattery;
+
     public StatusView(Context context) {
         super(context);
-//        initView();
     }
 
     public StatusView(Context context, AttributeSet attrs) {
@@ -31,28 +31,31 @@ public class StatusView extends LinearLayout {
 
     public StatusView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-//        initView();
     }
 
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.status_view, null);
-        wifiStatus= (ImageView) view.findViewById(R.id.iv_wifi);
-        gpsStatus= (ImageView) view.findViewById(R.id.iv_gps);
-        batteryProgress=(ProgressBar)view.findViewById(R.id.progress_battery);
-        tvBattery=(TextView)view.findViewById(R.id.tv_battery);
+        wifiStatus = (ImageView) view.findViewById(R.id.iv_wifi);
+        gpsStatus = (ImageView) view.findViewById(R.id.iv_gps);
+        batteryProgress = (ProgressBar) view.findViewById(R.id.progress_battery);
+        tvBattery = (TextView) view.findViewById(R.id.tv_battery);
         addView(view);
     }
-    public void setWifiStatus(int resid){
+
+    public void setWifiStatus(int resid) {
         wifiStatus.setBackgroundResource(resid);
     }
-    public void setGpsVisibility(int visibility){
+
+    public void setGpsVisibility(int visibility) {
         gpsStatus.setVisibility(visibility);
     }
-    private void setMaxProgress(int maxProgress){
+
+    private void setMaxProgress(int maxProgress) {
         batteryProgress.setMax(maxProgress);
     }
-    public void setBatteryStatus(int progress){
+
+    public void setBatteryStatus(int progress) {
         batteryProgress.setProgress(progress);
-        tvBattery.setText(progress+"%");
+        tvBattery.setText(progress + "%");
     }
 }

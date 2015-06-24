@@ -40,30 +40,6 @@ public class ViewManager {
     }
 
 
-
-//    public static void assignSeekBarView(View view, int id, Setting.SettingType settingType) {
-//        SeekBar seekBar = (SeekBar) view.findViewById(id);
-//        final Setting setting = DroneG2Application.settings[settingType.ordinal()];
-//        seekBar.setMax(setting.getMaxValue() - setting.getMinValue());
-//        seekBar.setProgress(setting.getValue() - setting.getMinValue());
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//                setting.setValue(seekBar.getProgress() + setting.getMinValue());
-//            }
-//        });
-//    }
-
     public static void setEnabled(boolean enabled, View[] viewArray, View... views) {
         List<View> combineAll = new ArrayList<View>(viewArray.length + views.length);
         Collections.addAll(combineAll, viewArray);

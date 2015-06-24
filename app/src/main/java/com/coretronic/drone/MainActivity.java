@@ -155,7 +155,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onLocationUpdate(lat, lon, eph);
         }
-    }
+            }
 
     @Override
     public void onHeadingUpdate(int heading) {

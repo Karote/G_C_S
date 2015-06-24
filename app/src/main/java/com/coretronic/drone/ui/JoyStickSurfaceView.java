@@ -26,26 +26,17 @@ import com.coretronic.drone.piloting.Setting;
  * Created by jiaLian on 15/3/30.
  */
 public class JoyStickSurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
-
-    public static final int ALPHA_MAX = 255;
-
-    public interface OnStickListener {
-        void onStickMoveEvent(View view, int action, int dx, int dy);
-
-        void onOrientationSensorMode(int action);
-
-        void onDoubleClick(View view);
-    }
-
     private static final String TAG = JoyStickSurfaceView.class.getSimpleName();
+
+    private static final int ALPHA_MAX = 255;
+    private static final float ALPHA_SCALE = 0.57f;
 
     public static final int CONTROL_TYPE_PITCH_ROLL = 1;
     public static final int CONTROL_TYPE_THROTTLE_YAW = 2;
 
-    public static final int DISTANCE_TOLERANCE = 20;
-    public static final int TIME_DELAY = 100;
+    private static final int DISTANCE_TOLERANCE = 20;
+    private static final int TIME_DELAY = 100;
     private static final int PAINT_PRESSED_ALPHA_DEFAULT = 180;
-    public static final float ALPHA_SCALE = 0.57f;
 
     private Bitmap throttleUpBitmap;
     private Bitmap yawRightBitmap;
@@ -89,7 +80,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         setZOrderOnTop(true);
         surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
 
-
         stickPaint = new Paint();
         stickPaint.setColor(Color.WHITE);
         stickPaint.setAntiAlias(true);
@@ -100,7 +90,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     }
 
     public void setPaintPressedAlpha(float rate) {
-        paintPressedAlpha = (int)(rate* ALPHA_MAX);
+        paintPressedAlpha = (int) (rate * ALPHA_MAX);
         paintNormalAlpha = (int) (paintPressedAlpha * ALPHA_SCALE);
         stickPaint.setAlpha(paintNormalAlpha);
     }
@@ -109,6 +99,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         this.controlType = controlType;
         this.isJoypadMode = isJoypadMode;
         int indicatorSize = (int) getResources().getDimension(R.dimen.joypad_indicator_size);
+
         throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
         yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);
         arrowUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_up), indicatorSize, indicatorSize);
@@ -312,5 +303,13 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         float ang = (float) Math.acos(lenA / lenC);
         ang = ang * (b.y < a.y ? -1 : 1);
         return ang;
+    }
+
+    public interface OnStickListener {
+        void onStickMoveEvent(View view, int action, int dx, int dy);
+
+        void onOrientationSensorMode(int action);
+
+        void onDoubleClick(View view);
     }
 }

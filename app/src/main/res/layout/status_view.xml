@@ -9,14 +9,14 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/ico_status_wifi_full"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_gps"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/ico_status_gps"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progress_battery"

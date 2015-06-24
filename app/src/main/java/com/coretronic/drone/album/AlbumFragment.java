@@ -2,7 +2,6 @@ package com.coretronic.drone.album;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,11 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
 import com.coretronic.drone.Drone;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.g2.command.body.BooleanBody;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppUtils;
 import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;
@@ -36,7 +39,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     private FragmentActivity fragmentActivity = null;
     // ui declare
     private StatusView statusView = null;
-//        private Switch albumSwitch = null;
+    //        private Switch albumSwitch = null;
     private Button albumDroneSwitchBtn = null;
     private Button albumSmartPhoneSwitchBtn = null;
     private ImageButton rubbishBinBtn = null;
@@ -173,13 +176,13 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
         public void onClick(View v) {
             albumFragmentTransaction = fragmentChildManager.beginTransaction();
 
-            if (v.getId() ==  R.id.drone_switchbtn) {
+            if (v.getId() == R.id.drone_switchbtn) {
 
                 albumDroneSwitchBtn.setSelected(true);
                 albumSmartPhoneSwitchBtn.setSelected(false);
                 albumMenuOption.setVisibility(View.INVISIBLE);
 
-                if( isDroneOrSmartphoneMode == false)
+                if (isDroneOrSmartphoneMode == false)
                     return;
                 Log.d(TAG, "---click on the drone switch button---");
                 if (droneAlbumFragment != null) {
@@ -199,7 +202,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
                 albumSmartPhoneSwitchBtn.setSelected(true);
                 albumMenuOption.setVisibility(View.VISIBLE);
 
-                if( isDroneOrSmartphoneMode == true)
+                if (isDroneOrSmartphoneMode == true)
                     return;
                 Log.d(TAG, "---click on the smartphone switch button---");
                 if (smartPhoneAlbumFragment != null) {

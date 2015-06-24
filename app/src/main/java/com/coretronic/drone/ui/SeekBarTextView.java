@@ -18,7 +18,6 @@ import com.coretronic.drone.piloting.Setting;
  */
 public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
     private static final String TAG = SeekBarTextView.class.getSimpleName();
-    //    private int maxValue;
     private int minValue;
     private String unit = "";
 
@@ -68,7 +67,6 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
     public void setConfig(int minValue, int maxValue, String unit) {
         this.unit = unit;
         this.minValue = minValue;
-//        this.maxValue = maxValue;
         seekBar.setMax(maxValue - minValue);
     }
 
@@ -76,10 +74,6 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         seekBar.setProgress(value - minValue);
         tvValue.setText(value + unit);
     }
-
-//    public void setUnit(String unit) {
-//        this.unit = unit;
-//    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

@@ -68,6 +68,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final float ORIENTATION_SENSOR_SCALE = 2.5f;
     private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
     public static final int MAX_SPEED = 50;
+    private static final int TAKE_OFF_ALTITUDE = 5;
 
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
@@ -209,7 +210,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     @Override
     public void onRadioSignalUpdate(int rssi) {
-
+        Log.d(TAG, "radio signal:" + rssi);
     }
 
     @Override
@@ -239,7 +240,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isTakeOff){
+                if (!isTakeOff) {
                     return;
                 }
                 sendReturnToLanch();
@@ -262,7 +263,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             btnHoldAlt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!isTakeOff){
+                    if (!isTakeOff) {
                         return;
                     }
                     if ((boolean) view.getTag() == HOLD_ALTITUDE_LOCK) {
@@ -572,7 +573,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private void sendTakeoff() {
         if (getController() != null) {
-            getController().takeOff(10);
+            getController().takeOff(TAKE_OFF_ALTITUDE);
         }
     }
 
