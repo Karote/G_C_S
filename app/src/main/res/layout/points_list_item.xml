@@ -1,69 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
-        android:layout_height="66dp"
-        android:layout_alignParentRight="true">
-        <FrameLayout
-                android:id="@+id/rowDeleteLayout"
-                android:background="@drawable/ic_mission_button"
-                android:layout_width="wrap_content"
-                android:layout_height="66dp"
-                android:padding="4dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp">
-                <Button
-                        android:id="@+id/rowDeleteView"
-                        android:background="@drawable/ic_action_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"/>
-        </FrameLayout>
-        <RelativeLayout
-                android:id="@+id/rowItemLayout"
-                android:layout_width="100dp"
-                android:layout_height="66dp"
-                android:background="@drawable/ic_mission_button"
-                android:padding="4dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginEnd="2dp"
-                android:layout_alignParentRight="true">
-                <TextView
-                        android:id="@+id/seperateIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        tools:text=" "
-                        android:background="@drawable/ic_seperate"
-                        />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="45dp"
+    android:layout_alignParentRight="true">
 
-                <TextView
-                        android:id="@+id/rowNameView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:gravity="center"
-                        android:layout_toLeftOf="@+id/seperateIcon"
-                        tools:text="44"
-                        android:textColor="#FFFFFF"
-                        android:textSize="30sp"
-                        android:textStyle="bold"
-                        />
-                <TextView
-                        android:id="@+id/rowAltitudeView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="200m"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_mission_wp"
-                        android:drawablePadding="5dp"
-                        android:layout_centerInParent="true"
-                        android:layout_toRightOf="@+id/seperateIcon"
-                        />
-        </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/rowDeleteLayout"
+        android:layout_width="28dp"
+        android:layout_height="44dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/btn_plan_waypoint_bg">
+
+    <ImageButton
+        android:id="@+id/btn_plan_waypoint_delet"
+        android:layout_width="28dp"
+        android:layout_height="44dp"
+        android:background="@drawable/btn_plan_waypoint_bg"
+        android:src="@drawable/ico_plan_waypoint_delet"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rowItemLayout"
+        android:layout_width="78dp"
+        android:layout_height="44dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/btn_plan_waypoint_bg">
+
+        <TextView
+            android:id="@+id/rowNameView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            tools:text="44" />
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/ico_indicator_plan_waypoint"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="4dp"
+            />
+
+        <TextView
+            android:id="@+id/m_text"
+            android:text="m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="sans-serif"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/rowAltitudeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/m_text"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="sans-serif"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            tools:text="200" />
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -41,7 +41,7 @@
                     android:layout_marginRight="8dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="SOFTWARE"
-                    android:textColor="@color/bule_sky"
+                    android:textColor="@color/blue_sky"
                     android:textSize="16sp" />
 
                 <TextView
@@ -78,7 +78,7 @@
                     android:layout_marginRight="8dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="HARDWARE"
-                    android:textColor="@color/bule_sky"
+                    android:textColor="@color/blue_sky"
                     android:textSize="16sp" />
 
                 <TextView
@@ -135,7 +135,7 @@
                     android:layout_marginRight="8dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="SOFTWARE"
-                    android:textColor="@color/bule_sky"
+                    android:textColor="@color/blue_sky"
                     android:textSize="16sp" />
 
                 <TextView
@@ -172,7 +172,7 @@
                     android:layout_marginRight="8dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="HARDWARE"
-                    android:textColor="@color/bule_sky"
+                    android:textColor="@color/blue_sky"
                     android:textSize="16sp" />
 
                 <TextView
@@ -227,7 +227,7 @@
                     android:layout_marginRight="8dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="SOFTWARE"
-                    android:textColor="@color/bule_sky"
+                    android:textColor="@color/blue_sky"
                     android:textSize="16sp" />
 
                 <TextView

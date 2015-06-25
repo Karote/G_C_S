@@ -54,7 +54,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
         spinnerDroneDevice = (Spinner) findViewById(R.id.spinner_drone_device);
         mDroneDevices = new ArrayList<>();
-        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "null", 77));
+        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Select Device", 77));
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
 
         mDeviceAdapter = new DeviceAdapter();
@@ -155,7 +155,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onLocationUpdate(lat, lon, eph);
         }
-    }
+            }
 
     @Override
     public void onHeadingUpdate(int heading) {
@@ -188,15 +188,15 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
-//                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-//                    return;
-//                }
+                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
+                    return;
+                }
                 fragment = new WaypointEditorFragment();
                 break;
             case R.id.ll_album:
-//                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-//                    return;
-//                }
+                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
+                    return;
+                }
                 fragment = new AlbumFragment();
                 backStackName = "AlbumFragment";
                 break;

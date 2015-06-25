@@ -39,45 +39,6 @@ public class ViewManager {
         });
     }
 
-    public static void assignSettingSeekBarTextView(final View view, int id, final Setting.SettingType settingType) {
-        final Setting setting = DroneApplication.settings[settingType.ordinal()];
-        Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
-        SeekBarTextView seekBarTextView = (SeekBarTextView) view.findViewById(id);
-        seekBarTextView.setConfig(setting.getMinValue(), setting.getMaxValue(), setting.getUnit());
-        seekBarTextView.setValue(setting.getValue());
-        seekBarTextView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(int value) {
-                Log.d(TAG, "onStopTrackingTouch");
-                DroneApplication.settings[settingType.ordinal()].setValue(value);
-            }
-        });
-
-    }
-
-//    public static void assignSeekBarView(View view, int id, Setting.SettingType settingType) {
-//        SeekBar seekBar = (SeekBar) view.findViewById(id);
-//        final Setting setting = DroneG2Application.settings[settingType.ordinal()];
-//        seekBar.setMax(setting.getMaxValue() - setting.getMinValue());
-//        seekBar.setProgress(setting.getValue() - setting.getMinValue());
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//                setting.setValue(seekBar.getProgress() + setting.getMinValue());
-//            }
-//        });
-//    }
 
     public static void setEnabled(boolean enabled, View[] viewArray, View... views) {
         List<View> combineAll = new ArrayList<View>(viewArray.length + views.length);

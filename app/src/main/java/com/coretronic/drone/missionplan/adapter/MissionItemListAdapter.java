@@ -4,8 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.Mission;
@@ -49,9 +51,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         viewHolder.nameView.setText(String.format("%2d", i + 1));
         viewHolder.altitudeView.setText(String.valueOf(mMissionList.get(i).getAltitude()));
         if( isVisible == false ){
-            viewHolder.deleteLayout.setVisibility(FrameLayout.GONE);
+            viewHolder.deleteLayout.setVisibility(LinearLayout.GONE);
         }else{
-            viewHolder.deleteLayout.setVisibility(FrameLayout.VISIBLE);
+            viewHolder.deleteLayout.setVisibility(LinearLayout.VISIBLE);
         }
     }
 
@@ -68,35 +70,30 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     public class MissionItemListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         final TextView nameView;
         final TextView altitudeView;
-        final FrameLayout deleteLayout;
-        final Button deleteButton;
+        final LinearLayout deleteLayout;
+        final ImageButton deleteButton;
+        final RelativeLayout rowItemLayoutView;
 
         MissionItemListViewHolder(View itemView) {
             super(itemView);
             nameView = (TextView)itemView.findViewById(R.id.rowNameView);
             altitudeView = (TextView)itemView.findViewById(R.id.rowAltitudeView);
-            deleteLayout = (FrameLayout)itemView.findViewById(R.id.rowDeleteLayout);
-            deleteLayout.setVisibility(FrameLayout.GONE);
-            deleteButton = (Button)itemView.findViewById(R.id.rowDeleteView);
+            deleteLayout = (LinearLayout)itemView.findViewById(R.id.rowDeleteLayout);
+            deleteLayout.setVisibility(LinearLayout.GONE);
+            deleteButton = (ImageButton)itemView.findViewById(R.id.btn_plan_waypoint_delet);
+            rowItemLayoutView = (RelativeLayout)itemView.findViewById(R.id.rowItemLayout);
 
             deleteButton.setOnClickListener(this);
-            itemView.setOnClickListener(this);
+            rowItemLayoutView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if(v.equals(deleteButton)){
                 mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
-                removeAt(getAdapterPosition());
             }else if (mItemClickListener != null) {
                 mItemClickListener.onItemPlanClick(v, getAdapterPosition());
             }
-        }
-
-        public void removeAt(int position) {
-            mMissionList.remove(position);
-//            notifyItemRemoved(position);
-            notifyDataSetChanged();
         }
     }
 
@@ -106,6 +103,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void addAt(Mission mission, int position){
         mMissionList.add(position, mission);
+    }
+
+    public void remove(int position){
+        mMissionList.remove(position);
     }
 
     public void clearMission(){

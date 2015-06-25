@@ -13,7 +13,6 @@ import com.coretronic.drone.R;
  */
 public class PageIndicator extends LinearLayout {
     private static final int DEFAULT_PAGE_COUNT = 4;
-    private int pageCount = DEFAULT_PAGE_COUNT;
     private ImageView[] indicators;
     private int normalItemResId = R.drawable.icon_page_dot_off;
     private int currentItemResId = R.drawable.icon_page_dot_on;
@@ -30,7 +29,7 @@ public class PageIndicator extends LinearLayout {
         setPageCount(DEFAULT_PAGE_COUNT);
     }
 
-    private void init(Context context) {
+    private void init() {
         setOrientation(HORIZONTAL);
         size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
         margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
@@ -44,7 +43,7 @@ public class PageIndicator extends LinearLayout {
     private void setCurrentItem(boolean isNew, int position) {
         for (int i = 0; i < indicators.length; i++) {
             if (isNew) {
-                indicators[i]=new ImageView(getContext());
+                indicators[i] = new ImageView(getContext());
                 LayoutParams params = new LayoutParams(size, size);
                 if (i == indicators.length - 1) {
                     params.rightMargin = 0;
@@ -72,7 +71,7 @@ public class PageIndicator extends LinearLayout {
     public void setPageCount(int count) {
         indicators = new ImageView[count];
         removeAllViews();
-        init(getContext());
+        init();
     }
 
 }

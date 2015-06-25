@@ -2,11 +2,21 @@
 <resources>
     <string name="app_name">Drone</string>
     <string-array name="mission_plan_menu">
-        <item>Waypoint Editor</item>
-        <item>Flight History</item>
-        <item>Follow Me</item>
+        <item>PLANNING</item>
+        <item>FOLLOW ME</item>
+        <item>FLIGHT HISTORY</item>
     </string-array>
-    <string name="delete_all">Delete All</string>
+    <string-array name="waypoint_type">
+        <item>Waypoint</item>
+        <item>Spline waypoint</item>
+        <item>Circle</item>
+        <item>Region of Interest</item>
+        <item>Change Speed</item>
+        <item>Take Off</item>
+        <item>Structure Scanner</item>
+        <item>Land</item>
+    </string-array>
+    <string name="delete_all">Delete\nAll</string>
     <string name="delete_done">Done</string>
     <string name="album_toggle_drone">Drone</string>
     <string name="album_toggle_smartphone">Smartphone</string>

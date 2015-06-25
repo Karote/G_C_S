@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:alpha="0.5"
-        android:background="@color/bule_sky"
+        android:background="@color/blue_sky"
         android:orientation="horizontal">
 
         <DigitalClock
