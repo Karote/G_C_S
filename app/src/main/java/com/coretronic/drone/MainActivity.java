@@ -28,7 +28,7 @@ import com.coretronic.drone.ui.StatusView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener {
+public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener, View.OnLongClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String G2_IP = "192.168.42.1";
 
@@ -46,8 +46,10 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         LinearLayout llAlbum = (LinearLayout) findViewById(R.id.ll_album);
         LinearLayout llUpdate = (LinearLayout) findViewById(R.id.ll_updates);
         btnPiloting.setOnClickListener(this);
+        btnMissionPlan.setOnLongClickListener(this);
         btnMissionPlan.setOnClickListener(this);
         llAlbum.setOnClickListener(this);
+        llAlbum.setOnLongClickListener(this);
         llUpdate.setOnClickListener(this);
 
         statusView = (StatusView) findViewById(R.id.status);
@@ -155,7 +157,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onLocationUpdate(lat, lon, eph);
         }
-            }
+    }
 
     @Override
     public void onHeadingUpdate(int heading) {
@@ -210,9 +212,32 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
+    @Override
+    public boolean onLongClick(View view) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = null;
+        String backStackName = null;
+        switch (view.getId()) {
+            case R.id.btn_mission_plan:
+                fragment = new WaypointEditorFragment();
+                break;
+            case R.id.ll_album:
+                fragment = new AlbumFragment();
+                backStackName = "AlbumFragment";
+                break;
+        }
+        if (fragment != null) {
+            transaction.replace(R.id.frame_view, fragment, "fragment");
+            transaction.addToBackStack(backStackName);
+            transaction.commit();
+        }
+        return true;
+    }
+
     public DroneDevice getConnectedDroneDevice() {
         return connectedDroneDevice;
     }
+
 
     public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
 
