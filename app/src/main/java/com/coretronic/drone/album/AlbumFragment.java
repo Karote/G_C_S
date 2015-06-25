@@ -64,7 +64,8 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
         droneAlbumFragment = new AlbumDroneTagFragment();
         if (droneAlbumFragment != null) {
             albumFragmentTransaction
-                    .replace(R.id.album_fragment_container, droneAlbumFragment, "SmartPhoneFragment")
+                    .replace(R.id.album_fragment_container, droneAlbumFragment, "DroneAlbumFragment")
+//                    .replace(R.id.album_fragment_container, smartPhoneAlbumFragment, "SmartPhoneFragment")
                     .commit();
         } else {
             Log.e(TAG, "Error in creating fragment");

@@ -14,6 +14,14 @@
                  android:visibility="visible"
             />
 
+    <TextView android:id="@+id/not_get_list_tv"
+            android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Can't get the file list"
+              android:textSize="26dp"
+              android:layout_centerInParent="true"
+              android:visibility="gone"/>
+
 
     <android.support.v7.widget.RecyclerView android:id="@+id/album_list_view"
                                             android:layout_width="match_parent"

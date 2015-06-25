@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
@@ -42,6 +43,7 @@ public class AlbumDroneTagFragment extends Fragment {
     private ArrayList<MediaListItem> albumImgList = new ArrayList<MediaListItem>();
     private String albumFilePath = "";
 
+    private TextView notFindListTV = null;
     private Thread connectThread = null;
     Handler handler = new Handler() {
         @Override
@@ -60,6 +62,22 @@ public class AlbumDroneTagFragment extends Fragment {
         }
     };
 
+    Handler processUIHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what)
+            {
+                case 0:
+                    progressbar.setVisibility(View.GONE);
+                    notFindListTV.setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    progressbar.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
+
     // AMBAClient
     AMBACmdClient cmdClient = null;
 
@@ -75,10 +93,12 @@ public class AlbumDroneTagFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album_dronetag, container, false);
         mContext = view.getContext();
 
-        albumFilePath =  AppConfig.getMediaFolderPosition(mContext);
+        albumFilePath = AppConfig.getMediaFolderPosition(mContext);
 
         progressbar = (ProgressBar) view.findViewById(R.id.progressbar);
         albumListView = (RecyclerView) view.findViewById(R.id.album_list_view);
+        notFindListTV = (TextView) view.findViewById(R.id.not_get_list_tv);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         albumListView.setLayoutManager(linearLayoutManager);
@@ -114,11 +134,22 @@ public class AlbumDroneTagFragment extends Fragment {
         public void onItemDeleteClick(View view, final int position) {
             Log.i(TAG, "delete:" + position);
 
-            Toast.makeText(mContext, "delete " + view.getTag(), Toast.LENGTH_SHORT).show();
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    cmdClient.cmdDeleteFile(albumImgList.get(position).getMediaFileName());
+
+                    AMBACmdClient.DeleteFileListener cmdDeleFileReceiver = new AMBACmdClient.DeleteFileListener() {
+
+                        @Override
+                        public void onCompleted(boolean blSuccess) {
+                            Log.i(TAG, "delete file completed");
+                            Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
+                        }
+                    };
+
+                    cmdClient.cmdDeleteFile(albumImgList.get(position).getMediaFileName(), cmdDeleFileReceiver);
+
 
                     AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
                         @Override
@@ -178,11 +209,20 @@ public class AlbumDroneTagFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        cmdClient.close();
+        Log.i(TAG, "album drone tag fragment onDestroyView");
+        if (cmdClient != null) {
+            cmdClient.close();
+        }
+
+        if (connectThread != null && !connectThread.isInterrupted()) {
+            connectThread.interrupt();
+            connectThread = null;
+        }
     }
 
 
     private void connectToAMBA() {
+        Log.i(TAG, "connectToAMBA");
         cmdClient = new AMBACmdClient();
 
         AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
@@ -193,7 +233,7 @@ public class AlbumDroneTagFragment extends Fragment {
                 // 0 is error, 1 is ok
                 if (status == 0) {
                     cmdClient.close();
-                    progressbar.setVisibility(View.GONE);
+                    processUIHandler.sendEmptyMessage(0);
                 }
             }
         };
@@ -218,39 +258,38 @@ public class AlbumDroneTagFragment extends Fragment {
 
 
         try {
-            cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+
+            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+            Log.i(TAG, "connectStatus:" + connectStatus);
+
+            if (!connectStatus) {
+                connectThread.interrupt();
+                connectThread = null;
+                return;
+            }
+
             if (cmdClient.isRun) {
-                cmdClient.setFileSavePath( albumFilePath );
+                cmdClient.setFileSavePath(albumFilePath);
                 cmdClient.start();
                 cmdClient.cmdStartSession();
                 cmdClient.getFileList(cmdListFileReceiver);
-//                cmdClient.cmdGetFile("AMBA0004.jpg", new AMBACmdClient.GetFileListener() {
-//
-//                    @Override
-//                    public void onProgress(long downloadedSize, long fileSize) {
-//                        ColorLog.debug("Progress:" + downloadedSize);
-//                        Log.i(TAG, "downloadedSize/fileSize:" + downloadedSize +" / "+fileSize);
-//                    }
-//
-//                    @Override
-//                    public void onCompleted(long size) {
-//                        Log.i(TAG, "downlaod image onCompleted/size:" + size);
-//                    }
-//                });
-            }
-            else
-            {
+            } else {
                 cmdClient.close();
                 progressbar.setVisibility(View.GONE);
             }
 
+
         } catch (IOException e) {
             e.printStackTrace();
-            cmdClient.close();
-            progressbar.setVisibility(View.GONE);
+            if (cmdClient != null) {
+                cmdClient.close();
+            }
+//            processUIHandler.sendEmptyMessage(0);
+
             Log.e(TAG, "connect error:" + e.getMessage());
         }
 
 
     }
+
 }

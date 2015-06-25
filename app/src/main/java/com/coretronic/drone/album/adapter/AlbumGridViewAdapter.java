@@ -39,6 +39,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public AlbumGridViewAdapter(Context context, int resource, ArrayList<MediaItem> data) {
 
+        Log.i(TAG,"AlbumGridViewAdapter");
         this.context = context;
         this.resourceId = resource;
 

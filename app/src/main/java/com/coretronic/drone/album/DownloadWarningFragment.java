@@ -63,6 +63,9 @@ public class DownloadWarningFragment extends Fragment {
     private Thread speedThread = null;
     private Timer speedTimer = null;
     private float tempIntervalSize = 0;
+    private static int INTERVAL_DOWNLOAD_TIME = 1000;
+    private float intervalCalculateSum = 0;
+
     Handler progressHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -73,7 +76,16 @@ public class DownloadWarningFragment extends Fragment {
             Log.i(TAG,"progressValue:"+progressValue);
             if( progressValue == 100)
             {
-                deleteAMMBAFile();
+                Log.i(TAG," progressValue == 100");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        deleteAMMBAFile();
+
+                    }
+                }).start();
+
 
             }
         }
@@ -83,7 +95,15 @@ public class DownloadWarningFragment extends Fragment {
     public Handler timeHandler = new Handler() {
         public void handleMessage(Message msg) {
             int wasteTime = msg.what;
-            timeTV.setText(millisecondsToHumanRead((int)wasteTime));
+            timeTV.setText(millisecondsToHumanRead((int) wasteTime));
+        }
+    };
+
+
+    public Handler deleteCompletedHandler = new Handler() {
+        public void handleMessage(Message msg) {
+//            int wasteTime = msg.what;
+            closeDownloadFragment();
         }
     };
 
@@ -154,7 +174,9 @@ public class DownloadWarningFragment extends Fragment {
 
         speedThread = new Thread();
         speedTimer = new Timer();
-        speedTimer.schedule(new SpeedTimerTask(), 500,5000);
+
+        intervalCalculateSum = 0;
+        speedTimer.schedule(new SpeedTimerTask(), 500,INTERVAL_DOWNLOAD_TIME);
 
         return view;
     }
@@ -167,16 +189,20 @@ public class DownloadWarningFragment extends Fragment {
         public void run() {
             Log.i(TAG,"== speed timer ==");
             Log.i(TAG,"getFileSize:"+getFileSize+"/totalFileSize:"+totalFileSize);
-            if( getFileSize != 0 && totalFileSize!=0) {
-                float wasteTime = ((float)(totalFileSize - getFileSize) / ((float)(getFileSize - tempIntervalSize) / 500)) ;
-                Log.i(TAG, "sec:" + ((float) totalFileSize / ((float) (getFileSize - tempIntervalSize) / 500)) );
+
+            intervalCalculateSum++;
+            if( getFileSize != 0 && totalFileSize!=0 ) {
+
+
+                float wasteTime = ((float)(totalFileSize - getFileSize) / ( (float)getFileSize / (INTERVAL_DOWNLOAD_TIME*intervalCalculateSum) )) ;
+//                float wasteTime = ((float)(totalFileSize - getFileSize) / ((float)(getFileSize - tempIntervalSize) / INTERVAL_DOWNLOAD_TIME)) ;
 
 
                 Message msg = new Message();
                 msg.what = (int)wasteTime;
                 Log.i(TAG, "msg.arg1:" + msg.what);
                 timeHandler.sendMessage(msg);
-                tempIntervalSize = (float)getFileSize;
+//                tempIntervalSize = (float)getFileSize;
             }
         }
     }
@@ -249,7 +275,17 @@ public class DownloadWarningFragment extends Fragment {
     private void deleteAMMBAFile()
     {
         Log.i(TAG, "dele AMMBA File Name:"+mediaListItem.getMediaFileName());
-        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName());
+
+        AMBACmdClient.DeleteFileListener cmdDeleFileReceiver = new AMBACmdClient.DeleteFileListener(){
+
+            @Override
+            public void onCompleted(boolean blSuccess) {
+                Log.i(TAG,"delete file completed");
+                deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+            }
+        };
+
+        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
 
         AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
             @Override
@@ -309,7 +345,13 @@ public class DownloadWarningFragment extends Fragment {
 
 
         try {
-            cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+
+            if( !connectStatus)
+            {
+                return;
+            }
+
             cmdClient.setFileSavePath(albumFilePath);
             cmdClient.start();
             cmdClient.cmdStartSession();

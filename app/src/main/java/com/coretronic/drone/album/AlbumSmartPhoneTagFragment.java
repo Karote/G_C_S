@@ -60,7 +60,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Log.i(TAG, TAG + " onCreateView ");
+        Log.i(TAG, TAG + "smartphone onCreateView ");
         View view = inflater.inflate(R.layout.fragment_album_smartphonetag, container, false);
         mContext = view.getContext();
 
@@ -93,6 +93,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
     //    private ArrayList<ImageItem> getData() {
     private void getData() {
+        Log.i(TAG,"smartphone getData");
 //        final ArrayList<ImageItem> imageItems = new ArrayList<>();
         albumImgList.clear();
 
