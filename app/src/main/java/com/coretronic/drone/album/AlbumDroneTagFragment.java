@@ -111,9 +111,26 @@ public class AlbumDroneTagFragment extends Fragment {
     AlbumListViewAdapter.OnItemClickListener recyclerItemClickListener = new AlbumListViewAdapter.OnItemClickListener() {
 
         @Override
-        public void onItemDeleteClick(View view, int position) {
+        public void onItemDeleteClick(View view, final int position) {
             Log.i(TAG, "delete:" + position);
+
             Toast.makeText(mContext, "delete " + view.getTag(), Toast.LENGTH_SHORT).show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    cmdClient.cmdDeleteFile(albumImgList.get(position).getMediaFileName());
+
+                    AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+                        @Override
+                        public void onCompleted(List<FileItem> listItems) {
+                            getDate(listItems);
+
+                        }
+                    };
+                    cmdClient.getFileList(cmdListFileReceiver);
+                }
+            }).start();
+
         }
 
         @Override

@@ -73,7 +73,8 @@ public class DownloadWarningFragment extends Fragment {
             Log.i(TAG,"progressValue:"+progressValue);
             if( progressValue == 100)
             {
-                closeDownloadFragment();
+                deleteAMMBAFile();
+
             }
         }
     };
@@ -113,6 +114,7 @@ public class DownloadWarningFragment extends Fragment {
 
         // get media list data
         Bundle bundle = getArguments();
+        Log.i(TAG,"bundle:"+bundle);
         if (bundle == null) {
             return view;
         }
@@ -124,10 +126,20 @@ public class DownloadWarningFragment extends Fragment {
 
         findViews(view);
 
-//        if( mediaListItem.getMediaSize())
-        // set if warning
-        wraningLL.setVisibility(View.VISIBLE);
-//        wraningLL.setVisibility(View.GONE);
+        int fileSizeNumber = Integer.valueOf((mediaListItem.getMediaSize().split(" bytes"))[0]);
+
+        // if > 50MB show warning
+        if( fileSizeNumber > 50*1000*1000)
+        {
+            // set if warning
+            wraningLL.setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            wraningLL.setVisibility(View.GONE);
+        }
+
 
         downloadBar.setProgress(progressValue);
 
@@ -135,15 +147,6 @@ public class DownloadWarningFragment extends Fragment {
             @Override
             public void run() {
                 connectToAMBA();
-//                while(progressValue < 100 ){
-//                    try{
-//                        progressHandler.sendMessage(progressHandler.obtainMessage());
-//                        Thread.sleep(1000);
-//                    }catch (Throwable t)
-//                    {
-//
-//                    }
-//                }
             }
         };
         progressThread = new Thread(progressRunnable);
@@ -169,7 +172,6 @@ public class DownloadWarningFragment extends Fragment {
                 Log.i(TAG, "sec:" + ((float) totalFileSize / ((float) (getFileSize - tempIntervalSize) / 500)) );
 
 
-
                 Message msg = new Message();
                 msg.what = (int)wasteTime;
                 Log.i(TAG, "msg.arg1:" + msg.what);
@@ -190,11 +192,11 @@ public class DownloadWarningFragment extends Fragment {
         if( seconds >=0 )
         {
             returnValue =  seconds + " seconds";
-        }else if( minutes >=0 )
+        }else if( minutes >0 )
         {
             returnValue = seconds+" minutes"+ seconds + " seconds";
         }
-        else if(hours >= 0)
+        else if(hours > 0)
         {
             returnValue = hours + " hours" + seconds+" minutes"+ seconds + " seconds";
         }
@@ -244,8 +246,23 @@ public class DownloadWarningFragment extends Fragment {
         }
     };
 
+    private void deleteAMMBAFile()
+    {
+        Log.i(TAG, "dele AMMBA File Name:"+mediaListItem.getMediaFileName());
+        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName());
+
+        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+            @Override
+            public void onCompleted(List<FileItem> listItems) {
+                closeDownloadFragment();
+            }
+        };
+    }
+
     private void closeDownloadFragment()
     {
+
+
         if( progressThread != null && progressThread.isAlive() )
         {
             progressThread.interrupt();

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
@@ -48,6 +49,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
     private TextView noMediaTV = null;
+//    private ProgressBar loadingPhotoProgress = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,19 +69,21 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         fragmentManager = getChildFragmentManager();
 
 
+//        loadingPhotoProgress = (ProgressBar) view.findViewById(R.id.loadphoto_progressbar);
         noMediaTV = (TextView) view.findViewById(R.id.no_mediainfolder_tv);
         albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
         albumGridView.setLayoutManager(gridLayoutManager);
 
 
+//        loadingPhotoProgress.setVisibility(View.VISIBLE);
         // get media array list
         getData();
 
         albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
         albumGridView.setAdapter(albumGridViewAdapter);
         albumGridViewAdapter.notifyDataSetChanged();
-
+//        loadingPhotoProgress.setVisibility(View.GONE);
         // AlbumFragment
 //        Fragment cuttentFragment = ((FragmentActivity) mContext).getSupportFragmentManager().findFragmentByTag("fragment");
 //        ((AlbumFragment) cuttentFragment).updateTrashUI();
@@ -255,7 +259,9 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         }*/
 //        return imageItems;
 
+
         if (albumImgList.size() == 0) {
+
             noMediaTV.setVisibility(View.VISIBLE);
             albumGridView.setVisibility(View.GONE);
         } else {
