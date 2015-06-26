@@ -225,7 +225,11 @@ public class AlbumDroneTagFragment extends Fragment {
 
     private void connectToAMBA() {
         Log.i(TAG, "connectToAMBA");
-        cmdClient = new AMBACmdClient();
+        try {
+            cmdClient = new AMBACmdClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
 
@@ -271,10 +275,18 @@ public class AlbumDroneTagFragment extends Fragment {
             }
 
             if (cmdClient.isRun) {
+
                 cmdClient.setFileSavePath(albumFilePath);
                 cmdClient.start();
-                cmdClient.cmdStartSession();
+                cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+                    @Override
+                    public void onStartSession(boolean Success) {
+
+                    }
+                });
+
                 cmdClient.getFileList(cmdListFileReceiver);
+
             } else {
                 cmdClient.close();
                 processUIHandler.sendEmptyMessage(0);

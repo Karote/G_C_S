@@ -284,7 +284,11 @@ public class DownloadWarningFragment extends Fragment {
     }
 
     private void connectToAMBA() {
-        cmdClient = new AMBACmdClient();
+        try {
+            cmdClient = new AMBACmdClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
 
@@ -324,7 +328,13 @@ public class DownloadWarningFragment extends Fragment {
 
             cmdClient.setFileSavePath(albumFilePath);
             cmdClient.start();
-            cmdClient.cmdStartSession();
+            cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+                @Override
+                public void onStartSession(boolean Success) {
+
+                }
+            });
+
             Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
             cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
 
