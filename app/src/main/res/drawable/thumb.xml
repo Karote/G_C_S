@@ -5,6 +5,7 @@
             <color android:color="@android:color/transparent"/>
             <size android:height="38dp"
                   android:width="38dp"/>
+            <solid android:color="@android:color/transparent"/>
         </shape>
     </item>
     <item android:drawable="@drawable/control_progress_circle" />

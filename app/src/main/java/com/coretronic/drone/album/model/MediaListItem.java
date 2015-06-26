@@ -1,11 +1,12 @@
 package com.coretronic.drone.album.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by james on 15/6/12.
  */
-public class MediaListItem {
+public class MediaListItem implements Serializable {
     private String mediaDate = null;
     private String mediaFileName = "";
     private String mediaSize = "";

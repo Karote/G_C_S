@@ -1,9 +1,12 @@
 package com.coretronic.drone.album;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,12 +58,15 @@ public class AlbumDroneTagFragment extends Fragment {
         albumListView.setLayoutManager(linearLayoutManager);
 
 
+        Log.i(TAG, "=== AlbumDroneTagFragment onCreateView===");
         albumListViewAdapter = new AlbumListViewAdapter(mContext, albumImgList);
         albumListView.setAdapter(albumListViewAdapter);
         albumListViewAdapter.SetOnItemClickListener(recyclerItemClickListener);
         albumListViewAdapter.notifyDataSetChanged();
         return view;
     }
+
+
 
     AlbumListViewAdapter.OnItemClickListener recyclerItemClickListener = new AlbumListViewAdapter.OnItemClickListener()
     {
@@ -74,12 +80,27 @@ public class AlbumDroneTagFragment extends Fragment {
         @Override
         public void onDownloadClick(View view, int position) {
             Log.i(TAG, "download:" + position);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("mediaListItemData", albumImgList.get(position));
+
             Toast.makeText(mContext, "download " + view.getTag(), Toast.LENGTH_SHORT).show();
+            DownloadWarningFragment downloadWarningFragment = new DownloadWarningFragment();
+            downloadWarningFragment.setArguments(bundle);
+
+            Fragment cuttentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("fragment");
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .hide(cuttentFragment)
+                    .replace(R.id.frame_view, downloadWarningFragment, "DownloadWarningFragment")
+                    .addToBackStack("DownloadWarningFragment")
+                    .commit();
         }
     };
 
     private void getDate()
     {
+        albumImgList.clear();
         for( int i = 0 ; i<= 99;i++)
         {
 
@@ -104,4 +125,11 @@ public class AlbumDroneTagFragment extends Fragment {
         super.onDestroyView();
     }
 
+
+//
+//    public void refreshListData()
+//    {
+//        getDate();
+//        albumListViewAdapter.notifyDataSetChanged();
+//    }
 }

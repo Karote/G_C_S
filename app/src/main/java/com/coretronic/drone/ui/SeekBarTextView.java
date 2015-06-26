@@ -2,19 +2,22 @@ package com.coretronic.drone.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.R;
+import com.coretronic.drone.piloting.Setting;
 
 /**
  * Created by jiaLian on 15/6/15.
  */
 public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
-    //    private int maxValue;
+    private static final String TAG = SeekBarTextView.class.getSimpleName();
     private int minValue;
     private String unit = "";
 
@@ -32,6 +35,23 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         initView();
     }
 
+    public static void assignSettingSeekBarTextView(final View view, int id, final Setting.SettingType settingType) {
+        final Setting setting = DroneApplication.settings[settingType.ordinal()];
+        Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
+        SeekBarTextView seekBarTextView = (SeekBarTextView) view.findViewById(id);
+        seekBarTextView.setConfig(setting.getMinValue(), setting.getMaxValue(), setting.getUnit());
+        seekBarTextView.setValue(setting.getValue());
+        seekBarTextView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(int value) {
+                Log.d(TAG, "onStopTrackingTouch");
+                DroneApplication.settings[settingType.ordinal()].setValue(value);
+            }
+        });
+
+    }
+
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.custom_seek_bar, null);
         tvValue = (TextView) view.findViewById(R.id.tv_value);
@@ -47,7 +67,6 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
     public void setConfig(int minValue, int maxValue, String unit) {
         this.unit = unit;
         this.minValue = minValue;
-//        this.maxValue = maxValue;
         seekBar.setMax(maxValue - minValue);
     }
 
@@ -55,10 +74,6 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         seekBar.setProgress(value - minValue);
         tvValue.setText(value + unit);
     }
-
-//    public void setUnit(String unit) {
-//        this.unit = unit;
-//    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

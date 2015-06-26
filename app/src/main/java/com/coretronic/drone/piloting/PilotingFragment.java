@@ -29,8 +29,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.Drone;
-import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneApplication;
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
@@ -55,6 +55,10 @@ import java.lang.ref.WeakReference;
 public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final String SEND_DRONE_CONTROL = "send drone control: ";
+
+    private static final int UNLOCK_HOLD_ALTITUDE_DEFAULT = 0;
+    private static final boolean HOLD_ALTITUDE_UNLOCK = false;
+    private static final boolean HOLD_ALTITUDE_LOCK = true;
     //    private static final float M_S2KM_H = 3.6f;
     private static final String VIDEO_FILE_PATH_RTSP_PREFIX = "rtsp://";
     private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
@@ -64,6 +68,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final float ORIENTATION_SENSOR_SCALE = 2.5f;
     private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
     public static final int MAX_SPEED = 50;
+    private static final int TAKE_OFF_ALTITUDE = 5;
+
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
@@ -99,6 +105,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private int stickShiftRadius = 0;
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private String mrl = null;
+    private float currentAltitude;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,6 +137,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         assignViews(view);
         return view;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -189,6 +197,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     @Override
     public void onAltitudeUpdate(final float altitude) {
+        if (altitude > 0) {
+            currentAltitude = altitude;
+        }
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -199,7 +210,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     @Override
     public void onRadioSignalUpdate(int rssi) {
-
+        Log.d(TAG, "radio signal:" + rssi);
     }
 
     @Override
@@ -226,6 +237,17 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private void assignViews(View view) {
         Button btnHome = (Button) view.findViewById(R.id.btn_home);
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isTakeOff) {
+                    return;
+                }
+                sendReturnToLanch();
+                Log.d(TAG, SEND_DRONE_CONTROL + "RTL");
+            }
+        });
+        Button btnHoldAlt = (Button) view.findViewById(R.id.btn_hold_altitude);
         Button btnEmergency = (Button) view.findViewById(R.id.btn_emergency);
         Button btnDocking = (Button) view.findViewById(R.id.btn_docking);
         Button btnSelfie = (Button) view.findViewById(R.id.btn_selfie);
@@ -236,6 +258,27 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             btnDocking.setVisibility(View.VISIBLE);
             btnSelfie.setVisibility(View.VISIBLE);
+            btnHoldAlt.setVisibility(View.VISIBLE);
+            btnHoldAlt.setTag(HOLD_ALTITUDE_UNLOCK);
+            btnHoldAlt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isTakeOff) {
+                        return;
+                    }
+                    if ((boolean) view.getTag() == HOLD_ALTITUDE_LOCK) {
+                        view.setBackgroundResource(R.drawable.ico_pilot_altitude_unlock);
+                        view.setTag(HOLD_ALTITUDE_UNLOCK);
+                        sendHoldAlt(UNLOCK_HOLD_ALTITUDE_DEFAULT);
+                        Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Unlock");
+                    } else {
+                        view.setBackgroundResource(R.drawable.ico_pilot_altitude_lock);
+                        view.setTag(HOLD_ALTITUDE_LOCK);
+                        sendHoldAlt((int) currentAltitude);
+                        Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Lock " + currentAltitude);
+                    }
+                }
+            });
         }
         btnEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,12 +335,12 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         semiCircleProgressBarView.setMaxProgress(MAX_SPEED);
         tvSpeed = (TextView) view.findViewById(R.id.tv_speed);
 
-        int size = (int) (getResources().getDimension(R.dimen.joypad_size) / getResources().getDisplayMetrics().density) / 2;
-        final String[] stickList = new String[(size / 5) - 3];
-        for (int i = 0; i < stickList.length; i++) {
-            stickList[i] = String.valueOf(size);
-            size -= 5;
-        }
+//        int size = (int) (getResources().getDimension(R.dimen.joypad_size) / getResources().getDisplayMetrics().density) / 2;
+//        final String[] stickList = new String[(size / 5) - 3];
+//        for (int i = 0; i < stickList.length; i++) {
+//            stickList[i] = String.valueOf(size);
+//            size -= 5;
+//        }
 
         tvAltitude = (TextView) view.findViewById(R.id.tv_altitude);
 
@@ -530,7 +573,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private void sendTakeoff() {
         if (getController() != null) {
-            getController().takeOff(10);
+            getController().takeOff(TAKE_OFF_ALTITUDE);
         }
     }
 
@@ -538,6 +581,14 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         if (getController() != null) {
             getController().emergency();
         }
+    }
+
+    private void sendHoldAlt(int altitude) {
+        getController().holdAlt(altitude);
+    }
+
+    private void sendReturnToLanch() {
+        getController().returnToLaunch();
     }
 
     private DroneController getController() {
