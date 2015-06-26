@@ -17,11 +17,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.model.MediaItem;
+import com.coretronic.drone.utility.AppConfig;
 import org.w3c.dom.Text;
 
 import java.text.ParseException;
@@ -37,8 +39,9 @@ import java.util.TimeZone;
  */
 public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
-    private final static String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
-    //    private final static  String FILTER_MEDIA_FOLDER = "external/";
+    //    private final static String FILTER_MEDIA_FOLDER = "/DCIM/100ANDRO/";
+//    private final static String FILTER_MEDIA_FOLDER = "external/";
+    private String FILTER_MEDIA_FOLDER = "";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView albumGridView = null;
@@ -46,6 +49,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
     private TextView noMediaTV = null;
+//    private ProgressBar loadingPhotoProgress = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,26 +60,30 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Log.i(TAG, TAG + " onCreateView ");
+        Log.i(TAG, TAG + "smartphone onCreateView ");
         View view = inflater.inflate(R.layout.fragment_album_smartphonetag, container, false);
         mContext = view.getContext();
+
+        FILTER_MEDIA_FOLDER = AppConfig.getMediaFolderPosition(mContext);
 
         fragmentManager = getChildFragmentManager();
 
 
+//        loadingPhotoProgress = (ProgressBar) view.findViewById(R.id.loadphoto_progressbar);
         noMediaTV = (TextView) view.findViewById(R.id.no_mediainfolder_tv);
         albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
         albumGridView.setLayoutManager(gridLayoutManager);
 
 
+//        loadingPhotoProgress.setVisibility(View.VISIBLE);
         // get media array list
         getData();
 
         albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
         albumGridView.setAdapter(albumGridViewAdapter);
         albumGridViewAdapter.notifyDataSetChanged();
-
+//        loadingPhotoProgress.setVisibility(View.GONE);
         // AlbumFragment
 //        Fragment cuttentFragment = ((FragmentActivity) mContext).getSupportFragmentManager().findFragmentByTag("fragment");
 //        ((AlbumFragment) cuttentFragment).updateTrashUI();
@@ -85,6 +93,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
     //    private ArrayList<ImageItem> getData() {
     private void getData() {
+        Log.i(TAG,"smartphone getData");
 //        final ArrayList<ImageItem> imageItems = new ArrayList<>();
         albumImgList.clear();
 
@@ -133,8 +142,9 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+            Log.i(TAG, "fileFullPath:" + fileFullPath);
             if (!fileFullPath.contains(FILTER_MEDIA_FOLDER)) {
-//                return;
+                return;
             }
             long fileId = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
             int imgType = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)));
@@ -250,7 +260,9 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         }*/
 //        return imageItems;
 
+
         if (albumImgList.size() == 0) {
+
             noMediaTV.setVisibility(View.VISIBLE);
             albumGridView.setVisibility(View.GONE);
         } else {

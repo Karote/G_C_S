@@ -12,7 +12,7 @@
                   android:orientation="horizontal"
                   android:gravity="center_horizontal"
                   android:layout_marginTop="40dp"
-                  android:visibility="visible">
+                  android:visibility="gone">
 
         <ImageView android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
@@ -46,8 +46,8 @@
                   android:gravity="center">
         <TextView android:id="@+id/timetv"
                   android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="0 min"
-                  android:textSize="30dp"
+                  android:text="calculate download time..."
+                  android:textSize="24dp"
                   android:textColor="#FFFFFF"/>
         <ProgressBar android:id="@+id/downloadbar"
                      android:layout_width="match_parent"
