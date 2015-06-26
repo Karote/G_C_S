@@ -21,7 +21,6 @@ import com.coretronic.drone.album.model.MediaListItem;
 import com.coretronic.drone.ambarlla.message.AMBACmdClient;
 import com.coretronic.drone.ambarlla.message.AMBACommand;
 import com.coretronic.drone.ambarlla.message.FileItem;
-import com.coretronic.drone.log.ColorLog;
 import com.coretronic.drone.utility.AppConfig;
 
 import java.io.File;
@@ -40,17 +39,17 @@ public class AlbumDroneTagFragment extends Fragment {
     private ProgressBar progressbar = null;
     private RecyclerView albumListView = null;
     private AlbumListViewAdapter albumListViewAdapter = null;
-    private ArrayList<MediaListItem> albumImgList = new ArrayList<MediaListItem>();
+    private ArrayList<MediaListItem> albumMediaList = new ArrayList<MediaListItem>();
     private String albumFilePath = "";
 
     private TextView notFindListTV = null;
     private Thread connectThread = null;
-    Handler handler = new Handler() {
+    Handler showListHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
             if (msg.obj == "complete") {
-                Log.i(TAG, "handler message:" + msg.obj);
+                Log.i(TAG, "showListHandler message:" + msg.obj);
                 albumListViewAdapter.notifyDataSetChanged();
                 albumListView.setVisibility(View.VISIBLE);
             }
@@ -103,14 +102,15 @@ public class AlbumDroneTagFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         albumListView.setLayoutManager(linearLayoutManager);
 
-        Log.i(TAG, "albumFilePath:" + albumFilePath);
+
+        // create the album folder for download media
         File albumFolder = new File(albumFilePath);
         if (!albumFolder.exists()) {
             albumFolder.mkdir();
         }
 
 
-        albumListViewAdapter = new AlbumListViewAdapter(mContext, albumImgList);
+        albumListViewAdapter = new AlbumListViewAdapter(mContext, albumMediaList);
         albumListView.setAdapter(albumListViewAdapter);
         albumListViewAdapter.SetOnItemClickListener(recyclerItemClickListener);
 
@@ -135,6 +135,7 @@ public class AlbumDroneTagFragment extends Fragment {
             Log.i(TAG, "delete:" + position);
 
 
+            // delete drone file
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -148,7 +149,7 @@ public class AlbumDroneTagFragment extends Fragment {
                         }
                     };
 
-                    cmdClient.cmdDeleteFile(albumImgList.get(position).getMediaFileName(), cmdDeleFileReceiver);
+                    cmdClient.cmdDeleteFile(albumMediaList.get(position).getMediaFileName(), cmdDeleFileReceiver);
 
 
                     AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
@@ -164,14 +165,15 @@ public class AlbumDroneTagFragment extends Fragment {
 
         }
 
+        // when download the file, it will open a new fragment and pass the file name
         @Override
         public void onDownloadClick(View view, int position) {
             Log.i(TAG, "download:" + position);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("mediaListItemData", albumImgList.get(position));
+            bundle.putSerializable("mediaListItemData", albumMediaList.get(position));
 
-            Toast.makeText(mContext, "download " + view.getTag(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "download " + view.getTag(), Toast.LENGTH_SHORT).show();
             DownloadWarningFragment downloadWarningFragment = new DownloadWarningFragment();
             downloadWarningFragment.setArguments(bundle);
 
@@ -188,15 +190,15 @@ public class AlbumDroneTagFragment extends Fragment {
     };
 
     private void getDate(List<FileItem> listItems) {
-        albumImgList.clear();
+        albumMediaList.clear();
 
         for (int i = 0; i < listItems.size(); i++) {
-            albumImgList.add(new MediaListItem(listItems.get(i)));
+            albumMediaList.add(new MediaListItem(listItems.get(i)));
         }
 
         Message message = new Message();
-        message = handler.obtainMessage(0, "complete");
-        handler.sendMessage(message);
+        message = showListHandler.obtainMessage(0, "complete");
+        showListHandler.sendMessage(message);
 
     }
 
@@ -275,7 +277,7 @@ public class AlbumDroneTagFragment extends Fragment {
                 cmdClient.getFileList(cmdListFileReceiver);
             } else {
                 cmdClient.close();
-                progressbar.setVisibility(View.GONE);
+                processUIHandler.sendEmptyMessage(0);
             }
 
 
@@ -284,7 +286,7 @@ public class AlbumDroneTagFragment extends Fragment {
             if (cmdClient != null) {
                 cmdClient.close();
             }
-//            processUIHandler.sendEmptyMessage(0);
+            processUIHandler.sendEmptyMessage(0);
 
             Log.e(TAG, "connect error:" + e.getMessage());
         }
