@@ -9,9 +9,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -54,20 +56,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class WaypointEditorFragment extends Fragment
-        implements Drone.StatusChangedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, DroneController.MissionLoaderListener {
+        implements View.OnClickListener, LocationListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        Drone.StatusChangedListener, DroneController.MissionLoaderListener, DroneController.FollowMeStatueListener {
     private static final String TAG = WaypointEditorFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private static MissionItemListAdapter mMissionItemAdapter;
     private WebView webview_WayPoint;
-    private TextView tv_droneSpeed, tv_droneLatLng;
-    private LinearLayout layout_editMarker, layout_deleteIcon, layout_deleteOption, layout_planControl, layout_buttomBar;
+    private TextView tv_droneAltitude, tv_droneSpeed, tv_droneLatLng;
+    private LinearLayout layout_mavinfo, layout_editMarker, layout_deleteIcon, layout_deleteOption, layout_planControl, layout_buttomBar;
+    private FrameLayout layout_waypointDetail;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequestHighAccuracy;
     private Location nowlocation;
     final static long LOCATION_UPDATE_MIN_TIME = 1000;
     final static int REQUEST_CHECK_SETTINGS = 1000;
-    private static final String[] SPINNER_MENU = {"PLANNING", "FOLLOW ME", "FLIGHT HISTORY"};
     public double nowLatget, nowLngget, droneLat = 0, droneLng = 0;
     public int droneHeading;
     public DroneController drone;
@@ -75,6 +79,8 @@ public class WaypointEditorFragment extends Fragment
     private ProgressDialog progressDialog;
     private FragmentActivity fragmentActivity;
     private StatusView statusView;
+    private FragmentManager fragmentChildManager = null;
+    private WaypointDetailFragment detailFragment = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,11 +107,12 @@ public class WaypointEditorFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         setUpWebView(view);
-        setUpWaypointListRecycleView(view);
+        setUpWaypointListAndDetail(view);
         setUpButtomBarButton(view);
         setUpTopBarButton(view);
         setUpMavInfo(view);
         statusView = (StatusView) view.findViewById(R.id.status);
+
     }
 
     @Override
@@ -232,7 +239,8 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onAltitudeUpdate(final float altitude) {
-
+        String tx_alt = String.format("%d", (int)altitude);
+        tv_droneAltitude.setText(tx_alt+"m");
     }
 
     @Override
@@ -269,11 +277,26 @@ public class WaypointEditorFragment extends Fragment
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                Log.d(TAG, "onHeadingUpdate: " + droneLat + "," + droneLng + "," + droneHeading);
                 webview_WayPoint.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
             }
         });
     }
+
+    @Override
+    public void onStart(float latOffset, float longOffset) {
+
+    }
+
+    @Override
+    public void onMissionItemUpdated(float lat, float lon) {
+
+    }
+
+    @Override
+    public void onLocationUpdated(float lat, float lon) {
+
+    }
+
 
     /**
      * 建立給 JavaScript 呼叫的函式 *
@@ -309,7 +332,7 @@ public class WaypointEditorFragment extends Fragment
         }
     }
 
-    private void setUpWaypointListRecycleView(View view) {
+    private void setUpWaypointListAndDetail(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.mission_item_recycler_view);
         //如果可以確定每個item的高度是固定的，設置這個選項可以提高性能
         recyclerView.setHasFixedSize(true);
@@ -320,6 +343,13 @@ public class WaypointEditorFragment extends Fragment
 
         mMissionItemAdapter = new MissionItemListAdapter();
         recyclerView.setAdapter(mMissionItemAdapter);
+
+        layout_waypointDetail = (FrameLayout) view.findViewById(R.id.waypoint_detail_container);
+
+        fragmentActivity = getActivity();
+        fragmentChildManager = getChildFragmentManager();
+
+        layout_waypointDetail.setVisibility(FrameLayout.GONE);
 
         mMissionItemAdapter.SetOnItemClickListener(new MissionItemListAdapter.OnItemClickListener() {
             @Override
@@ -332,18 +362,38 @@ public class WaypointEditorFragment extends Fragment
 
             @Override
             public void onItemPlanClick(View view, int position) {
-                Log.d(TAG, "onItemPlanClick");
+                if (mMissionItemAdapter.getFocusIndex() < 0 || position != mMissionItemAdapter.getFocusIndex()) {
+                    Mission itemMission = mMissionItemAdapter.getMission(position);
+                    FragmentTransaction fragmentTransaction = fragmentChildManager.beginTransaction();
+                    detailFragment = WaypointDetailFragment.newInstance(position + 1, itemMission);
+                    fragmentTransaction
+                            .replace(R.id.waypoint_detail_container, detailFragment, "DetailFragment")
+                            .commit();
+                    layout_waypointDetail.setVisibility(FrameLayout.VISIBLE);
+                }else{
+                    layout_waypointDetail.setVisibility(FrameLayout.GONE);
+                }
             }
         });
     }
 
+    public static void setItemMissionType(Type missionType){
+        mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setType(missionType);
+    }
+    public static void setItemMissionAltitude(float missionAltidude){
+        mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setAltitude(missionAltidude);
+    }
+    public static void setItemMissionDelay(int missionDelay){
+        mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setWaitSeconds(missionDelay);
+    }
+
     private void setUpButtomBarButton(View view) {
-        layout_buttomBar = (LinearLayout)view.findViewById(R.id.bottom_bar);
+        layout_buttomBar = (LinearLayout) view.findViewById(R.id.bottom_bar);
 
         final Button myLocationButton = (Button) view.findViewById(R.id.button_my_location);
         myLocationButton.setOnClickListener(this);
 
-        layout_planControl = (LinearLayout)view.findViewById(R.id.layout_plan_control);
+        layout_planControl = (LinearLayout) view.findViewById(R.id.layout_plan_control);
 
         final Button goButton = (Button) view.findViewById(R.id.btn_plan_go);
         goButton.setOnClickListener(this);
@@ -358,7 +408,7 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void setUpTopBarButton(View view) {
-        setUpDeleteLayout(view);
+        setUpEditMarkerLayout(view);
         final Button backToMainButton = (Button) view.findViewById(R.id.button_back_to_main);
         backToMainButton.setOnClickListener(this);
 
@@ -374,10 +424,10 @@ public class WaypointEditorFragment extends Fragment
                         canMapAddMarker = true;
                         isShowMarker = true;
                         layout_editMarker.setVisibility(LinearLayout.VISIBLE);
-                        setDeleteOptionShow(false);
                         recyclerView.setVisibility(RecyclerView.VISIBLE);
                         layout_buttomBar.setVisibility(LinearLayout.VISIBLE);
                         layout_planControl.setVisibility(LinearLayout.VISIBLE);
+                        layout_mavinfo.setVisibility(LinearLayout.VISIBLE);
                         break;
                     case 1: // FOLLOW ME
                         canMapAddMarker = false;
@@ -386,6 +436,7 @@ public class WaypointEditorFragment extends Fragment
                         recyclerView.setVisibility(RecyclerView.GONE);
                         layout_buttomBar.setVisibility(LinearLayout.VISIBLE);
                         layout_planControl.setVisibility(LinearLayout.GONE);
+                        layout_mavinfo.setVisibility(LinearLayout.VISIBLE);
                         break;
                     case 2: // FLIGHT HISTORY
                         canMapAddMarker = false;
@@ -393,10 +444,12 @@ public class WaypointEditorFragment extends Fragment
                         layout_editMarker.setVisibility(LinearLayout.GONE);
                         recyclerView.setVisibility(RecyclerView.GONE);
                         layout_buttomBar.setVisibility(LinearLayout.GONE);
+                        layout_mavinfo.setVisibility(LinearLayout.GONE);
                         break;
                     default:
                         break;
                 }
+                setDeleteOptionShow(false);
                 webview_WayPoint.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
                 webview_WayPoint.loadUrl("javascript:setMarkerShow(" + isShowMarker + ")");
             }
@@ -410,11 +463,14 @@ public class WaypointEditorFragment extends Fragment
 
     }
 
-    private void setUpDeleteLayout(View view) {
+    private void setUpEditMarkerLayout(View view) {
         layout_editMarker = (LinearLayout) view.findViewById(R.id.custom_layout_edit_marker);
         layout_deleteIcon = (LinearLayout) view.findViewById(R.id.layout_delete_icon);
         layout_deleteOption = (LinearLayout) view.findViewById(R.id.layout_delete_option);
         layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
+
+        final Button b_action_plan_undo = (Button)view.findViewById(R.id.btn_action_plan_undo);
+        b_action_plan_undo.setOnClickListener(this);
 
         final Button b_action_plan_delete = (Button) view.findViewById(R.id.btn_action_plan_delete);
         b_action_plan_delete.setOnClickListener(this);
@@ -427,6 +483,9 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void setUpMavInfo(View view) {
+        layout_mavinfo = (LinearLayout)view.findViewById(R.id.mav_info);
+        tv_droneAltitude = (TextView)view.findViewById(R.id.altitude_text);
+        tv_droneAltitude.setText("0m");
         tv_droneSpeed = (TextView) view.findViewById(R.id.speed_text);
         tv_droneSpeed.setText("0 km/h");
         tv_droneLatLng = (TextView) view.findViewById(R.id.location_text);
@@ -515,26 +574,23 @@ public class WaypointEditorFragment extends Fragment
             case R.id.button_back_to_main:
                 getFragmentManager().popBackStack();
                 break;
+            case R.id.btn_action_plan_undo:
+                drone.readMissions(WaypointEditorFragment.this);
+                progressDialog.setTitle("Loading");
+                progressDialog.setMessage("Please wait...");
+                progressDialog.show();
+                isGO = false;
+                break;
             case R.id.btn_delete_all:
                 webview_WayPoint.loadUrl("javascript:clearMarkers()");
                 mMissionItemAdapter.clearMission();
                 mMissionItemAdapter.notifyDataSetChanged();
                 break;
             case R.id.btn_action_plan_delete:
-//                layout_deleteOption.setVisibility(LinearLayout.VISIBLE);
-//                layout_deleteIcon.setVisibility(LinearLayout.INVISIBLE);
-//                recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_deleteitem_width);
-//                mMissionItemAdapter.isVisible = true;
-//                mMissionItemAdapter.notifyDataSetChanged();
                 setDeleteOptionShow(true);
                 canMapAddMarker = false;
                 break;
             case R.id.btn_delete_done:
-//                layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
-//                layout_deleteIcon.setVisibility(LinearLayout.VISIBLE);
-//                recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_item_width);
-//                mMissionItemAdapter.isVisible = false;
-//                mMissionItemAdapter.notifyDataSetChanged();
                 setDeleteOptionShow(false);
                 canMapAddMarker = true;
                 break;
@@ -548,11 +604,6 @@ public class WaypointEditorFragment extends Fragment
                 isGO = true;
                 break;
             case R.id.btn_plan_stop:
-                drone.readMissions(WaypointEditorFragment.this);
-                progressDialog.setTitle("Loading");
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
-                isGO = false;
                 break;
             case R.id.button_my_location:
                 webview_WayPoint.loadUrl("javascript:setMapToMyLocation()");
@@ -568,18 +619,19 @@ public class WaypointEditorFragment extends Fragment
         }
     }
 
-    private void setDeleteOptionShow(boolean isShow){
-        if(isShow){
+    private void setDeleteOptionShow(boolean isShow) {
+        if (isShow) {
             layout_deleteOption.setVisibility(LinearLayout.VISIBLE);
             layout_deleteIcon.setVisibility(LinearLayout.INVISIBLE);
             recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_deleteitem_width);
-            mMissionItemAdapter.isVisible = true;
-        }else {
+            mMissionItemAdapter.setDeleteLayoutVisible(true);
+        } else {
             layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
             layout_deleteIcon.setVisibility(LinearLayout.VISIBLE);
             recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_item_width);
-            mMissionItemAdapter.isVisible = false;
+            mMissionItemAdapter.setDeleteLayoutVisible(false);
         }
+        layout_waypointDetail.setVisibility(FrameLayout.GONE);
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
