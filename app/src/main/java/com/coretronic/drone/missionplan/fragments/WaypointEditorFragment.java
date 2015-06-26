@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,9 @@ import com.coretronic.drone.Mission.Builder;
 import com.coretronic.drone.Mission.Type;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
+import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 import com.coretronic.drone.ui.StatusView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -64,8 +68,8 @@ public class WaypointEditorFragment extends Fragment
     private static MissionItemListAdapter mMissionItemAdapter;
     private WebView webview_WayPoint;
     private TextView tv_droneAltitude, tv_droneSpeed, tv_droneLatLng;
-    private LinearLayout layout_mavinfo, layout_editMarker, layout_deleteIcon, layout_deleteOption, layout_planControl, layout_buttomBar;
-    private FrameLayout layout_waypointDetail;
+    private LinearLayout layout_start_follow, layout_mavinfo, layout_editMarker, layout_deleteIcon, layout_deleteOption, layout_planControl, layout_buttomBar;
+    private FrameLayout layout_waypointDetail, layout_followMe;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequestHighAccuracy;
@@ -81,6 +85,9 @@ public class WaypointEditorFragment extends Fragment
     private StatusView statusView;
     private FragmentManager fragmentChildManager = null;
     private WaypointDetailFragment detailFragment = null;
+    private Button btn_stop_follow;
+    private AbstractWheel followMeAltitudeWheel;
+    private int mfollowMeAltitude = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +113,9 @@ public class WaypointEditorFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fragmentActivity = getActivity();
+        fragmentChildManager = getChildFragmentManager();
+
         setUpWebView(view);
         setUpWaypointListAndDetail(view);
         setUpButtomBarButton(view);
@@ -113,6 +123,7 @@ public class WaypointEditorFragment extends Fragment
         setUpMavInfo(view);
         statusView = (StatusView) view.findViewById(R.id.status);
 
+        setUpFollowMe(view);
     }
 
     @Override
@@ -240,7 +251,7 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onAltitudeUpdate(final float altitude) {
         String tx_alt = String.format("%d", (int)altitude);
-        tv_droneAltitude.setText(tx_alt+"m");
+        tv_droneAltitude.setText(tx_alt + "m");
     }
 
     @Override
@@ -282,6 +293,9 @@ public class WaypointEditorFragment extends Fragment
         });
     }
 
+    //
+    // implement DroneController.FollowMeStatueListener Method
+    //
     @Override
     public void onStart(float latOffset, float longOffset) {
 
@@ -295,6 +309,30 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onLocationUpdated(float lat, float lon) {
 
+    }
+
+    public void setUpFollowMe(View view) {
+        layout_followMe = (FrameLayout)view.findViewById(R.id.layout_follow_me);
+        layout_followMe.setVisibility(FrameLayout.GONE);
+
+        layout_start_follow = (LinearLayout)view.findViewById(R.id.layout_start_follow);
+
+        followMeAltitudeWheel= (AbstractWheel)view.findViewById(R.id.follow_me_altitude_wheel);
+        followMeAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%02d"));
+        followMeAltitudeWheel.setCyclic(false);
+        followMeAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
+            @Override
+            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
+                mfollowMeAltitude = newValue;
+            }
+        });
+
+        final RelativeLayout btn_start_follow = (RelativeLayout)view.findViewById(R.id.btn_start_follow);
+        btn_start_follow.setOnClickListener(this);
+
+        btn_stop_follow = (Button)view.findViewById(R.id.btn_stop_follow);
+        btn_stop_follow.setOnClickListener(this);
+        btn_stop_follow.setVisibility(Button.GONE);
     }
 
 
@@ -345,9 +383,6 @@ public class WaypointEditorFragment extends Fragment
         recyclerView.setAdapter(mMissionItemAdapter);
 
         layout_waypointDetail = (FrameLayout) view.findViewById(R.id.waypoint_detail_container);
-
-        fragmentActivity = getActivity();
-        fragmentChildManager = getChildFragmentManager();
 
         layout_waypointDetail.setVisibility(FrameLayout.GONE);
 
@@ -428,6 +463,7 @@ public class WaypointEditorFragment extends Fragment
                         layout_buttomBar.setVisibility(LinearLayout.VISIBLE);
                         layout_planControl.setVisibility(LinearLayout.VISIBLE);
                         layout_mavinfo.setVisibility(LinearLayout.VISIBLE);
+                        layout_followMe.setVisibility(FrameLayout.GONE);
                         break;
                     case 1: // FOLLOW ME
                         canMapAddMarker = false;
@@ -437,6 +473,7 @@ public class WaypointEditorFragment extends Fragment
                         layout_buttomBar.setVisibility(LinearLayout.VISIBLE);
                         layout_planControl.setVisibility(LinearLayout.GONE);
                         layout_mavinfo.setVisibility(LinearLayout.VISIBLE);
+                        layout_followMe.setVisibility(FrameLayout.VISIBLE);
                         break;
                     case 2: // FLIGHT HISTORY
                         canMapAddMarker = false;
@@ -445,6 +482,7 @@ public class WaypointEditorFragment extends Fragment
                         recyclerView.setVisibility(RecyclerView.GONE);
                         layout_buttomBar.setVisibility(LinearLayout.GONE);
                         layout_mavinfo.setVisibility(LinearLayout.GONE);
+                        layout_followMe.setVisibility(FrameLayout.GONE);
                         break;
                     default:
                         break;
@@ -615,6 +653,16 @@ public class WaypointEditorFragment extends Fragment
                 if (mMissionItemAdapter.getItemCount() > 0) {
                     webview_WayPoint.loadUrl("javascript:fitMapShowAll()");
                 }
+                break;
+            case R.id.btn_start_follow:
+                drone.startFollowMe(mfollowMeAltitude, WaypointEditorFragment.this);
+                layout_start_follow.setVisibility(LinearLayout.GONE);
+                btn_stop_follow.setVisibility(Button.VISIBLE);
+                break;
+            case R.id.btn_stop_follow:
+                drone.startFollowMe(-1, WaypointEditorFragment.this);
+                layout_start_follow.setVisibility(LinearLayout.VISIBLE);
+                btn_stop_follow.setVisibility(Button.GONE);
                 break;
         }
     }

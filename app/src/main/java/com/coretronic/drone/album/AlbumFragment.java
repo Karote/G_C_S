@@ -16,7 +16,6 @@ import android.widget.*;
 import com.coretronic.drone.Drone;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.g2.command.body.BooleanBody;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppUtils;
 import com.coretronic.drone.utility.CustomerTwoBtnAlertDialog;

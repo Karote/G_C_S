@@ -182,7 +182,7 @@ public class DownloadWarningFragment extends Fragment {
                 float wasteTime = ((float) (totalFileSize - getFileSize) / ((float) getFileSize / (INTERVAL_DOWNLOAD_TIME * intervalCalculateSum)));
 
 
-                Message msg = new Message();
+                Message msg = Message.obtain();
                 msg.what = (int) wasteTime;
                 timeHandler.sendMessage(msg);
             }
@@ -345,7 +345,7 @@ public class DownloadWarningFragment extends Fragment {
                     getFileSize = downloadedSize;
                     totalFileSize = fileSize;
 
-                    Message msg = new Message();
+                    Message msg = Message.obtain();
                     msg.arg1 = (int) (downloadedSize * 100 / fileSize);
                     Log.i(TAG, "msg.arg1:" + msg.arg1);
                     progressHandler.sendMessage(msg);

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -191,4 +190,12 @@
         android:layout_below="@id/top_layout"
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:clickable="true" />
+
+    <include
+        android:id="@+id/layout_follow_me"
+        layout="@layout/fragment_follow_me"
+        android:layout_width="228dp"
+        android:layout_height="110dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>

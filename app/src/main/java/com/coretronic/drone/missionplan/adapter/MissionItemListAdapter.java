@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
     private List<Mission> mMissionList;
-    public Boolean isDeleteLayoutVisible = false;
+    private Boolean isDeleteLayoutVisible = false;
     private int focusIndex = -1;
 
     public MissionItemListAdapter() {
@@ -50,7 +50,20 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     @Override
     public void onBindViewHolder(MissionItemListViewHolder viewHolder, int i) {
         viewHolder.nameView.setText(String.format("%2d", i + 1));
-        viewHolder.altitudeView.setText(String.format("%d", (int)mMissionList.get(i).getAltitude()));
+        viewHolder.altitudeView.setText(String.format("%d", (int) mMissionList.get(i).getAltitude()));
+        switch (mMissionList.get(i).getType()){
+            case TAKEOFF:
+                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
+                break;
+            case LAND:
+                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
+                viewHolder.typeView.setRotation(180.0f);
+                break;
+            case WAY_POINT:
+            default:
+                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
+                break;
+        }
 
         if (i == focusIndex) {
             viewHolder.focusBarView.setVisibility(View.VISIBLE);
@@ -76,8 +89,8 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     public class MissionItemListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView nameView;
-        final TextView altitudeView;
+        final TextView nameView, altitudeView;
+        final View typeView;
         final LinearLayout deleteLayout;
         final ImageButton deleteButton;
         final RelativeLayout rowItemLayoutView;
@@ -86,6 +99,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         MissionItemListViewHolder(View itemView) {
             super(itemView);
             nameView = (TextView) itemView.findViewById(R.id.rowNameView);
+            typeView = (View)itemView.findViewById(R.id.icon_waypoint_type);
             altitudeView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
             deleteLayout = (LinearLayout) itemView.findViewById(R.id.rowDeleteLayout);
             deleteLayout.setVisibility(LinearLayout.GONE);

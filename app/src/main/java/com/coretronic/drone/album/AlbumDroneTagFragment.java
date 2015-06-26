@@ -145,7 +145,13 @@ public class AlbumDroneTagFragment extends Fragment {
                         @Override
                         public void onCompleted(boolean blSuccess) {
                             Log.i(TAG, "delete file completed");
-                            Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
+                                }
+                            });
+
                         }
                     };
 
@@ -196,7 +202,7 @@ public class AlbumDroneTagFragment extends Fragment {
             albumMediaList.add(new MediaListItem(listItems.get(i)));
         }
 
-        Message message = new Message();
+        Message message = Message.obtain();
         message = showListHandler.obtainMessage(0, "complete");
         showListHandler.sendMessage(message);
 
