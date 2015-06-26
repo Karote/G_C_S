@@ -70,6 +70,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     public static final int MAX_SPEED = 50;
     private static final int TAKE_OFF_ALTITUDE = 5;
 
+    private static final int HANDLER_RELEASE_CONTROL = 1;
+    private static final int CONTROL_RELEASE_DELAY_MILLIS = 120;
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
     public static View markView;
@@ -365,7 +367,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                     libvlc.attachSurface(surfaceHolder.getSurface(), new IVideoPlayer() {
                         @Override
                         public void setSurfaceSize(int width, int height, int visible_width, int visible_height, int sar_num, int sar_den) {
-                            Message msg = Message.obtain(handler, VideoSizeChanged, width, height);
+                            Message msg = Message.obtain(vlcHandler, VideoSizeChanged, width, height);
                             msg.sendToTarget();
                         }
                     });
@@ -390,10 +392,15 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                             controlWrap.changeRoll(dx);
                             controlWrap.changePitch(-dy);
                             Log.d(TAG, "onStickMoveEvent: Pitch " + (-dy) + ", Roll " + dx);
+
                         } else {
                             controlWrap.changeYaw(dx);
                             controlWrap.changeThrottle(dy);
                             Log.d(TAG, "onStickMoveEvent: Throttle " + dy + ", Yaw: " + dx);
+                        }
+                        if (action == MotionEvent.ACTION_UP) {
+                            pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS);
+                            pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS * 2);
                         }
                     }
 
@@ -415,6 +422,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                                 controlWrap.pitch = ControlWrap.DEFAULT_VALUE;
                                 controlWrap.roll = ControlWrap.DEFAULT_VALUE;
                                 sendControl();
+                                pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS);
+                                pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS * 2);
                             }
                             isOnOrientationSensorMode = false;
                         }
@@ -555,7 +564,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     };
 
     private void sendControl() {
-        if (getController() != null && isTakeOff) {
+        if (getController() != null /*&& isTakeOff*/) {
             getController().control(controlWrap.roll, controlWrap.pitch, controlWrap.throttle, controlWrap.yaw);
             Log.d(TAG, SEND_DRONE_CONTROL +
                     "Throttle " + controlWrap.throttle +
@@ -611,7 +620,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             libvlc = LibVLC.getInstance();
             libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);
             LibVLC.restart(getActivity());
-            EventHandler.getInstance().addHandler(handler);
+            EventHandler.getInstance().addHandler(vlcHandler);
             holder.setFormat(PixelFormat.TRANSLUCENT);
             MediaList list = libvlc.getMediaList();
             list.clear();
@@ -624,7 +633,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private void releasePlayer() {
         if (libvlc == null)
             return;
-        EventHandler.getInstance().removeHandler(handler);
+        EventHandler.getInstance().removeHandler(vlcHandler);
         libvlc.stop();
         libvlc.detachSurface();
         holder = null;
@@ -636,7 +645,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         videoHeight = 0;
     }
 
-    private Handler handler = new VlcHandler(this);
+    private Handler vlcHandler = new VlcHandler(this);
 
     private static class VlcHandler extends Handler {
         private WeakReference<PilotingFragment> mOwner;
@@ -676,6 +685,18 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+    private PilotingStatusControlReleaseHandler pilotingStatusControlReleaseHandler = new PilotingStatusControlReleaseHandler();
+
+    private class PilotingStatusControlReleaseHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == HANDLER_RELEASE_CONTROL) {
+                Log.d(TAG, SEND_DRONE_CONTROL + "release control");
+                sendControl();
             }
         }
     }
