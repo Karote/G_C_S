@@ -269,8 +269,10 @@ public class AlbumDroneTagFragment extends Fragment {
             Log.i(TAG, "connectStatus:" + connectStatus);
 
             if (!connectStatus) {
-                connectThread.interrupt();
-                connectThread = null;
+                if( connectThread!=null && !connectThread.isInterrupted()) {
+                    connectThread.interrupt();
+                    connectThread = null;
+                }
                 return;
             }
 
