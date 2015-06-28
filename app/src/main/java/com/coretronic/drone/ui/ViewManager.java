@@ -1,6 +1,5 @@
 package com.coretronic.drone.ui;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.coretronic.drone.DroneApplication;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
+import com.coretronic.drone.service.Parameter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +40,22 @@ public class ViewManager {
         });
     }
 
+    public static void assignSwitchView(final MainActivity activity, View view, int id, Setting.SettingType settingType, final Parameter.Type parameterType) {
+        Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
+        final int type = settingType.ordinal();
+        sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isPressed()) {
+                    DroneApplication.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
+                    Log.d(TAG, "isSetting[" + type + "]: " + DroneApplication.settings[type].getValue());
+                    Parameter parameter = (isChecked == true) ? Parameter.Control.ENABLE : Parameter.Control.DISABLE;
+                    activity.setParameters(parameterType, parameter);
+                }
+            }
+        });
+    }
 
     public static void setEnabled(boolean enabled, View[] viewArray, View... views) {
         List<View> combineAll = new ArrayList<View>(viewArray.length + views.length);

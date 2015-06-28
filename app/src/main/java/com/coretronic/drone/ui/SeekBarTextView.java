@@ -10,8 +10,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.coretronic.drone.DroneApplication;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
+import com.coretronic.drone.service.Parameter;
 
 /**
  * Created by jiaLian on 15/6/15.
@@ -52,6 +54,27 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
 
     }
 
+    public static void assignSettingSeekBarTextView(final MainActivity activity, final View view, int id, final Setting.SettingType settingType, final Parameter.Type parameterType) {
+        final Setting setting = DroneApplication.settings[settingType.ordinal()];
+        Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
+        SeekBarTextView seekBarTextView = (SeekBarTextView) view.findViewById(id);
+        seekBarTextView.setConfig(setting.getMinValue(), setting.getMaxValue(), setting.getUnit());
+        seekBarTextView.setValue(setting.getValue());
+        seekBarTextView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(int value) {
+                Log.d(TAG, "onStopTrackingTouch");
+                DroneApplication.settings[settingType.ordinal()].setValue(value);
+                if (parameterType == Parameter.Type.ALTITUDE_LIMIT) {
+                    value = value * 100;
+                }
+                activity.setParameters(parameterType, Parameter.Number.getInstance().setValue((short) value));
+            }
+        });
+
+    }
+
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.custom_seek_bar, null);
         tvValue = (TextView) view.findViewById(R.id.tv_value);
@@ -72,7 +95,7 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
 
     public void setValue(int value) {
         seekBar.setProgress(value - minValue);
-        tvValue.setText(value + unit);
+        tvValue.setText(String.valueOf(value) + unit);
     }
 
     @Override

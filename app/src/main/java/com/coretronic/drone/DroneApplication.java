@@ -17,7 +17,7 @@ import java.io.File;
  */
 public class DroneApplication extends Application {
     private static final String TAG = DroneApplication.class.getSimpleName();
-
+    private static final char DEGREE_SYMBOL = 0x00B0;
     public static final String SETTINGS_VALUE = "settings_value";
     public static final String SETTING = "setting";
 
@@ -34,7 +34,13 @@ public class DroneApplication extends Application {
         settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.ON);
         settings[Setting.SettingType.HEADLESS.ordinal()] = new Setting(Setting.OFF);
         settings[Setting.SettingType.LEFT_HANDED.ordinal()] = new Setting(Setting.OFF);
-        settings[Setting.SettingType.PHONE_TILT.ordinal()] = new Setting(0, 50, 20, "º");
+        settings[Setting.SettingType.PHONE_TILT.ordinal()] = new Setting(5, 50, 20, String.valueOf(DEGREE_SYMBOL));
+
+        String tempStr = String.valueOf(DEGREE_SYMBOL) + "/s";
+        settings[Setting.SettingType.ROTATION_SPEED_MAX.ordinal()] = new Setting(40, 350, 100, tempStr);
+        settings[Setting.SettingType.ALTITUDE_LIMIT.ordinal()] = new Setting(3, 100, 3, "m");
+        settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(200, 2000, 700, "mm/s");
+        settings[Setting.SettingType.TILT_ANGLE_MAX.ordinal()] = new Setting(5, 30, 12, String.valueOf(DEGREE_SYMBOL));
         loadSettingsValue();
     }
 
