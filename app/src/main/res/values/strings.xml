@@ -8,13 +8,11 @@
     </string-array>
     <string-array name="waypoint_type">
         <item>Waypoint</item>
+        <item>Take Off</item>
+        <item>Land</item>
+        <item>Return to Launch</item>
         <item>Spline waypoint</item>
         <item>Circle</item>
-        <item>Region of Interest</item>
-        <item>Change Speed</item>
-        <item>Take Off</item>
-        <item>Structure Scanner</item>
-        <item>Land</item>
     </string-array>
     <string name="delete_all">Delete\nAll</string>
     <string name="delete_done">Done</string>

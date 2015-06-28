@@ -1,6 +1,8 @@
 package com.coretronic.drone.album;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,16 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.model.MediaListItem;
-import com.coretronic.drone.album.model.MediaObject;
+import com.coretronic.drone.ambarlla.message.AMBACmdClient;
+import com.coretronic.drone.ambarlla.message.AMBACommand;
+import com.coretronic.drone.ambarlla.message.FileItem;
+import com.coretronic.drone.log.ColorLog;
+import com.coretronic.drone.utility.AppConfig;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
 
 
 /**
@@ -27,6 +37,8 @@ public class DownloadWarningFragment extends Fragment {
 
     private static String TAG = DownloadWarningFragment.class.getSimpleName();
     private Context context = null;
+    MediaListItem mediaListItem = null;
+
     // fragment declare
     private FragmentManager fragmentManager = null;
     private FragmentTransaction previewFragmentTransaction = null;
@@ -41,18 +53,57 @@ public class DownloadWarningFragment extends Fragment {
     private Runnable progressRunnable = null;
     private ProgressBar downloadBar = null;
     private int progressValue = 0;
+    private long totalFileSize = 0;
+    private long getFileSize = 0;
 
-    Handler progressHandler = new Handler(){
+    // speed thread and timer
+    private Timer speedTimer = null;
+    private static int INTERVAL_DOWNLOAD_TIME = 1000;
+    private float intervalCalculateSum = 0;
+    // AMBAClient
+    AMBACmdClient cmdClient = null;
+    private String albumFilePath = "";
+
+    Handler progressHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            progressValue++;
+
+            progressValue = msg.arg1;
             downloadBar.setProgress(progressValue);
-            if( progressValue == 100)
-            {
-                closeDownloadFragment();
+            Log.i(TAG, "progressValue:" + progressValue);
+            if (progressValue == 100) {
+                Log.i(TAG, " progressValue == 100");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        deleteAMMBAFile();
+
+                    }
+                }).start();
+
+
             }
         }
     };
+
+
+    public Handler timeHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            int wasteTime = msg.what;
+            timeTV.setText(millisecondsToHumanRead((int) wasteTime));
+        }
+    };
+
+
+    public Handler deleteCompletedHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            closeDownloadFragment();
+        }
+    };
+
+
+
 
 
     @Override
@@ -63,7 +114,6 @@ public class DownloadWarningFragment extends Fragment {
 
         previewFragmentTransaction = fragmentManager.beginTransaction();
 
-
     }
 
 
@@ -72,13 +122,15 @@ public class DownloadWarningFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album_warning, container, false);
         context = view.getContext();
+        albumFilePath = AppConfig.getMediaFolderPosition(context);
 
         // get media list data
         Bundle bundle = getArguments();
+        Log.i(TAG, "get bundle:" + bundle);
         if (bundle == null) {
             return view;
         }
-        MediaListItem mediaListItem = (MediaListItem) bundle.getSerializable("mediaListItemData");
+        mediaListItem = (MediaListItem) bundle.getSerializable("mediaListItemData");
         Log.i(TAG, "file name:" + mediaListItem.getMediaFileName());
         Log.i(TAG, "file size:" + mediaListItem.getMediaSize());
         Log.i(TAG, "file date:" + mediaListItem.getMediaDate());
@@ -86,30 +138,76 @@ public class DownloadWarningFragment extends Fragment {
 
         findViews(view);
 
-        // set if warning
-        wraningLL.setVisibility(View.VISIBLE);
-//        wraningLL.setVisibility(View.GONE);
+        int fileSizeNumber = Integer.valueOf((mediaListItem.getMediaSize().split(" bytes"))[0]);
+
+        // if > 50MB show warning
+        if (fileSizeNumber > 50 * 1000 * 1000) {
+            // set if warning
+            wraningLL.setVisibility(View.VISIBLE);
+
+        } else {
+            wraningLL.setVisibility(View.GONE);
+        }
+
 
         downloadBar.setProgress(progressValue);
 
         progressRunnable = new Runnable() {
             @Override
             public void run() {
-                while(progressValue < 100 ){
-                    try{
-                        progressHandler.sendMessage(progressHandler.obtainMessage());
-                        Thread.sleep(1000);
-                    }catch (Throwable t)
-                    {
-
-                    }
-                }
+                connectToAMBA();
             }
         };
         progressThread = new Thread(progressRunnable);
         progressThread.start();
 
+        speedTimer = new Timer();
+        intervalCalculateSum = 0;
+        speedTimer.schedule(new SpeedTimerTask(), 500, INTERVAL_DOWNLOAD_TIME);
+
         return view;
+    }
+
+
+    class SpeedTimerTask extends java.util.TimerTask {
+
+        @Override
+        public void run() {
+            Log.i(TAG, "getFileSize:" + getFileSize + "/totalFileSize:" + totalFileSize);
+
+            intervalCalculateSum++;
+            if (getFileSize != 0 && totalFileSize != 0) {
+
+
+                float wasteTime = ((float) (totalFileSize - getFileSize) / ((float) getFileSize / (INTERVAL_DOWNLOAD_TIME * intervalCalculateSum)));
+
+
+                Message msg = Message.obtain();
+                msg.what = (int) wasteTime;
+                timeHandler.sendMessage(msg);
+            }
+        }
+    }
+
+
+    private String millisecondsToHumanRead(float mills) {
+        int seconds = (int) (mills / 1000) % 60;
+        int minutes = (int) ((mills / (1000 * 60)) % 60);
+        int hours = (int) ((mills / (1000 * 60 * 60)) % 24);
+        Log.i(TAG, "mills:" + mills + " /seconds:" + seconds + " /minutes:" + minutes + " /hours:" + hours);
+        String returnValue = "calculate the download time..";
+        if (seconds >= 0) {
+            returnValue = seconds + " seconds";
+        } else if (minutes > 0) {
+            returnValue = seconds + " minutes" + seconds + " seconds";
+        } else if (hours > 0) {
+            returnValue = hours + " hours" + seconds + " minutes" + seconds + " seconds";
+        }
+        if (seconds == 0 && seconds == 0 && hours == 0) {
+            returnValue = "calculate the download time..";
+        }
+        Log.i(TAG, "waste download time returnValue:" + returnValue);
+        return returnValue;
     }
 
     private void findViews(View view) {
@@ -139,6 +237,7 @@ public class DownloadWarningFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "==== onDestroyView ====");
+        cmdClient.close();
     }
 
     View.OnClickListener stopbtnListner = new View.OnClickListener() {
@@ -149,17 +248,134 @@ public class DownloadWarningFragment extends Fragment {
         }
     };
 
-    private void closeDownloadFragment()
-    {
-        if( progressThread != null && progressThread.isAlive() )
-        {
+    private void deleteAMMBAFile() {
+        Log.i(TAG, "dele AMMBA File Name:" + mediaListItem.getMediaFileName());
+
+        AMBACmdClient.DeleteFileListener cmdDeleFileReceiver = new AMBACmdClient.DeleteFileListener() {
+
+            @Override
+            public void onCompleted(boolean blSuccess) {
+                Log.i(TAG, "delete file completed");
+                deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+            }
+        };
+
+        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
+
+        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+            @Override
+            public void onCompleted(List<FileItem> listItems) {
+                closeDownloadFragment();
+            }
+        };
+    }
+
+    private void closeDownloadFragment() {
+
+
+        if (progressThread != null && progressThread.isAlive()) {
             progressThread.interrupt();
             progressThread = null;
         }
-
+        speedTimer.cancel();
         fragmentManager.popBackStack();
 //        AlbumFragment albumFragment = new AlbumFragment();
 //        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_view, albumFragment).commit();
+    }
+
+    private void connectToAMBA() {
+        try {
+            cmdClient = new AMBACmdClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
+
+            @Override
+            public void onNotify(int status, String strMsg) {
+                // 0 is error, 1 is ok
+                if (status == 0) {
+                    cmdClient.close();
+                }
+            }
+        };
+
+
+        AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
+            @Override
+            public void onMessage(AMBACommand objMessage) {
+                Log.i(TAG, "objMessage:" + objMessage);
+            }
+
+        };
+
+
+        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+            @Override
+            public void onCompleted(List<FileItem> listItems) {
+
+            }
+        };
+
+
+        try {
+            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+
+            if (!connectStatus) {
+                return;
+            }
+
+            cmdClient.setFileSavePath(albumFilePath);
+            cmdClient.start();
+            cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+                @Override
+                public void onStartSession(boolean Success) {
+
+                }
+            });
+
+            Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
+            cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
+
+                @Override
+                public void onProgress(long downloadedSize, long fileSize) {
+                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + fileSize + "/" + (downloadedSize / fileSize) + "/" + (int) (downloadedSize * 100 / fileSize));
+
+                    getFileSize = downloadedSize;
+                    totalFileSize = fileSize;
+
+                    Message msg = Message.obtain();
+                    msg.arg1 = (int) (downloadedSize * 100 / fileSize);
+                    Log.i(TAG, "msg.arg1:" + msg.arg1);
+                    progressHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void onCompleted(long size) {
+                    Log.i(TAG, "downlaod image onCompleted");
+
+                    ArrayList<String> toBeScanned = new ArrayList<String>();
+                    toBeScanned.add(albumFilePath + mediaListItem.getMediaFileName());
+                    String[] toBeScannedStr = new String[toBeScanned.size()];
+                    toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
+                    MediaScannerConnection.scanFile(getActivity(), toBeScannedStr, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            System.out.println("SCAN COMPLETED: " + path);
+
+                        }
+                    });
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            cmdClient.close();
+            Log.e(TAG, "connect error:" + e.getMessage());
+        }
+
+
     }
 
 }

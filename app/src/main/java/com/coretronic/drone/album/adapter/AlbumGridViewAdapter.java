@@ -39,6 +39,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public AlbumGridViewAdapter(Context context, int resource, ArrayList<MediaItem> data) {
 
+        Log.i(TAG,"AlbumGridViewAdapter");
         this.context = context;
         this.resourceId = resource;
 
@@ -79,6 +80,13 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
             viewHolder.videoTagImg.setVisibility(View.VISIBLE);
         }
 
+//        bitmap = Bitmap.createBitmap(
+//                bitmap,
+//                50,
+//                50,
+//                bitmap.getWidth() - 50 * 2,
+//                bitmap.getHeight() - 50 * 2
+//        );
         viewHolder.mediaImage.setImageBitmap(bitmap);
 
         viewHolder.selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);

@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/undo"
+        android:id="@+id/btn_action_plan_undo"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginRight="4dp"

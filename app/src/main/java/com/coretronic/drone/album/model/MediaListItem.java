@@ -1,6 +1,14 @@
 package com.coretronic.drone.album.model;
 
+import android.util.Log;
+import com.coretronic.drone.ambarlla.message.FileItem;
+import com.coretronic.drone.utility.AppUtils;
+
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -40,4 +48,27 @@ public class MediaListItem implements Serializable {
     public void setMediaSize(String mediaSize) {
         this.mediaSize = mediaSize;
     }
+
+
+    public MediaListItem(FileItem fileItem)
+    {
+
+        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat toFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+        try {
+            Date date = fromFormat.parse(fileItem.getMediaDate());
+            this.mediaDate =  toFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        this.mediaDate =  fileItem.getMediaDate() + "";
+        this.mediaFileName = fileItem.getMediaFileName();
+        this.mediaSize = fileItem.getMediaSize();
+
+    }
+
+
+
+
 }
