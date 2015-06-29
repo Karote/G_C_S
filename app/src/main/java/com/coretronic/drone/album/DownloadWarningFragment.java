@@ -260,9 +260,9 @@ public class DownloadWarningFragment extends Fragment {
             }
         };
 
-        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
+        cmdClient.deleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
 
-        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+        AMBACmdClient.listFileReceiver cmdListFileReceiver = new AMBACmdClient.listFileReceiver() {
             @Override
             public void onCompleted(List<FileItem> listItems) {
                 closeDownloadFragment();
@@ -290,16 +290,16 @@ public class DownloadWarningFragment extends Fragment {
             e.printStackTrace();
         }
 
-        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
-
-            @Override
-            public void onNotify(int status, String strMsg) {
-                // 0 is error, 1 is ok
-                if (status == 0) {
-                    cmdClient.close();
-                }
-            }
-        };
+//        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
+//
+//            @Override
+//            public void onNotify(int status, String strMsg) {
+//                // 0 is error, 1 is ok
+//                if (status == 0) {
+//                    cmdClient.close();
+//                }
+//            }
+//        };
 
 
         AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
@@ -311,7 +311,7 @@ public class DownloadWarningFragment extends Fragment {
         };
 
 
-        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+        AMBACmdClient.listFileReceiver cmdListFileReceiver = new AMBACmdClient.listFileReceiver() {
             @Override
             public void onCompleted(List<FileItem> listItems) {
 
@@ -320,23 +320,25 @@ public class DownloadWarningFragment extends Fragment {
 
 
         try {
-            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+//            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT);
 
             if (!connectStatus) {
+                cmdClient.close();
                 return;
             }
 
             cmdClient.setFileSavePath(albumFilePath);
             cmdClient.start();
-            cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
-                @Override
-                public void onStartSession(boolean Success) {
-
-                }
-            });
+//            cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+//                @Override
+//                public void onStartSession(boolean Success) {
+//
+//                }
+//            });
 
             Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
-            cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
+            cmdClient.getFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
 
                 @Override
                 public void onProgress(long downloadedSize, long fileSize) {

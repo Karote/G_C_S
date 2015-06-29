@@ -155,10 +155,10 @@ public class AlbumDroneTagFragment extends Fragment {
                         }
                     };
 
-                    cmdClient.cmdDeleteFile(albumMediaList.get(position).getMediaFileName(), cmdDeleFileReceiver);
+                    cmdClient.deleteFile(albumMediaList.get(position).getMediaFileName(), cmdDeleFileReceiver);
 
 
-                    AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+                    AMBACmdClient.listFileReceiver cmdListFileReceiver = new AMBACmdClient.listFileReceiver() {
                         @Override
                         public void onCompleted(List<FileItem> listItems) {
                             getDate(listItems);
@@ -237,18 +237,18 @@ public class AlbumDroneTagFragment extends Fragment {
             e.printStackTrace();
         }
 
-        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
-
-            @Override
-            public void onNotify(int status, String strMsg) {
-                Log.i(TAG, "on Notify status:" + status + " / strMsg:" + strMsg);
-                // 0 is error, 1 is ok
-                if (status == 0) {
-                    cmdClient.close();
-                    processUIHandler.sendEmptyMessage(0);
-                }
-            }
-        };
+//        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
+//
+//            @Override
+//            public void onNotify(int status, String strMsg) {
+//                Log.i(TAG, "on Notify status:" + status + " / strMsg:" + strMsg);
+//                // 0 is error, 1 is ok
+//                if (status == 0) {
+//                    cmdClient.close();
+//                    processUIHandler.sendEmptyMessage(0);
+//                }
+//            }
+//        };
 
         AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
             @Override
@@ -260,7 +260,7 @@ public class AlbumDroneTagFragment extends Fragment {
         };
 
 
-        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+        AMBACmdClient.listFileReceiver cmdListFileReceiver = new AMBACmdClient.listFileReceiver() {
             @Override
             public void onCompleted(List<FileItem> listItems) {
                 getDate(listItems);
@@ -271,10 +271,16 @@ public class AlbumDroneTagFragment extends Fragment {
 
         try {
 
-            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+//            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT);
             Log.i(TAG, "connectStatus:" + connectStatus);
 
+
             if (!connectStatus) {
+
+                cmdClient.close();
+                processUIHandler.sendEmptyMessage(0);
+
                 if( connectThread!=null && !connectThread.isInterrupted()) {
                     connectThread.interrupt();
                     connectThread = null;
@@ -286,12 +292,12 @@ public class AlbumDroneTagFragment extends Fragment {
 
                 cmdClient.setFileSavePath(albumFilePath);
                 cmdClient.start();
-                cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
-                    @Override
-                    public void onStartSession(boolean Success) {
-
-                    }
-                });
+//                cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+//                    @Override
+//                    public void onStartSession(boolean Success) {
+//
+//                    }
+//                });
 
                 cmdClient.getFileList(cmdListFileReceiver);
 
