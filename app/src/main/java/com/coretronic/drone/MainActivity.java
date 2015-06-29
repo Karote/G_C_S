@@ -153,10 +153,18 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     }
 
     @Override
-    public void onLocationUpdate(long lat, long lon, int eph) {
+    public void onLocationUpdate(final long lat, final long lon, final int eph) {
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onLocationUpdate(lat, lon, eph);
         }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if ((lat == 0) && (lon == 0)) {
+                    statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
+                }
+            }
+        });
     }
 
     @Override

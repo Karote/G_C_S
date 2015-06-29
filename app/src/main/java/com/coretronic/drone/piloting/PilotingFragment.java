@@ -36,6 +36,7 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
 import com.coretronic.drone.service.DroneDevice;
+import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 import com.coretronic.drone.ui.StatusView;
@@ -228,7 +229,15 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     }
 
     @Override
-    public void onLocationUpdate(long lat, long lon, int eph) {
+    public void onLocationUpdate(final long lat, final long lon, final int eph) {
+        fragmentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (lat == 0 && lon == 0) {
+                    statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
+                }
+            }
+        });
 
     }
 
@@ -256,7 +265,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         Button btnRecording = (Button) view.findViewById(R.id.btn_recording);
         Button btnCamera = (Button) view.findViewById(R.id.btn_camera);
         btnAction = (Button) view.findViewById(R.id.btn_take_off);
-        statusView = (StatusView) view.findViewById(R.id.status);
+               statusView = (StatusView) view.findViewById(R.id.status);
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             btnDocking.setVisibility(View.VISIBLE);
             btnSelfie.setVisibility(View.VISIBLE);
@@ -406,6 +415,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
                     @Override
                     public void onDoubleClick(View view) {
+                        sendFlip();
                         Log.d(TAG, "onDoubleClick");
                     }
 
@@ -598,6 +608,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private void sendReturnToLanch() {
         getController().returnToLaunch();
+    }
+
+    private void sendFlip() {
+        getController().flip(null);
     }
 
     private DroneController getController() {

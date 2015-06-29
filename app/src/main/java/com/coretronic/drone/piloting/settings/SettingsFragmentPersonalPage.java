@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.coretronic.drone.DroneApplication;
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
@@ -23,14 +24,15 @@ import com.coretronic.drone.ui.ViewManager;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
+public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
     private static final String TAG = SettingsFragmentPersonalPage.class.getSimpleName();
     private int currentFlipOrientationValue;
     private MainActivity activity;
+    private EditText etNetworkName;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
     }
 
@@ -39,6 +41,7 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_personal_page, container, false);
         SeekBarTextView.assignSettingSeekBarTextView(fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACTITY);
         ViewManager.assignSwitchView(fragmentView, R.id.switch_sdcard_enable, Setting.SettingType.SD_RECORD);
+        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE, Parameter.Type.FLIP);
 
         final Button[] buttons = new Button[4];
         buttons[Setting.FLIP_ORIENTATION_FRONT] = (Button) fragmentView.findViewById(R.id.btn_front);
@@ -84,7 +87,7 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
                 }
             });
         }
-        final EditText etNetworkName = (EditText) fragmentView.findViewById(R.id.et_network_name);
+        etNetworkName = (EditText) fragmentView.findViewById(R.id.et_network_name);
         etNetworkName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
@@ -96,8 +99,13 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
                 return false;
             }
         });
-        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE, Parameter.Type.FLIP);
         return fragmentView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        activity.readParameters(this, Parameter.Type.NETWORK_NAME);
     }
 
     private void refreshBackground(int currentValue, Button btn) {
@@ -107,4 +115,17 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment {
             btn.setBackgroundResource(R.drawable.btn_bg);
         }
     }
+
+    @Override
+    public void onParameterLoaded(Parameter.Type type, final Parameter parameter) {
+        if (type == Parameter.Type.NETWORK_NAME) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    etNetworkName.setText(parameter.getValue() + "");
+                }
+            });
+        }
+    }
 }
+
