@@ -260,14 +260,14 @@ public class DownloadWarningFragment extends Fragment {
             }
         };
 
-        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
-
-        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
-            @Override
-            public void onCompleted(List<FileItem> listItems) {
-                closeDownloadFragment();
-            }
-        };
+//        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
+//
+//        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+//            @Override
+//            public void onCompleted(List<FileItem> listItems) {
+//                closeDownloadFragment();
+//            }
+//        };
     }
 
     private void closeDownloadFragment() {
@@ -290,16 +290,16 @@ public class DownloadWarningFragment extends Fragment {
             e.printStackTrace();
         }
 
-        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
-
-            @Override
-            public void onNotify(int status, String strMsg) {
-                // 0 is error, 1 is ok
-                if (status == 0) {
-                    cmdClient.close();
-                }
-            }
-        };
+//        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
+//
+//            @Override
+//            public void onNotify(int status, String strMsg) {
+//                // 0 is error, 1 is ok
+//                if (status == 0) {
+//                    cmdClient.close();
+//                }
+//            }
+//        };
 
 
         AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
@@ -311,69 +311,69 @@ public class DownloadWarningFragment extends Fragment {
         };
 
 
-        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
-            @Override
-            public void onCompleted(List<FileItem> listItems) {
+//        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+//            @Override
+//            public void onCompleted(List<FileItem> listItems) {
+//
+//            }
+//        };
 
-            }
-        };
 
+//        try {
+//            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+//
+//            if (!connectStatus) {
+//                return;
+//            }
 
-        try {
-            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
-
-            if (!connectStatus) {
-                return;
-            }
-
-            cmdClient.setFileSavePath(albumFilePath);
-            cmdClient.start();
-            cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
-                @Override
-                public void onStartSession(boolean Success) {
-
-                }
-            });
+//            cmdClient.setFileSavePath(albumFilePath);
+//            cmdClient.start();
+//            cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+//                @Override
+//                public void onStartSession(boolean Success) {
+//
+//                }
+//            });
 
             Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
-            cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
+//            cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
 
-                @Override
-                public void onProgress(long downloadedSize, long fileSize) {
-                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + fileSize + "/" + (downloadedSize / fileSize) + "/" + (int) (downloadedSize * 100 / fileSize));
-
-                    getFileSize = downloadedSize;
-                    totalFileSize = fileSize;
-
-                    Message msg = Message.obtain();
-                    msg.arg1 = (int) (downloadedSize * 100 / fileSize);
-                    Log.i(TAG, "msg.arg1:" + msg.arg1);
-                    progressHandler.sendMessage(msg);
-                }
-
-                @Override
-                public void onCompleted(long size) {
-                    Log.i(TAG, "downlaod image onCompleted");
-
-                    ArrayList<String> toBeScanned = new ArrayList<String>();
-                    toBeScanned.add(albumFilePath + mediaListItem.getMediaFileName());
-                    String[] toBeScannedStr = new String[toBeScanned.size()];
-                    toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
-                    MediaScannerConnection.scanFile(getActivity(), toBeScannedStr, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-                        @Override
-                        public void onScanCompleted(String path, Uri uri) {
-                            System.out.println("SCAN COMPLETED: " + path);
-
-                        }
-                    });
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            cmdClient.close();
-            Log.e(TAG, "connect error:" + e.getMessage());
-        }
+//                @Override
+//                public void onProgress(long downloadedSize, long fileSize) {
+//                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + fileSize + "/" + (downloadedSize / fileSize) + "/" + (int) (downloadedSize * 100 / fileSize));
+//
+//                    getFileSize = downloadedSize;
+//                    totalFileSize = fileSize;
+//
+//                    Message msg = Message.obtain();
+//                    msg.arg1 = (int) (downloadedSize * 100 / fileSize);
+//                    Log.i(TAG, "msg.arg1:" + msg.arg1);
+//                    progressHandler.sendMessage(msg);
+//                }
+//
+//                @Override
+//                public void onCompleted(long size) {
+//                    Log.i(TAG, "downlaod image onCompleted");
+//
+//                    ArrayList<String> toBeScanned = new ArrayList<String>();
+//                    toBeScanned.add(albumFilePath + mediaListItem.getMediaFileName());
+//                    String[] toBeScannedStr = new String[toBeScanned.size()];
+//                    toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
+//                    MediaScannerConnection.scanFile(getActivity(), toBeScannedStr, null, new MediaScannerConnection.OnScanCompletedListener() {
+//
+//                        @Override
+//                        public void onScanCompleted(String path, Uri uri) {
+//                            System.out.println("SCAN COMPLETED: " + path);
+//
+//                        }
+//                    });
+//                }
+//            });
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            cmdClient.close();
+//            Log.e(TAG, "connect error:" + e.getMessage());
+//        }
 
 
     }

@@ -5,3 +5,4 @@ project(':MavlinkMessage').projectDir = new File('DroneControlLibrary/MavlinkMes
 project(':ControlCoreLib').projectDir = new File('DroneControlLibrary/ControlCoreLib')
 project(':G2Command').projectDir = new File('DroneControlLibrary/G2Command')
 project(':MulticastDiscoverService').projectDir = new File('DroneControlLibrary/MulticastDiscoverService')
+project(':AmbarellaClient').projectDir = new File('DroneControlLibrary/AmbarellaClient')

@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.Drone;
@@ -47,12 +48,14 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaList;
 
 import java.lang.ref.WeakReference;
+import java.util.Formatter;
+import java.util.Locale;
 
 
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener {
+public class PilotingFragment extends UnBindDrawablesFragment implements Drone.StatusChangedListener, DroneController.MediaCommandListener {
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final String SEND_DRONE_CONTROL = "send drone control: ";
 
@@ -71,6 +74,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final int TAKE_OFF_ALTITUDE = 5;
 
     private static final int HANDLER_RELEASE_CONTROL = 1;
+    private static final int HANDLER_RECORDING_TIME = 2;
     private static final int CONTROL_RELEASE_DELAY_MILLIS = 120;
 
     public static JoyStickSurfaceView[] joyStickSurfaceViews = new JoyStickSurfaceView[2];
@@ -108,6 +112,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private String mrl = null;
     private float currentAltitude;
+    private boolean isRecording = false;
+    private TextView tvRecordingTime;
+    private LinearLayout llRecording;
+    private int recordingTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -230,13 +238,16 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     @Override
     public void onLocationUpdate(final long lat, final long lon, final int eph) {
         fragmentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (lat == 0 && lon == 0) {
-                    statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
-                }
-            }
-        });
+                                           @Override
+                                           public void run() {
+                                               if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
+                                                   statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
+                                               } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
+                                                   statusView.setGpsVisibility(eph == 9999 ? View.GONE : View.VISIBLE);
+                                               }
+                                           }
+                                       }
+        );
 
     }
 
@@ -264,6 +275,26 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         Button btnRecording = (Button) view.findViewById(R.id.btn_recording);
         Button btnCamera = (Button) view.findViewById(R.id.btn_camera);
         btnAction = (Button) view.findViewById(R.id.btn_take_off);
+        llRecording = (LinearLayout) view.findViewById(R.id.ll_recording);
+        tvRecordingTime = (TextView) view.findViewById(R.id.tv_recording_time);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getController().takePhoto(PilotingFragment.this);
+            }
+        });
+        btnRecording.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isRecording) {
+                    getController().stopRecord(PilotingFragment.this);
+                    isRecording = false;
+                } else {
+                    getController().startRecord(PilotingFragment.this);
+                    isRecording = true;
+                }
+            }
+        });
         statusView = (StatusView) view.findViewById(R.id.status);
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             btnDocking.setVisibility(View.VISIBLE);
@@ -663,6 +694,36 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private Handler vlcHandler = new VlcHandler(this);
 
+    @Override
+    public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object datd) {
+        switch (mediaCommand) {
+            case START_RECORD:
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        llRecording.setVisibility(View.VISIBLE);
+                    }
+                });
+                pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RECORDING_TIME, 1000);
+                recordingTime = 0;
+                Log.d(TAG, "onCommandResult: START_RECORD");
+                break;
+            case STOP_RECORD:
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        llRecording.setVisibility(View.GONE);
+                    }
+                });
+                pilotingStatusControlReleaseHandler.removeMessages(HANDLER_RECORDING_TIME);
+                Log.d(TAG, "onCommandResult: STOP_RECORD");
+                break;
+            case TAKE_PHOTO:
+                Log.d(TAG, "onCommandResult: TAKE_PHOTO");
+                break;
+        }
+    }
+
     private static class VlcHandler extends Handler {
         private WeakReference<PilotingFragment> mOwner;
 
@@ -713,7 +774,25 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             if (msg.what == HANDLER_RELEASE_CONTROL) {
                 Log.d(TAG, SEND_DRONE_CONTROL + "release control");
                 sendControl();
+            } else if (msg.what == HANDLER_RECORDING_TIME) {
+                tvRecordingTime.setText((stringForTime(++recordingTime)) + "");
+                this.sendEmptyMessageDelayed(HANDLER_RECORDING_TIME, 1000);
             }
+        }
+    }
+
+    public static String stringForTime(int time) {
+        Formatter formatter = new Formatter(new StringBuilder(), Locale.getDefault());
+        int totalSeconds = time/* / 1000*/;
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+
+        if (hours > 0) {
+            return formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return formatter.format("%02d:%02d", minutes, seconds).toString();
         }
     }
 

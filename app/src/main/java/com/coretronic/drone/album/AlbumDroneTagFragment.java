@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
 import com.coretronic.drone.album.model.MediaListItem;
@@ -64,8 +65,7 @@ public class AlbumDroneTagFragment extends Fragment {
     Handler processUIHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case 0:
                     progressbar.setVisibility(View.GONE);
                     notFindListTV.setVisibility(View.VISIBLE);
@@ -155,17 +155,17 @@ public class AlbumDroneTagFragment extends Fragment {
                         }
                     };
 
-                    cmdClient.cmdDeleteFile(albumMediaList.get(position).getMediaFileName(), cmdDeleFileReceiver);
+//                    cmdClient.cmdDeleteFile(albumMediaList.get(position).getMediaFileName(), cmdDeleFileReceiver);
 
 
-                    AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
-                        @Override
-                        public void onCompleted(List<FileItem> listItems) {
-                            getDate(listItems);
-
-                        }
-                    };
-                    cmdClient.getFileList(cmdListFileReceiver);
+//                    AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+//                        @Override
+//                        public void onCompleted(List<FileItem> listItems) {
+//                            getDate(listItems);
+//
+//                        }
+//                    };
+//                    cmdClient.getFileList(cmdListFileReceiver);
                 }
             }).start();
 
@@ -237,18 +237,18 @@ public class AlbumDroneTagFragment extends Fragment {
             e.printStackTrace();
         }
 
-        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
-
-            @Override
-            public void onNotify(int status, String strMsg) {
-                Log.i(TAG, "on Notify status:" + status + " / strMsg:" + strMsg);
-                // 0 is error, 1 is ok
-                if (status == 0) {
-                    cmdClient.close();
-                    processUIHandler.sendEmptyMessage(0);
-                }
-            }
-        };
+//        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
+//
+//            @Override
+//            public void onNotify(int status, String strMsg) {
+//                Log.i(TAG, "on Notify status:" + status + " / strMsg:" + strMsg);
+//                // 0 is error, 1 is ok
+//                if (status == 0) {
+//                    cmdClient.close();
+//                    processUIHandler.sendEmptyMessage(0);
+//                }
+//            }
+//        };
 
         AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
             @Override
@@ -260,58 +260,59 @@ public class AlbumDroneTagFragment extends Fragment {
         };
 
 
-        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
-            @Override
-            public void onCompleted(List<FileItem> listItems) {
-                getDate(listItems);
-
-            }
-        };
-
-
-        try {
-
-            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
-            Log.i(TAG, "connectStatus:" + connectStatus);
-
-            if (!connectStatus) {
-                if( connectThread!=null && !connectThread.isInterrupted()) {
-                    connectThread.interrupt();
-                    connectThread = null;
-                }
-                return;
-            }
-
-            if (cmdClient.isRun) {
-
-                cmdClient.setFileSavePath(albumFilePath);
-                cmdClient.start();
-                cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
-                    @Override
-                    public void onStartSession(boolean Success) {
-
-                    }
-                });
-
-                cmdClient.getFileList(cmdListFileReceiver);
-
-            } else {
-                cmdClient.close();
-                processUIHandler.sendEmptyMessage(0);
-            }
+//        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+//            @Override
+//            public void onCompleted(List<FileItem> listItems) {
+//                getDate(listItems);
+//
+//            }
+//        };
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (cmdClient != null) {
-                cmdClient.close();
-            }
-            processUIHandler.sendEmptyMessage(0);
+//        try {
 
-            Log.e(TAG, "connect error:" + e.getMessage());
-        }
+//            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
+//            Log.i(TAG, "connectStatus:" + connectStatus);
+//
+//            if (!connectStatus) {
+//                if( connectThread!=null && !connectThread.isInterrupted()) {
+//                    connectThread.interrupt();
+//                    connectThread = null;
+//                }
+//                return;
+//            }
 
+//            if (cmdClient.isRun) {
+//
+//                cmdClient.setFileSavePath(albumFilePath);
+//                cmdClient.start();
+//                cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
+//                    @Override
+//                    public void onStartSession(boolean Success) {
+//
+//                    }
+//                });
+//
+//                cmdClient.getFileList(cmdListFileReceiver);
+//
+//            } else {
+//                cmdClient.close();
+//                processUIHandler.sendEmptyMessage(0);
+//            }
+
+
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            if (cmdClient != null) {
+//                cmdClient.close();
+//            }
+//            processUIHandler.sendEmptyMessage(0);
+//
+//            Log.e(TAG, "connect error:" + e.getMessage());
+//        }
+
+
+//    }
 
     }
-
 }
