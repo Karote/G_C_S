@@ -36,7 +36,6 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
 import com.coretronic.drone.service.DroneDevice;
-import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 import com.coretronic.drone.ui.StatusView;
@@ -66,7 +65,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final String VIDEO_FILE_PATH_G2_SUFFIX = "/live";
     private static final String VIDEO_FILE_PATH_2015_SUFFIX = ":8086";
 
-    private static final float ORIENTATION_SENSOR_SCALE = 2.5f;
+    private float phoneAngleScale = ControlWrap.DEFAULT_RADIUS / (float) DroneApplication.settings[Setting.SettingType.PHONE_TILT.ordinal()].getMaxValue();
     private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
     public static final int MAX_SPEED = 50;
     private static final int TAKE_OFF_ALTITUDE = 5;
@@ -265,7 +264,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         Button btnRecording = (Button) view.findViewById(R.id.btn_recording);
         Button btnCamera = (Button) view.findViewById(R.id.btn_camera);
         btnAction = (Button) view.findViewById(R.id.btn_take_off);
-               statusView = (StatusView) view.findViewById(R.id.status);
+        statusView = (StatusView) view.findViewById(R.id.status);
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             btnDocking.setVisibility(View.VISIBLE);
             btnSelfie.setVisibility(View.VISIBLE);
@@ -549,19 +548,22 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             if (isOnOrientationSensorMode) {
                 int rcPitch = pitch - startPitch;
                 int rcRoll = roll - startRoll;
+                int phoneAngleMax = DroneApplication.settings[Setting.SettingType.PHONE_TILT.ordinal()].getValue();
                 if (getController() != null) {
-                    if (rcPitch > ORIENTATION_SENSOR_ANGLE_MAX) {
-                        rcPitch = ORIENTATION_SENSOR_ANGLE_MAX;
-                    } else if (rcPitch < -ORIENTATION_SENSOR_ANGLE_MAX) {
-                        rcPitch = -ORIENTATION_SENSOR_ANGLE_MAX;
+                    if (rcPitch > phoneAngleMax) {
+                        rcPitch = phoneAngleMax;
+                    } else if (rcPitch < -phoneAngleMax) {
+                        rcPitch = -phoneAngleMax;
                     }
-                    if (rcRoll > ORIENTATION_SENSOR_ANGLE_MAX) {
-                        rcRoll = ORIENTATION_SENSOR_ANGLE_MAX;
-                    } else if (rcRoll < -ORIENTATION_SENSOR_ANGLE_MAX) {
-                        rcRoll = -ORIENTATION_SENSOR_ANGLE_MAX;
+                    if (rcRoll > phoneAngleMax) {
+                        rcRoll = phoneAngleMax;
+                    } else if (rcRoll < -phoneAngleMax) {
+                        rcRoll = -phoneAngleMax;
                     }
-                    controlWrap.pitch = rcPitch * ORIENTATION_SENSOR_SCALE;
-                    controlWrap.roll = rcRoll * ORIENTATION_SENSOR_SCALE;
+                    controlWrap.pitch = rcPitch * phoneAngleScale;
+                    controlWrap.roll = rcRoll * phoneAngleScale;
+                    Log.d(TAG, "Phone angle scale: " + phoneAngleScale);
+                    Log.d(TAG, "Phone angle: " + controlWrap.pitch + ", " + controlWrap.roll);
                     sendControl();
                 }
             }
@@ -721,7 +723,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         private float throttle = 0;
         private float yaw = 0;
         public final static int DEFAULT_VALUE = 0;
-        private final static int DEFAULT_RADIUS = 100;
+        public final static int DEFAULT_RADIUS = 100;
 
         public int changePitch(float pitch) {
             this.pitch = changeValue(pitch);

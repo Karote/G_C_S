@@ -204,9 +204,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 fragment = new WaypointEditorFragment();
                 break;
             case R.id.ll_album:
-                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-                    return;
-                }
                 fragment = new AlbumFragment();
                 backStackName = "AlbumFragment";
                 break;
