@@ -13,6 +13,10 @@ public class Setting {
     public static final int FLIP_ORIENTATION_LEFT = 2;
     public static final int FLIP_ORIENTATION_RIGHT = 3;
 
+    public static final int JOYPAD_MODE_JAPAN=0;
+    public static final int JOYPAD_MODE_USA=1;
+    public static final int JOYPAD_MODE_KINESICS=2;
+
     private int minVale ;
     private int maxValue;
     private int value;

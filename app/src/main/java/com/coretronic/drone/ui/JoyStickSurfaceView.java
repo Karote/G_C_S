@@ -33,14 +33,17 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
     public static final int CONTROL_TYPE_PITCH_ROLL = 1;
     public static final int CONTROL_TYPE_THROTTLE_YAW = 2;
+    public static final int CONTROL_TYPE_PITCH_YAW = 3;
+    public static final int CONTROL_TYPE_THROTTLE_ROLL = 4;
 
     private static final int DISTANCE_TOLERANCE = 20;
-    private static final int TIME_DELAY = 100;
+    private static final int TIME_DELAY = 60;
     private static final int PAINT_PRESSED_ALPHA_DEFAULT = 180;
 
     private Bitmap throttleUpBitmap;
     private Bitmap yawRightBitmap;
     private Bitmap arrowUpBitmap;
+    private Bitmap arrowRightBitmap;
 
     private Paint stickPaint = null;
 
@@ -103,6 +106,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
         yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);
         arrowUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_up), indicatorSize, indicatorSize);
+        arrowRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_right), indicatorSize, indicatorSize);
 
         if (stickListener != null) {
             stickListener.onStickMoveEvent(JoyStickSurfaceView.this, MotionEvent.ACTION_UP, 0, 0);
@@ -228,10 +232,19 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
                 padPaint.setAlpha(stickPaint.getAlpha());
                 canvas.drawCircle(startPoint.x, startPoint.y, padRadius, padPaint);
 
-                if (controlType == JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW) {
-                    drawIndicator(canvas, throttleUpBitmap, yawRightBitmap);
-                } else {
-                    drawIndicator(canvas, arrowUpBitmap);
+                switch (controlType) {
+                    case CONTROL_TYPE_THROTTLE_YAW:
+                        drawIndicator(canvas, throttleUpBitmap, yawRightBitmap);
+                        break;
+                    case CONTROL_TYPE_PITCH_ROLL:
+                        drawIndicator(canvas, arrowUpBitmap);
+                        break;
+                    case CONTROL_TYPE_THROTTLE_ROLL:
+                        drawIndicator(canvas, throttleUpBitmap, arrowRightBitmap);
+                        break;
+                    case CONTROL_TYPE_PITCH_YAW:
+                        drawIndicator(canvas, arrowUpBitmap, yawRightBitmap);
+                        break;
                 }
             } else {
                 canvas.drawCircle(startPoint.x, startPoint.y, circleRadius, stickPaint);

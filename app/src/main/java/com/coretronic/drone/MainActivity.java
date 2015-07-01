@@ -39,8 +39,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private StatusView statusView;
-    private long lat = 0;
-    private long lon = 0;
 
     private void assignViews() {
         Button btnPiloting = (Button) findViewById(R.id.btn_piloting);
@@ -163,14 +161,14 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onLocationUpdate(lat, lon, eph);
         }
-        Log.d(TAG, "onLocationUpdate " + lat + ", " + lon + ", " + eph);
+//        Log.d(TAG, "onLocationUpdate " + lat + ", " + lon + ", " + eph);
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
                               if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
                                   statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
                               } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-                                  statusView.setGpsVisibility(eph == 9999 ? View.GONE : View.VISIBLE);
+                                  statusView.setGpsVisibility((eph==0||eph == 9999) ? View.GONE : View.VISIBLE);
                               }
                           }
                       }

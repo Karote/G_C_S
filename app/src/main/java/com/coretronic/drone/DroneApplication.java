@@ -31,7 +31,7 @@ public class DroneApplication extends Application {
         settings[Setting.SettingType.FLIP_ENABLE.ordinal()] = new Setting(Setting.OFF);
         settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()] = new Setting(Setting.FLIP_ORIENTATION_LEFT);
 
-        settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.ON);
+        settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.JOYPAD_MODE_USA);
         settings[Setting.SettingType.HEADLESS.ordinal()] = new Setting(Setting.OFF);
         settings[Setting.SettingType.LEFT_HANDED.ordinal()] = new Setting(Setting.OFF);
         settings[Setting.SettingType.PHONE_TILT.ordinal()] = new Setting(5, 50, 20, String.valueOf(DEGREE_SYMBOL));
