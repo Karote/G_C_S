@@ -30,6 +30,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -167,6 +169,13 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
             albumImgList.add(new MediaItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, false));
         }
+
+        Collections.sort(albumImgList, new Comparator<MediaItem>() {
+            @Override
+            public int compare(MediaItem lhs, MediaItem rhs) {
+                return rhs.getMediaDate().compareTo(lhs.getMediaDate());
+            }
+        });
 
         cursor.close();
 

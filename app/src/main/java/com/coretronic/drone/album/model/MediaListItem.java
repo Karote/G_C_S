@@ -1,12 +1,8 @@
 package com.coretronic.drone.album.model;
 
-import android.util.Log;
-import com.coretronic.drone.ambarlla.message.FileItem;
-import com.coretronic.drone.utility.AppUtils;
+import com.coretronic.drone.DroneController.MediaCommandListener.MediaContent;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,8 +16,7 @@ public class MediaListItem implements Serializable {
     private String mediaSize = "";
 
 
-    public MediaListItem( String mediaFileName,String mediaSize, String date)
-    {
+    public MediaListItem(String mediaFileName, String mediaSize, String date) {
         super();
         this.mediaDate = date;
         this.mediaFileName = mediaFileName;
@@ -31,6 +26,7 @@ public class MediaListItem implements Serializable {
     public String getMediaDate() {
         return mediaDate;
     }
+
     public void setMediaDate(String mediaDate) {
         this.mediaDate = mediaDate;
     }
@@ -38,6 +34,7 @@ public class MediaListItem implements Serializable {
     public String getMediaFileName() {
         return mediaFileName;
     }
+
     public void setMediaFileName(String mediaFileName) {
         this.mediaFileName = mediaFileName;
     }
@@ -45,30 +42,25 @@ public class MediaListItem implements Serializable {
     public String getMediaSize() {
         return mediaSize;
     }
+
     public void setMediaSize(String mediaSize) {
         this.mediaSize = mediaSize;
     }
 
-
-    public MediaListItem(FileItem fileItem)
-    {
-
+    public MediaListItem(MediaContent mediaContent) {
         SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat toFormat = new SimpleDateFormat("yyyy/MM/dd");
 
         try {
-            Date date = fromFormat.parse(fileItem.getMediaDate());
-            this.mediaDate =  toFormat.format(date);
+            Date date = fromFormat.parse(mediaContent.getCreateData());
+            this.mediaDate = toFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-//        this.mediaDate =  fileItem.getMediaDate() + "";
-        this.mediaFileName = fileItem.getMediaFileName();
-        this.mediaSize = fileItem.getMediaSize();
+        this.mediaFileName = mediaContent.getName();
+        this.mediaSize = String.valueOf(mediaContent.size());
 
     }
-
-
 
 
 }
