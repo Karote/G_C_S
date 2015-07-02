@@ -447,7 +447,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     public static void initialJoypadMode() {
         int[] controlType = new int[0];
-        boolean[] isJoyModes = new boolean[0];
+        boolean[] isJoypads = new boolean[0];
         int joypadMode = DroneApplication.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue();
         boolean leftHanded = DroneApplication.settings[Setting.SettingType.LEFT_HANDED.ordinal()].getValue() == Setting.ON ? true : false;
         switch (joypadMode) {
@@ -457,15 +457,15 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 } else {
                     controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW, JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL};
                 }
-                isJoyModes = new boolean[]{true, true};
+                isJoypads = new boolean[]{true, true};
                 break;
             case Setting.JOYPAD_MODE_KINESICS:
                 if (leftHanded) {
                     controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL, JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW};
-                    isJoyModes = new boolean[]{false, true};
+                    isJoypads = new boolean[]{false, true};
                 } else {
                     controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW, JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL};
-                    isJoyModes = new boolean[]{true, false};
+                    isJoypads = new boolean[]{true, false};
                 }
                 break;
             case Setting.JOYPAD_MODE_JAPAN:
@@ -474,12 +474,12 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 } else {
                     controlType = new int[]{JoyStickSurfaceView.CONTROL_TYPE_PITCH_YAW, JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_ROLL};
                 }
-                isJoyModes = new boolean[]{true, true};
+                isJoypads = new boolean[]{true, true};
                 break;
         }
 
         for (int i = 0; i < joyStickSurfaceViews.length; i++) {
-            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoyModes[i]);
+            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoypads[i]);
         }
     }
 

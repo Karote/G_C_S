@@ -55,7 +55,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     private int stickShiftRadius;
 
     private boolean isStop;
-    private boolean isJoypadMode;
+    private boolean isJoypad;
     private int controlType;
 
     private int paintPressedAlpha;
@@ -98,9 +98,9 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint.setAlpha(paintNormalAlpha);
     }
 
-    public void initJoyMode(int controlType, boolean isJoypadMode) {
+    public void initJoyMode(int controlType, boolean isJoypad) {
         this.controlType = controlType;
-        this.isJoypadMode = isJoypadMode;
+        this.isJoypad = isJoypad;
         int indicatorSize = (int) getResources().getDimension(R.dimen.joypad_indicator_size);
 
         throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
@@ -166,7 +166,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         int distance = getDistance(startPoint.x, startPoint.y, x, y);
         if (action == MotionEvent.ACTION_DOWN) {
             stickPaint.setAlpha(paintPressedAlpha);
-            if (stickListener != null && !isJoypadMode) {
+            if (stickListener != null && !isJoypad) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_DOWN);
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
@@ -179,15 +179,15 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             int dy = rockerPoint.y - startPoint.y;
 
             if (Math.abs(dx) >= DISTANCE_TOLERANCE || Math.abs(dy) >= DISTANCE_TOLERANCE) {
-                if (stickListener != null && isJoypadMode) {
+                if (stickListener != null && isJoypad) {
                     stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, dx, -dy);
                 }
             }
         } else if (action == MotionEvent.ACTION_UP) {
             rockerPoint.set(startPoint.x, startPoint.y);
-            if (stickListener != null && isJoypadMode) {
+            if (stickListener != null && isJoypad) {
                 stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, 0, 0);
-            } else if (stickListener != null && !isJoypadMode) {
+            } else if (stickListener != null && !isJoypad) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_UP);
             }
             stickPaint.setAlpha(paintNormalAlpha);
@@ -221,7 +221,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             float circleRadius = getResources().getDimension(R.dimen.stick_size) / 2;
-            if (isJoypadMode) {
+            if (isJoypad) {
                 Paint padPaint = new Paint(stickPaint);
                 padPaint.setAlpha((int) (stickPaint.getAlpha() * ALPHA_SCALE));
                 canvas.drawCircle(startPoint.x, startPoint.y, padRadius, padPaint);
