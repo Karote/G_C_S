@@ -1,6 +1,7 @@
 package com.coretronic.drone.piloting;
 
 import com.coretronic.drone.service.Parameter;
+import com.coretronic.drone.service.Parameter.Orientation;
 
 /**
  * Created by jiaLian on 15/5/25.
@@ -72,6 +73,35 @@ public class Setting {
         this.value = value;
     }
 
+    public void setValue(Parameter parameter) {
+        switch (parameterType) {
+            case FLIP:
+            case ABSOLUTE_CONTROL:
+                value = parameter == Parameter.Control.ENABLE ? Setting.ON : Setting.OFF;
+                break;
+            case FLIP_ORIENTATION:
+                if (parameter.getValue() == Orientation.BACK) {
+                    value = Setting.FLIP_ORIENTATION_BACK;
+                } else if (parameter.getValue() == Orientation.FRONT) {
+                    value = Setting.FLIP_ORIENTATION_FRONT;
+                } else if (parameter.getValue() == Orientation.LEFT) {
+                    value = Setting.FLIP_ORIENTATION_LEFT;
+                } else if (parameter.getValue() == Orientation.RIGHT) {
+                    value = Setting.FLIP_ORIENTATION_RIGHT;
+                }
+                break;
+            case ROTATION_SPEED_MAX:
+            case VERTICAL_SPEED_MAX:
+            case ANGLE_MAX:
+                value = (int) parameter.getValue();
+                break;
+            case ALTITUDE_LIMIT:
+                value = (int) ((int) parameter.getValue() / 100f);
+                break;
+        }
+
+    }
+
     public int getMinValue() {
         return minVale;
     }
@@ -98,16 +128,16 @@ public class Setting {
             case FLIP_ORIENTATION:
                 switch (value) {
                     case Setting.FLIP_ORIENTATION_BACK:
-                        parameter = Parameter.Orientation.BACK;
+                        parameter = Orientation.BACK;
                         break;
                     case Setting.FLIP_ORIENTATION_FRONT:
-                        parameter = Parameter.Orientation.FRONT;
+                        parameter = Orientation.FRONT;
                         break;
                     case Setting.FLIP_ORIENTATION_LEFT:
-                        parameter = Parameter.Orientation.LEFT;
+                        parameter = Orientation.LEFT;
                         break;
                     case Setting.FLIP_ORIENTATION_RIGHT:
-                        parameter = Parameter.Orientation.RIGHT;
+                        parameter = Orientation.RIGHT;
                         break;
                 }
                 break;

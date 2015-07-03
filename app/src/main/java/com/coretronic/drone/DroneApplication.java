@@ -24,6 +24,10 @@ public class DroneApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initialSetting();
+    }
+
+    private void initialSetting() {
         settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()] = new Setting(20, 100, 70, "%");
         settings[Setting.SettingType.SD_RECORD.ordinal()] = new Setting(Setting.ON);
         settings[Setting.SettingType.FLIP_ENABLE.ordinal()] = new Setting(Parameter.Type.FLIP, Setting.OFF);

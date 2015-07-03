@@ -22,13 +22,15 @@ import android.widget.Toast;
 import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.PilotingFragment;
+import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.service.DroneDevice;
+import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.StatusView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener, View.OnLongClickListener {
+public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener, View.OnLongClickListener, DroneController.ParameterLoaderListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String G2_IP = "192.168.42.1";
 
@@ -80,6 +82,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                                     Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
                                             Toast.LENGTH_LONG).show();
                                     connectedDroneDevice = droneDevice;
+                                    readParameters(MainActivity.this, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
 //                                    Log.i(TAG, "Drone Type: " + droneDevice);
                                 }
 
@@ -104,6 +107,11 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         assignViews();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -168,7 +176,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                               if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
                                   statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
                               } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-                                  statusView.setGpsVisibility((eph==0||eph == 9999) ? View.GONE : View.VISIBLE);
+                                  statusView.setGpsVisibility((eph == 0 || eph == 9999) ? View.GONE : View.VISIBLE);
                               }
                           }
                       }
@@ -245,6 +253,17 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
     public DroneDevice getConnectedDroneDevice() {
         return connectedDroneDevice;
+    }
+
+    @Override
+    public void onParameterLoaded(Parameter.Type type, Parameter parameter) {
+        for (Setting setting : DroneApplication.settings) {
+            if (type == setting.getParameterType()) {
+                Log.d(TAG, "onParameterLoaded: " + type + "," + parameter.getValue());
+                setting.setValue(parameter);
+                Log.d(TAG, "onParameterLoaded setting: " + setting.getValue());
+            }
+        }
     }
 
 

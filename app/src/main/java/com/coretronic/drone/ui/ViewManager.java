@@ -11,7 +11,6 @@ import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
-import com.coretronic.drone.service.Parameter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +54,7 @@ public class ViewManager {
             }
         });
     }
+
 
     public static void setEnabled(boolean enabled, View[] viewArray, View... views) {
         List<View> combineAll = new ArrayList<View>(viewArray.length + views.length);

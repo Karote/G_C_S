@@ -119,6 +119,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private float currentAltitude;
     private boolean isRecording = false;
     private int recordingTime = 0;
+//    private long testTime;
+//    private int testCount=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +130,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         sensorManager = (SensorManager) fragmentActivity.getSystemService(Context.SENSOR_SERVICE);
         connectedDroneDevice = ((MainActivity) fragmentActivity).getConnectedDroneDevice();
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-            mrl =VIDEO_FILE_PATH_RTSP_PREFIX+connectedDroneDevice.getName()+VIDEO_FILE_PATH_2015_SUFFIX ;
+            mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_2015_SUFFIX;
 //            mrl = VIDEO_FILE_PATH_TEST;
         } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_G2_SUFFIX;
@@ -169,8 +171,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     @Override
     public void onResume() {
         super.onResume();
-        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         createPlayer(mrl);
     }
 
@@ -410,6 +412,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                             startRoll = roll;
                             isOnOrientationSensorMode = true;
                             Log.d(TAG, "onOrientationSensorMode: Action down");
+//                            testTime = System.currentTimeMillis();
+//                            testCount=0;
                         } else if (action == MotionEvent.ACTION_UP) {
                             Log.d(TAG, "onOrientationSensorMode: Action up");
                             if (getController() != null) {
@@ -560,6 +564,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                     Log.d(TAG, "Phone angle scale: " + phoneAngleScale);
                     Log.d(TAG, "Phone angle: " + controlWrap.pitch + ", " + controlWrap.roll);
                     sendControl();
+//                    if (System.currentTimeMillis() - testTime < 1000) {
+//                        Log.d(TAG, "kinesics count: " + (testCount++));
+//                    }
                 }
             }
         }

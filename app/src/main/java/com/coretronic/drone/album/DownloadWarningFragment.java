@@ -2,7 +2,6 @@ package com.coretronic.drone.album;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,20 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.model.MediaListItem;
-import com.coretronic.drone.ambarlla.message.AMBACmdClient;
-import com.coretronic.drone.ambarlla.message.AMBACommand;
-import com.coretronic.drone.ambarlla.message.FileItem;
-import com.coretronic.drone.log.ColorLog;
 import com.coretronic.drone.utility.AppConfig;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 
 
@@ -104,9 +101,6 @@ public class DownloadWarningFragment extends Fragment {
             closeDownloadFragment();
         }
     };
-
-
-
 
 
     @Override
@@ -268,7 +262,7 @@ public class DownloadWarningFragment extends Fragment {
         DroneController.MediaCommandListener droneDeleFileReceiver = new DroneController.MediaCommandListener() {
             @Override
             public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
-                if(MediaCommand.REMOVE_CONTENT == mediaCommand){
+                if (MediaCommand.REMOVE_CONTENT == mediaCommand) {
                     Log.i(TAG, "delete file completed");
                     deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
                 }
@@ -282,10 +276,10 @@ public class DownloadWarningFragment extends Fragment {
 //                closeDownloadFragment();
 //            }
 //        };
-        droneController.getMediaContents(new DroneController.MediaCommandListener(){
+        droneController.getMediaContents(new DroneController.MediaCommandListener() {
             @Override
             public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
-                if(MediaCommand.LIST_CONTENTS == mediaCommand) {
+                if (MediaCommand.LIST_CONTENTS == mediaCommand) {
                     closeDownloadFragment();
                 }
             }
@@ -308,7 +302,7 @@ public class DownloadWarningFragment extends Fragment {
     private void connectToAMBA() {
         try {
 //            cmdClient = new AMBACmdClient();
-            droneController = ((MainActivity)getActivity()).getDroneController();
+            droneController = ((MainActivity) getActivity()).getDroneController();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -360,7 +354,7 @@ public class DownloadWarningFragment extends Fragment {
 //                }
 //            });
 
-            Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
+        Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
 //            cmdClient.getFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
 //
 //                @Override
@@ -394,39 +388,31 @@ public class DownloadWarningFragment extends Fragment {
 //                    });
 //                }
 //            });
-            droneController.downloadMedia(albumFilePath, mediaListItem.getMediaFileName(), new DroneController.OnProgressUpdatedListener() {
-                @Override
-                public void onProgressUpdated(long downloadedSize, long totalSize) {
-                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + totalSize + "/" + (downloadedSize / totalSize) + "/" + (int) (downloadedSize * 100 / totalSize));
+        droneController.downloadMedia(albumFilePath, mediaListItem.getMediaFileName(), new DroneController.OnProgressUpdatedListener() {
+            @Override
+            public void onProgressUpdated(long downloadedSize, long totalSize) {
+                Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + totalSize + "/" + (downloadedSize / totalSize) + "/" + (int) (downloadedSize * 100 / totalSize));
 
-                    getFileSize = downloadedSize;
-                    totalFileSize = totalSize;
+                getFileSize = downloadedSize;
+                totalFileSize = totalSize;
 
-                    Message msg = Message.obtain();
-                    msg.arg1 = (int) (downloadedSize * 100 / totalSize);
-                    Log.i(TAG, "msg.arg1:" + msg.arg1);
-                    progressHandler.sendMessage(msg);
-                }
+                Message msg = Message.obtain();
+                msg.arg1 = (int) (downloadedSize * 100 / totalSize);
+                Log.i(TAG, "msg.arg1:" + msg.arg1);
+                progressHandler.sendMessage(msg);
+            }
 
-                @Override
-                public void onCompleted(long size) {
-                    Log.i(TAG, "downlaod image onCompleted");
+            @Override
+            public void onCompleted(long size) {
+                Log.i(TAG, "downlaod image onCompleted");
 
-                    ArrayList<String> toBeScanned = new ArrayList<String>();
-                    toBeScanned.add(albumFilePath + mediaListItem.getMediaFileName());
-                    String[] toBeScannedStr = new String[toBeScanned.size()];
-                    toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
-                    MediaScannerConnection.scanFile(getActivity(), toBeScannedStr, null, new MediaScannerConnection.OnScanCompletedListener() {
-
-                        @Override
-                        public void onScanCompleted(String path, Uri uri) {
-                            System.out.println("SCAN COMPLETED: " + path);
-
-                        }
-                    });
-
-                }
-            });
+                ArrayList<String> toBeScanned = new ArrayList<String>();
+                toBeScanned.add(albumFilePath + mediaListItem.getMediaFileName());
+                String[] toBeScannedStr = new String[toBeScanned.size()];
+                toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
+                MediaScannerConnection.scanFile(context, toBeScannedStr, null, null);
+            }
+        });
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //            cmdClient.close();

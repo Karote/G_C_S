@@ -13,7 +13,6 @@ import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
-import com.coretronic.drone.service.Parameter;
 
 /**
  * Created by jiaLian on 15/6/15.
@@ -37,6 +36,7 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         initView();
     }
 
+
     public static void assignSettingSeekBarTextView(final View view, int id, final Setting.SettingType settingType) {
         final Setting setting = DroneApplication.settings[settingType.ordinal()];
         Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
@@ -51,7 +51,6 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
                 DroneApplication.settings[settingType.ordinal()].setValue(value);
             }
         });
-
     }
 
     public static void assignSettingSeekBarTextView(final MainActivity activity, final View view, int id, final Setting.SettingType settingType) {
@@ -69,14 +68,12 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
                 activity.setParameters(DroneApplication.settings[settingType.ordinal()].getParameterType(), DroneApplication.settings[settingType.ordinal()].getParameter());
             }
         });
-
     }
 
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.custom_seek_bar, null);
         tvValue = (TextView) view.findViewById(R.id.tv_value);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-        seekBar.setOnSeekBarChangeListener(this);
         addView(view);
     }
 
@@ -90,23 +87,36 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         seekBar.setMax(maxValue - minValue);
     }
 
-    public void setValue(int value) {
-        seekBar.setProgress(value - minValue);
+    public void setValue(final int value) {
+        Log.d(TAG, "setValue " + value);
         tvValue.setText(String.valueOf(value) + unit);
+        Log.d(TAG, "getMax " + (seekBar.getMax() + minValue));
+        seekBar.setProgress(value - minValue);
+        seekBar.post(new Runnable() {
+            @Override
+            public void run() {
+                seekBar.setProgress(value - minValue);
+            }
+        });
+        seekBar.setOnSeekBarChangeListener(this);
+        Log.d(TAG, "getProgress " + (seekBar.getProgress() + minValue));
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        tvValue.setText((seekBar.getProgress() + minValue) + unit);
+    public void onProgressChanged(android.widget.SeekBar seekBar, int progress, boolean fromUser) {
+        if (fromUser) {
+            Log.d(TAG, "onProgressChanged " + (progress + minValue));
+            tvValue.setText((progress + minValue) + unit);
+        }
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onStartTrackingTouch(android.widget.SeekBar seekBar) {
 
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStopTrackingTouch(android.widget.SeekBar seekBar) {
         if (seekBarTextViewChangeListener != null) {
             seekBarTextViewChangeListener.onStopTrackingTouch(seekBar.getProgress() + minValue);
         }
