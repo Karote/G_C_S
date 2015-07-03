@@ -128,7 +128,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         sensorManager = (SensorManager) fragmentActivity.getSystemService(Context.SENSOR_SERVICE);
         connectedDroneDevice = ((MainActivity) fragmentActivity).getConnectedDroneDevice();
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-//            mrl =VIDEO_FILE_PATH_RTSP_PREFIX+connectedDroneDevice.getName()+VIDEO_FILE_PATH_2015_SUFFIX ;
+            mrl =VIDEO_FILE_PATH_RTSP_PREFIX+connectedDroneDevice.getName()+VIDEO_FILE_PATH_2015_SUFFIX ;
 //            mrl = VIDEO_FILE_PATH_TEST;
         } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_G2_SUFFIX;
@@ -156,6 +156,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
+        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
+            initialG2Setting();
+        }
     }
 
     @Override
@@ -815,6 +818,15 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             } else if (msg.what == HANDLER_RECORDING_TIME) {
                 tvRecordingTime.setText((stringForTime(++recordingTime)) + "");
                 this.sendEmptyMessageDelayed(HANDLER_RECORDING_TIME, 1000);
+            }
+        }
+    }
+
+    private void initialG2Setting() {
+        for (Setting setting : DroneApplication.settings) {
+            if (setting.getParameterType() != null) {
+                ((MainActivity) fragmentActivity).setParameters(setting.getParameterType(), setting.getParameter());
+                Log.d(TAG, "Initial G2 parameter" + setting.getParameterType() + ", " + setting.getParameter().getValue());
             }
         }
     }

@@ -32,7 +32,7 @@ public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_piloting_mode_page, container, false);
-        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_headless, Setting.SettingType.HEADLESS, Parameter.Type.ABSOLUTE_CONTROL);
+        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_headless, Setting.SettingType.ABSOLUTE_CONTROL);
         ViewManager.assignSwitchView(fragmentView, R.id.switch_left_handed, Setting.SettingType.LEFT_HANDED);
         SeekBarTextView.assignSettingSeekBarTextView(fragmentView, R.id.setting_bar_phone_tilt_max, Setting.SettingType.PHONE_TILT);
 

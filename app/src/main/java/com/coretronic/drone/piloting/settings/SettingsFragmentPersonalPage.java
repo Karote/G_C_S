@@ -41,7 +41,7 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
         View fragmentView = inflater.inflate(R.layout.fragment_settings_personal_page, container, false);
         SeekBarTextView.assignSettingSeekBarTextView(fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACTITY);
         ViewManager.assignSwitchView(fragmentView, R.id.switch_sdcard_enable, Setting.SettingType.SD_RECORD);
-        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE, Parameter.Type.FLIP);
+        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE);
 
         final Button[] buttons = new Button[4];
         buttons[Setting.FLIP_ORIENTATION_FRONT] = (Button) fragmentView.findViewById(R.id.btn_front);
@@ -67,22 +67,7 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
                     for (Button btn : buttons) {
                         refreshBackground(currentFlipOrientationValue, btn);
                     }
-                    Parameter parameter = null;
-                    switch (currentFlipOrientationValue) {
-                        case Setting.FLIP_ORIENTATION_FRONT:
-                            parameter = Parameter.Orientation.FRONT;
-                            break;
-                        case Setting.FLIP_ORIENTATION_BACK:
-                            parameter = Parameter.Orientation.BACK;
-                            break;
-                        case Setting.FLIP_ORIENTATION_LEFT:
-                            parameter = Parameter.Orientation.LEFT;
-                            break;
-                        case Setting.FLIP_ORIENTATION_RIGHT:
-                            parameter = Parameter.Orientation.RIGHT;
-                            break;
-                    }
-                    activity.setParameters(Parameter.Type.FLIP_ORIENTATION, parameter);
+                    activity.setParameters(DroneApplication.settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()].getParameterType(), DroneApplication.settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()].getParameter());
 
                 }
             });

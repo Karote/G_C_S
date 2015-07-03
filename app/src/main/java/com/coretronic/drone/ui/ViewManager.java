@@ -40,7 +40,7 @@ public class ViewManager {
         });
     }
 
-    public static void assignSwitchView(final MainActivity activity, View view, int id, Setting.SettingType settingType, final Parameter.Type parameterType) {
+    public static void assignSwitchView(final MainActivity activity, View view, int id, Setting.SettingType settingType) {
         Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
         final int type = settingType.ordinal();
         sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
@@ -50,8 +50,7 @@ public class ViewManager {
                 if (buttonView.isPressed()) {
                     DroneApplication.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
                     Log.d(TAG, "isSetting[" + type + "]: " + DroneApplication.settings[type].getValue());
-                    Parameter parameter = (isChecked == true) ? Parameter.Control.ENABLE : Parameter.Control.DISABLE;
-                    activity.setParameters(parameterType, parameter);
+                    activity.setParameters(DroneApplication.settings[type].getParameterType(), DroneApplication.settings[type].getParameter());
                 }
             }
         });
