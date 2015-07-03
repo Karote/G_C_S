@@ -1,5 +1,6 @@
 package com.coretronic.drone.album;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,23 +17,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.DroneController;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.adapter.AlbumListViewAdapter;
 import com.coretronic.drone.album.model.MediaListItem;
-import com.coretronic.drone.ambarlla.message.AMBACmdClient;
-import com.coretronic.drone.ambarlla.message.AMBACommand;
-import com.coretronic.drone.ambarlla.message.FileItem;
 import com.coretronic.drone.utility.AppConfig;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by james on 15/6/1.
  */
-public class AlbumDroneTagFragment extends Fragment {
+public class AlbumDroneTagFragment extends Fragment implements DroneController.MediaCommandListener {
 
     private static String TAG = AlbumDroneTagFragment.class.getSimpleName();
 
@@ -44,7 +45,6 @@ public class AlbumDroneTagFragment extends Fragment {
     private String albumFilePath = "";
 
     private TextView notFindListTV = null;
-    private Thread connectThread = null;
     Handler showListHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -56,8 +56,6 @@ public class AlbumDroneTagFragment extends Fragment {
             }
 
             progressbar.setVisibility(View.GONE);
-//            connectThread.interrupt();
-//            cmdClient.close();
 
         }
     };
@@ -77,8 +75,7 @@ public class AlbumDroneTagFragment extends Fragment {
         }
     };
 
-    // AMBAClient
-    AMBACmdClient cmdClient = null;
+    DroneController droneController = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,13 +113,18 @@ public class AlbumDroneTagFragment extends Fragment {
 
         progressbar.setVisibility(View.VISIBLE);
 
-        connectThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                connectToAMBA();
+        droneController = ((MainActivity) getActivity()).getDroneController();
+        if (droneController == null) {
+            processUIHandler.sendEmptyMessage(0);
+        } else {
+            boolean status = droneController.getMediaContents(AlbumDroneTagFragment.this);
+            if (!status) {
+                Log.i(TAG, "droneController droneController.getMediaContents FAIL");
+                processUIHandler.sendEmptyMessage(0);
+            } else {
+                Log.i(TAG, "droneController droneController.getMediaContents SUCCESS");
             }
-        });
-        connectThread.start();
+        }
 
         return view;
     }
@@ -139,33 +141,8 @@ public class AlbumDroneTagFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-
-                    AMBACmdClient.DeleteFileListener cmdDeleFileReceiver = new AMBACmdClient.DeleteFileListener() {
-
-                        @Override
-                        public void onCompleted(boolean blSuccess) {
-                            Log.i(TAG, "delete file completed");
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-                        }
-                    };
-
-//                    cmdClient.cmdDeleteFile(albumMediaList.get(position).getMediaFileName(), cmdDeleFileReceiver);
-
-
-//                    AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
-//                        @Override
-//                        public void onCompleted(List<FileItem> listItems) {
-//                            getDate(listItems);
-//
-//                        }
-//                    };
-//                    cmdClient.getFileList(cmdListFileReceiver);
+                    droneController.removeContent(albumMediaList.get(position).getMediaFileName(), AlbumDroneTagFragment.this);
+                    droneController.getMediaContents(AlbumDroneTagFragment.this);
                 }
             }).start();
 
@@ -190,17 +167,22 @@ public class AlbumDroneTagFragment extends Fragment {
                     .replace(R.id.frame_view, downloadWarningFragment, "DownloadWarningFragment")
                     .addToBackStack("DownloadWarningFragment")
                     .commit();
-
-            connectThread.interrupt();
         }
     };
 
-    private void getDate(List<FileItem> listItems) {
+    private void getDate(List<MediaContent> listItems) {
+        Log.i(TAG, "droneController getDate");
         albumMediaList.clear();
 
         for (int i = 0; i < listItems.size(); i++) {
             albumMediaList.add(new MediaListItem(listItems.get(i)));
         }
+        Collections.sort(albumMediaList, new Comparator<MediaListItem>() {
+            @Override
+            public int compare(MediaListItem lhs, MediaListItem rhs) {
+                return rhs.getMediaDate().compareTo(lhs.getMediaDate());
+            }
+        });
 
         Message message = Message.obtain();
         message = showListHandler.obtainMessage(0, "complete");
@@ -218,101 +200,34 @@ public class AlbumDroneTagFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "album drone tag fragment onDestroyView");
-        if (cmdClient != null) {
-            cmdClient.close();
-        }
-
-        if (connectThread != null && !connectThread.isInterrupted()) {
-            connectThread.interrupt();
-            connectThread = null;
-        }
     }
 
-
-    private void connectToAMBA() {
-        Log.i(TAG, "connectToAMBA");
-        try {
-            cmdClient = new AMBACmdClient();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        AMBACmdClient.ClientNotifer errReceiver = new AMBACmdClient.ClientNotifer() {
-//
-//            @Override
-//            public void onNotify(int status, String strMsg) {
-//                Log.i(TAG, "on Notify status:" + status + " / strMsg:" + strMsg);
-//                // 0 is error, 1 is ok
-//                if (status == 0) {
-//                    cmdClient.close();
-//                    processUIHandler.sendEmptyMessage(0);
-//                }
-//            }
-//        };
-
-        AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
-            @Override
-            public void onMessage(AMBACommand objMessage) {
-//                objMessage.toLog();
-                Log.i(TAG, "objMessage:" + objMessage);
+    @Override
+    public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
+        Log.i(TAG, "droneController onCommandResult");
+        if (isSuccess) {
+            Log.i(TAG, "droneController onCommandResult success");
+            switch (mediaCommand) {
+                case LIST_CONTENTS:
+                    List<MediaContent> listItems = (List<MediaContent>) data;
+                    getDate(listItems);
+                    break;
+                case REMOVE_CONTENT:
+                    Log.i(TAG, "delete file completed");
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    break;
+                default:
+                    break;
             }
-
-        };
-
-
-//        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
-//            @Override
-//            public void onCompleted(List<FileItem> listItems) {
-//                getDate(listItems);
-//
-//            }
-//        };
-
-
-//        try {
-
-//            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
-//            Log.i(TAG, "connectStatus:" + connectStatus);
-//
-//            if (!connectStatus) {
-//                if( connectThread!=null && !connectThread.isInterrupted()) {
-//                    connectThread.interrupt();
-//                    connectThread = null;
-//                }
-//                return;
-//            }
-
-//            if (cmdClient.isRun) {
-//
-//                cmdClient.setFileSavePath(albumFilePath);
-//                cmdClient.start();
-//                cmdClient.cmdStartSession(new AMBACmdClient.SessionListener() {
-//                    @Override
-//                    public void onStartSession(boolean Success) {
-//
-//                    }
-//                });
-//
-//                cmdClient.getFileList(cmdListFileReceiver);
-//
-//            } else {
-//                cmdClient.close();
-//                processUIHandler.sendEmptyMessage(0);
-//            }
-
-
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            if (cmdClient != null) {
-//                cmdClient.close();
-//            }
-//            processUIHandler.sendEmptyMessage(0);
-//
-//            Log.e(TAG, "connect error:" + e.getMessage());
-//        }
-
-
-//    }
-
+        } else {
+            Log.i(TAG, "droneController onCommandResult fail");
+            processUIHandler.sendEmptyMessage(0);
+        }
     }
+
 }

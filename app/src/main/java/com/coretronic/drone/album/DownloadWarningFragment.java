@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.coretronic.drone.DroneController;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.model.MediaListItem;
 import com.coretronic.drone.ambarlla.message.AMBACmdClient;
@@ -61,7 +63,8 @@ public class DownloadWarningFragment extends Fragment {
     private static int INTERVAL_DOWNLOAD_TIME = 1000;
     private float intervalCalculateSum = 0;
     // AMBAClient
-    AMBACmdClient cmdClient = null;
+//    AMBACmdClient cmdClient = null;
+    DroneController droneController = null;
     private String albumFilePath = "";
 
     Handler progressHandler = new Handler() {
@@ -237,7 +240,7 @@ public class DownloadWarningFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "==== onDestroyView ====");
-        cmdClient.close();
+//        cmdClient.close();
     }
 
     View.OnClickListener stopbtnListner = new View.OnClickListener() {
@@ -251,23 +254,42 @@ public class DownloadWarningFragment extends Fragment {
     private void deleteAMMBAFile() {
         Log.i(TAG, "dele AMMBA File Name:" + mediaListItem.getMediaFileName());
 
-        AMBACmdClient.DeleteFileListener cmdDeleFileReceiver = new AMBACmdClient.DeleteFileListener() {
+//        AMBACmdClient.DeleteFileListener cmdDeleFileReceiver = new AMBACmdClient.DeleteFileListener() {
+//
+//            @Override
+//            public void onCompleted(boolean blSuccess) {
+//                Log.i(TAG, "delete file completed");
+//                deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+//            }
+//        };
+//
+//        cmdClient.deleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
 
+        DroneController.MediaCommandListener droneDeleFileReceiver = new DroneController.MediaCommandListener() {
             @Override
-            public void onCompleted(boolean blSuccess) {
-                Log.i(TAG, "delete file completed");
-                deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
+                if(MediaCommand.REMOVE_CONTENT == mediaCommand){
+                    Log.i(TAG, "delete file completed");
+                    deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+                }
             }
         };
+        droneController.removeContent(mediaListItem.getMediaFileName(), droneDeleFileReceiver);
 
-//        cmdClient.cmdDeleteFile(mediaListItem.getMediaFileName(), cmdDeleFileReceiver);
-//
-//        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+//        AMBACmdClient.listFileReceiver cmdListFileReceiver = new AMBACmdClient.listFileReceiver() {
 //            @Override
 //            public void onCompleted(List<FileItem> listItems) {
 //                closeDownloadFragment();
 //            }
 //        };
+        droneController.getMediaContents(new DroneController.MediaCommandListener(){
+            @Override
+            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
+                if(MediaCommand.LIST_CONTENTS == mediaCommand) {
+                    closeDownloadFragment();
+                }
+            }
+        });
     }
 
     private void closeDownloadFragment() {
@@ -285,7 +307,8 @@ public class DownloadWarningFragment extends Fragment {
 
     private void connectToAMBA() {
         try {
-            cmdClient = new AMBACmdClient();
+//            cmdClient = new AMBACmdClient();
+            droneController = ((MainActivity)getActivity()).getDroneController();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -302,16 +325,16 @@ public class DownloadWarningFragment extends Fragment {
 //        };
 
 
-        AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
-            @Override
-            public void onMessage(AMBACommand objMessage) {
-                Log.i(TAG, "objMessage:" + objMessage);
-            }
+//        AMBACmdClient.CmdReceiver cmdReceiver = new AMBACmdClient.CmdReceiver() {
+//            @Override
+//            public void onMessage(AMBACommand objMessage) {
+//                Log.i(TAG, "objMessage:" + objMessage);
+//            }
+//
+//        };
 
-        };
 
-
-//        AMBACmdClient.CmdListFileReceiver cmdListFileReceiver = new AMBACmdClient.CmdListFileReceiver() {
+//        AMBACmdClient.listFileReceiver cmdListFileReceiver = new AMBACmdClient.listFileReceiver() {
 //            @Override
 //            public void onCompleted(List<FileItem> listItems) {
 //
@@ -321,8 +344,10 @@ public class DownloadWarningFragment extends Fragment {
 
 //        try {
 //            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT, errReceiver);
-//
+//            Boolean connectStatus = cmdClient.connectToServer(AppConfig.SERVER_IP, AppConfig.COMMAND_PORT, AppConfig.DATA_PORT);
+
 //            if (!connectStatus) {
+//                cmdClient.close();
 //                return;
 //            }
 
@@ -336,8 +361,8 @@ public class DownloadWarningFragment extends Fragment {
 //            });
 
             Log.i(TAG, "mediaListItem.getMediaFileName():" + mediaListItem.getMediaFileName());
-//            cmdClient.cmdGetFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
-
+//            cmdClient.getFile(mediaListItem.getMediaFileName(), new AMBACmdClient.GetFileListener() {
+//
 //                @Override
 //                public void onProgress(long downloadedSize, long fileSize) {
 //                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + fileSize + "/" + (downloadedSize / fileSize) + "/" + (int) (downloadedSize * 100 / fileSize));
@@ -369,6 +394,39 @@ public class DownloadWarningFragment extends Fragment {
 //                    });
 //                }
 //            });
+            droneController.downloadMedia(albumFilePath, mediaListItem.getMediaFileName(), new DroneController.OnProgressUpdatedListener() {
+                @Override
+                public void onProgressUpdated(long downloadedSize, long totalSize) {
+                    Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + totalSize + "/" + (downloadedSize / totalSize) + "/" + (int) (downloadedSize * 100 / totalSize));
+
+                    getFileSize = downloadedSize;
+                    totalFileSize = totalSize;
+
+                    Message msg = Message.obtain();
+                    msg.arg1 = (int) (downloadedSize * 100 / totalSize);
+                    Log.i(TAG, "msg.arg1:" + msg.arg1);
+                    progressHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void onCompleted(long size) {
+                    Log.i(TAG, "downlaod image onCompleted");
+
+                    ArrayList<String> toBeScanned = new ArrayList<String>();
+                    toBeScanned.add(albumFilePath + mediaListItem.getMediaFileName());
+                    String[] toBeScannedStr = new String[toBeScanned.size()];
+                    toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
+                    MediaScannerConnection.scanFile(getActivity(), toBeScannedStr, null, new MediaScannerConnection.OnScanCompletedListener() {
+
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            System.out.println("SCAN COMPLETED: " + path);
+
+                        }
+                    });
+
+                }
+            });
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //            cmdClient.close();
