@@ -30,7 +30,7 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
 
 
     public interface OnItemClickListener {
-        void onItemDeleteClick(View view, int position);
+//        void onItemDeleteClick(View view, int position);
         void onDownloadClick(View view, int position);
     }
 
@@ -66,7 +66,7 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
         holder.mediaDate.setText(listItem.getMediaDate().toString());
         holder.mediaFilesize.setText(AppUtils.readableFileSize(listItem.getMediaSize()));
 
-        holder.mediaDeleteIBtn.setTag(position);
+//        holder.mediaDeleteIBtn.setTag(position);
         holder.mediaDownloadIBtn.setTag(position);
 
 
@@ -84,7 +84,7 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
         TextView mediaFilename = null;
         TextView mediaDate  = null;
         TextView mediaFilesize = null;
-        ImageButton mediaDeleteIBtn = null;
+//        ImageButton mediaDeleteIBtn = null;
         ImageButton mediaDownloadIBtn = null;
 
         public ViewHolder(View itemView) {
@@ -92,21 +92,21 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
             mediaDate = (TextView) itemView.findViewById(R.id.media_date);
             mediaFilesize = (TextView) itemView.findViewById(R.id.media_filesize);
             mediaFilename = (TextView) itemView.findViewById(R.id.media_filename);
-            mediaDeleteIBtn = (ImageButton) itemView.findViewById(R.id.media_listdelete_btn);
+//            mediaDeleteIBtn = (ImageButton) itemView.findViewById(R.id.media_listdelete_btn);
             mediaDownloadIBtn = (ImageButton) itemView.findViewById(R.id.media_download_btn);
 
-           mediaDeleteIBtn.setOnClickListener(this);
+//           mediaDeleteIBtn.setOnClickListener(this);
            mediaDownloadIBtn.setOnClickListener(this);
 
         }
 
 
         public void onClick(View v) {
-            if(v.equals(mediaDeleteIBtn)){
-                mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
-            }else if (v.equals(mediaDownloadIBtn)) {
+//            if(v.equals(mediaDeleteIBtn)){
+//                mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
+//            }else if (v.equals(mediaDownloadIBtn)) {
                 mItemClickListener.onDownloadClick(v, getAdapterPosition());
-            }
+//            }
         }
     }
 

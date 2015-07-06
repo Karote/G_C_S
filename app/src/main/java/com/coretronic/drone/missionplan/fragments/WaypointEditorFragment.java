@@ -250,8 +250,13 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onAltitudeUpdate(final float altitude) {
-        String tx_alt = String.format("%d", (int)altitude);
-        tv_droneAltitude.setText(tx_alt + "m");
+        fragmentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String tx_alt = String.format("%d", (int) altitude);
+                tv_droneAltitude.setText(tx_alt + "m");
+            }
+        });
     }
 
     @Override

@@ -1,6 +1,3 @@
 [submodule "DroneControlLibrary"]
 	path = DroneControlLibrary
 	url = git@git.coretronic.com:coretronicdrone/dronecontrollibrary.git
-[submodule "ambarellaClient"]
-	path = ambarellaClient
-	url = https://git.coretronic.com/aircraft/ambarellafakesvr.git

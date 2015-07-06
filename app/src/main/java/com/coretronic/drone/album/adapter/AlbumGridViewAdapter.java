@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.AlbumPreviewFragment;
 import com.coretronic.drone.album.model.MediaObject;
@@ -39,7 +41,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public AlbumGridViewAdapter(Context context, int resource, ArrayList<MediaItem> data) {
 
-        Log.i(TAG,"AlbumGridViewAdapter");
+        Log.i(TAG, "AlbumGridViewAdapter");
         this.context = context;
         this.resourceId = resource;
 
@@ -89,13 +91,10 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 //        );
         viewHolder.mediaImage.setImageBitmap(bitmap);
 
-        viewHolder.selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);
+//        viewHolder.selectTagImg.setImageResource(R.drawable.photo_frame_thumbnail_delete);
         ((MediaItem) mediaItems.get(i)).setIsMediaSelect(false);
 
-        // set delete option
-        if (isShowDeleteOption) {
-            viewHolder.selectTagImg.setVisibility(View.VISIBLE);
-        } else {
+        if(!isShowDeleteOption) {
             viewHolder.selectTagImg.setVisibility(View.GONE);
         }
     }
@@ -108,7 +107,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        RelativeLayout itemLayout = null;
+        FrameLayout itemLayout = null;
         TextView imageTitle = null;
         ImageView mediaImage = null;
         ImageView videoTagImg = null;
@@ -117,7 +116,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_layout);
+            itemLayout = (FrameLayout) itemView.findViewById(R.id.item_layout);
             imageTitle = (TextView) itemView.findViewById(R.id.imageview_title);
             mediaImage = (ImageView) itemView.findViewById(R.id.imageview);
             videoTagImg = (ImageView) itemView.findViewById(R.id.video_tag);
@@ -140,7 +139,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
                 if (((MediaItem) mediaItems.get(itemPos)).getIsMediaSelect()) {
 
-                    selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);
+                    selectTagImg.setVisibility(View.GONE);
                     ((MediaItem) mediaItems.get(itemPos)).setIsMediaSelect(false);
                     // if selected path is contain arraylist
                     if (selectedPathAryList.contains(((MediaItem) mediaItems.get(itemPos)).getMediaId())) {
@@ -149,7 +148,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
                 } else {
                     ((MediaItem) mediaItems.get(itemPos)).setIsMediaSelect(true);
-                    selectTagImg.setImageResource(R.drawable.ic_album_check_n);
+                    selectTagImg.setVisibility(View.VISIBLE);
 
                     selectedPathAryList.add(((MediaItem) mediaItems.get(itemPos)).getMediaId());
                 }
@@ -225,7 +224,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
                 }
             }
         }
-        Log.i(TAG,"tempDelAry:"+tempDelAry);
+        Log.i(TAG, "tempDelAry:" + tempDelAry);
         deleteSelectedPathAryList();
     }
 

@@ -8,23 +8,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.GridView;
 import android.widget.TextView;
+
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
+import com.coretronic.drone.album.adapter.AlbumGridViewBaseAdapter;
 import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.utility.AppConfig;
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,8 +42,10 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private String FILTER_MEDIA_FOLDER = "";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
-    private RecyclerView albumGridView = null;
-    private AlbumGridViewAdapter albumGridViewAdapter = null;
+    //    private RecyclerView albumGridView = null;
+    private GridView albumGridView = null;
+    //    private AlbumGridViewAdapter albumGridViewAdapter = null;
+    private AlbumGridViewBaseAdapter albumGridViewAdapter = null;
     private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
     private TextView noMediaTV = null;
@@ -73,16 +71,18 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
 //        loadingPhotoProgress = (ProgressBar) view.findViewById(R.id.loadphoto_progressbar);
         noMediaTV = (TextView) view.findViewById(R.id.no_mediainfolder_tv);
-        albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
-        albumGridView.setLayoutManager(gridLayoutManager);
+//        albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 6);
+//        albumGridView.setLayoutManager(gridLayoutManager);
+        albumGridView = (GridView) view.findViewById(R.id.album_grid_view);
 
 
 //        loadingPhotoProgress.setVisibility(View.VISIBLE);
         // get media array list
         getData();
 
-        albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
+//        albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
+        albumGridViewAdapter = new AlbumGridViewBaseAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
         albumGridView.setAdapter(albumGridViewAdapter);
         albumGridViewAdapter.notifyDataSetChanged();
 //        loadingPhotoProgress.setVisibility(View.GONE);
@@ -95,7 +95,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
     //    private ArrayList<ImageItem> getData() {
     private void getData() {
-        Log.i(TAG,"smartphone getData");
+        Log.i(TAG, "smartphone getData");
 //        final ArrayList<ImageItem> imageItems = new ArrayList<>();
         albumImgList.clear();
 

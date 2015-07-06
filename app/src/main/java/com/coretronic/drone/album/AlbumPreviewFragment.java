@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.coretronic.drone.R;
@@ -41,9 +42,9 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     private FragmentTransaction previewFragmentTransaction = null;
     private FragmentActivity fragmentActivity = null;
     // ui elements declare
-    private ImageButton previewBackBtn = null;
-    private ImageButton previewShareBtn = null;
-    private ImageButton previewDeleteBtn = null;
+    private Button previewBackBtn = null;
+    private Button previewShareBtn = null;
+    private Button previewDeleteBtn = null;
     private TextView previewCountTitle = null;
     private ViewPager previewPager = null;
     private CustomerTwoBtnAlertDialog removeDialog = null;
@@ -103,9 +104,9 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
     }
 
     private void findViews(View view) {
-        previewBackBtn = (ImageButton) view.findViewById(R.id.preview_back_btn);
-        previewShareBtn = (ImageButton) view.findViewById(R.id.preview_share_btn);
-        previewDeleteBtn = (ImageButton) view.findViewById(R.id.preview_rubbish_bin_btn);
+        previewBackBtn = (Button) view.findViewById(R.id.preview_back_btn);
+        previewShareBtn = (Button) view.findViewById(R.id.preview_share_btn);
+        previewDeleteBtn = (Button) view.findViewById(R.id.preview_rubbish_bin_btn);
         previewCountTitle = (TextView) view.findViewById(R.id.preview_media_num_tv);
         previewPager = (ViewPager) view.findViewById(R.id.preview_pager);
 
