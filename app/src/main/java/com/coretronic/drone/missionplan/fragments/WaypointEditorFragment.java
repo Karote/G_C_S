@@ -250,8 +250,13 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onAltitudeUpdate(final float altitude) {
-        String tx_alt = String.format("%d", (int)altitude);
-        tv_droneAltitude.setText(tx_alt + "m");
+        fragmentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String tx_alt = String.format("%d", (int) altitude);
+                tv_droneAltitude.setText(tx_alt + "m");
+            }
+        });
     }
 
     @Override
@@ -312,12 +317,12 @@ public class WaypointEditorFragment extends Fragment
     }
 
     public void setUpFollowMe(View view) {
-        layout_followMe = (FrameLayout)view.findViewById(R.id.layout_follow_me);
+        layout_followMe = (FrameLayout) view.findViewById(R.id.layout_follow_me);
         layout_followMe.setVisibility(FrameLayout.GONE);
 
-        layout_start_follow = (LinearLayout)view.findViewById(R.id.layout_start_follow);
+        layout_start_follow = (LinearLayout) view.findViewById(R.id.layout_start_follow);
 
-        followMeAltitudeWheel= (AbstractWheel)view.findViewById(R.id.follow_me_altitude_wheel);
+        followMeAltitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
         followMeAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%02d"));
         followMeAltitudeWheel.setCyclic(false);
         followMeAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
@@ -327,10 +332,10 @@ public class WaypointEditorFragment extends Fragment
             }
         });
 
-        final RelativeLayout btn_start_follow = (RelativeLayout)view.findViewById(R.id.btn_start_follow);
+        final RelativeLayout btn_start_follow = (RelativeLayout) view.findViewById(R.id.btn_start_follow);
         btn_start_follow.setOnClickListener(this);
 
-        btn_stop_follow = (Button)view.findViewById(R.id.btn_stop_follow);
+        btn_stop_follow = (Button) view.findViewById(R.id.btn_stop_follow);
         btn_stop_follow.setOnClickListener(this);
         btn_stop_follow.setVisibility(Button.GONE);
     }
@@ -405,20 +410,22 @@ public class WaypointEditorFragment extends Fragment
                             .replace(R.id.waypoint_detail_container, detailFragment, "DetailFragment")
                             .commit();
                     layout_waypointDetail.setVisibility(FrameLayout.VISIBLE);
-                }else{
+                } else {
                     layout_waypointDetail.setVisibility(FrameLayout.GONE);
                 }
             }
         });
     }
 
-    public static void setItemMissionType(Type missionType){
+    public static void setItemMissionType(Type missionType) {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setType(missionType);
     }
-    public static void setItemMissionAltitude(float missionAltidude){
+
+    public static void setItemMissionAltitude(float missionAltidude) {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setAltitude(missionAltidude);
     }
-    public static void setItemMissionDelay(int missionDelay){
+
+    public static void setItemMissionDelay(int missionDelay) {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setWaitSeconds(missionDelay);
     }
 
@@ -507,7 +514,7 @@ public class WaypointEditorFragment extends Fragment
         layout_deleteOption = (LinearLayout) view.findViewById(R.id.layout_delete_option);
         layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
 
-        final Button b_action_plan_undo = (Button)view.findViewById(R.id.btn_action_plan_undo);
+        final Button b_action_plan_undo = (Button) view.findViewById(R.id.btn_action_plan_undo);
         b_action_plan_undo.setOnClickListener(this);
 
         final Button b_action_plan_delete = (Button) view.findViewById(R.id.btn_action_plan_delete);
@@ -521,8 +528,8 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void setUpMavInfo(View view) {
-        layout_mavinfo = (LinearLayout)view.findViewById(R.id.mav_info);
-        tv_droneAltitude = (TextView)view.findViewById(R.id.altitude_text);
+        layout_mavinfo = (LinearLayout) view.findViewById(R.id.mav_info);
+        tv_droneAltitude = (TextView) view.findViewById(R.id.altitude_text);
         tv_droneAltitude.setText("0m");
         tv_droneSpeed = (TextView) view.findViewById(R.id.speed_text);
         tv_droneSpeed.setText("0 km/h");

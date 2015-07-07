@@ -119,10 +119,10 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
         } else {
             boolean status = droneController.getMediaContents(AlbumDroneTagFragment.this);
             if (!status) {
-                Log.i(TAG, "droneController droneController.getMediaContents FAIL");
+                Log.i(TAG, "droneController.getMediaContents FAIL");
                 processUIHandler.sendEmptyMessage(0);
             } else {
-                Log.i(TAG, "droneController droneController.getMediaContents SUCCESS");
+                Log.i(TAG, "droneController.getMediaContents SUCCESS");
             }
         }
 
@@ -132,21 +132,21 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
 
     AlbumListViewAdapter.OnItemClickListener recyclerItemClickListener = new AlbumListViewAdapter.OnItemClickListener() {
 
-        @Override
-        public void onItemDeleteClick(View view, final int position) {
-            Log.i(TAG, "delete:" + position);
-
-
-            // delete drone file
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    droneController.removeContent(albumMediaList.get(position).getMediaFileName(), AlbumDroneTagFragment.this);
-                    droneController.getMediaContents(AlbumDroneTagFragment.this);
-                }
-            }).start();
-
-        }
+//        @Override
+//        public void onItemDeleteClick(View view, final int position) {
+//            Log.i(TAG, "delete:" + position);
+//
+//
+//            // delete drone file
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    droneController.removeContent(albumMediaList.get(position).getMediaFileName(), AlbumDroneTagFragment.this);
+//                    droneController.getMediaContents(AlbumDroneTagFragment.this);
+//                }
+//            }).start();
+//
+//        }
 
         // when download the file, it will open a new fragment and pass the file name
         @Override

@@ -8,12 +8,13 @@
         android:id="@+id/layout_start_follow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="#ffffff"
+        android:clickable="true"
+        android:orientation="vertical"
         android:paddingBottom="8dp"
         android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:clickable="true">
+        android:paddingRight="12dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,17 +95,19 @@
             android:id="@+id/btn_start_follow"
             android:layout_width="204dp"
             android:layout_height="28dp"
-            android:layout_marginTop="8dp"
             android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
             android:background="@drawable/btn_follow_me">
 
             <TextView
                 android:id="@+id/tx_start_follow"
-                style="@style/follow_me_button_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Start Follow" />
+                android:fontFamily="sans-serif"
+                android:text="Start Follow"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="28dp"
@@ -116,12 +119,14 @@
     </LinearLayout>
 
     <Button
-    android:id="@+id/btn_stop_follow"
-    style="@style/follow_me_button_text_style"
-    android:layout_width="match_parent"
-    android:layout_height="28dp"
-    android:layout_gravity="bottom"
-    android:background="#ff0000"
-    android:text="STOP FOLLOW" />
+        android:id="@+id/btn_stop_follow"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_gravity="bottom"
+        android:background="#ff0000"
+        android:fontFamily="sans-serif"
+        android:text="STOP FOLLOW"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
 
 </FrameLayout>

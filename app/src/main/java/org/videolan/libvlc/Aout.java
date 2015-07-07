@@ -1,22 +1,24 @@
-/*****************************************************************************
+/**
+ * **************************************************************************
  * Aout.java
- *****************************************************************************
+ * ****************************************************************************
  * Copyright © 2011-2012 VLC authors and VideoLAN
- *
+ * <p/>
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
- *****************************************************************************/
+ * ***************************************************************************
+ */
 
 package org.videolan.libvlc;
 
@@ -42,14 +44,14 @@ public class Aout {
     public void init(int sampleRateInHz, int channels, int samples) {
         Log.d(TAG, sampleRateInHz + ", " + channels + ", " + samples + "=>" + channels * samples);
         int minBufferSize = AudioTrack.getMinBufferSize(sampleRateInHz,
-                                                        AudioFormat.CHANNEL_OUT_STEREO,
-                                                        AudioFormat.ENCODING_PCM_16BIT);
+                AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.ENCODING_PCM_16BIT);
         mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                                     sampleRateInHz,
-                                     AudioFormat.CHANNEL_OUT_STEREO,
-                                     AudioFormat.ENCODING_PCM_16BIT,
-                                     Math.max(minBufferSize, channels * samples * 2),
-                                     AudioTrack.MODE_STREAM);
+                sampleRateInHz,
+                AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                Math.max(minBufferSize, channels * samples * 2),
+                AudioTrack.MODE_STREAM);
     }
 
     public void release() {
