@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
@@ -39,8 +38,8 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_personal_page, container, false);
-        SeekBarTextView.assignSettingSeekBarTextView(fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACTITY);
-        ViewManager.assignSwitchView(fragmentView, R.id.switch_sdcard_enable, Setting.SettingType.SD_RECORD);
+        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACTITY);
+        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_sdcard_enable, Setting.SettingType.SD_RECORD);
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE);
 
         final Button[] buttons = new Button[4];
@@ -56,19 +55,18 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
         buttons[Setting.FLIP_ORIENTATION_RIGHT] = (Button) fragmentView.findViewById(R.id.btn_right);
         buttons[Setting.FLIP_ORIENTATION_RIGHT].setTag(Setting.FLIP_ORIENTATION_RIGHT);
 
-        currentFlipOrientationValue = DroneApplication.settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()].getValue();
+        currentFlipOrientationValue = activity.getSettingValue(Setting.SettingType.FLIP_ORIENTATION);
         for (Button btn : buttons) {
             refreshBackground(currentFlipOrientationValue, btn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     currentFlipOrientationValue = (int) view.getTag();
-                    DroneApplication.settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()].setValue(currentFlipOrientationValue);
+                    activity.setSettingValue(Setting.SettingType.FLIP_ORIENTATION, currentFlipOrientationValue);
                     for (Button btn : buttons) {
                         refreshBackground(currentFlipOrientationValue, btn);
                     }
-                    activity.setParameters(DroneApplication.settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()].getParameterType(), DroneApplication.settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()].getParameter());
-
+                    activity.setParameters(activity.getSetting(Setting.SettingType.FLIP_ORIENTATION).getParameterType(), activity.getSetting(Setting.SettingType.FLIP_ORIENTATION).getParameter());
                 }
             });
         }

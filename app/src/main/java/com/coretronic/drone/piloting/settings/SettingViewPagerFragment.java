@@ -1,5 +1,7 @@
 package com.coretronic.drone.piloting.settings;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +16,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.coretronic.drone.DroneApplication;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.piloting.PilotingFragment;
@@ -54,24 +56,38 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         mViewPager.setAdapter(pagerAdapter);
         pageIndicator = (PageIndicator) fragmentView.findViewById(R.id.page_indicator);
         pageIndicator.setPageCount(PAGE_COUNT);
+
         Button btnBack = (Button) fragmentView.findViewById(R.id.btn_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getFragmentManager().popBackStack();
-//                getActivity().getSupportFragmentManager().popBackStack();
-//                DroneG2Application.isSettingsMode=false;
             }
         });
+
         tvTitle = (TextView) fragmentView.findViewById(R.id.tv_title);
         tvTitle.setText(titleString[mViewPager.getCurrentItem()]);
+
         defaultSetting = (LinearLayout) fragmentView.findViewById(R.id.default_set);
         defaultSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Confirm")
+                        .setMessage("Are you sure restore default Settings?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((MainActivity) getActivity()).resetSettings();
+                                getFragmentManager().popBackStack();
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
             }
         });
+
         PilotingFragment.markView.setBackgroundColor(Color.BLACK);
         PilotingFragment.markView.setAlpha(0.85f);
         for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
@@ -89,7 +105,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        ((DroneApplication) getActivity().getApplication()).saveSettingsValue();
+        ((MainActivity) getActivity()).saveSettingsValue();
     }
 
     @Override
@@ -98,10 +114,10 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         PilotingFragment.markView.setBackgroundColor(Color.TRANSPARENT);
         PilotingFragment.markView.setAlpha(1);
         for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
-            joyStickSurfaceView.setPaintPressedAlpha(DroneApplication.settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()].getValue()/100f);
+            joyStickSurfaceView.setPaintPressedAlpha(((MainActivity) getActivity()).getSettingValue(Setting.SettingType.INTERFACE_OPACTITY) / 100f);
             joyStickSurfaceView.setVisibility(View.VISIBLE);
         }
-        PilotingFragment.initialJoypadMode();
+        PilotingFragment.initialJoypadMode((MainActivity) getActivity());
     }
 
     @Override

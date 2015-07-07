@@ -1,28 +1,30 @@
-/*****************************************************************************
+/**
+ * **************************************************************************
  * MediaList.java
- *****************************************************************************
+ * ****************************************************************************
  * Copyright © 2013 VLC authors and VideoLAN
  * Copyright © 2013 Edward Wang
- *
+ * <p/>
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
- *****************************************************************************/
+ * ***************************************************************************
+ */
 package org.videolan.libvlc;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
+
+import java.util.ArrayList;
 
 /**
  * Java/JNI wrapper for the libvlc_media_list_t structure.
@@ -38,10 +40,15 @@ public class MediaList {
         boolean noHardwareAcceleration; // default false
 
         public MediaHolder(Media media) {
-            m = media; noVideo = false; noHardwareAcceleration = false;
+            m = media;
+            noVideo = false;
+            noHardwareAcceleration = false;
         }
+
         public MediaHolder(Media m_, boolean noVideo_, boolean noHardwareAcceleration_) {
-            m = m_; noVideo = noVideo_; noHardwareAcceleration = noHardwareAcceleration_;
+            m = m_;
+            noVideo = noVideo_;
+            noHardwareAcceleration = noHardwareAcceleration_;
         }
     }
 
@@ -67,12 +74,15 @@ public class MediaList {
     public void add(String mrl) {
         add(new Media(mLibVLC, mrl));
     }
+
     public void add(Media media) {
         add(media, false, false);
     }
+
     public void add(Media media, boolean noVideo) {
         add(media, noVideo, false);
     }
+
     public void add(Media media, boolean noVideo, boolean noHardwareAcceleration) {
         mInternalList.add(new MediaHolder(media, noVideo, noHardwareAcceleration));
         signal_list_event(EventHandler.CustomMediaListItemAdded, mInternalList.size() - 1, media.getLocation());
@@ -83,7 +93,7 @@ public class MediaList {
      */
     public void clear() {
         // Signal to observers of media being deleted.
-        for(int i = 0; i < mInternalList.size(); i++) {
+        for (int i = 0; i < mInternalList.size(); i++) {
             signal_list_event(EventHandler.CustomMediaListItemDeleted, i, mInternalList.get(i).m.getLocation());
         }
         mInternalList.clear();
@@ -104,31 +114,34 @@ public class MediaList {
     public int expandMedia(int position) {
         ArrayList<String> children = new ArrayList<String>();
         int ret = expandMedia(mLibVLC, position, children);
-        if(ret == 0) {
+        if (ret == 0) {
             mEventHandler.callback(EventHandler.CustomMediaListExpanding, new Bundle());
             this.remove(position);
-            for(String mrl : children) {
+            for (String mrl : children) {
                 this.insert(position, mrl);
             }
             mEventHandler.callback(EventHandler.CustomMediaListExpandingEnd, new Bundle());
         }
         return ret;
     }
+
     private native int expandMedia(LibVLC libvlc_instance, int position, ArrayList<String> children);
 
     public void loadPlaylist(String mrl) {
         ArrayList<String> items = new ArrayList<String>();
         loadPlaylist(mLibVLC, mrl, items);
         this.clear();
-        for(String item : items) {
+        for (String item : items) {
             this.add(item);
         }
     }
+
     private native void loadPlaylist(LibVLC libvlc_instance, String mrl, ArrayList<String> items);
 
     public void insert(int position, String mrl) {
         insert(position, new Media(mLibVLC, mrl));
     }
+
     public void insert(int position, Media media) {
         mInternalList.add(position, new MediaHolder(media));
         signal_list_event(EventHandler.CustomMediaListItemAdded, position, media.getLocation());
@@ -143,7 +156,7 @@ public class MediaList {
      */
     public void move(int startPosition, int endPosition) {
         if (!(isValid(startPosition)
-              && endPosition >= 0 && endPosition <= mInternalList.size()))
+                && endPosition >= 0 && endPosition <= mInternalList.size()))
             throw new IndexOutOfBoundsException("Indexes out of range");
 
         MediaHolder toMove = mInternalList.get(startPosition);
@@ -200,8 +213,7 @@ public class MediaList {
     public String[] getMediaOptions(int position) {
         boolean noHardwareAcceleration = mLibVLC.getHardwareAcceleration() == 0;
         boolean noVideo = false;
-        if (isValid(position))
-        {
+        if (isValid(position)) {
             if (!noHardwareAcceleration)
                 noHardwareAcceleration = mInternalList.get(position).noHardwareAcceleration;
             noVideo = mInternalList.get(position).noVideo;
@@ -236,8 +248,8 @@ public class MediaList {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("LibVLC Media List: {");
-        for(int i = 0; i < size(); i++) {
-            sb.append(((Integer)i).toString());
+        for (int i = 0; i < size(); i++) {
+            sb.append(((Integer) i).toString());
             sb.append(": ");
             sb.append(getMRL(i));
             sb.append(", ");

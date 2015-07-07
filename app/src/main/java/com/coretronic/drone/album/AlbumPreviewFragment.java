@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.MediaPreviewAdapter;
@@ -240,8 +241,6 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
 
         }
     };
-
-
 
 
 }

@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,14 +15,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.utility.AppConfig;
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -95,7 +92,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
     //    private ArrayList<ImageItem> getData() {
     private void getData() {
-        Log.i(TAG,"smartphone getData");
+        Log.i(TAG, "smartphone getData");
 //        final ArrayList<ImageItem> imageItems = new ArrayList<>();
         albumImgList.clear();
 

@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class AbstractWheelAdapter implements WheelViewAdapter {
     // Observers
     private List<DataSetObserver> datasetObservers;
-    
+
     @Override
     public View getEmptyItem(View convertView, ViewGroup parent) {
         return null;
@@ -57,7 +57,7 @@ public abstract class AbstractWheelAdapter implements WheelViewAdapter {
             datasetObservers.remove(observer);
         }
     }
-    
+
     /**
      * Notifies observers about data changing
      */
@@ -68,7 +68,7 @@ public abstract class AbstractWheelAdapter implements WheelViewAdapter {
             }
         }
     }
-    
+
     /**
      * Notifies observers about invalidating data
      */

@@ -1,32 +1,34 @@
-/*****************************************************************************
+/**
+ * **************************************************************************
  * LibVLC.java
- *****************************************************************************
+ * ****************************************************************************
  * Copyright © 2010-2013 VLC authors and VideoLAN
- *
+ * <p/>
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
- *****************************************************************************/
+ * ***************************************************************************
+ */
 
 package org.videolan.libvlc;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class LibVLC {
     private static final String TAG = "VLC/LibVLC";
@@ -77,11 +79,13 @@ public class LibVLC {
 
     /** Check in libVLC already initialized otherwise crash */
     private boolean mIsInitialized = false;
+
     public native void attachSurface(Surface surface, IVideoPlayer player);
 
     public native void detachSurface();
 
     public native void attachSubtitlesSurface(Surface surface);
+
     public native void detachSubtitlesSurface();
 
     public native void eventVideoPlayerActivityCreated(boolean created);
@@ -237,8 +241,7 @@ public class LibVLC {
                 this.hardwareAcceleration = HW_ACCELERATION_FULL;
             else
                 this.hardwareAcceleration = HW_ACCELERATION_DISABLED;
-        }
-        else
+        } else
             this.hardwareAcceleration = hardwareAcceleration;
     }
 
@@ -282,7 +285,7 @@ public class LibVLC {
 
     public int getDeblocking() {
         int ret = deblocking;
-        if(deblocking < 0) {
+        if (deblocking < 0) {
             /**
              * Set some reasonable deblocking defaults:
              *
@@ -291,13 +294,13 @@ public class LibVLC {
              * Skip non-key (3) for all devices that don't meet anything above
              */
             LibVlcUtil.MachineSpecs m = LibVlcUtil.getMachineSpecs();
-            if( (m.hasArmV6 && !(m.hasArmV7)) || m.hasMips )
+            if ((m.hasArmV6 && !(m.hasArmV7)) || m.hasMips)
                 ret = 4;
-            else if(m.bogoMIPS > 1200 && m.processors > 2)
+            else if (m.bogoMIPS > 1200 && m.processors > 2)
                 ret = 1;
             else
                 ret = 3;
-        } else if(deblocking > 4) { // sanity check
+        } else if (deblocking > 4) { // sanity check
             ret = 3;
         }
         return ret;
@@ -323,21 +326,19 @@ public class LibVLC {
         this.verboseMode = verboseMode;
     }
 
-    public float[] getEqualizer()
-    {
+    public float[] getEqualizer() {
         return equalizer;
     }
 
-    public void setEqualizer(float[] equalizer)
-    {
+    public void setEqualizer(float[] equalizer) {
         this.equalizer = equalizer;
         applyEqualizer();
     }
 
-    private void applyEqualizer()
-    {
+    private void applyEqualizer() {
         setNativeEqualizer(mInternalMediaPlayerInstance, this.equalizer);
     }
+
     private native int setNativeEqualizer(long mediaPlayer, float[] bands);
 
     public boolean frameSkipEnabled() {
@@ -367,7 +368,7 @@ public class LibVLC {
         Log.v(TAG, "Initializing LibVLC");
         mDebugLogBuffer = new StringBuffer();
         if (!mIsInitialized) {
-            if(!LibVlcUtil.hasCompatibleCPU(context)) {
+            if (!LibVlcUtil.hasCompatibleCPU(context)) {
                 Log.e(TAG, LibVlcUtil.getErrorMsg());
                 throw new LibVlcException();
             }
@@ -496,7 +497,9 @@ public class LibVLC {
      * Start buffering to the mDebugLogBuffer.
      */
     public native void startDebugBuffer();
+
     public native void stopDebugBuffer();
+
     public String getBufferContent() {
         return mDebugLogBuffer.toString();
     }
@@ -616,7 +619,7 @@ public class LibVLC {
 
     public native int getAudioTracksCount();
 
-    public native Map<Integer,String> getAudioTrackDescription();
+    public native Map<Integer, String> getAudioTrackDescription();
 
     public native int getAudioTrack();
 
@@ -626,7 +629,7 @@ public class LibVLC {
 
     public native int addSubtitleTrack(String path);
 
-    public native Map<Integer,String> getSpuTrackDescription();
+    public native Map<Integer, String> getSpuTrackDescription();
 
     public native int getSpuTrack();
 
@@ -644,7 +647,7 @@ public class LibVLC {
      * @return A URI representation of path
      */
     public static String PathToURI(String path) {
-        if(path == null) {
+        if (path == null) {
             throw new NullPointerException("Cannot convert null path!");
         }
         return LibVLC.nativeToURI(path);
@@ -654,14 +657,14 @@ public class LibVLC {
 
     public native static boolean nativeIsPathDirectory(String path);
 
-     /**
-      * Expand and continue playing the current media.
-      *
-      * @return the index of the media was expanded, and -1 if no media was expanded
-      */
+    /**
+     * Expand and continue playing the current media.
+     *
+     * @return the index of the media was expanded, and -1 if no media was expanded
+     */
     public int expandAndPlay() {
         int r = mMediaList.expandMedia(mInternalMediaPlayerIndex);
-        if(r == 0)
+        if (r == 0)
             this.playIndex(mInternalMediaPlayerIndex);
         return r;
     }

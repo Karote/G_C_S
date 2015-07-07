@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.piloting.Setting;
-import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.SeekBarTextView;
 import com.coretronic.drone.ui.ViewManager;
 
@@ -33,8 +31,8 @@ public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_piloting_mode_page, container, false);
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_headless, Setting.SettingType.ABSOLUTE_CONTROL);
-        ViewManager.assignSwitchView(fragmentView, R.id.switch_left_handed, Setting.SettingType.LEFT_HANDED);
-        SeekBarTextView.assignSettingSeekBarTextView(fragmentView, R.id.setting_bar_phone_tilt_max, Setting.SettingType.PHONE_TILT);
+        ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_left_handed, Setting.SettingType.LEFT_HANDED);
+        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_phone_tilt_max, Setting.SettingType.PHONE_TILT);
 
         final Button[] buttons = new Button[3];
         buttons[Setting.JOYPAD_MODE_JAPAN] = (Button) fragmentView.findViewById(R.id.btn_japan);
@@ -46,14 +44,14 @@ public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
         buttons[Setting.JOYPAD_MODE_KINESICS] = (Button) fragmentView.findViewById(R.id.btn_kinesics);
         buttons[Setting.JOYPAD_MODE_KINESICS].setTag(Setting.JOYPAD_MODE_KINESICS);
 
-        currentJoypadModeValue = DroneApplication.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue();
+        currentJoypadModeValue = activity.getSettingValue(Setting.SettingType.JOYPAD_MODE);
         for (Button btn : buttons) {
             refreshBackground(currentJoypadModeValue, btn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     currentJoypadModeValue = (int) view.getTag();
-                    DroneApplication.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].setValue(currentJoypadModeValue);
+                    activity.setSettingValue(Setting.SettingType.JOYPAD_MODE, currentJoypadModeValue);
                     for (Button btn : buttons) {
                         refreshBackground(currentJoypadModeValue, btn);
                     }

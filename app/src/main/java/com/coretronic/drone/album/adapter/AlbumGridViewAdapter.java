@@ -15,10 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.coretronic.drone.R;
 import com.coretronic.drone.album.AlbumPreviewFragment;
-import com.coretronic.drone.album.model.MediaObject;
 import com.coretronic.drone.album.model.MediaItem;
+import com.coretronic.drone.album.model.MediaObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public AlbumGridViewAdapter(Context context, int resource, ArrayList<MediaItem> data) {
 
-        Log.i(TAG,"AlbumGridViewAdapter");
+        Log.i(TAG, "AlbumGridViewAdapter");
         this.context = context;
         this.resourceId = resource;
 
@@ -225,7 +226,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
                 }
             }
         }
-        Log.i(TAG,"tempDelAry:"+tempDelAry);
+        Log.i(TAG, "tempDelAry:" + tempDelAry);
         deleteSelectedPathAryList();
     }
 

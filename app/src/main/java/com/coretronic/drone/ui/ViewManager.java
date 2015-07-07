@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
@@ -24,32 +23,35 @@ public class ViewManager {
     public static final float HALF_ALPHA = 0.3f;
     public static final float NON_ALPHA = 1f;
 
-    public static void assignSwitchView(View view, int id, Setting.SettingType settingType) {
-        Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
-        final int type = settingType.ordinal();
-        sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
-        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isPressed()) {
-                    DroneApplication.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
-                    Log.d(TAG, "isSetting[" + type + "]: " + DroneApplication.settings[type].getValue());
-                }
-            }
-        });
-    }
+//    public static void assignSwitchView(View view, int id, Setting.SettingType settingType) {
+//        Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
+//        final int type = settingType.ordinal();
+//        sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
+//        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (buttonView.isPressed()) {
+//                    DroneApplication.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
+//                    Log.d(TAG, "isSetting[" + type + "]: " + DroneApplication.settings[type].getValue());
+//                }
+//            }
+//        });
+//    }
 
-    public static void assignSwitchView(final MainActivity activity, View view, int id, Setting.SettingType settingType) {
+    public static void assignSwitchView(final MainActivity activity, View view, int id, final Setting.SettingType settingType) {
         Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
+        final Setting setting = activity.getSetting(settingType);
         final int type = settingType.ordinal();
-        sw.setChecked(DroneApplication.settings[type].getValue() == Setting.ON ? true : false);
+        sw.setChecked(setting.getValue() == Setting.ON ? true : false);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isPressed()) {
-                    DroneApplication.settings[type].setValue(isChecked == true ? Setting.ON : Setting.OFF);
-                    Log.d(TAG, "isSetting[" + type + "]: " + DroneApplication.settings[type].getValue());
-                    activity.setParameters(DroneApplication.settings[type].getParameterType(), DroneApplication.settings[type].getParameter());
+                    activity.setSettingValue(settingType, isChecked == true ? Setting.ON : Setting.OFF);
+                    Log.d(TAG, "isSetting[" + type + "]: " + setting.getValue());
+                    if (setting.getParameterType() != null) {
+                        activity.setParameters(setting.getParameterType(), setting.getParameter());
+                    }
                 }
             }
         });

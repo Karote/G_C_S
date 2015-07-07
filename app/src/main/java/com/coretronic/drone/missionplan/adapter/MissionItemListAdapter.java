@@ -51,7 +51,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     public void onBindViewHolder(MissionItemListViewHolder viewHolder, int i) {
         viewHolder.nameView.setText(String.format("%2d", i + 1));
         viewHolder.altitudeView.setText(String.format("%d", (int) mMissionList.get(i).getAltitude()));
-        switch (mMissionList.get(i).getType()){
+        switch (mMissionList.get(i).getType()) {
             case TAKEOFF:
                 viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
                 break;
@@ -99,7 +99,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         MissionItemListViewHolder(View itemView) {
             super(itemView);
             nameView = (TextView) itemView.findViewById(R.id.rowNameView);
-            typeView = (View)itemView.findViewById(R.id.icon_waypoint_type);
+            typeView = (View) itemView.findViewById(R.id.icon_waypoint_type);
             altitudeView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
             deleteLayout = (LinearLayout) itemView.findViewById(R.id.rowDeleteLayout);
             deleteLayout.setVisibility(LinearLayout.GONE);
@@ -157,17 +157,17 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return mMissionList.get(position);
     }
 
-    public int getFocusIndex(){
+    public int getFocusIndex() {
         return focusIndex;
     }
 
 //    public void clearFocusIndex(){
 //    }
 
-    public void setDeleteLayoutVisible(boolean isVisible){
+    public void setDeleteLayoutVisible(boolean isVisible) {
         isDeleteLayoutVisible = isVisible;
 
-        if(isVisible) {
+        if (isVisible) {
             focusIndex = -1;
             notifyDataSetChanged();
         }

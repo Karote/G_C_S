@@ -6,12 +6,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.coretronic.drone.R;
 
 /**
  * Created by james on 15/6/5.
  */
-public class CustomerTwoBtnAlertDialog extends Dialog{
+public class CustomerTwoBtnAlertDialog extends Dialog {
 
     private Context context;
     private Button btn_ok;

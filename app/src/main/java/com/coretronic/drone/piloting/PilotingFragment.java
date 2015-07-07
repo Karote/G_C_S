@@ -11,7 +11,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -29,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.Drone;
-import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
@@ -61,18 +59,18 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final int UNLOCK_HOLD_ALTITUDE_DEFAULT = 0;
     private static final boolean HOLD_ALTITUDE_UNLOCK = false;
     private static final boolean HOLD_ALTITUDE_LOCK = true;
-    //    private static final float M_S2KM_H = 3.6f;
+
     private static final String VIDEO_FILE_PATH_RTSP_PREFIX = "rtsp://";
-    private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
     private static final String VIDEO_FILE_PATH_G2_SUFFIX = "/live";
     private static final String VIDEO_FILE_PATH_2015_SUFFIX = ":8086";
+    private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
 
-    private static final int ORIENTATION_SENSOR_ANGLE_MAX = 30;
     public static final int MAX_SPEED = 50;
-    private static final int TAKE_OFF_ALTITUDE = 1;
+    private static final int TAKE_OFF_ALTITUDE = 2;
 
     private static final int HANDLER_RELEASE_CONTROL = 1;
     private static final int HANDLER_RECORDING_TIME = 2;
+
     private static final int CONTROL_RELEASE_DELAY_MILLIS = 120;
 
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
@@ -93,14 +91,14 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private SurfaceHolder holder;
     private FragmentManager childFragmentManager;
     private SensorManager sensorManager;
-    private FragmentActivity fragmentActivity;
+    private MainActivity activity;
 
     private LibVLC libvlc;
     private int videoWidth;
     private int videoHeight;
     private final static int VideoSizeChanged = -1;
 
-    private float phoneAngleScale = ControlWrap.DEFAULT_RADIUS / (float) DroneApplication.settings[Setting.SettingType.PHONE_TILT.ordinal()].getMaxValue();
+    private float phoneAngleScale;
 
     private float[] magneticValues = new float[3];
     private float[] accelerometerValues = new float[3];
@@ -114,23 +112,20 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private ControlWrap controlWrap;
     private int stickShiftRadius = 0;
 
-
     private String mrl = null;
     private float currentAltitude;
     private boolean isRecording = false;
     private int recordingTime = 0;
-//    private long testTime;
-//    private int testCount=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentActivity = getActivity();
+        activity = (MainActivity) getActivity();
         childFragmentManager = getChildFragmentManager();
-        sensorManager = (SensorManager) fragmentActivity.getSystemService(Context.SENSOR_SERVICE);
-        connectedDroneDevice = ((MainActivity) fragmentActivity).getConnectedDroneDevice();
+        sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+        connectedDroneDevice = activity.getConnectedDroneDevice();
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-            mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_2015_SUFFIX;
+//            mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_2015_SUFFIX;
 //            mrl = VIDEO_FILE_PATH_TEST;
         } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             mrl = VIDEO_FILE_PATH_RTSP_PREFIX + connectedDroneDevice.getName() + VIDEO_FILE_PATH_G2_SUFFIX;
@@ -157,7 +152,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
+        phoneAngleScale = ControlWrap.DEFAULT_RADIUS / (float) activity.settings[Setting.SettingType.PHONE_TILT.ordinal()].getMaxValue();
+        activity.registerDroneStatusChangedListener(this);
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             initialG2Setting();
         }
@@ -199,13 +195,13 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     @Override
     public void onDestroyView() {
-        ((MainActivity) fragmentActivity).unregisterDroneStatusChangedListener(this);
+        activity.unregisterDroneStatusChangedListener(this);
         super.onDestroyView();
     }
 
     @Override
     public void onBatteryUpdate(final int battery) {
-        fragmentActivity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 statusView.setBatteryStatus(battery);
@@ -218,7 +214,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         if (altitude > 0) {
             currentAltitude = altitude;
         }
-        fragmentActivity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 tvAltitude.setText(String.format("%.1fm", altitude));
@@ -233,10 +229,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     @Override
     public void onSpeedUpdate(final float groundSpeed) {
-        fragmentActivity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                int speed = (int) (groundSpeed /* M_S2KM_H*/);
+                int speed = (int) (groundSpeed);
                 semiCircleProgressBarView.setProgress(speed);
                 tvSpeed.setText(speed + "");
             }
@@ -245,16 +241,16 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     @Override
     public void onLocationUpdate(final long lat, final long lon, final int eph) {
-        fragmentActivity.runOnUiThread(new Runnable() {
-                                           @Override
-                                           public void run() {
-                                               if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
-                                                   statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
-                                               } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-                                                   statusView.setGpsVisibility((eph == 0 || eph == 9999) ? View.GONE : View.VISIBLE);
-                                               }
-                                           }
+        activity.runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
+                                           statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
+                                       } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
+                                           statusView.setGpsVisibility((eph == 0 || eph == 9999) ? View.GONE : View.VISIBLE);
                                        }
+                                   }
+                               }
         );
 
     }
@@ -303,19 +299,12 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         initialJoystickModule(view, R.id.module2);
 
         controlWrap = new ControlWrap();
-        initialJoypadMode();
+        initialJoypadMode(activity);
 
         semiCircleProgressBarView = (SemiCircleProgressBarView) view.findViewById(R.id.semi_circle_bar);
         semiCircleProgressBarView.setProgressBarColor(Color.RED);
         semiCircleProgressBarView.setMaxProgress(MAX_SPEED);
         tvSpeed = (TextView) view.findViewById(R.id.tv_speed);
-
-//        int size = (int) (getResources().getDimension(R.dimen.joypad_size) / getResources().getDisplayMetrics().density) / 2;
-//        final String[] stickList = new String[(size / 5) - 3];
-//        for (int i = 0; i < stickList.length; i++) {
-//            stickList[i] = String.valueOf(size);
-//            size -= 5;
-//        }
 
         tvAltitude = (TextView) view.findViewById(R.id.tv_altitude);
 
@@ -383,16 +372,8 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                                 Log.d(TAG, "onStickMoveEvent: Throttle " + dy + ", Roll: " + dx);
                                 break;
                         }
-//                        if (((JoyStickSurfaceView) view).getControlType() == JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL) {
-//                            controlWrap.changeRoll(dx);
-//                            controlWrap.changePitch(-dy);
-//                            Log.d(TAG, "onStickMoveEvent: Pitch " + (-dy) + ", Roll " + dx);
-//
-//                        } else {
-//                            controlWrap.changeYaw(dx);
-//                            controlWrap.changeThrottle(dy);
-//                            Log.d(TAG, "onStickMoveEvent: Throttle " + dy + ", Yaw: " + dx);
-//                        }
+
+                        //G2 release control
                         if (action == MotionEvent.ACTION_UP) {
                             pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS);
                             pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS * 2);
@@ -412,14 +393,14 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                             startRoll = roll;
                             isOnOrientationSensorMode = true;
                             Log.d(TAG, "onOrientationSensorMode: Action down");
-//                            testTime = System.currentTimeMillis();
-//                            testCount=0;
                         } else if (action == MotionEvent.ACTION_UP) {
                             Log.d(TAG, "onOrientationSensorMode: Action up");
                             if (getController() != null) {
                                 controlWrap.pitch = ControlWrap.DEFAULT_VALUE;
                                 controlWrap.roll = ControlWrap.DEFAULT_VALUE;
                                 sendControl();
+
+                                //G2 release control
                                 pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS);
                                 pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS * 2);
                             }
@@ -452,11 +433,11 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         );
     }
 
-    public static void initialJoypadMode() {
+    public static void initialJoypadMode(MainActivity activity) {
         int[] controlType = new int[0];
         boolean[] isJoypads = new boolean[0];
-        int joypadMode = DroneApplication.settings[Setting.SettingType.JOYPAD_MODE.ordinal()].getValue();
-        boolean leftHanded = DroneApplication.settings[Setting.SettingType.LEFT_HANDED.ordinal()].getValue() == Setting.ON ? true : false;
+        int joypadMode = activity.getSettingValue(Setting.SettingType.JOYPAD_MODE);
+        boolean leftHanded = activity.getSettingValue(Setting.SettingType.LEFT_HANDED) == Setting.ON ? true : false;
         switch (joypadMode) {
             case Setting.JOYPAD_MODE_USA:
                 if (leftHanded) {
@@ -486,7 +467,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
 
         for (int i = 0; i < joyStickSurfaceViews.length; i++) {
-            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoypads[i]);
+            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoypads[i], activity.getSettingValue(Setting.SettingType.INTERFACE_OPACTITY));
         }
     }
 
@@ -525,7 +506,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             for (int i = 0; i < result.length; i++) {
                 result[i] = (int) Math.toDegrees(values[i]);
             }
-            final int rotation = ((WindowManager) fragmentActivity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            final int rotation = ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
             switch (rotation) {
                 case Surface.ROTATION_0:
                     pitch = -result[1];
@@ -547,7 +528,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             if (isOnOrientationSensorMode) {
                 int rcPitch = pitch - startPitch;
                 int rcRoll = roll - startRoll;
-                int phoneAngleMax = DroneApplication.settings[Setting.SettingType.PHONE_TILT.ordinal()].getValue();
+                int phoneAngleMax = activity.getSettingValue(Setting.SettingType.PHONE_TILT);
                 if (getController() != null) {
                     if (rcPitch > phoneAngleMax) {
                         rcPitch = phoneAngleMax;
@@ -561,12 +542,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                     }
                     controlWrap.pitch = rcPitch * phoneAngleScale;
                     controlWrap.roll = rcRoll * phoneAngleScale;
-                    Log.d(TAG, "Phone angle scale: " + phoneAngleScale);
-                    Log.d(TAG, "Phone angle: " + controlWrap.pitch + ", " + controlWrap.roll);
                     sendControl();
-//                    if (System.currentTimeMillis() - testTime < 1000) {
-//                        Log.d(TAG, "kinesics count: " + (testCount++));
-//                    }
                 }
             }
         }
@@ -578,7 +554,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     };
 
     private void sendControl() {
-        if (getController() != null /*&& isTakeOff*/) {
+        if (getController() != null) {
             getController().control(controlWrap.roll, controlWrap.pitch, controlWrap.throttle, controlWrap.yaw);
             Log.d(TAG, SEND_DRONE_CONTROL +
                     "Throttle " + controlWrap.throttle +
@@ -606,7 +582,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
     }
 
-    private void sendHoldAlt(int altitude) {
+    private void sendHoldAlt(float altitude) {
         getController().holdAlt(altitude);
     }
 
@@ -619,7 +595,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     }
 
     private DroneController getController() {
-        return ((MainActivity) fragmentActivity).getDroneController();
+        return activity.getDroneController();
     }
 
     private void setSize(int width, int height) {
@@ -668,7 +644,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object datd) {
         switch (mediaCommand) {
             case START_RECORD:
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         llRecording.setVisibility(View.VISIBLE);
@@ -679,7 +655,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 Log.d(TAG, "onCommandResult: START_RECORD");
                 break;
             case STOP_RECORD:
-                fragmentActivity.runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         llRecording.setVisibility(View.GONE);
@@ -738,7 +714,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 } else {
                     view.setBackgroundResource(R.drawable.ico_pilot_altitude_lock);
                     view.setTag(HOLD_ALTITUDE_LOCK);
-                    sendHoldAlt((int) currentAltitude);
+                    sendHoldAlt(currentAltitude);
                     Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Lock " + currentAltitude);
                 }
                 break;
@@ -762,10 +738,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 }
                 break;
             case R.id.btn_selfie:
-
+                getController().triggerAutoControl(DroneController.AutoControlMode.DISABLE, null);
                 break;
             case R.id.btn_docking:
-
+                getController().triggerAutoControl(DroneController.AutoControlMode.AUTO_DUCKING, null);
                 break;
         }
     }
@@ -830,9 +806,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     }
 
     private void initialG2Setting() {
-        for (Setting setting : DroneApplication.settings) {
+        for (Setting setting : activity.getSettings()) {
             if (setting.getParameterType() != null) {
-                ((MainActivity) fragmentActivity).setParameters(setting.getParameterType(), setting.getParameter());
+                activity.setParameters(setting.getParameterType(), setting.getParameter());
                 Log.d(TAG, "Initial G2 parameter" + setting.getParameterType() + ", " + setting.getParameter().getValue());
             }
         }
@@ -840,7 +816,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     public static String stringForTime(int time) {
         Formatter formatter = new Formatter(new StringBuilder(), Locale.getDefault());
-        int totalSeconds = time/* / 1000*/;
+        int totalSeconds = time;
 
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;

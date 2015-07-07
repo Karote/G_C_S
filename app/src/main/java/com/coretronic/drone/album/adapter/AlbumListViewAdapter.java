@@ -1,20 +1,15 @@
 package com.coretronic.drone.album.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
 import com.coretronic.drone.R;
-import com.coretronic.drone.album.AlbumPreviewFragment;
-import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.album.model.MediaListItem;
-import com.coretronic.drone.album.model.MediaObject;
 import com.coretronic.drone.utility.AppUtils;
 
 import java.util.ArrayList;
@@ -22,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by james on 15/6/12.
  */
-public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdapter.ViewHolder>{
+public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdapter.ViewHolder> {
 
     private static String TAG = AlbumListViewAdapter.class.getSimpleName();
     private static Context context;
@@ -31,6 +26,7 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
 
     public interface OnItemClickListener {
         void onItemDeleteClick(View view, int position);
+
         void onDownloadClick(View view, int position);
     }
 
@@ -39,8 +35,6 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
     public void SetOnItemClickListener(final OnItemClickListener listener) {
         mItemClickListener = listener;
     }
-
-
 
 
     public AlbumListViewAdapter(Context context, ArrayList<MediaListItem> data) {
@@ -79,10 +73,10 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView mediaFilename = null;
-        TextView mediaDate  = null;
+        TextView mediaDate = null;
         TextView mediaFilesize = null;
         ImageButton mediaDeleteIBtn = null;
         ImageButton mediaDownloadIBtn = null;
@@ -95,16 +89,16 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
             mediaDeleteIBtn = (ImageButton) itemView.findViewById(R.id.media_listdelete_btn);
             mediaDownloadIBtn = (ImageButton) itemView.findViewById(R.id.media_download_btn);
 
-           mediaDeleteIBtn.setOnClickListener(this);
-           mediaDownloadIBtn.setOnClickListener(this);
+            mediaDeleteIBtn.setOnClickListener(this);
+            mediaDownloadIBtn.setOnClickListener(this);
 
         }
 
 
         public void onClick(View v) {
-            if(v.equals(mediaDeleteIBtn)){
+            if (v.equals(mediaDeleteIBtn)) {
                 mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
-            }else if (v.equals(mediaDownloadIBtn)) {
+            } else if (v.equals(mediaDownloadIBtn)) {
                 mItemClickListener.onDownloadClick(v, getAdapterPosition());
             }
         }

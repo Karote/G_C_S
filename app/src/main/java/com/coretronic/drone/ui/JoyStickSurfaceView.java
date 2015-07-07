@@ -18,9 +18,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.R;
-import com.coretronic.drone.piloting.Setting;
 
 /**
  * Created by jiaLian on 15/3/30.
@@ -87,8 +85,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint.setColor(Color.WHITE);
         stickPaint.setAntiAlias(true);
 //        stickPaint.setAlpha(paintNormalAlpha);
-        setPaintPressedAlpha(DroneApplication.settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()].getValue() / 100f);
-
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
     }
 
@@ -98,10 +94,12 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint.setAlpha(paintNormalAlpha);
     }
 
-    public void initJoyMode(int controlType, boolean isJoypad) {
+    public void initJoyMode(int controlType, boolean isJoypad, int alpha) {
         this.controlType = controlType;
         this.isJoypad = isJoypad;
         int indicatorSize = (int) getResources().getDimension(R.dimen.joypad_indicator_size);
+
+        setPaintPressedAlpha(alpha / 100f);
 
         throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
         yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);

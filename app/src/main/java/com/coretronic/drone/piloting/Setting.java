@@ -93,10 +93,10 @@ public class Setting {
             case ROTATION_SPEED_MAX:
             case VERTICAL_SPEED_MAX:
             case ANGLE_MAX:
-                value = (int) parameter.getValue();
+                value = (short) parameter.getValue();
                 break;
             case ALTITUDE_LIMIT:
-                value = (int) ((int) parameter.getValue() / 100f);
+                value = (int) ((short) parameter.getValue() / 100f);
                 break;
         }
 

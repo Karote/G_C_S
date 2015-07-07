@@ -2,6 +2,7 @@ package com.coretronic.drone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -27,31 +28,43 @@ import com.coretronic.drone.service.DroneDevice;
 import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.StatusView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener, View.OnLongClickListener, DroneController.ParameterLoaderListener {
+public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener, DroneController.ParameterLoaderListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String G2_IP = "192.168.42.1";
 
+    private static final char DEGREE_SYMBOL = 0x00B0;   //º
+
+    public static final String SETTINGS_VALUE = "settings_value";
+    public static final String SETTING = "setting";
+    public static final String SETTING_NAME_2015 = "setting_2015";
+    public static final String SETTING_NAME_G2 = "setting_g2";
+
+    public static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
+
+    private StatusView statusView;
     private Spinner spinnerDroneDevice;
+
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
     private StatusChangedListener mStatusChangedListener;
 
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
-    private StatusView statusView;
 
     private void assignViews() {
         Button btnPiloting = (Button) findViewById(R.id.btn_piloting);
         Button btnMissionPlan = (Button) findViewById(R.id.btn_mission_plan);
         LinearLayout llAlbum = (LinearLayout) findViewById(R.id.ll_album);
         LinearLayout llUpdate = (LinearLayout) findViewById(R.id.ll_updates);
+
         btnPiloting.setOnClickListener(this);
-        btnMissionPlan.setOnLongClickListener(this);
         btnMissionPlan.setOnClickListener(this);
         llAlbum.setOnClickListener(this);
-        llAlbum.setOnLongClickListener(this);
         llUpdate.setOnClickListener(this);
 
         statusView = (StatusView) findViewById(R.id.status);
@@ -82,12 +95,13 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                                     Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
                                             Toast.LENGTH_LONG).show();
                                     connectedDroneDevice = droneDevice;
+                                    initialSetting();
                                     readParameters(MainActivity.this, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
-//                                    Log.i(TAG, "Drone Type: " + droneDevice);
                                 }
 
                                 @Override
                                 public void onConnectFail() {
+                                    spinnerDroneDevice.setSelection(0);
                                     Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
                                 }
                             });
@@ -99,7 +113,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
                     }
                 }
-
         );
     }
 
@@ -107,11 +120,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         assignViews();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        initialSetting();
     }
 
     @Override
@@ -125,8 +134,21 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         mDroneDevices.remove(droneDevice);
         mDeviceAdapter.notifyDataSetChanged();
         spinnerDroneDevice.setSelection(0);
+
         if (droneDevice.getName().equals(connectedDroneDevice.getName())) {
             Toast.makeText(this, connectedDroneDevice.getName() + " Disconnected", Toast.LENGTH_LONG).show();
+            if (mStatusChangedListener != null) {
+                mStatusChangedListener.onBatteryUpdate(0);
+                mStatusChangedListener.onAltitudeUpdate(0);
+                mStatusChangedListener.onLocationUpdate(0, 0, 0);
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    statusView.setBatteryStatus(0);
+                    statusView.setGpsVisibility(View.GONE);
+                }
+            });
         }
     }
 
@@ -169,7 +191,6 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         if (mStatusChangedListener != null) {
             mStatusChangedListener.onLocationUpdate(lat, lon, eph);
         }
-//        Log.d(TAG, "onLocationUpdate " + lat + ", " + lon + ", " + eph);
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
@@ -233,31 +254,13 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
-    @Override
-    public boolean onLongClick(View view) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment fragment = null;
-        String backStackName = null;
-        switch (view.getId()) {
-            case R.id.btn_mission_plan:
-                fragment = new WaypointEditorFragment();
-                break;
-        }
-        if (fragment != null) {
-            transaction.replace(R.id.frame_view, fragment, "fragment");
-            transaction.addToBackStack(backStackName);
-            transaction.commit();
-        }
-        return true;
-    }
-
     public DroneDevice getConnectedDroneDevice() {
         return connectedDroneDevice;
     }
 
     @Override
     public void onParameterLoaded(Parameter.Type type, Parameter parameter) {
-        for (Setting setting : DroneApplication.settings) {
+        for (Setting setting : settings) {
             if (type == setting.getParameterType()) {
                 Log.d(TAG, "onParameterLoaded: " + type + "," + parameter.getValue());
                 setting.setValue(parameter);
@@ -266,6 +269,95 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         }
     }
 
+    private void initialSetting() {
+        switch (connectedDroneDevice.getDroneType()) {
+            case DroneDevice.DRONE_TYPE_FAKE:
+                defaultSettings();
+                break;
+            case DroneDevice.DRONE_TYPE_CORETRONIC:
+                settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 0, 500, 300, "cm/s");
+            case DroneDevice.DRONE_TYPE_CORETRONIC_G2:
+                loadSettingsValue();
+                break;
+        }
+    }
+
+    private void defaultSettings() {
+        settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()] = new Setting(20, 100, 70, "%");
+        settings[Setting.SettingType.SD_RECORD.ordinal()] = new Setting(Setting.ON);
+        settings[Setting.SettingType.FLIP_ENABLE.ordinal()] = new Setting(Parameter.Type.FLIP, Setting.OFF);
+        settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()] = new Setting(Parameter.Type.FLIP_ORIENTATION, Setting.FLIP_ORIENTATION_LEFT);
+
+        settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.JOYPAD_MODE_USA);
+        settings[Setting.SettingType.ABSOLUTE_CONTROL.ordinal()] = new Setting(Parameter.Type.ABSOLUTE_CONTROL, Setting.OFF);
+        settings[Setting.SettingType.LEFT_HANDED.ordinal()] = new Setting(Setting.OFF);
+        settings[Setting.SettingType.PHONE_TILT.ordinal()] = new Setting(5, 50, 20, String.valueOf(DEGREE_SYMBOL));
+
+        String tempStr = String.valueOf(DEGREE_SYMBOL) + "/s";
+
+        settings[Setting.SettingType.ROTATION_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.ROTATION_SPEED_MAX, 40, 120, 120, tempStr);
+        settings[Setting.SettingType.ALTITUDE_LIMIT.ordinal()] = new Setting(Parameter.Type.ALTITUDE_LIMIT, 2, 100, 3, "m");
+        settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 500, 6000, 2000, "mm/s");
+        settings[Setting.SettingType.TILT_ANGLE_MAX.ordinal()] = new Setting(Parameter.Type.ANGLE_MAX, 10, 30, 30, String.valueOf(DEGREE_SYMBOL));
+    }
+
+    public void resetSettings() {
+        defaultSettings();
+        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
+            settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 0, 500, 300, "cm/s");
+        }
+    }
+
+    public int getSettingValue(Setting.SettingType settingType) {
+        return settings[settingType.ordinal()].getValue();
+    }
+
+    public void setSettingValue(Setting.SettingType settingType, int value) {
+        settings[settingType.ordinal()].setValue(value);
+    }
+
+    public Setting getSetting(Setting.SettingType settingType) {
+        return settings[settingType.ordinal()];
+    }
+
+    public Setting[] getSettings() {
+        return settings;
+    }
+
+    public boolean saveSettingsValue() {
+        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
+            return false;
+        }
+        String name = connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
+        SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
+        JSONArray jsonArray = new JSONArray();
+        for (Setting setting : settings) {
+            jsonArray.put(setting.getValue());
+        }
+        Log.d(TAG, jsonArray.toString());
+        prefs.edit().putString(SETTINGS_VALUE, jsonArray.toString()).commit();
+        return true;
+    }
+
+    public boolean loadSettingsValue() {
+        String name = connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
+        SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
+        String json = prefs.getString(SETTINGS_VALUE, null);
+        try {
+            if (json != null) {
+                JSONArray jsonArray = new JSONArray(json);
+                int i = 0;
+                for (Setting setting : settings) {
+                    setting.setValue(jsonArray.getInt(i++));
+                }
+            } else {
+                Log.d(TAG, "Json Null");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
     public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
 
