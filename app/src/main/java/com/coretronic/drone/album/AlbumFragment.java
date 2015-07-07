@@ -2,7 +2,6 @@ package com.coretronic.drone.album;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,7 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
 import com.coretronic.drone.Drone;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
@@ -175,14 +178,14 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
         public void onClick(View v) {
             albumFragmentTransaction = fragmentChildManager.beginTransaction();
 
-            if (v.getId() ==  R.id.drone_switchbtn) {
+            if (v.getId() == R.id.drone_switchbtn) {
 
                 albumDroneSwitchBtn.setSelected(true);
                 albumSmartPhoneSwitchBtn.setSelected(false);
                 albumMenuOption.setVisibility(View.GONE);
                 albumSwitchLayout.setBackgroundResource(R.drawable.btn_tab_catogory_left);
 
-                if( isDroneOrSmartphoneMode == false)
+                if (isDroneOrSmartphoneMode == false)
                     return;
                 Log.d(TAG, "---click on the drone switch button---");
                 if (droneAlbumFragment != null) {
@@ -203,7 +206,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
                 albumMenuOption.setVisibility(View.VISIBLE);
                 albumSwitchLayout.setBackgroundResource(R.drawable.btn_tab_catogory_right);
 
-                if( isDroneOrSmartphoneMode == true)
+                if (isDroneOrSmartphoneMode == true)
                     return;
                 Log.d(TAG, "---click on the smartphone switch button---");
                 if (smartPhoneAlbumFragment != null) {
@@ -220,7 +223,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     };
 
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -235,7 +237,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     public void onResume() {
         super.onResume();
         if (smartPhoneAlbumFragment != null && isDroneOrSmartphoneMode) {
-            Log.i(TAG, TAG +"smartPhoneAlbumFragment onResume");
+            Log.i(TAG, TAG + "smartPhoneAlbumFragment onResume");
             ((AlbumSmartPhoneTagFragment) smartPhoneAlbumFragment).refreshData();
         }
 

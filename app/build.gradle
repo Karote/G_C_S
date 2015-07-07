@@ -44,5 +44,4 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile project(':ControlCoreLib')
-    compile project(':AmbarellaClient')
 }

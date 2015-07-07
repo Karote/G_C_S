@@ -1,8 +1,7 @@
 package com.coretronic.drone.missionplan.fragments;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +48,7 @@ public class WaypointDetailFragment extends Fragment {
     private AbstractWheel altitudeWheel, delayWheel;
     private static final String TAG = WaypointDetailFragment.class.getSimpleName();
 
-    public static WaypointDetailFragment newInstance(int index, Mission mission){
+    public static WaypointDetailFragment newInstance(int index, Mission mission) {
         WaypointDetailFragment f = new WaypointDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_INDEX, index);
@@ -69,7 +68,7 @@ public class WaypointDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_waypoint_detail, container, false);
         findviews(fragmentView);
 
@@ -77,12 +76,12 @@ public class WaypointDetailFragment extends Fragment {
     }
 
     private void findviews(View fragmentView) {
-        tx_name = (TextView)fragmentView.findViewById(R.id.text_detail_waypoint_name);
-        tx_lat = (TextView)fragmentView.findViewById(R.id.text_waypoint_lat);
-        tx_lng = (TextView)fragmentView.findViewById(R.id.text_waypoint_lng);
-        spinner_type = (Spinner)fragmentView.findViewById(R.id.spinner_detail_waypoint_type);
-        icon_type = (View)fragmentView.findViewById(R.id.icon_detail_waypoint_type);
-        bt_delete = (Button)fragmentView.findViewById(R.id.btn_detail_delete);
+        tx_name = (TextView) fragmentView.findViewById(R.id.text_detail_waypoint_name);
+        tx_lat = (TextView) fragmentView.findViewById(R.id.text_waypoint_lat);
+        tx_lng = (TextView) fragmentView.findViewById(R.id.text_waypoint_lng);
+        spinner_type = (Spinner) fragmentView.findViewById(R.id.spinner_detail_waypoint_type);
+        icon_type = (View) fragmentView.findViewById(R.id.icon_detail_waypoint_type);
+        bt_delete = (Button) fragmentView.findViewById(R.id.btn_detail_delete);
 
         spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.spinner_waypoint_detail_style, POINT_TYPE);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_waypoint_detail_dropdown_style);
@@ -123,7 +122,7 @@ public class WaypointDetailFragment extends Fragment {
             }
         });
 
-        altitudeWheel = (AbstractWheel)fragmentView.findViewById(R.id.altitude_wheel);
+        altitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.altitude_wheel);
         altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%02d"));
         altitudeWheel.setCyclic(false);
         altitudeWheel.addChangingListener(new OnWheelChangedListener() {
@@ -133,7 +132,7 @@ public class WaypointDetailFragment extends Fragment {
             }
         });
 
-        delayWheel = (AbstractWheel)fragmentView.findViewById(R.id.delay_wheel);
+        delayWheel = (AbstractWheel) fragmentView.findViewById(R.id.delay_wheel);
         delayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 99, "%02d"));
         delayWheel.setCyclic(false);
         delayWheel.addChangingListener(new OnWheelChangedListener() {
@@ -150,10 +149,10 @@ public class WaypointDetailFragment extends Fragment {
         setviews();
     }
 
-    private void setviews(){
+    private void setviews() {
         Bundle arguments = getArguments();
 
-        if(arguments != null) {
+        if (arguments != null) {
             tx_name.setText(String.valueOf(arguments.getInt(ARGUMENT_INDEX)));
             tx_lat.setText(String.valueOf(arguments.getFloat(ARGUMENT_LATITUDE)));
             tx_lng.setText(String.valueOf(arguments.getFloat(ARGUMENT_LONGITUDE)));
@@ -170,13 +169,13 @@ public class WaypointDetailFragment extends Fragment {
                     icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
                     break;
             }
-            altitudeWheel.setCurrentItem((int)arguments.getFloat(ARGUMENT_ALTITUDE));
+            altitudeWheel.setCurrentItem((int) arguments.getFloat(ARGUMENT_ALTITUDE));
             delayWheel.setCurrentItem(arguments.getInt(ARGUMENT_DELAY));
         }
     }
 
-    private int typeToIndex(int type){
-        switch (type){
+    private int typeToIndex(int type) {
+        switch (type) {
             case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
                 return Arrays.asList(POINT_TYPE).indexOf(TXT_TAKEOFF);
             case MAV_CMD.MAV_CMD_NAV_LAND:

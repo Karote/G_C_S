@@ -54,8 +54,13 @@ public class StatusView extends LinearLayout {
         batteryProgress.setMax(maxProgress);
     }
 
-    public void setBatteryStatus(int progress) {
-        batteryProgress.setProgress(progress);
+    public void setBatteryStatus(final int progress) {
+        batteryProgress.post(new Runnable() {
+            @Override
+            public void run() {
+                batteryProgress.setProgress(progress);
+            }
+        });
         tvBattery.setText(progress + "%");
     }
 }

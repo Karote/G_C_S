@@ -24,25 +24,16 @@
         android:textSize="20dp"
         android:visibility="gone" />
 
-    <GridView
+    <com.coretronic.drone.album.AutofitRecyclerView
         android:id="@+id/album_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
         android:columnWidth="92dp"
+        android:drawSelectorOnTop="true"
+        android:focusable="true"
+        android:gravity="center"
         android:numColumns="auto_fit"
-        android:stretchMode="spacingWidth" />
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/album_grid_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:clickable="true"-->
-    <!--android:columnWidth="92dp"-->
-    <!--android:drawSelectorOnTop="true"-->
-    <!--android:focusable="true"-->
-    <!--android:gravity="center"-->
-    <!--android:numColumns="auto_fit"-->
-    <!--android:stretchMode="columnWidth"-->
-    <!--android:visibility="visible" />-->
+        android:stretchMode="columnWidth"
+        android:visibility="visible" />
 </RelativeLayout>

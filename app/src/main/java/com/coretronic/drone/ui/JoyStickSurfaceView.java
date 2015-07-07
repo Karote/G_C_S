@@ -18,9 +18,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.coretronic.drone.DroneApplication;
 import com.coretronic.drone.R;
-import com.coretronic.drone.piloting.Setting;
 
 /**
  * Created by jiaLian on 15/3/30.
@@ -33,14 +31,17 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
     public static final int CONTROL_TYPE_PITCH_ROLL = 1;
     public static final int CONTROL_TYPE_THROTTLE_YAW = 2;
+    public static final int CONTROL_TYPE_PITCH_YAW = 3;
+    public static final int CONTROL_TYPE_THROTTLE_ROLL = 4;
 
     private static final int DISTANCE_TOLERANCE = 20;
-    private static final int TIME_DELAY = 100;
+    private static final int TIME_DELAY = 60;
     private static final int PAINT_PRESSED_ALPHA_DEFAULT = 180;
 
     private Bitmap throttleUpBitmap;
     private Bitmap yawRightBitmap;
     private Bitmap arrowUpBitmap;
+    private Bitmap arrowRightBitmap;
 
     private Paint stickPaint = null;
 
@@ -52,7 +53,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     private int stickShiftRadius;
 
     private boolean isStop;
-    private boolean isJoypadMode;
+    private boolean isJoypad;
     private int controlType;
 
     private int paintPressedAlpha;
@@ -84,8 +85,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint.setColor(Color.WHITE);
         stickPaint.setAntiAlias(true);
 //        stickPaint.setAlpha(paintNormalAlpha);
-        setPaintPressedAlpha(DroneApplication.settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()].getValue() / 100f);
-
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
     }
 
@@ -95,14 +94,17 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint.setAlpha(paintNormalAlpha);
     }
 
-    public void initJoyMode(int controlType, boolean isJoypadMode) {
+    public void initJoyMode(int controlType, boolean isJoypad, int alpha) {
         this.controlType = controlType;
-        this.isJoypadMode = isJoypadMode;
+        this.isJoypad = isJoypad;
         int indicatorSize = (int) getResources().getDimension(R.dimen.joypad_indicator_size);
+
+        setPaintPressedAlpha(alpha / 100f);
 
         throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
         yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);
         arrowUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_up), indicatorSize, indicatorSize);
+        arrowRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_right), indicatorSize, indicatorSize);
 
         if (stickListener != null) {
             stickListener.onStickMoveEvent(JoyStickSurfaceView.this, MotionEvent.ACTION_UP, 0, 0);
@@ -162,7 +164,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         int distance = getDistance(startPoint.x, startPoint.y, x, y);
         if (action == MotionEvent.ACTION_DOWN) {
             stickPaint.setAlpha(paintPressedAlpha);
-            if (stickListener != null && !isJoypadMode) {
+            if (stickListener != null && !isJoypad) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_DOWN);
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
@@ -175,15 +177,15 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             int dy = rockerPoint.y - startPoint.y;
 
             if (Math.abs(dx) >= DISTANCE_TOLERANCE || Math.abs(dy) >= DISTANCE_TOLERANCE) {
-                if (stickListener != null && isJoypadMode) {
+                if (stickListener != null && isJoypad) {
                     stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, dx, -dy);
                 }
             }
         } else if (action == MotionEvent.ACTION_UP) {
             rockerPoint.set(startPoint.x, startPoint.y);
-            if (stickListener != null && isJoypadMode) {
+            if (stickListener != null && isJoypad) {
                 stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, 0, 0);
-            } else if (stickListener != null && !isJoypadMode) {
+            } else if (stickListener != null && !isJoypad) {
                 stickListener.onOrientationSensorMode(MotionEvent.ACTION_UP);
             }
             stickPaint.setAlpha(paintNormalAlpha);
@@ -217,7 +219,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             float circleRadius = getResources().getDimension(R.dimen.stick_size) / 2;
-            if (isJoypadMode) {
+            if (isJoypad) {
                 Paint padPaint = new Paint(stickPaint);
                 padPaint.setAlpha((int) (stickPaint.getAlpha() * ALPHA_SCALE));
                 canvas.drawCircle(startPoint.x, startPoint.y, padRadius, padPaint);
@@ -228,10 +230,19 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
                 padPaint.setAlpha(stickPaint.getAlpha());
                 canvas.drawCircle(startPoint.x, startPoint.y, padRadius, padPaint);
 
-                if (controlType == JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW) {
-                    drawIndicator(canvas, throttleUpBitmap, yawRightBitmap);
-                } else {
-                    drawIndicator(canvas, arrowUpBitmap);
+                switch (controlType) {
+                    case CONTROL_TYPE_THROTTLE_YAW:
+                        drawIndicator(canvas, throttleUpBitmap, yawRightBitmap);
+                        break;
+                    case CONTROL_TYPE_PITCH_ROLL:
+                        drawIndicator(canvas, arrowUpBitmap);
+                        break;
+                    case CONTROL_TYPE_THROTTLE_ROLL:
+                        drawIndicator(canvas, throttleUpBitmap, arrowRightBitmap);
+                        break;
+                    case CONTROL_TYPE_PITCH_YAW:
+                        drawIndicator(canvas, arrowUpBitmap, yawRightBitmap);
+                        break;
                 }
             } else {
                 canvas.drawCircle(startPoint.x, startPoint.y, circleRadius, stickPaint);

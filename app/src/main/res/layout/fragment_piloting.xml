@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
-        android:orientation="horizontal"
         android:layout_marginTop="40dp"
+        android:orientation="horizontal"
         android:visibility="gone">
 
         <ImageView
@@ -34,15 +34,15 @@
             android:id="@+id/tv_recording_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
             android:layout_gravity="center"
-            android:text="00:10"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
+            android:layout_marginLeft="2dp"
             android:shadowColor="#000000"
-            android:shadowRadius="1"
             android:shadowDx="0"
-            android:shadowDy="0"/>
+            android:shadowDy="0"
+            android:shadowRadius="1"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <Button
@@ -85,7 +85,7 @@
             android:layout_height="40dp"
             android:layout_gravity="right"
             android:background="@drawable/ico_pilot_altitude_unlock"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </FrameLayout>
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->

@@ -13,12 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.album.adapter.AlbumGridViewBaseAdapter;
+import com.coretronic.drone.album.adapter.AlbumGridViewAdapter;
 import com.coretronic.drone.album.model.MediaItem;
 import com.coretronic.drone.utility.AppConfig;
 
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by james on 15/6/1.
@@ -42,10 +42,8 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private String FILTER_MEDIA_FOLDER = "";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
-    //    private RecyclerView albumGridView = null;
-    private GridView albumGridView = null;
-    //    private AlbumGridViewAdapter albumGridViewAdapter = null;
-    private AlbumGridViewBaseAdapter albumGridViewAdapter = null;
+    private AutofitRecyclerView albumGridView = null;
+    private AlbumGridViewAdapter albumGridViewAdapter = null;
     private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
     private TextView noMediaTV = null;
@@ -71,18 +69,14 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
 //        loadingPhotoProgress = (ProgressBar) view.findViewById(R.id.loadphoto_progressbar);
         noMediaTV = (TextView) view.findViewById(R.id.no_mediainfolder_tv);
-//        albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 6);
-//        albumGridView.setLayoutManager(gridLayoutManager);
-        albumGridView = (GridView) view.findViewById(R.id.album_grid_view);
+        albumGridView = (AutofitRecyclerView) view.findViewById(R.id.album_grid_view);
 
 
 //        loadingPhotoProgress.setVisibility(View.VISIBLE);
         // get media array list
         getData();
 
-//        albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
-        albumGridViewAdapter = new AlbumGridViewBaseAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
+        albumGridViewAdapter = new AlbumGridViewAdapter(mContext, R.layout.album_smartphone_griditem, albumImgList);
         albumGridView.setAdapter(albumGridViewAdapter);
         albumGridViewAdapter.notifyDataSetChanged();
 //        loadingPhotoProgress.setVisibility(View.GONE);
@@ -108,6 +102,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
                 MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.DATE_MODIFIED,
                 MediaStore.Files.FileColumns.MEDIA_TYPE,
+                MediaStore.Video.Media.DURATION,
                 MediaStore.Files.FileColumns.MIME_TYPE,
                 MediaStore.Files.FileColumns.TITLE
         };
@@ -151,6 +146,10 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             long fileId = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
             int imgType = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)));
 
+            long videoDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+            String duration = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(videoDuration),
+                    TimeUnit.MILLISECONDS.toSeconds(videoDuration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(videoDuration)));
+
             String fileAddDate = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED));
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(Long.parseLong(fileAddDate) * 1000);
@@ -167,7 +166,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             }
             Log.i(TAG, "filePath/fileId/imgType/mediaFileDate:" + fileFullPath + fileId + imgType + timeStamp);
 
-            albumImgList.add(new MediaItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, false));
+            albumImgList.add(new MediaItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, duration, false));
         }
 
         Collections.sort(albumImgList, new Comparator<MediaItem>() {

@@ -1,6 +1,5 @@
 package com.coretronic.drone.album.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,19 +12,20 @@ public class MediaItem {
     private String mediaTitle = "";
     private long mediaId = 0;
     private int mediaType = 0;
+    private String mediaDuration = "";
     private boolean isMediaSelect = false;
     private String mediaFileName = "";
     private String mediaSize = "";
 
 
-    public MediaItem(String mediaPath, Date date, String mediaTitle, long imgId, int mediaType, boolean isMediaSelect)
-    {
+    public MediaItem(String mediaPath, Date date, String mediaTitle, long imgId, int mediaType, String mediaDuration, boolean isMediaSelect) {
         super();
         this.mediaTitle = mediaTitle;
         this.mediaPath = mediaPath;
         this.mediaDate = date;
         this.mediaId = imgId;
         this.mediaType = mediaType;
+        this.mediaDuration = mediaDuration;
         this.isMediaSelect = isMediaSelect;
     }
 
@@ -64,6 +64,14 @@ public class MediaItem {
     }
     public void setMediaType(int imgType) {
         this.mediaType = imgType;
+    }
+
+    public String getMediaDuration() {
+        return mediaDuration;
+    }
+
+    public void setMediaDuration(String mediaDuration) {
+        this.mediaDuration = mediaDuration;
     }
 
     public boolean getIsMediaSelect() {

@@ -13,6 +13,7 @@ public class MediaObject implements Serializable {
     public void setImageItems(ArrayList<MediaItem> mediaItems) {
         MediaObject.mediaItems = mediaItems;
     }
+
     public ArrayList<MediaItem> getImageItems() {
         return mediaItems;
     }

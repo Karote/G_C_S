@@ -1,7 +1,12 @@
 package com.coretronic.drone.ui;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -12,7 +17,7 @@ import android.view.ViewGroup;
  */
 public class SemiCircleProgressBarView extends View {
     private int mProgress;
-    private int maxProgress=100;
+    private int maxProgress = 100;
     private RectF mOval;
     private RectF mOvalInner;
     private Paint mPaintProgress;

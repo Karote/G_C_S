@@ -1,21 +1,24 @@
 package com.coretronic.drone.album;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.VideoView;
+
 import com.coretronic.drone.R;
-import android.os.Handler;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.utility.AppUtils;
 

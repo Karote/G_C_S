@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by karot.chuang on 2015/7/6.
@@ -63,7 +64,7 @@ public class AlbumGridViewBaseAdapter extends BaseAdapter {
 
     public class Holder {
         FrameLayout itemLayout;
-        TextView imageTitle;
+        TextView videoTime;
         ImageView mediaImage;
         ImageView videoTagImg;
         ImageView selectTagImg;
@@ -76,7 +77,7 @@ public class AlbumGridViewBaseAdapter extends BaseAdapter {
         grid = inflater.inflate(R.layout.album_smartphone_griditem, null);
 
         holder.itemLayout = (FrameLayout) grid.findViewById(R.id.item_layout);
-        holder.imageTitle = (TextView) grid.findViewById(R.id.imageview_title);
+        holder.videoTime = (TextView) grid.findViewById(R.id.video_time);
         holder.mediaImage = (ImageView) grid.findViewById(R.id.imageview);
         holder.videoTagImg = (ImageView) grid.findViewById(R.id.video_tag);
         holder.selectTagImg = (ImageView) grid.findViewById(R.id.select_tag);
@@ -158,8 +159,11 @@ public class AlbumGridViewBaseAdapter extends BaseAdapter {
                             .getApplicationContext().getContentResolver(), item.getMediaId(),
                     MediaStore.Images.Thumbnails.MINI_KIND, null);
             holder.videoTagImg.setVisibility(View.VISIBLE);
+            holder.videoTime.setText(item.getMediaDuration());
+            holder.videoTime.setVisibility(View.VISIBLE);
         }
         holder.mediaImage.setImageBitmap(bitmap);
+        holder.mediaImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         ((MediaItem) mediaItems.get(position)).setIsMediaSelect(false);
 
