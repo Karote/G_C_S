@@ -14,13 +14,15 @@ public class MediaListItem implements Serializable {
     private String mediaDate = null;
     private String mediaFileName = "";
     private String mediaSize = "";
+    private boolean isMediaSelect = false;
 
 
-    public MediaListItem(String mediaFileName, String mediaSize, String date) {
+    public MediaListItem(String mediaFileName, String mediaSize, String date, boolean isMediaSelect) {
         super();
         this.mediaDate = date;
         this.mediaFileName = mediaFileName;
         this.mediaSize = mediaSize;
+        this.isMediaSelect = isMediaSelect;
     }
 
     public String getMediaDate() {
@@ -62,5 +64,11 @@ public class MediaListItem implements Serializable {
 
     }
 
+    public boolean getIsMediaSelect() {
+        return isMediaSelect;
+    }
 
+    public void setIsMediaSelect(boolean isMediaSelect) {
+        this.isMediaSelect = isMediaSelect;
+    }
 }

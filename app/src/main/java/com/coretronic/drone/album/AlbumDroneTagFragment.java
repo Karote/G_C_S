@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -171,7 +172,6 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
     };
 
     private void getDate(List<MediaContent> listItems) {
-        Log.i(TAG, "droneController getDate");
         albumMediaList.clear();
 
         for (int i = 0; i < listItems.size(); i++) {
@@ -180,7 +180,7 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
         Collections.sort(albumMediaList, new Comparator<MediaListItem>() {
             @Override
             public int compare(MediaListItem lhs, MediaListItem rhs) {
-                return rhs.getMediaDate().compareTo(lhs.getMediaDate());
+                return rhs.getMediaFileName().compareTo(lhs.getMediaFileName());
             }
         });
 
@@ -194,6 +194,8 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
     @Override
     public void onPause() {
         super.onPause();
+        hideDeleteOption();
+        deleteSelectedPathAryList();
     }
 
     @Override
@@ -213,13 +215,18 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
                     getDate(listItems);
                     break;
                 case REMOVE_CONTENT:
-                    Log.i(TAG, "delete file completed");
-                    ((Activity) mContext).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    if (iterator.hasNext()) {
+                        droneController.removeContent(iterator.next(), AlbumDroneTagFragment.this);
+                    } else {
+                        droneController.getMediaContents(AlbumDroneTagFragment.this);
+                        Log.i(TAG, "delete file completed");
+                        ((Activity) mContext).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(mContext, "delete file completed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                     break;
                 default:
                     break;
@@ -230,4 +237,35 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
         }
     }
 
+    public void showDeleteOption() {
+        // show delete option elements visible
+        albumListViewAdapter.setIsShowDeleteOption(true);
+        albumListViewAdapter.notifyDataSetChanged();
+    }
+
+    public void hideDeleteOption() {
+        // hide delete option elements visible
+        albumListViewAdapter.setIsShowDeleteOption(false);
+        albumListViewAdapter.notifyDataSetChanged();
+    }
+
+
+    public void deleteSelectedPathAryList() {
+        albumListViewAdapter.deleteSelectedPathAryList();
+        albumListViewAdapter.notifyDataSetChanged();
+    }
+
+    Iterator<String> iterator;
+
+    public void deleteSelectMediaFile() {
+        iterator = albumListViewAdapter.getSelectedPathAryList().iterator();
+        // delete drone file
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                droneController.removeContent(iterator.next(), AlbumDroneTagFragment.this);
+            }
+        }).start();
+        progressbar.setVisibility(View.VISIBLE);
+    }
 }
