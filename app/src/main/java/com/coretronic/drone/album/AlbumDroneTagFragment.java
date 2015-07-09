@@ -158,17 +158,20 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
             bundle.putSerializable("mediaListItemData", albumMediaList.get(position));
 
 //            Toast.makeText(mContext, "download " + view.getTag(), Toast.LENGTH_SHORT).show();
-            DownloadWarningFragment downloadWarningFragment = new DownloadWarningFragment();
-            downloadWarningFragment.setArguments(bundle);
-
-            Fragment cuttentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("fragment");
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .hide(cuttentFragment)
-                    .replace(R.id.frame_view, downloadWarningFragment, "DownloadWarningFragment")
-                    .addToBackStack("DownloadWarningFragment")
-                    .commit();
+//            DownloadWarningFragment downloadWarningFragment = new DownloadWarningFragment();
+//            downloadWarningFragment.setArguments(bundle);
+//
+//            Fragment cuttentFragment = getActivity().getSupportFragmentManager().findFragmentByTag("fragment");
+//            getActivity().getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .hide(cuttentFragment)
+//                    .replace(R.id.frame_view, downloadWarningFragment, "DownloadWarningFragment")
+//                    .addToBackStack("DownloadWarningFragment")
+//                    .commit();
+            DownloadProgressDialogFragment dpDF = DownloadProgressDialogFragment.newInstance(albumMediaList.get(position));
+            dpDF.show(getActivity().getFragmentManager(), "");
         }
+
     };
 
     private void getDate(List<MediaContent> listItems) {
@@ -259,13 +262,16 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
 
     public void deleteSelectMediaFile() {
         iterator = albumListViewAdapter.getSelectedPathAryList().iterator();
-        // delete drone file
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                droneController.removeContent(iterator.next(), AlbumDroneTagFragment.this);
-            }
-        }).start();
-        progressbar.setVisibility(View.VISIBLE);
+
+        if (iterator.hasNext()) {
+            // delete drone file
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    droneController.removeContent(iterator.next(), AlbumDroneTagFragment.this);
+                }
+            }).start();
+            progressbar.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -1,72 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#303030"
-                android:clickable="true">
+    android:layout_width="376dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_dialog_bg"
+    android:clickable="true">
 
-    <LinearLayout android:id="@+id/wraning_ll"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:gravity="center_horizontal"
-                  android:layout_marginTop="40dp"
-                  android:visibility="gone">
+    <RelativeLayout
+        android:id="@+id/downloadbarll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="36dp"
+        android:orientation="horizontal">
 
-        <ImageView android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_album_warning"/>
+        <TextView
+            android:id="@+id/timetv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="sans-serif-light"
+            android:text="--:--"
+            android:textColor="#939393"
+            android:textSize="12sp" />
 
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:layout_gravity="center_vertical"
-                      android:layout_marginLeft="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/timetv"
+            android:layout_toStartOf="@id/timetv">
 
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textSize="26dp"
-                      android:textColor="#FFFFFF"
-                      android:text="Size to big!"/>
-
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textSize="26dp"
-                      android:textColor="#FFFFFF"
-                      android:text="Recommand to read on computer."/>
-
+            <ProgressBar
+                android:id="@+id/downloadbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:progressDrawable="@drawable/progress_drawable_download" />
         </LinearLayout>
-    </LinearLayout>
-    <LinearLayout android:id="@+id/progressbarll"
-                  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:layout_below="@+id/wraning_ll"
-                  android:orientation="vertical"
-                  android:gravity="center">
-        <TextView android:id="@+id/timetv"
-                  android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="calculate download time..."
-                  android:textSize="24dp"
-                  android:textColor="#FFFFFF"/>
-        <ProgressBar android:id="@+id/downloadbar"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     style="@style/CustomProgressBarHorizontal"
-                     android:layout_marginLeft="40dp"
-                     android:layout_marginRight="40dp"
-                     android:layout_marginTop="20dp"/>
 
-        <Button android:id="@+id/stopdownload_btn"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Stop"
-                android:textSize="26dp"
-                android:textColor="@android:color/black"
-                android:background="#A0A0A0"
-                android:layout_marginTop="28dp"
-                android:layout_marginRight="40dp"
-                android:layout_gravity="right"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/wraning_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/downloadbarll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Size to big. "
+            android:textColor="#474747"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Recommand to read on computer."
+            android:textColor="#474747"
+            android:textSize="14sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/stopdownload_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/wraning_ll"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="36dp"
+        android:text="Stop Download"
+        android:textColor="@drawable/btn_album_stop_download"
+        android:textSize="16sp" />
 
 </RelativeLayout>
