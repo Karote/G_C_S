@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,7 +24,6 @@ import com.coretronic.drone.ui.ViewManager;
  */
 public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
     private static final String TAG = SettingsFragmentPersonalPage.class.getSimpleName();
-    private int currentFlipOrientationValue;
     private MainActivity activity;
     private EditText etNetworkName;
 
@@ -38,38 +36,24 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_personal_page, container, false);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACTITY);
+
+        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_opacity, Setting.SettingType.INTERFACE_OPACITY);
+
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_sdcard_enable, Setting.SettingType.SD_RECORD);
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_flip_enable, Setting.SettingType.FLIP_ENABLE);
 
-        final Button[] buttons = new Button[4];
-        buttons[Setting.FLIP_ORIENTATION_FRONT] = (Button) fragmentView.findViewById(R.id.btn_front);
-        buttons[Setting.FLIP_ORIENTATION_FRONT].setTag(Setting.FLIP_ORIENTATION_FRONT);
+        ViewManager.assignSingleSelectionButton(activity, fragmentView, Setting.SettingType.FLIP_ORIENTATION,
+                new int[]{
+                        R.id.btn_front,
+                        R.id.btn_back,
+                        R.id.btn_left,
+                        R.id.btn_right},
+                new int[]{
+                        Setting.FLIP_ORIENTATION_FRONT,
+                        Setting.FLIP_ORIENTATION_BACK,
+                        Setting.FLIP_ORIENTATION_LEFT,
+                        Setting.FLIP_ORIENTATION_RIGHT});
 
-        buttons[Setting.FLIP_ORIENTATION_BACK] = (Button) fragmentView.findViewById(R.id.btn_back);
-        buttons[Setting.FLIP_ORIENTATION_BACK].setTag(Setting.FLIP_ORIENTATION_BACK);
-
-        buttons[Setting.FLIP_ORIENTATION_LEFT] = (Button) fragmentView.findViewById(R.id.btn_left);
-        buttons[Setting.FLIP_ORIENTATION_LEFT].setTag(Setting.FLIP_ORIENTATION_LEFT);
-
-        buttons[Setting.FLIP_ORIENTATION_RIGHT] = (Button) fragmentView.findViewById(R.id.btn_right);
-        buttons[Setting.FLIP_ORIENTATION_RIGHT].setTag(Setting.FLIP_ORIENTATION_RIGHT);
-
-        currentFlipOrientationValue = activity.getSettingValue(Setting.SettingType.FLIP_ORIENTATION);
-        for (Button btn : buttons) {
-            refreshBackground(currentFlipOrientationValue, btn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    currentFlipOrientationValue = (int) view.getTag();
-                    activity.setSettingValue(Setting.SettingType.FLIP_ORIENTATION, currentFlipOrientationValue);
-                    for (Button btn : buttons) {
-                        refreshBackground(currentFlipOrientationValue, btn);
-                    }
-                    activity.setParameters(activity.getSetting(Setting.SettingType.FLIP_ORIENTATION).getParameterType(), activity.getSetting(Setting.SettingType.FLIP_ORIENTATION).getParameter());
-                }
-            });
-        }
         etNetworkName = (EditText) fragmentView.findViewById(R.id.et_network_name);
         etNetworkName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -82,6 +66,7 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
                 return false;
             }
         });
+
         return fragmentView;
     }
 
@@ -89,14 +74,6 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         activity.readParameters(this, Parameter.Type.NETWORK_NAME);
-    }
-
-    private void refreshBackground(int currentValue, Button btn) {
-        if ((int) btn.getTag() == currentValue) {
-            btn.setBackgroundColor(getResources().getColor(R.color.blue_sky));
-        } else {
-            btn.setBackgroundResource(R.drawable.btn_bg);
-        }
     }
 
     @Override

@@ -46,17 +46,17 @@
 
                 <Button
                     android:id="@+id/btn_japan"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="JAPAN" />
 
                 <Button
                     android:id="@+id/btn_usa"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="USA" />
 
                 <Button
                     android:id="@+id/btn_kinesics"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="KINESICS" />
 
             </LinearLayout>

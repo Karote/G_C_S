@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
@@ -19,7 +18,6 @@ import com.coretronic.drone.ui.ViewManager;
 public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
     private static final String TAG = SettingsFragmentPilotingModePage.class.getSimpleName();
     private MainActivity activity;
-    private int currentJoypadModeValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,40 +30,19 @@ public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_piloting_mode_page, container, false);
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_headless, Setting.SettingType.ABSOLUTE_CONTROL);
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_left_handed, Setting.SettingType.LEFT_HANDED);
+
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_phone_tilt_max, Setting.SettingType.PHONE_TILT);
 
-        final Button[] buttons = new Button[3];
-        buttons[Setting.JOYPAD_MODE_JAPAN] = (Button) fragmentView.findViewById(R.id.btn_japan);
-        buttons[Setting.JOYPAD_MODE_JAPAN].setTag(Setting.JOYPAD_MODE_JAPAN);
+        ViewManager.assignSingleSelectionButton(activity, fragmentView, Setting.SettingType.JOYPAD_MODE,
+                new int[]{
+                        R.id.btn_japan,
+                        R.id.btn_usa,
+                        R.id.btn_kinesics},
+                new int[]{
+                        Setting.JOYPAD_MODE_JAPAN,
+                        Setting.JOYPAD_MODE_USA,
+                        Setting.JOYPAD_MODE_KINESICS});
 
-        buttons[Setting.JOYPAD_MODE_USA] = (Button) fragmentView.findViewById(R.id.btn_usa);
-        buttons[Setting.JOYPAD_MODE_USA].setTag(Setting.JOYPAD_MODE_USA);
-
-        buttons[Setting.JOYPAD_MODE_KINESICS] = (Button) fragmentView.findViewById(R.id.btn_kinesics);
-        buttons[Setting.JOYPAD_MODE_KINESICS].setTag(Setting.JOYPAD_MODE_KINESICS);
-
-        currentJoypadModeValue = activity.getSettingValue(Setting.SettingType.JOYPAD_MODE);
-        for (Button btn : buttons) {
-            refreshBackground(currentJoypadModeValue, btn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    currentJoypadModeValue = (int) view.getTag();
-                    activity.setSettingValue(Setting.SettingType.JOYPAD_MODE, currentJoypadModeValue);
-                    for (Button btn : buttons) {
-                        refreshBackground(currentJoypadModeValue, btn);
-                    }
-                }
-            });
-        }
         return fragmentView;
-    }
-
-    private void refreshBackground(int currentValue, Button btn) {
-        if ((int) btn.getTag() == currentValue) {
-            btn.setBackgroundColor(getResources().getColor(R.color.blue_sky));
-        } else {
-            btn.setBackgroundResource(R.drawable.btn_bg);
-        }
     }
 }

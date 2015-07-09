@@ -303,7 +303,7 @@ public class WaypointEditorFragment extends Fragment
     //
     @Override
     public void onStart(float latOffset, float longOffset) {
-
+        Toast.makeText(getActivity().getApplicationContext(), "Start Follow Me", Toast.LENGTH_SHORT).show();
     }
 
     @Override

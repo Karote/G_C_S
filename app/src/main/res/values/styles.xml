@@ -11,7 +11,7 @@
         <item name="android:textColor">#ffffff</item>
     </style>
 
-    <style name="setting_flip_orientation">
+    <style name="setting_btn">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">28dp</item>
         <item name="android:layout_weight">1</item>

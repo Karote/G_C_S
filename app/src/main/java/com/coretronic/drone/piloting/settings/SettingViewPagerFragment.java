@@ -28,15 +28,17 @@ import com.coretronic.drone.ui.PageIndicator;
  * Created by jiaLian on 15/4/1.
  */
 public class SettingViewPagerFragment extends UnBindDrawablesFragment implements ViewPager.OnPageChangeListener {
+
     private static final int PAGE_COUNT = 4;
-    public static final int STSUS_PAGE = 3;
+    public static final int STATUS_PAGE = 3;
+
     private static String[] titleString = {
             "PERSONAL SETTINGS",
             "FLIGHT SETTINGS",
             "PILOTING MODE",
             "STATUS"
     };
-    private ViewPager mViewPager;
+
     private TextView tvTitle;
     private PageIndicator pageIndicator;
     private LinearLayout defaultSetting;
@@ -44,16 +46,19 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_view_pager, container, false);
+
         fragmentView.findViewById(R.id.root_view).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
+
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager());
-        mViewPager = (ViewPager) fragmentView.findViewById(R.id.pager);
+        ViewPager mViewPager = (ViewPager) fragmentView.findViewById(R.id.pager);
         mViewPager.setOnPageChangeListener(this);
         mViewPager.setAdapter(pagerAdapter);
+
         pageIndicator = (PageIndicator) fragmentView.findViewById(R.id.page_indicator);
         pageIndicator.setPageCount(PAGE_COUNT);
 
@@ -69,6 +74,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         tvTitle.setText(titleString[mViewPager.getCurrentItem()]);
 
         defaultSetting = (LinearLayout) fragmentView.findViewById(R.id.default_set);
+
         defaultSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,19 +96,14 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
 
         PilotingFragment.markView.setBackgroundColor(Color.BLACK);
         PilotingFragment.markView.setAlpha(0.85f);
+
         for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
             joyStickSurfaceView.setVisibility(View.INVISIBLE);
         }
         return fragmentView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
+       @Override
     public void onPause() {
         super.onPause();
         ((MainActivity) getActivity()).saveSettingsValue();
@@ -113,10 +114,12 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         super.onDestroy();
         PilotingFragment.markView.setBackgroundColor(Color.TRANSPARENT);
         PilotingFragment.markView.setAlpha(1);
+
         for (JoyStickSurfaceView joyStickSurfaceView : PilotingFragment.joyStickSurfaceViews) {
-            joyStickSurfaceView.setPaintPressedAlpha(((MainActivity) getActivity()).getSettingValue(Setting.SettingType.INTERFACE_OPACTITY) / 100f);
+            joyStickSurfaceView.setPaintPressedAlpha(((MainActivity) getActivity()).getSettingValue(Setting.SettingType.INTERFACE_OPACITY) / 100f);
             joyStickSurfaceView.setVisibility(View.VISIBLE);
         }
+
         PilotingFragment.initialJoypadMode((MainActivity) getActivity());
     }
 
@@ -129,7 +132,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     public void onPageSelected(int i) {
         tvTitle.setText(titleString[i]);
         pageIndicator.setCurrentItem(i);
-        if (i == STSUS_PAGE) {
+        if (i == STATUS_PAGE) {
             defaultSetting.setVisibility(View.GONE);
         } else {
             defaultSetting.setVisibility(View.VISIBLE);

@@ -56,7 +56,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final String TAG = PilotingFragment.class.getSimpleName();
     private static final String SEND_DRONE_CONTROL = "send drone control: ";
 
-    private static final int UNLOCK_HOLD_ALTITUDE_DEFAULT = 0;
+    private static final int DEFAULT_UNLOCK_HOLD_ALTITUDE = 0;
     private static final boolean HOLD_ALTITUDE_UNLOCK = false;
     private static final boolean HOLD_ALTITUDE_LOCK = true;
 
@@ -66,10 +66,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
 
     public static final int MAX_SPEED = 50;
-    private static final int TAKE_OFF_ALTITUDE = 2;
+    private static final int DEFAULT_TAKE_OFF_ALTITUDE = 2;
 
     private static final int HANDLER_RELEASE_CONTROL = 1;
-    private static final int HANDLER_RECORDING_TIME = 2;
+    private static final int HANDLER_RECORDING_COUNTER = 2;
 
     private static final int CONTROL_RELEASE_DELAY_MILLIS = 120;
 
@@ -116,6 +116,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private float currentAltitude;
     private boolean isRecording = false;
     private int recordingTime = 0;
+    private Button btnHoldAlt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +149,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         return view;
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -157,11 +157,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
             initialG2Setting();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -262,7 +257,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private void assignViews(View view) {
         Button btnHome = (Button) view.findViewById(R.id.btn_home);
-        Button btnHoldAlt = (Button) view.findViewById(R.id.btn_hold_altitude);
         Button btnEmergency = (Button) view.findViewById(R.id.btn_emergency);
         Button btnDocking = (Button) view.findViewById(R.id.btn_docking);
         Button btnSelfie = (Button) view.findViewById(R.id.btn_selfie);
@@ -271,6 +265,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         Button btnBack = (Button) view.findViewById(R.id.btn_back);
         Button btnSettings = (Button) view.findViewById(R.id.btn_settings);
         btnAction = (Button) view.findViewById(R.id.btn_take_off);
+        btnHoldAlt = (Button) view.findViewById(R.id.btn_hold_altitude);
 
         btnDocking.setOnClickListener(this);
         btnSelfie.setOnClickListener(this);
@@ -354,22 +349,18 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                             case JoyStickSurfaceView.CONTROL_TYPE_PITCH_ROLL:
                                 controlWrap.changeRoll(dx);
                                 controlWrap.changePitch(-dy);
-                                Log.d(TAG, "onStickMoveEvent: Pitch " + (-dy) + ", Roll " + dx);
                                 break;
                             case JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_YAW:
                                 controlWrap.changeYaw(dx);
                                 controlWrap.changeThrottle(dy);
-                                Log.d(TAG, "onStickMoveEvent: Throttle " + dy + ", Yaw: " + dx);
                                 break;
                             case JoyStickSurfaceView.CONTROL_TYPE_PITCH_YAW:
                                 controlWrap.changeYaw(dx);
                                 controlWrap.changePitch(-dy);
-                                Log.d(TAG, "onStickMoveEvent: Pitch " + (-dy) + ", Yaw " + dx);
                                 break;
                             case JoyStickSurfaceView.CONTROL_TYPE_THROTTLE_ROLL:
                                 controlWrap.changeRoll(dx);
                                 controlWrap.changeThrottle(dy);
-                                Log.d(TAG, "onStickMoveEvent: Throttle " + dy + ", Roll: " + dx);
                                 break;
                         }
 
@@ -383,7 +374,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                     @Override
                     public void onDoubleClick(View view) {
                         sendFlip();
-                        Log.d(TAG, "onDoubleClick");
                     }
 
                     @Override
@@ -392,14 +382,11 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                             startPitch = pitch;
                             startRoll = roll;
                             isOnOrientationSensorMode = true;
-                            Log.d(TAG, "onOrientationSensorMode: Action down");
                         } else if (action == MotionEvent.ACTION_UP) {
-                            Log.d(TAG, "onOrientationSensorMode: Action up");
                             if (getController() != null) {
                                 controlWrap.pitch = ControlWrap.DEFAULT_VALUE;
                                 controlWrap.roll = ControlWrap.DEFAULT_VALUE;
                                 sendControl();
-
                                 //G2 release control
                                 pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS);
                                 pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RELEASE_CONTROL, CONTROL_RELEASE_DELAY_MILLIS * 2);
@@ -467,7 +454,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
 
         for (int i = 0; i < joyStickSurfaceViews.length; i++) {
-            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoypads[i], activity.getSettingValue(Setting.SettingType.INTERFACE_OPACTITY));
+            joyStickSurfaceViews[i].initJoyMode(controlType[i], isJoypads[i], activity.getSettingValue(Setting.SettingType.INTERFACE_OPACITY));
         }
     }
 
@@ -477,11 +464,9 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
             int type = event.sensor.getType();
             switch (type) {
                 case Sensor.TYPE_MAGNETIC_FIELD:
-                    // 取得加速度感應器資訊
                     magneticValues = event.values.clone();
                     break;
                 case Sensor.TYPE_ACCELEROMETER:
-                    // 取得磁場感應器資訊
                     accelerometerValues = event.values.clone();
                     break;
             }
@@ -553,51 +538,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         }
     };
 
-    private void sendControl() {
-        if (getController() != null) {
-            getController().control(controlWrap.roll, controlWrap.pitch, controlWrap.throttle, controlWrap.yaw);
-            Log.d(TAG, SEND_DRONE_CONTROL +
-                    "Throttle " + controlWrap.throttle +
-                    ", Yaw " + controlWrap.yaw +
-                    ", Pitch: " + controlWrap.pitch +
-                    ", Roll: " + controlWrap.roll);
-        }
-    }
-
-    private void sendLanding() {
-        if (getController() != null) {
-            getController().land();
-        }
-    }
-
-    private void sendTakeoff() {
-        if (getController() != null) {
-            getController().takeOff(TAKE_OFF_ALTITUDE);
-        }
-    }
-
-    private void sendEmergency() {
-        if (getController() != null) {
-            getController().emergency();
-        }
-    }
-
-    private void sendHoldAlt(float altitude) {
-        getController().holdAlt(altitude);
-    }
-
-    private void sendReturnToLanch() {
-        getController().returnToLaunch();
-    }
-
-    private void sendFlip() {
-        getController().flip(null);
-    }
-
-    private DroneController getController() {
-        return activity.getDroneController();
-    }
-
     private void setSize(int width, int height) {
         videoWidth = width;
         videoHeight = height;
@@ -648,9 +588,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                     @Override
                     public void run() {
                         llRecording.setVisibility(View.VISIBLE);
+                        tvRecordingTime.setText(stringForTime(0));
                     }
                 });
-                pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RECORDING_TIME, 1000);
+                pilotingStatusControlReleaseHandler.sendEmptyMessageDelayed(HANDLER_RECORDING_COUNTER, 1000);
                 recordingTime = 0;
                 Log.d(TAG, "onCommandResult: START_RECORD");
                 break;
@@ -661,7 +602,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                         llRecording.setVisibility(View.GONE);
                     }
                 });
-                pilotingStatusControlReleaseHandler.removeMessages(HANDLER_RECORDING_TIME);
+                pilotingStatusControlReleaseHandler.removeMessages(HANDLER_RECORDING_COUNTER);
                 Log.d(TAG, "onCommandResult: STOP_RECORD");
                 break;
             case TAKE_PHOTO:
@@ -683,66 +624,175 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
                 transaction.commit();
                 break;
             case R.id.btn_take_off:
-                Button btn = (Button) view;
                 if (!isTakeOff) {
                     sendTakeoff();
                     isTakeOff = true;
-                    btn.setBackgroundResource(R.drawable.btn_pilot_landing);
-                    Log.d(TAG, SEND_DRONE_CONTROL + "take off");
+                    view.setBackgroundResource(R.drawable.btn_pilot_landing);
                 } else {
                     sendLanding();
                     isTakeOff = false;
-                    btn.setBackgroundResource(R.drawable.btn_pilot_takeoff);
-                    Log.d(TAG, SEND_DRONE_CONTROL + "landing");
+                    view.setBackgroundResource(R.drawable.btn_pilot_takeoff);
+                    resetHoldAltBtn();
                 }
                 break;
             case R.id.btn_emergency:
                 sendEmergency();
                 isTakeOff = false;
                 btnAction.setBackgroundResource(R.drawable.btn_pilot_takeoff);
-                Log.d(TAG, SEND_DRONE_CONTROL + "Emergency");
+                resetHoldAltBtn();
                 break;
             case R.id.btn_hold_altitude:
                 if (!isTakeOff) {
-                    return;
+                    break;
                 }
                 if ((boolean) view.getTag() == HOLD_ALTITUDE_LOCK) {
                     view.setBackgroundResource(R.drawable.ico_pilot_altitude_unlock);
                     view.setTag(HOLD_ALTITUDE_UNLOCK);
-                    sendHoldAlt(UNLOCK_HOLD_ALTITUDE_DEFAULT);
-                    Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Unlock");
+                    sendHoldAlt(DEFAULT_UNLOCK_HOLD_ALTITUDE);
                 } else {
                     view.setBackgroundResource(R.drawable.ico_pilot_altitude_lock);
                     view.setTag(HOLD_ALTITUDE_LOCK);
                     sendHoldAlt(currentAltitude);
-                    Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Lock " + currentAltitude);
                 }
                 break;
             case R.id.btn_home:
                 if (!isTakeOff) {
-                    return;
+                    break;
                 }
-                sendReturnToLanch();
-                Log.d(TAG, SEND_DRONE_CONTROL + "RTL");
+                sendReturnToLaunch();
                 break;
             case R.id.btn_camera:
-                getController().takePhoto(PilotingFragment.this);
+                sendTakePhoto();
                 break;
             case R.id.btn_recording:
                 if (isRecording) {
-                    getController().stopRecord(PilotingFragment.this);
+                    sendStopRecord();
                     isRecording = false;
                 } else {
-                    getController().startRecord(PilotingFragment.this);
+                    sendStartRecord();
                     isRecording = true;
                 }
                 break;
             case R.id.btn_selfie:
-                getController().triggerAutoControl(DroneController.AutoControlMode.DISABLE, null);
+                sendSelfie();
                 break;
             case R.id.btn_docking:
-                getController().triggerAutoControl(DroneController.AutoControlMode.AUTO_DUCKING, null);
+                if (!isTakeOff) {
+                    break;
+                }
+                sendAutoDocking();
                 break;
+        }
+    }
+
+    private void sendControl() {
+        if (getController() != null) {
+            getController().control(controlWrap.roll, controlWrap.pitch, controlWrap.throttle, controlWrap.yaw);
+            Log.d(TAG, SEND_DRONE_CONTROL +
+                    "Throttle " + controlWrap.throttle +
+                    ", Yaw " + controlWrap.yaw +
+                    ", Pitch: " + controlWrap.pitch +
+                    ", Roll: " + controlWrap.roll);
+        }
+    }
+
+    private void sendEmergency() {
+        if (getController() != null) {
+            getController().emergency();
+            Log.d(TAG, SEND_DRONE_CONTROL + "Emergency");
+        }
+    }
+
+    private void sendTakeoff() {
+        if (getController() != null) {
+            getController().takeOff(DEFAULT_TAKE_OFF_ALTITUDE);
+            Log.d(TAG, SEND_DRONE_CONTROL + "Take Off");
+        }
+    }
+
+    private void sendLanding() {
+        if (getController() != null) {
+            getController().land();
+            Log.d(TAG, SEND_DRONE_CONTROL + "Landing");
+        }
+    }
+
+    private void sendHoldAlt(float altitude) {
+        if (getController() != null) {
+            getController().holdAlt(altitude);
+            if (altitude == DEFAULT_UNLOCK_HOLD_ALTITUDE) {
+                Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Unlock");
+            } else {
+                Log.d(TAG, SEND_DRONE_CONTROL + "Hold Altitude Lock " + altitude);
+            }
+        }
+    }
+
+    private void sendReturnToLaunch() {
+        if (getController() != null) {
+            getController().returnToLaunch();
+            Log.d(TAG, SEND_DRONE_CONTROL + "Return to Launch");
+        }
+    }
+
+    private void sendFlip() {
+        if (getController() != null) {
+            getController().flip(null);
+            Log.d(TAG, SEND_DRONE_CONTROL + "Flip");
+        }
+    }
+
+    private void sendTakePhoto() {
+        if (getController() != null) {
+            getController().takePhoto(PilotingFragment.this);
+            Log.d(TAG, SEND_DRONE_CONTROL + "Take Photo");
+        }
+    }
+
+    private void sendStartRecord() {
+        if (getController() != null) {
+            getController().startRecord(PilotingFragment.this);
+            Log.d(TAG, SEND_DRONE_CONTROL + "Start Recording");
+        }
+    }
+
+    private void sendStopRecord() {
+        if (getController() != null) {
+            getController().stopRecord(PilotingFragment.this);
+            Log.d(TAG, SEND_DRONE_CONTROL + "Stop Recording");
+        }
+    }
+
+    private void sendSelfie() {
+        if (getController() != null) {
+            getController().triggerAutoControl(DroneController.AutoControlMode.DISABLE, null);
+//            Log.d(TAG, SEND_DRONE_CONTROL + "Smile Photo");
+        }
+    }
+
+    private void sendAutoDocking() {
+        if (getController() != null) {
+            getController().triggerAutoControl(DroneController.AutoControlMode.AUTO_DUCKING, null);
+            Log.d(TAG, SEND_DRONE_CONTROL + "Auto Docking");
+        }
+    }
+
+    private DroneController getController() {
+        return activity.getDroneController();
+    }
+
+    private void resetHoldAltBtn() {
+        btnHoldAlt.setBackgroundResource(R.drawable.ico_pilot_altitude_unlock);
+        btnHoldAlt.setTag(HOLD_ALTITUDE_UNLOCK);
+        sendHoldAlt(DEFAULT_UNLOCK_HOLD_ALTITUDE);
+    }
+
+    private void initialG2Setting() {
+        for (Setting setting : activity.getSettings()) {
+            if (setting.getParameterType() != null) {
+                activity.setParameters(setting.getParameterType(), setting.getParameter());
+                Log.d(TAG, "Initial G2 parameter" + setting.getParameterType() + ", " + setting.getParameter().getValue());
+            }
         }
     }
 
@@ -796,23 +846,14 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == HANDLER_RELEASE_CONTROL) {
-                Log.d(TAG, SEND_DRONE_CONTROL + "release control");
                 sendControl();
-            } else if (msg.what == HANDLER_RECORDING_TIME) {
+            } else if (msg.what == HANDLER_RECORDING_COUNTER) {
                 tvRecordingTime.setText((stringForTime(++recordingTime)) + "");
-                this.sendEmptyMessageDelayed(HANDLER_RECORDING_TIME, 1000);
+                this.sendEmptyMessageDelayed(HANDLER_RECORDING_COUNTER, 1000);
             }
         }
     }
 
-    private void initialG2Setting() {
-        for (Setting setting : activity.getSettings()) {
-            if (setting.getParameterType() != null) {
-                activity.setParameters(setting.getParameterType(), setting.getParameter());
-                Log.d(TAG, "Initial G2 parameter" + setting.getParameterType() + ", " + setting.getParameter().getValue());
-            }
-        }
-    }
 
     public static String stringForTime(int time) {
         Formatter formatter = new Formatter(new StringBuilder(), Locale.getDefault());
@@ -830,12 +871,12 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     }
 
     private class ControlWrap {
+        public final static int DEFAULT_VALUE = 0;
+        public final static int DEFAULT_RADIUS = 100;
         private float pitch = 0;
         private float roll = 0;
         private float throttle = 0;
         private float yaw = 0;
-        public final static int DEFAULT_VALUE = 0;
-        public final static int DEFAULT_RADIUS = 100;
 
         public int changePitch(float pitch) {
             this.pitch = changeValue(pitch);

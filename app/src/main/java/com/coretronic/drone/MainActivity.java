@@ -40,10 +40,9 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
     private static final char DEGREE_SYMBOL = 0x00B0;   //º
 
-    public static final String SETTINGS_VALUE = "settings_value";
-    public static final String SETTING = "setting";
     public static final String SETTING_NAME_2015 = "setting_2015";
     public static final String SETTING_NAME_G2 = "setting_g2";
+    public static final String SETTINGS_VALUE = "settings_value";
 
     public static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
 
@@ -283,13 +282,13 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
     }
 
     private void defaultSettings() {
-        settings[Setting.SettingType.INTERFACE_OPACTITY.ordinal()] = new Setting(20, 100, 70, "%");
+        settings[Setting.SettingType.INTERFACE_OPACITY.ordinal()] = new Setting(20, 100, 50, "%");
         settings[Setting.SettingType.SD_RECORD.ordinal()] = new Setting(Setting.ON);
         settings[Setting.SettingType.FLIP_ENABLE.ordinal()] = new Setting(Parameter.Type.FLIP, Setting.OFF);
-        settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()] = new Setting(Parameter.Type.FLIP_ORIENTATION, Setting.FLIP_ORIENTATION_LEFT);
+        settings[Setting.SettingType.FLIP_ORIENTATION.ordinal()] = new Setting(Parameter.Type.FLIP_ORIENTATION, Setting.FLIP_ORIENTATION_RIGHT);
 
         settings[Setting.SettingType.JOYPAD_MODE.ordinal()] = new Setting(Setting.JOYPAD_MODE_USA);
-        settings[Setting.SettingType.ABSOLUTE_CONTROL.ordinal()] = new Setting(Parameter.Type.ABSOLUTE_CONTROL, Setting.OFF);
+        settings[Setting.SettingType.ABSOLUTE_CONTROL.ordinal()] = new Setting(Parameter.Type.ABSOLUTE_CONTROL, Setting.ON);
         settings[Setting.SettingType.LEFT_HANDED.ordinal()] = new Setting(Setting.OFF);
         settings[Setting.SettingType.PHONE_TILT.ordinal()] = new Setting(5, 50, 20, String.valueOf(DEGREE_SYMBOL));
 
