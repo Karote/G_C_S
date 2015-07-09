@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by james on 15/6/1.
@@ -43,7 +42,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
     private String FILTER_MEDIA_FOLDER = "";
     private static String TAG = AlbumSmartPhoneTagFragment.class.getSimpleName();
     private Context mContext = null;
-    private RecyclerView albumGridView = null;
+    private AutofitRecyclerView albumGridView = null;
     private AlbumGridViewAdapter albumGridViewAdapter = null;
     private ArrayList<MediaItem> albumImgList = new ArrayList<MediaItem>();
     private FragmentManager fragmentManager = null;
@@ -70,9 +69,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
 //        loadingPhotoProgress = (ProgressBar) view.findViewById(R.id.loadphoto_progressbar);
         noMediaTV = (TextView) view.findViewById(R.id.no_mediainfolder_tv);
-        albumGridView = (RecyclerView) view.findViewById(R.id.album_grid_view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
-        albumGridView.setLayoutManager(gridLayoutManager);
+        albumGridView = (AutofitRecyclerView) view.findViewById(R.id.album_grid_view);
 
 
 //        loadingPhotoProgress.setVisibility(View.VISIBLE);
@@ -105,6 +102,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
                 MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.DATE_MODIFIED,
                 MediaStore.Files.FileColumns.MEDIA_TYPE,
+                MediaStore.Video.Media.DURATION,
                 MediaStore.Files.FileColumns.MIME_TYPE,
                 MediaStore.Files.FileColumns.TITLE
         };
@@ -143,10 +141,14 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
             Log.i(TAG, "fileFullPath:" + fileFullPath);
             if (!fileFullPath.contains(FILTER_MEDIA_FOLDER)) {
-                return;
+                continue;
             }
             long fileId = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
             int imgType = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)));
+
+            long videoDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+            String duration = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(videoDuration),
+                    TimeUnit.MILLISECONDS.toSeconds(videoDuration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(videoDuration)));
 
             String fileAddDate = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED));
             Calendar calendar = Calendar.getInstance();
@@ -164,7 +166,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
             }
             Log.i(TAG, "filePath/fileId/imgType/mediaFileDate:" + fileFullPath + fileId + imgType + timeStamp);
 
-            albumImgList.add(new MediaItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, false));
+            albumImgList.add(new MediaItem(fileFullPath, mediaDate, "Image#" + i, fileId, imgType, duration, false));
         }
 
         Collections.sort(albumImgList, new Comparator<MediaItem>() {

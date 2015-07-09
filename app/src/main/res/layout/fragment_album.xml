@@ -1,120 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/white"
-              android:clickable="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:orientation="vertical">
 
-    <RelativeLayout android:layout_width="match_parent"
-                  android:layout_height="44dp"
-                  android:orientation="horizontal"
-            android:background="@android:color/darker_gray">
-        <Button
-                android:id="@+id/album_backbtn"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="4dp"
-                android:background="@drawable/btn_pilot_back" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/blue_sky_light"
+        android:orientation="horizontal">
+
         <com.coretronic.drone.ui.StatusView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/album_backbtn"/>
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                android:text="Photos/Videos"
-                android:textSize="26dp"
-                android:layout_centerInParent="true"/>
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
-    </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:text="Photo/Video"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <RelativeLayout android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:clickable="true">
-        <LinearLayout android:id="@+id/switch_layout"
-                      android:layout_width="fill_parent"
-                      android:layout_height="54dp"
-                      android:orientation="horizontal"
-                      android:layout_centerInParent="true"
-                      >
-            <Button android:id="@+id/drone_switchbtn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="170dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/album_left_switch_selector"
-                    android:text="@string/album_toggle_drone"
-                    android:textColor="@drawable/selector_buttons_text"/>
-            <Button android:id="@+id/smartphone_switchbtn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="170dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/album_right_switch_selector"
-                    android:textColor="@drawable/selector_buttons_text"
-                    android:text="@string/album_toggle_smartphone"
-                    android:layout_weight="1"/>
+        <Button
+            android:id="@+id/album_backbtn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/btn_action_back" />
 
+        <LinearLayout
+            android:id="@+id/switch_layout"
+            android:layout_width="200dp"
+            android:layout_height="24dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/btn_tab_catogory_left"
+            android:orientation="horizontal"
+            android:padding="0dp">
 
+            <Button
+                android:id="@+id/drone_switchbtn"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="sans-serif"
+                android:padding="0dp"
+                android:text="@string/album_toggle_drone"
+                android:textColor="@drawable/selector_buttons_text"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/smartphone_switchbtn"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="sans-serif"
+                android:padding="0dp"
+                android:text="@string/album_toggle_smartphone"
+                android:textColor="@drawable/selector_buttons_text"
+                android:textSize="14sp" />
         </LinearLayout>
 
-        <RelativeLayout android:id="@+id/album_menu_option"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:visibility="invisible">
+        <RelativeLayout
+            android:id="@+id/album_menu_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
 
-            <ImageButton android:id="@+id/rubbish_bin_btn"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_alignParentRight="true"
-                         android:layout_marginRight="20dp"
-                         android:src="@drawable/ic_album_delete_n"
-                         android:visibility="visible"/>
+            <Button
+                android:id="@+id/rubbish_bin_btn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/btn_action_delete"
+                android:visibility="visible" />
 
-            <!--now no function , so I set visibility gone-->
-            <ImageButton android:id="@+id/list_share_btn"
-                         android:src="@drawable/ic_album_share_n"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_toLeftOf="@id/rubbish_bin_btn"
-                         android:layout_marginRight="0dp"
-                         android:visibility="gone"
-                    />
+            <Button
+                android:id="@+id/list_share_btn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@id/rubbish_bin_btn"
+                android:layout_toStartOf="@id/rubbish_bin_btn"
+                android:background="@drawable/btn_action_share"
+                android:visibility="gone" />
         </RelativeLayout>
-        <LinearLayout android:id="@+id/delete_option_layout"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:layout_below="@id/album_menu_option"
-                      android:layout_alignParentRight="true"
-                      android:layout_marginRight="20dp"
-                      android:visibility="gone">
-            <Button android:id="@+id/cancel_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel"/>
 
-            <Button android:id="@+id/delete_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Delete"/>
+        <RelativeLayout
+            android:id="@+id/delete_option_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/blue_sky_light"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-        </LinearLayout>
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:background="#00000000"
+                android:fontFamily="sans-serif"
+                android:text="Cancel"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/delete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#00000000"
+                android:fontFamily="sans-serif"
+                android:text="Delete"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
     </RelativeLayout>
-    <FrameLayout android:id="@+id/album_fragment_container"
-                 android:orientation="horizontal"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_marginTop="0dp"
-                 android:background="@android:color/white">
 
-    </FrameLayout>
-
+    <FrameLayout
+        android:id="@+id/album_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal" />
 </LinearLayout>

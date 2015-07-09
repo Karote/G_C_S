@@ -12,8 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
@@ -45,7 +45,12 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
         this.resourceId = resource;
 
         this.mediaItems = data;
-//        Collections.sort(this.data, new CustomComparator());
+        Collections.sort(this.mediaItems, new Comparator<MediaItem>() {
+            @Override
+            public int compare(MediaItem lhs, MediaItem rhs) {
+                return rhs.getMediaDate().compareTo(lhs.getMediaDate());
+            }
+        });
     }
 
 
@@ -72,6 +77,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
                     MediaStore.Images.Thumbnails.MINI_KIND, null);
 
             viewHolder.videoTagImg.setVisibility(View.GONE);
+            viewHolder.videoTime.setVisibility(View.GONE);
 
         } else if (item.getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
             // video file
@@ -79,6 +85,8 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
                             .getApplicationContext().getContentResolver(), item.getMediaId(),
                     MediaStore.Images.Thumbnails.MINI_KIND, null);
             viewHolder.videoTagImg.setVisibility(View.VISIBLE);
+            viewHolder.videoTime.setText(item.getMediaDuration());
+            viewHolder.videoTime.setVisibility(View.VISIBLE);
         }
 
 //        bitmap = Bitmap.createBitmap(
@@ -89,14 +97,11 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 //                bitmap.getHeight() - 50 * 2
 //        );
         viewHolder.mediaImage.setImageBitmap(bitmap);
+        viewHolder.mediaImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        viewHolder.selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);
         ((MediaItem) mediaItems.get(i)).setIsMediaSelect(false);
 
-        // set delete option
-        if (isShowDeleteOption) {
-            viewHolder.selectTagImg.setVisibility(View.VISIBLE);
-        } else {
+        if (!isShowDeleteOption) {
             viewHolder.selectTagImg.setVisibility(View.GONE);
         }
     }
@@ -109,8 +114,8 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        RelativeLayout itemLayout = null;
-        TextView imageTitle = null;
+        FrameLayout itemLayout = null;
+        TextView videoTime = null;
         ImageView mediaImage = null;
         ImageView videoTagImg = null;
         ImageView selectTagImg = null;
@@ -118,8 +123,8 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_layout);
-            imageTitle = (TextView) itemView.findViewById(R.id.imageview_title);
+            itemLayout = (FrameLayout) itemView.findViewById(R.id.item_layout);
+            videoTime = (TextView) itemView.findViewById(R.id.video_time);
             mediaImage = (ImageView) itemView.findViewById(R.id.imageview);
             videoTagImg = (ImageView) itemView.findViewById(R.id.video_tag);
             selectTagImg = (ImageView) itemView.findViewById(R.id.select_tag);
@@ -141,7 +146,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
                 if (((MediaItem) mediaItems.get(itemPos)).getIsMediaSelect()) {
 
-                    selectTagImg.setImageResource(R.drawable.ic_album_uncheck_n);
+                    selectTagImg.setVisibility(View.GONE);
                     ((MediaItem) mediaItems.get(itemPos)).setIsMediaSelect(false);
                     // if selected path is contain arraylist
                     if (selectedPathAryList.contains(((MediaItem) mediaItems.get(itemPos)).getMediaId())) {
@@ -150,7 +155,7 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
 
                 } else {
                     ((MediaItem) mediaItems.get(itemPos)).setIsMediaSelect(true);
-                    selectTagImg.setImageResource(R.drawable.ic_album_check_n);
+                    selectTagImg.setVisibility(View.VISIBLE);
 
                     selectedPathAryList.add(((MediaItem) mediaItems.get(itemPos)).getMediaId());
                 }
@@ -187,15 +192,6 @@ public class AlbumGridViewAdapter extends RecyclerView.Adapter<AlbumGridViewAdap
     public void setIsShowDeleteOption(Boolean isShowDeleteOption) {
         this.isShowDeleteOption = isShowDeleteOption;
     }
-
-
-    //    public class CustomComparator implements Comparator<ImageItem> {
-//
-//        @Override
-//        public int compare(ImageItem lhs, ImageItem rhs) {
-//            return lhs.getMediaDate().compareTo(rhs.getMediaDate());
-//        }
-//    }
 
     public class CustomComparator implements Comparator<Long> {
 

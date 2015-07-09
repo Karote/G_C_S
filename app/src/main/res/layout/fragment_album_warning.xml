@@ -1,86 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#303030"
+    android:layout_width="376dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_dialog_bg"
     android:clickable="true"
-    android:keepScreenOn="true"
-    android:orientation="vertical">
+    android:keepScreenOn="true">
 
-    <LinearLayout
-        android:id="@+id/wraning_ll"
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/downloadbarll"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_album_warning" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Size to big!"
-                android:textColor="#FFFFFF"
-                android:textSize="26dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Recommand to read on computer."
-                android:textColor="#FFFFFF"
-                android:textSize="26dp" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/progressbarll"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/wraning_ll"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="36dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/timetv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="calculate download time..."
-            android:textColor="#FFFFFF"
-            android:textSize="24dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="sans-serif-light"
+            android:text="--:--"
+            android:textColor="#939393"
+            android:textSize="12sp" />
 
-        <ProgressBar
-            android:id="@+id/downloadbar"
-            style="@style/CustomProgressBarHorizontal"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="20dp" />
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/timetv"
+            android:layout_toStartOf="@id/timetv">
 
-        <Button
-            android:id="@+id/stopdownload_btn"
-            android:layout_width="100dp"
+            <ProgressBar
+                android:id="@+id/downloadbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:progressDrawable="@drawable/progress_drawable_download" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/wraning_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/downloadbarll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="28dp"
-            android:background="#A0A0A0"
-            android:text="Stop"
-            android:textColor="@android:color/black"
-            android:textSize="26dp" />
+            android:fontFamily="sans-serif"
+            android:text="Size to big. "
+            android:textColor="#474747"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Recommand to read on computer."
+            android:textColor="#474747"
+            android:textSize="14sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/stopdownload_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/wraning_ll"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="36dp"
+        android:text="Stop Download"
+        android:textColor="@drawable/btn_album_stop_download"
+        android:textSize="16sp" />
 
 </RelativeLayout>
