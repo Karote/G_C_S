@@ -193,11 +193,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
-                              if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
-                                  statusView.setGpsVisibility(eph == 1 ? View.VISIBLE : View.GONE);
-                              } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-                                  statusView.setGpsVisibility((eph == 0 || eph == 9999) ? View.GONE : View.VISIBLE);
-                              }
+                              statusView.setGpsVisibility(hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
                           }
                       }
         );
@@ -266,6 +262,15 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
                 Log.d(TAG, "onParameterLoaded setting: " + setting.getValue());
             }
         }
+    }
+
+    public boolean hasGPSSignal(int eph) {
+        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
+            return eph == 1 ? true : false;
+        } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
+            return (eph == 0 || eph == 9999) ? false : true;
+        }
+        return false;
     }
 
     private void initialSetting() {

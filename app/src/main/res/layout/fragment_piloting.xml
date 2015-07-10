@@ -49,8 +49,16 @@
         android:id="@+id/btn_back"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_marginLeft="4dp"
         android:background="@drawable/btn_pilot_back" />
+
+    <Button
+        android:id="@+id/btn_hold_altitude"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="1dp"
+        android:layout_gravity="right"
+        android:background="@drawable/btn_piloting_hold_altitude"
+        android:visibility="gone" />
 
     <com.coretronic.drone.ui.StatusView
         android:id="@+id/status"
@@ -59,10 +67,10 @@
         android:layout_marginLeft="56dp" />
 
     <FrameLayout
-        android:layout_width="102dp"
+        android:layout_width="106dp"
         android:layout_height="44dp"
         android:layout_gravity="right"
-        android:layout_marginRight="9dp">
+        android:layout_marginRight="2dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -79,71 +87,7 @@
             android:textColor="#ffffff"
             android:textSize="12sp" />
 
-        <Button
-            android:id="@+id/btn_hold_altitude"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="right"
-            android:background="@drawable/ico_pilot_altitude_unlock"
-            android:visibility="gone" />
     </FrameLayout>
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical">-->
-
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="50dp"-->
-    <!--android:layout_marginLeft="50dp"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<View-->
-    <!--android:layout_width="1dp"-->
-    <!--android:layout_height="match_parent" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_battery"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_margin="10dp"-->
-    <!--android:text="0%"-->
-    <!--android:textColor="@android:color/white" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_pitch"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_margin="10dp"-->
-    <!--android:text="pitch: 0"-->
-    <!--android:textColor="@android:color/white" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_roll"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_margin="10dp"-->
-    <!--android:text="roll: 0"-->
-    <!--android:textColor="@android:color/white" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_altitude"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_margin="10dp"-->
-    <!--android:text="0m"-->
-    <!--android:textColor="@android:color/white" />-->
-    <!--&lt;!&ndash;<Spinner&ndash;&gt;-->
-    <!--&lt;!&ndash;android:id="@+id/spinner_drone_device"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_height="match_parent" />&ndash;&gt;-->
-
-    <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -162,12 +106,6 @@
                 layout="@layout/joystick_module" />
         </FrameLayout>
 
-        <!--<View-->
-        <!--android:layout_width="1dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:alpha="0.3"-->
-        <!--android:background="@android:color/darker_gray" />-->
-
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -179,7 +117,6 @@
                 layout="@layout/joystick_module" />
         </FrameLayout>
     </LinearLayout>
-    <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -232,13 +169,13 @@
                 android:background="@drawable/btn_pilot_home" />
 
             <Button
-                android:id="@+id/btn_take_off"
+                android:id="@+id/btn_action"
                 android:layout_width="100dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/btn_pilot_takeoff" />
+                android:background="@drawable/btn_piloting_action_mode" />
 
             <Button
                 android:id="@+id/btn_docking"

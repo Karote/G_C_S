@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.coretronic.drone.Drone;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.ui.StatusView;
@@ -114,10 +115,16 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
 
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((MainActivity) fragmentActivity).unregisterDroneStatusChangedListener(this);
+    }
 
     private View.OnClickListener rubbishBinBtnAction = new View.OnClickListener() {
 
@@ -296,7 +303,6 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
                 statusView.setBatteryStatus(battery);
             }
         });
-
     }
 
     @Override
@@ -316,8 +322,15 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     }
 
     @Override
-    public void onLocationUpdate(long lat, long lon, int eph) {
+    public void onLocationUpdate(long lat, long lon, final int eph) {
+        fragmentActivity.runOnUiThread(new Runnable() {
 
+                                           @Override
+                                           public void run() {
+                                               statusView.setGpsVisibility(((MainActivity) fragmentActivity).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
+                                           }
+                                       }
+        );
     }
 
     @Override

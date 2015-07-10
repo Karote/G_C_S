@@ -283,7 +283,9 @@ public class WaypointEditorFragment extends Fragment
             public void run() {
                 tv_droneLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
                 webview_WayPoint.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
+                statusView.setGpsVisibility(((MainActivity) fragmentActivity).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
             }
+
         });
     }
 

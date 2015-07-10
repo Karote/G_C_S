@@ -36,7 +36,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
 
     private static final int DISTANCE_TOLERANCE = 20;
     private static final int TIME_DELAY = 60;
-    private static final int PAINT_PRESSED_ALPHA_DEFAULT = 180;
 
     private Bitmap throttleUpBitmap;
     private Bitmap yawRightBitmap;
@@ -105,10 +104,6 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);
         arrowUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_up), indicatorSize, indicatorSize);
         arrowRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_right), indicatorSize, indicatorSize);
-
-        if (stickListener != null) {
-            stickListener.onStickMoveEvent(JoyStickSurfaceView.this, MotionEvent.ACTION_UP, 0, 0);
-        }
     }
 
     @Override
