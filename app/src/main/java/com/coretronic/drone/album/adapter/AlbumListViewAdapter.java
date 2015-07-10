@@ -30,7 +30,7 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
 
 
     public interface OnItemClickListener {
-//        void onItemDeleteClick(View view, int position);
+        //        void onItemDeleteClick(View view, int position);
         void onDownloadClick(View view, int position);
     }
 
@@ -39,8 +39,6 @@ public class AlbumListViewAdapter extends RecyclerView.Adapter<AlbumListViewAdap
     public void SetOnItemClickListener(final OnItemClickListener listener) {
         mItemClickListener = listener;
     }
-
-
 
 
     public AlbumListViewAdapter(Context context, ArrayList<MediaListItem> data) {

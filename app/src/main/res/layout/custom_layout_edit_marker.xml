@@ -75,6 +75,7 @@
                 android:textColor="#FFFFFF"
                 android:background="@drawable/btn_delete_bg"
                 android:textSize="12sp" />
+
             <Button
                 android:id="@+id/btn_delete_all"
                 android:layout_width="52dp"

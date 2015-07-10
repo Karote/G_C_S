@@ -103,7 +103,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         return fragmentView;
     }
 
-       @Override
+    @Override
     public void onPause() {
         super.onPause();
         ((MainActivity) getActivity()).saveSettingsValue();

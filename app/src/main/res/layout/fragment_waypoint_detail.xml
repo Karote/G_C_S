@@ -35,7 +35,7 @@
             android:layout_height="16dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ico_indicator_plan_waypoint"/>
+            android:background="@drawable/ico_indicator_plan_waypoint" />
 
         <Spinner
             android:id="@+id/spinner_detail_waypoint_type"

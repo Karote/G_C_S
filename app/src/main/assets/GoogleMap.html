@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<title>Google Map</title>
-		<style>
-			html {
-				height: 100%
-			}
-			body {
-				height: 100%;
-				margin: 0;
-				padding: 0
-			}
-			.mapIconLabel {
-				font-size: 14px;
-				font-weight: bold;
-				color: #FFFFFF;
-			}
-		</style>
-		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw"></script>
-		<script src="geolocationmarker-compiled.js"></script>
-		<script src="markerwithlabel.js"></script>
-		<script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <title>Google Map</title>
+    <style>
+        html {
+        height: 100%
+        }
+        body {
+        height: 100%;
+        margin: 0;
+        padding: 0
+        }
+        .mapIconLabel {
+        font-size: 14px;
+        font-weight: bold;
+        color: #FFFFFF;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw"></script>
+    <script src="geolocationmarker-compiled.js"></script>
+    <script src="markerwithlabel.js"></script>
+    <script>
             var map,
                 GeoMarker,
                 droneMarkerOuter,
@@ -286,9 +286,10 @@
             	poly.setMap(option);
             }
             
-		</script>
-	</head>
-	<body onload="initialize()">
-		<div id="map" style="width: 100%; height: 100%;"> </div>
-	</body>
+
+    </script>
+</head>
+<body onload="initialize()">
+<div id="map" style="width: 100%; height: 100%;"></div>
+</body>
 </html>

@@ -9,30 +9,30 @@
         android:layout_height="match_parent">
 
         <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_gravity="bottom|center">-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_gravity="bottom|center">-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tv_dy"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:text="y: 0"-->
-                <!--android:textColor="@android:color/white" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/tv_dy"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="y: 0"-->
+        <!--android:textColor="@android:color/white" />-->
 
-            <!--<View-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="match_parent"/>-->
+        <!--<View-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="match_parent"/>-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tv_dx"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:text="x: 0"-->
-                <!--android:textColor="@android:color/white" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/tv_dx"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="x: 0"-->
+        <!--android:textColor="@android:color/white" />-->
         <!--</LinearLayout>-->
 
         <com.coretronic.drone.ui.JoyStickSurfaceView
@@ -40,6 +40,6 @@
             android:layout_width="@dimen/joypad_size"
             android:layout_height="@dimen/joypad_size"
             android:layout_gravity="center|bottom"
-            android:layout_margin="65dp"/>
+            android:layout_margin="65dp" />
     </FrameLayout>
 </FrameLayout>

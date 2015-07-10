@@ -5,5 +5,4 @@
     android:layout_height="wrap_content"
     android:fontFamily="sans-serif"
     android:textColor="#FFFFFF"
-    android:textSize="12sp">
-</TextView>
+    android:textSize="12sp"></TextView>

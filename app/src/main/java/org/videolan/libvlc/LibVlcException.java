@@ -19,6 +19,8 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
  * ***************************************************************************
  * LibVlcException: exceptions thrown by the native LibVLC interface
+ * <p/>
+ * LibVlcException: exceptions thrown by the native LibVLC interface
  */
 
 /**
