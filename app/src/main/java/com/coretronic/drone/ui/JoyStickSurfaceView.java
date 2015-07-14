@@ -83,8 +83,13 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         stickPaint = new Paint();
         stickPaint.setColor(Color.WHITE);
         stickPaint.setAntiAlias(true);
-//        stickPaint.setAlpha(paintNormalAlpha);
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
+
+        int indicatorSize = (int) getResources().getDimension(R.dimen.joypad_indicator_size);
+        throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
+        yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);
+        arrowUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_up), indicatorSize, indicatorSize);
+        arrowRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_right), indicatorSize, indicatorSize);
     }
 
     public void setPaintPressedAlpha(float rate) {
@@ -96,14 +101,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     public void initJoyMode(int controlType, boolean isJoypad, int alpha) {
         this.controlType = controlType;
         this.isJoypad = isJoypad;
-        int indicatorSize = (int) getResources().getDimension(R.dimen.joypad_indicator_size);
-
         setPaintPressedAlpha(alpha / 100f);
-
-        throttleUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_speed_up), indicatorSize, indicatorSize);
-        yawRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_spin_right), indicatorSize, indicatorSize);
-        arrowUpBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_up), indicatorSize, indicatorSize);
-        arrowRightBitmap = getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ico_joypad_arrow_right), indicatorSize, indicatorSize);
     }
 
     @Override
@@ -119,8 +117,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         rockerPoint = new Point(startPoint);
         padRadius = (int) ((width >> 1) - getResources().getDimension(R.dimen.joypad_rim_width) / 2f);
         stickShiftRadius = (int) (padRadius - getResources().getDimension(R.dimen.stick_size) / 2f);
-//        ((DroneG2Application) getContext().getApplicationContext()).joyStickRadius = padRadius;
-    }
+  }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -160,7 +157,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         if (action == MotionEvent.ACTION_DOWN) {
             stickPaint.setAlpha(paintPressedAlpha);
             if (stickListener != null && !isJoypad) {
-                stickListener.onOrientationSensorMode(MotionEvent.ACTION_DOWN);
+                stickListener.onOrientationAction(MotionEvent.ACTION_DOWN);
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
             if (distance <= stickShiftRadius) {
@@ -181,7 +178,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
             if (stickListener != null && isJoypad) {
                 stickListener.onStickMoveEvent(JoyStickSurfaceView.this, action, 0, 0);
             } else if (stickListener != null && !isJoypad) {
-                stickListener.onOrientationSensorMode(MotionEvent.ACTION_UP);
+                stickListener.onOrientationAction(MotionEvent.ACTION_UP);
             }
             stickPaint.setAlpha(paintNormalAlpha);
         }
@@ -265,7 +262,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     }
 
 
-    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+    private Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;
@@ -314,7 +311,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
     public interface OnStickListener {
         void onStickMoveEvent(View view, int action, int dx, int dy);
 
-        void onOrientationSensorMode(int action);
+        void onOrientationAction(int action);
 
         void onDoubleClick(View view);
     }

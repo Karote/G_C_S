@@ -103,7 +103,6 @@ public class AlbumPagerPreviewDetailFragment extends UnBindDrawablesFragment {
         videoTimerTV = (TextView) fragmentView.findViewById(R.id.preview_play_time_tv);
         videoControlBtn = (ImageButton) fragmentView.findViewById(R.id.video_controller_ib);
         videoBigControlBtn = (ImageButton) fragmentView.findViewById(R.id.video_controller_big_ib);
-
         previewVideo.setOnTouchListener(videoViewClickListener);
         previewVideo.setOnCompletionListener(previewVideoCompletionListener);
 //        previewVideo.setOnPreparedListener(previewVideoOnPreparedListener);

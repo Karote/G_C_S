@@ -34,17 +34,17 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends LandscapeFragmentActivity implements View.OnClickListener, DroneController.ParameterLoaderListener {
+public class MainActivity extends LandscapeFragmentActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneController.ParameterLoaderListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final String G2_IP = "192.168.42.1";
+    private static final String G2_IP = "192.168.42.1";
 
     private static final char DEGREE_SYMBOL = 0x00B0;   //º
 
-    public static final String SETTING_NAME_2015 = "setting_2015";
-    public static final String SETTING_NAME_G2 = "setting_g2";
-    public static final String SETTINGS_VALUE = "settings_value";
+    private static final String SETTING_NAME_2015 = "setting_2015";
+    private static final String SETTING_NAME_G2 = "setting_g2";
+    private static final String SETTINGS_VALUE = "settings_value";
 
-    public static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
+    private static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
 
     private StatusView statusView;
     private Spinner spinnerDroneDevice;
@@ -75,44 +75,7 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
         mDeviceAdapter = new DeviceAdapter();
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
-        spinnerDroneDevice.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
-                        Log.d(TAG, "onItemSelected: " + mDroneDevices.get(i).getName());
-                        final DroneDevice droneDevice = mDroneDevices.get(i);
-                        if (mDroneDevices.get(i).getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
-                            if (mDroneDevices.get(i).getName().equals("Add New Device")) {
-                                showAddNewDroneDialog();
-                                spinnerDroneDevice.setSelection(0);
-                            }
-                        } else {
-                            selectControl(mDroneDevices.get(i), new OnDroneConnectedListener() {
-
-                                @Override
-                                public void onConnected() {
-                                    Toast.makeText(MainActivity.this, "Init controller" + mDroneDevices.get(i).getName(),
-                                            Toast.LENGTH_LONG).show();
-                                    connectedDroneDevice = droneDevice;
-                                    initialSetting();
-                                    readParameters(MainActivity.this, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
-                                }
-
-                                @Override
-                                public void onConnectFail() {
-                                    spinnerDroneDevice.setSelection(0);
-                                    Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                }
-        );
+        spinnerDroneDevice.setOnItemSelectedListener(this);
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +99,8 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
         if (droneDevice.getName().equals(connectedDroneDevice.getName())) {
             Toast.makeText(this, connectedDroneDevice.getName() + " Disconnected", Toast.LENGTH_LONG).show();
+            connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
+            initialSetting();
             if (mStatusChangedListener != null) {
                 mStatusChangedListener.onBatteryUpdate(0);
                 mStatusChangedListener.onAltitudeUpdate(0);
@@ -218,6 +183,40 @@ public class MainActivity extends LandscapeFragmentActivity implements View.OnCl
 
     public DroneController getDroneController() {
         return this;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+        final DroneDevice droneDevice = mDroneDevices.get(position);
+        Log.d(TAG, "onItemSelected: " + droneDevice.getName());
+        if (droneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
+            if (droneDevice.getName().equals("Add New Device")) {
+                showAddNewDroneDialog();
+                spinnerDroneDevice.setSelection(0);
+            }
+        } else {
+            selectControl(droneDevice, new OnDroneConnectedListener() {
+                @Override
+                public void onConnected() {
+                    Toast.makeText(MainActivity.this, "Init controller" + droneDevice.getName(),
+                            Toast.LENGTH_LONG).show();
+                    connectedDroneDevice = droneDevice;
+                    initialSetting();
+                    readParameters(MainActivity.this, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
+                }
+
+                @Override
+                public void onConnectFail() {
+                    spinnerDroneDevice.setSelection(0);
+                    Toast.makeText(MainActivity.this, "Init controller error", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     @Override

@@ -35,23 +35,6 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         initView();
     }
 
-
-//    public static void assignSettingSeekBarTextView(final View view, int id, final Setting.SettingType settingType) {
-//        final Setting setting = DroneApplication.settings[settingType.ordinal()];
-//        Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
-//        SeekBarTextView seekBarTextView = (SeekBarTextView) view.findViewById(id);
-//        seekBarTextView.setConfig(setting.getMinValue(), setting.getMaxValue(), setting.getUnit());
-//        seekBarTextView.setValue(setting.getValue());
-//        seekBarTextView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
-//
-//            @Override
-//            public void onStopTrackingTouch(int value) {
-//                Log.d(TAG, "onStopTrackingTouch");
-//                DroneApplication.settings[settingType.ordinal()].setValue(value);
-//            }
-//        });
-//    }
-
     public static void assignSettingSeekBarTextView(final MainActivity activity, final View view, int id, final Setting.SettingType settingType) {
         final Setting setting = activity.getSetting(settingType);
         Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());

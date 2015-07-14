@@ -149,8 +149,8 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         mMissionList = missions;
     }
 
-    public List<Mission> getMissionList() {
-        return mMissionList;
+    public List<Mission> cloneMissionList() {
+        return new ArrayList<>(mMissionList);
     }
 
     public Mission getMission(int position) {

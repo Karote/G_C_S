@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class ViewManager {
     private static final String TAG = ViewManager.class.getSimpleName();
-    public static final float HALF_ALPHA = 0.3f;
-    public static final float NON_ALPHA = 1f;
+    private static final float HALF_ALPHA = 0.3f;
+    private static final float NON_ALPHA = 1f;
 
     public static void assignSingleSelectionButton(final MainActivity activity, final View view, final Setting.SettingType settingType, int[] ids, int[] tags) {
         int currentValue = activity.getSettingValue(settingType);

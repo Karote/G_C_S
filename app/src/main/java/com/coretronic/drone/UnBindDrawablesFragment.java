@@ -14,4 +14,8 @@ public class UnBindDrawablesFragment extends Fragment {
         ViewManager.unbindDrawables(getView());
         System.gc();
     }
+
+    public String getTitle() {
+        return null;
+    }
 }

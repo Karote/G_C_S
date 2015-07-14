@@ -1,7 +1,6 @@
 package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,10 +57,8 @@ public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implem
         etNetworkName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE /*||
-                        event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER*/) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
                     activity.setParameters(Parameter.Type.NETWORK_NAME, Parameter.Text.getInstance().setValue(etNetworkName.getText().toString()));
-                    Log.d(TAG, "onEditorAction: " + etNetworkName.getText().toString());
                 }
                 return false;
             }

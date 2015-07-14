@@ -1,7 +1,6 @@
 package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ public class SettingsFragmentFlightPage extends UnBindDrawablesFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
         View fragmentView = inflater.inflate(R.layout.fragment_settings_flight_page, container, false);
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_rotation_max, Setting.SettingType.ROTATION_SPEED_MAX);
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_tilt_angle_max, Setting.SettingType.TILT_ANGLE_MAX);

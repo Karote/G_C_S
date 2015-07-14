@@ -10,6 +10,8 @@ import android.view.View;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Formatter;
+import java.util.Locale;
 
 import static android.graphics.BitmapFactory.decodeFile;
 
@@ -131,5 +133,18 @@ public class AppUtils {
         final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static String stringForTime(int time) {
+        Formatter formatter = new Formatter(new StringBuilder(), Locale.getDefault());
+        int seconds = time % 60;
+        int minutes = (time / 60) % 60;
+        int hours = time / 3600;
+
+        if (hours > 0) {
+            return formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return formatter.format("%02d:%02d", minutes, seconds).toString();
+        }
     }
 }
