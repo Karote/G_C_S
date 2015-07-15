@@ -1,6 +1,5 @@
 package com.coretronic.drone.album;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
@@ -93,9 +92,6 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 //        final ArrayList<ImageItem> imageItems = new ArrayList<>();
         albumImgList.clear();
 
-        ContentResolver cr = mContext.getContentResolver();
-
-
         String[] projection = {
                 MediaStore.Files.FileColumns._ID,
                 MediaStore.Files.FileColumns.DATA,
@@ -107,19 +103,22 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
                 MediaStore.Files.FileColumns.TITLE
         };
 
-        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-                + " OR "
-                + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+        int depthOfPath = FILTER_MEDIA_FOLDER.length() - FILTER_MEDIA_FOLDER.replace("/", "").length();
+
+        String selection =
+                MediaStore.Files.FileColumns.DATA + " LIKE "
+                        + "'" + FILTER_MEDIA_FOLDER + "%'"
+                        + " AND (SELECT LENGTH(_data) - LENGTH(REPLACE(_data, '/', ''))) = " + depthOfPath
+                        + " AND ("
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                        + " OR "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+                        + ")";
 
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
-//        Uri queryUri = MediaStore.Files.getContentUri( Environment.DIRECTORY_DCIM );
-//        Log.i(TAG,"URI:"+mContext.getExternalCacheDir() +"/BDT/");
-//        Log.i(TAG,"-URI:"+Environment.getExternalStorageDirectory().getAbsolutePath()  +"/DCIM/BDT/");
-//        Uri queryUri = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()  +"/DCIM/BDT/");
-//        Uri queryUri = Uri.parse( "content://media/external/file/" );
 
         CursorLoader cursorLoader = new CursorLoader(
                 mContext,
@@ -132,17 +131,15 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
 
         Cursor cursor = cursorLoader.loadInBackground();
-//        Log.i(TAG,"cursor.getCount():"+cursor.getCount());
         if (cursor == null) {
             return;
         }
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
             String fileFullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
-            Log.i(TAG, "fileFullPath:" + fileFullPath);
-            if (!fileFullPath.contains(FILTER_MEDIA_FOLDER)) {
-                continue;
-            }
+//            if (!fileFullPath.contains(FILTER_MEDIA_FOLDER)) {
+//                continue;
+//            }
             long fileId = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
             int imgType = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)));
 
@@ -178,105 +175,12 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
 
         cursor.close();
 
-/*
-
-//        String[] projection = { MediaStore.Images.Media._ID,MediaStore.Images.Media.DATA};
-
-         String[] projection2 = {MediaStore.Images.Thumbnails.DATA, MediaStore.Video.Thumbnails.DATA};
-         cursor = cr.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,projection2,null,null,null);
-        Log.i(TAG,"=======");
-        Log.i(TAG,"cursor.getCount():"+cursor.getCount());
-        for( int i = 0 ; i < cursor.getCount(); i++)
-        {
-            cursor.moveToPosition(i);
-            String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
-            Log.i(TAG,"filePath:"+filePath);
-            File file = new File(filePath);
-
-            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-            imageItems.add( new ImageItem(myBitmap, "Image#" + i, null , null) );
-        }
-
-
-        cursor = cr.query(MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,projection2,null,null,null);
-        Log.i(TAG,"cursor.getCount():"+cursor.getCount());
-        for( int i = 0 ; i < cursor.getCount(); i++)
-        {
-            cursor.moveToPosition(i);
-            String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
-            Log.i(TAG,"filePath:"+filePath);
-            File file = new File(filePath);
-
-//            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-//            imageItems.add( new ImageItem(myBitmap, "Image#" + i) );
-        }
-
-
-
-        cursor.close();
-*/
-
-        /*
-//        TypedArray imgs = mContext.getResources().obtainTypedArray(R.array.image_ids);
-//
-//        for (int i = 0; i < imgs.length(); i++) {
-//            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), imgs.getResourceId(i, -1));
-//            imageItems.add(new ImageItem(bitmap, "Image#" + i));
-//        }
-
-        File path = new File(Environment.getExternalStorageDirectory(), "/DCIM/100ANDRO");
-
-        if (path.exists()) {
-            String[] fileNames = path.list();
-
-            for (int i = 0; i < fileNames.length; i++) {
-
-                Log.i("info", "path.getPath():" + path.getPath() + "/" + fileNames[i]);
-                String imgPath = path.getPath() + "/" + fileNames[i];
-
-
-                String[] fileNameSplit = fileNames[i].split("\\.(?=[^\\.]+$)");
-                Log.i("info", "fileNamesplit:" + fileNames[0]);
-//                Log.i("info", "fileNamesplit.length:" + fileNameSplit.length);
-                String extension = fileNameSplit[fileNameSplit.length -1];
-                Log.i("info"," extension:"+extension);
-
-//                if ((extension.equals("jpg")) || (extension.equals("png")) || (extension.equals("jpeg") ) )
-//                {
-//                    Bitmap mBitmap = Utility.rotateAndResizeBitmap(imgPath, 150, 150);
-//                    imageItems.add( new ImageItem(mBitmap, "Image#" + i) );
-
-                    File file = new File( imgPath );
-                    ExifInterface exif = null;
-                    try {
-                        exif = new ExifInterface(file.getPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    byte[] imageData=exif.getThumbnail();
-                    Bitmap  thumbnail= BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                    imageItems.add( new ImageItem(thumbnail, "Image#" + i) );
-//                }
-//                else if( extension.equals("mov") || extension.equals("mp4") )
-//                {
-//
-//
-//                }
-            }
-        }*/
-//        return imageItems;
-
-
         if (albumImgList.size() == 0) {
-
             noMediaTV.setVisibility(View.VISIBLE);
             albumGridView.setVisibility(View.GONE);
         } else {
             noMediaTV.setVisibility(View.GONE);
             albumGridView.setVisibility(View.VISIBLE);
-
         }
 
     }

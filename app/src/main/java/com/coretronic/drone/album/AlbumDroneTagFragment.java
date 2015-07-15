@@ -213,6 +213,7 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_DOWNLOAD_DIALOGFRAGMENT_DISMISS && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "REQUEST_CODE_DOWNLOAD_DIALOGFRAGMENT_DISMISS");
             droneController.getMediaContents(this);
         }
     }

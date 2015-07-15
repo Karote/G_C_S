@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -13,66 +12,20 @@
         android:visibility="gone" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/preview_showvideo_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_height="match_parent">
 
         <FrameLayout
+            android:id="@+id/videoSurfaceContainer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
 
-            <VideoView
+            <SurfaceView
                 android:id="@+id/preview_video"
                 android:layout_width="match_parent"
-                android:layout_marginTop="4dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center" />
-
-            <ImageButton
-                android:id="@+id/video_controller_big_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_album_play_big_n" />
-
+                android:layout_height="match_parent"/>
         </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-
-            <ImageButton
-                android:id="@+id/video_controller_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_album_preview_play_n"
-                android:layout_margin="8dp" />
-
-            <SeekBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/progressBar"
-                android:layout_weight="1"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/preview_play_time_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:textSize="28sp"
-                android:gravity="center"
-                android:layout_margin="8dp" />
-
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
+</FrameLayout>
