@@ -100,8 +100,7 @@ public class WaypointDetailFragment extends Fragment {
                         break;
                     case 2: // Land
                         WaypointEditorFragment.setItemMissionType(Mission.Type.LAND);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
-                        icon_type.setRotation(180.0f);
+                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
                         break;
                     case 3: // Spline waypoint
                         WaypointEditorFragment.setItemMissionType(Mission.Type.SPLINE_WAY_POINT);

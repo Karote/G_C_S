@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -369,7 +370,7 @@ public class WaypointEditorFragment extends Fragment
                 @Override
                 public void run() {
                     mMissionItemAdapter.notifyDataSetChanged();
-                    writeMissionsToMap(mMissionItemAdapter.getMissionList());
+                    writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
                 }
             });
         }
@@ -397,7 +398,7 @@ public class WaypointEditorFragment extends Fragment
 //                webview_WayPoint.loadUrl("javascript:deleteSelectMarker(" + position + ")");
                 mMissionItemAdapter.remove(position);
                 mMissionItemAdapter.notifyDataSetChanged();
-                writeMissionsToMap(mMissionItemAdapter.getMissionList());
+                writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
             }
 
             @Override
@@ -640,7 +641,7 @@ public class WaypointEditorFragment extends Fragment
                 canMapAddMarker = true;
                 break;
             case R.id.btn_plan_go:
-                List<Mission> droneMissionList = mMissionItemAdapter.getMissionList();
+                List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                 droneMissionList.add(0, createNewMission(0, 0, 0, 0, false, 0, Type.WAY_POINT));
                 drone.writeMissions(droneMissionList, WaypointEditorFragment.this);
                 progressDialog.setTitle("Sending");
