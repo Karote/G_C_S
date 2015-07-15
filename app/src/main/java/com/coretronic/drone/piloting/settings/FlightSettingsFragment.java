@@ -15,8 +15,8 @@ import com.coretronic.drone.ui.SeekBarTextView;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentFlightPage extends UnBindDrawablesFragment {
-    private static final String TAG = SettingsFragmentFlightPage.class.getSimpleName();
+public class FlightSettingsFragment extends UnBindDrawablesFragment {
+    private static final String TAG = FlightSettingsFragment.class.getSimpleName();
     private MainActivity activity;
 
     @Override

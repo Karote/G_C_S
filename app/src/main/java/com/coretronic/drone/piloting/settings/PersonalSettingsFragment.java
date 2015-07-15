@@ -21,8 +21,8 @@ import com.coretronic.drone.ui.ViewManager;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentPersonalPage extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
-    private static final String TAG = SettingsFragmentPersonalPage.class.getSimpleName();
+public class PersonalSettingsFragment extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
+    private static final String TAG = PersonalSettingsFragment.class.getSimpleName();
     private MainActivity activity;
     private EditText etNetworkName;
 

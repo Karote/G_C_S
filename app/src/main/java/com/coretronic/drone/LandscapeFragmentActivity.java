@@ -39,7 +39,7 @@ public class LandscapeFragmentActivity extends MiniDronesActivity {
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragList = fm.getFragments();
         if (fragList != null && fragList.size() > 0) {
-            for (Fragment frag : fm.getFragments()) {
+            for (Fragment frag : fragList) {
                 if (frag == null) {
                     continue;
                 }

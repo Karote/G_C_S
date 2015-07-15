@@ -118,6 +118,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private boolean isRecording = false;
     private int recordingTime = 0;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,7 +275,6 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
         initialJoystickModule(view, R.id.module1);
         initialJoystickModule(view, R.id.module2);
-
         controlWrap = new ControlWrap();
         initialJoypadMode();
 
@@ -405,7 +405,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         int[] controlType = new int[0];
         boolean[] isJoypads = new boolean[0];
         int joypadMode = activity.getSettingValue(Setting.SettingType.JOYPAD_MODE);
-        boolean leftHanded = activity.getSettingValue(Setting.SettingType.LEFT_HANDED) == Setting.ON ? true : false;
+        boolean leftHanded = activity.getSettingValue(Setting.SettingType.LEFT_HANDED) == Setting.ON ;
         switch (joypadMode) {
             case Setting.JOYPAD_MODE_USA:
                 if (leftHanded) {
@@ -764,21 +764,21 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     private void sendTakePhoto() {
         if (getController() != null) {
-            getController().takePhoto(PilotingFragment.this);
+            getController().takePhoto(this);
             Log.d(TAG, SEND_DRONE_CONTROL + "Take Photo");
         }
     }
 
     private void sendStartRecord() {
         if (getController() != null) {
-            getController().startRecord(PilotingFragment.this);
+            getController().startRecord(this);
             Log.d(TAG, SEND_DRONE_CONTROL + "Start Recording");
         }
     }
 
     private void sendStopRecord() {
         if (getController() != null) {
-            getController().stopRecord(PilotingFragment.this);
+            getController().stopRecord(this);
             Log.d(TAG, SEND_DRONE_CONTROL + "Stop Recording");
         }
     }

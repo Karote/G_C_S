@@ -27,16 +27,16 @@ public class SettingsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new SettingsFragmentPersonalPage();
+                fragment = new PersonalSettingsFragment();
                 break;
             case 1:
-                fragment = new SettingsFragmentFlightPage();
+                fragment = new FlightSettingsFragment();
                 break;
             case 2:
-                fragment = new SettingsFragmentPilotingModePage();
+                fragment = new PilotingSettingsFragment();
                 break;
             case 3:
-                fragment = new SettingsFragmentStatusPage();
+                fragment = new StatusSettingsFragment();
                 break;
         }
         return fragment;

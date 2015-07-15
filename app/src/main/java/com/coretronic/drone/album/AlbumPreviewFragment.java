@@ -152,7 +152,6 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
-
             if (mediaItems.get(currentMediaIdx).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                 shareIntent.setType("image/*");
             } else if (mediaItems.get(currentMediaIdx).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {

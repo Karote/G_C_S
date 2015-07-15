@@ -53,7 +53,6 @@ public class AlbumPagerPreviewDetailFragment extends UnBindDrawablesFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_album_preview_pagercontent, container, false);
         context = fragmentView.getContext();
 
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             this.mediaType = bundle.getInt("mediaType");

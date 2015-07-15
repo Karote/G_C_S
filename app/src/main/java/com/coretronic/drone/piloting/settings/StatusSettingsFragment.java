@@ -16,7 +16,7 @@ import com.coretronic.drone.service.Parameter;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentStatusPage extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
+public class StatusSettingsFragment extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
 
     private MainActivity activity;
     private TextView tvFlightSoftware;

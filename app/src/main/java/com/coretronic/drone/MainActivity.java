@@ -265,9 +265,9 @@ public class MainActivity extends LandscapeFragmentActivity implements AdapterVi
 
     public boolean hasGPSSignal(int eph) {
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
-            return eph == 1 ? true : false;
+            return eph == 1;
         } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-            return (eph == 0 || eph == 9999) ? false : true;
+            return !(eph == 0 || eph == 9999);
         }
         return false;
     }

@@ -15,8 +15,8 @@ import com.coretronic.drone.ui.ViewManager;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentPilotingModePage extends UnBindDrawablesFragment {
-    private static final String TAG = SettingsFragmentPilotingModePage.class.getSimpleName();
+public class PilotingSettingsFragment extends UnBindDrawablesFragment {
+    private static final String TAG = PilotingSettingsFragment.class.getSimpleName();
     private MainActivity activity;
 
     @Override
