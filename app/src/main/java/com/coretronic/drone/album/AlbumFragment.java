@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.coretronic.drone.Drone;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
 import com.coretronic.drone.ui.StatusView;
@@ -116,6 +117,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
     }
 
 

@@ -1,14 +1,16 @@
 package com.coretronic.drone.album;
 
+import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -66,13 +68,13 @@ public class DownloadProgressDialogFragment extends DialogFragment {
             Log.i(TAG, "progressValue:" + progressValue);
             if (progressValue == 100) {
                 Log.i(TAG, " progressValue == 100");
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        deleteAMMBAFile();
-//                    }
-//                }).start();
-                closeDownloadFragment();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        deleteAMMBAFile();
+                    }
+                }).start();
+//                closeDownloadFragment();
             }
         }
     };
@@ -86,11 +88,11 @@ public class DownloadProgressDialogFragment extends DialogFragment {
     };
 
 
-//    public Handler deleteCompletedHandler = new Handler() {
-//        public void handleMessage(Message msg) {
-//            closeDownloadFragment();
-//        }
-//    };
+    public Handler deleteCompletedHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            closeDownloadFragment();
+        }
+    };
 
     public static DownloadProgressDialogFragment newInstance(MediaListItem mediaListItem) {
         DownloadProgressDialogFragment df = new DownloadProgressDialogFragment();
@@ -106,6 +108,7 @@ public class DownloadProgressDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        setCancelable(false);
         final Dialog dialog = new Dialog(getActivity());
         context = dialog.getContext();
         albumFilePath = AppConfig.getMediaFolderPosition(context);
@@ -124,7 +127,6 @@ public class DownloadProgressDialogFragment extends DialogFragment {
             }
         });
         downloadBar = (ProgressBar) dialog.findViewById(R.id.downloadbar);
-
         dialog.show();
 
         return dialog;
@@ -133,7 +135,6 @@ public class DownloadProgressDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         Bundle arguments = getArguments();
 
         if (arguments != null) {
@@ -180,21 +181,20 @@ public class DownloadProgressDialogFragment extends DialogFragment {
         }
         speedTimer.cancel();
         dismiss();
+
     }
 
     private void deleteAMMBAFile() {
-//        Log.i(TAG, "dele AMMBA File Name:" + mediaListItem.getMediaFileName());
-
-//        DroneController.MediaCommandListener droneDeleFileReceiver = new DroneController.MediaCommandListener() {
-//            @Override
-//            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
-//                if (MediaCommand.REMOVE_CONTENT == mediaCommand) {
-//                    Log.i(TAG, "delete file completed");
-//                    deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
-//                }
-//            }
-//        };
-//        droneController.removeContent(fileName, droneDeleFileReceiver);
+        DroneController.MediaCommandListener droneDeleFileReceiver = new DroneController.MediaCommandListener() {
+            @Override
+            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
+                if (MediaCommand.REMOVE_CONTENT == mediaCommand) {
+                    Log.i(TAG, "delete file completed");
+                    deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+                }
+            }
+        };
+        droneController.removeContent(fileName, droneDeleFileReceiver);
 
         droneController.getMediaContents(new DroneController.MediaCommandListener() {
             @Override
@@ -277,5 +277,11 @@ public class DownloadProgressDialogFragment extends DialogFragment {
             }
         });
 
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
     }
 }

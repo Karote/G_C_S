@@ -56,8 +56,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
                 viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
                 break;
             case LAND:
-                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
-                viewHolder.typeView.setRotation(180.0f);
+                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_land);
                 break;
             case WAY_POINT:
             default:
@@ -149,8 +148,8 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         mMissionList = missions;
     }
 
-    public List<Mission> getMissionList() {
-        return mMissionList;
+    public List<Mission> cloneMissionList() {
+        return new ArrayList<Mission>(mMissionList);
     }
 
     public Mission getMission(int position) {

@@ -3,6 +3,7 @@
     android:layout_width="376dp"
     android:layout_height="wrap_content"
     android:background="@drawable/popup_dialog_bg"
+    android:keepScreenOn="true"
     android:clickable="true">
 
     <RelativeLayout

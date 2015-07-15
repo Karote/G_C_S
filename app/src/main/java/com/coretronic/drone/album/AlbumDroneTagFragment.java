@@ -2,6 +2,7 @@ package com.coretronic.drone.album;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,8 +37,8 @@ import java.util.List;
  */
 public class AlbumDroneTagFragment extends Fragment implements DroneController.MediaCommandListener {
 
-    private static String TAG = AlbumDroneTagFragment.class.getSimpleName();
-
+    private static final String TAG = AlbumDroneTagFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_DOWNLOAD_DIALOGFRAGMENT_DISMISS = 1;
     private Context mContext = null;
     private ProgressBar progressbar = null;
     private RecyclerView albumListView = null;
@@ -169,7 +170,8 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
 //                    .addToBackStack("DownloadWarningFragment")
 //                    .commit();
             DownloadProgressDialogFragment dpDF = DownloadProgressDialogFragment.newInstance(albumMediaList.get(position));
-            dpDF.show(getActivity().getFragmentManager(), "");
+            dpDF.setTargetFragment(AlbumDroneTagFragment.this, REQUEST_CODE_DOWNLOAD_DIALOGFRAGMENT_DISMISS);
+            dpDF.show(getFragmentManager(), "");
         }
 
     };
@@ -205,6 +207,15 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "album drone tag fragment onDestroyView");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_DOWNLOAD_DIALOGFRAGMENT_DISMISS && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "REQUEST_CODE_DOWNLOAD_DIALOGFRAGMENT_DISMISS");
+            droneController.getMediaContents(this);
+        }
     }
 
     @Override
