@@ -43,8 +43,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     @Override
     public MissionItemListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.points_list_item, viewGroup, false);
-        MissionItemListViewHolder pvh = new MissionItemListViewHolder(v);
-        return pvh;
+        return new MissionItemListViewHolder(v);
     }
 
     @Override
@@ -70,10 +69,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             viewHolder.focusBarView.setVisibility(View.GONE);
         }
 
-        if (isDeleteLayoutVisible == false) {
-            viewHolder.deleteLayout.setVisibility(LinearLayout.GONE);
+        if (isDeleteLayoutVisible) {
+            viewHolder.deleteLayout.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.deleteLayout.setVisibility(LinearLayout.VISIBLE);
+            viewHolder.deleteLayout.setVisibility(View.GONE);
         }
     }
 
@@ -115,6 +114,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             if (v.equals(deleteButton)) {
                 mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
             } else if (mItemClickListener != null) {
+
+                if(isDeleteLayoutVisible)
+                    return;
 
                 mItemClickListener.onItemPlanClick(v, getAdapterPosition());
 
@@ -160,8 +162,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return focusIndex;
     }
 
-//    public void clearFocusIndex(){
-//    }
+    public void clearFocusIndex(){
+        focusIndex = -1;
+    }
 
     public void setDeleteLayoutVisible(boolean isVisible) {
         isDeleteLayoutVisible = isVisible;
