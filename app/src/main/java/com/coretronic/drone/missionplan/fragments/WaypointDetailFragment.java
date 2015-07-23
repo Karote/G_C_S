@@ -82,6 +82,12 @@ public class WaypointDetailFragment extends Fragment {
         spinner_type = (Spinner) fragmentView.findViewById(R.id.spinner_detail_waypoint_type);
         icon_type = (View) fragmentView.findViewById(R.id.icon_detail_waypoint_type);
         bt_delete = (Button) fragmentView.findViewById(R.id.btn_detail_delete);
+        bt_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlanningFragment.deleteItemMission();
+            }
+        });
 
         spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.spinner_waypoint_detail_style, POINT_TYPE);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_waypoint_detail_dropdown_style);
@@ -91,23 +97,23 @@ public class WaypointDetailFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0: // Waypoint
-                        WaypointEditorFragment.setItemMissionType(Mission.Type.WAY_POINT);
+                        PlanningFragment.setItemMissionType(Mission.Type.WAY_POINT);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
                     case 1: // Take Off
-                        WaypointEditorFragment.setItemMissionType(Mission.Type.TAKEOFF);
+                        PlanningFragment.setItemMissionType(Mission.Type.TAKEOFF);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
                         break;
                     case 2: // Land
-                        WaypointEditorFragment.setItemMissionType(Mission.Type.LAND);
+                        PlanningFragment.setItemMissionType(Mission.Type.LAND);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
                         break;
                     case 3: // Spline waypoint
-                        WaypointEditorFragment.setItemMissionType(Mission.Type.SPLINE_WAY_POINT);
+                        PlanningFragment.setItemMissionType(Mission.Type.SPLINE_WAY_POINT);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
                     case 4: // Circle
-                        WaypointEditorFragment.setItemMissionType(Mission.Type.CIRCLE);
+                        PlanningFragment.setItemMissionType(Mission.Type.CIRCLE);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
                     default:
@@ -127,7 +133,7 @@ public class WaypointDetailFragment extends Fragment {
         altitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                WaypointEditorFragment.setItemMissionAltitude((float) newValue);
+                PlanningFragment.setItemMissionAltitude((float) newValue);
             }
         });
 
@@ -137,7 +143,7 @@ public class WaypointDetailFragment extends Fragment {
         delayWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                WaypointEditorFragment.setItemMissionDelay(newValue);
+                PlanningFragment.setItemMissionDelay(newValue);
             }
         });
     }
