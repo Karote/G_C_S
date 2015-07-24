@@ -61,7 +61,7 @@ public class AlbumSmartPhoneTagFragment extends UnBindDrawablesFragment {
         View view = inflater.inflate(R.layout.fragment_album_smartphonetag, container, false);
         mContext = view.getContext();
 
-        FILTER_MEDIA_FOLDER = AppConfig.getMediaFolderPosition(mContext);
+        FILTER_MEDIA_FOLDER = AppConfig.getMediaFolderPosition();
 
         fragmentManager = getChildFragmentManager();
 

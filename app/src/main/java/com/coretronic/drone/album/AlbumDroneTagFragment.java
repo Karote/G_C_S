@@ -91,7 +91,7 @@ public class AlbumDroneTagFragment extends Fragment implements DroneController.M
         View view = inflater.inflate(R.layout.fragment_album_dronetag, container, false);
         mContext = view.getContext();
 
-        albumFilePath = AppConfig.getMediaFolderPosition(mContext);
+        albumFilePath = AppConfig.getMediaFolderPosition();
 
         progressbar = (ProgressBar) view.findViewById(R.id.progressbar);
         albumListView = (RecyclerView) view.findViewById(R.id.album_list_view);

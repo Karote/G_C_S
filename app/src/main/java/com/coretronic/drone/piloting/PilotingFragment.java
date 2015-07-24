@@ -68,7 +68,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private static final String VIDEO_FILE_PATH_TEST = "rtsp://mm2.pcslab.com/mm/7m1000.mp4";
 
     private static final int MAX_SPEED = 50;
-    private static final int DEFAULT_TAKE_OFF_ALTITUDE = 2;
+    private static final float DEFAULT_TAKE_OFF_ALTITUDE = 2.0f;
 
     private static final int HANDLER_RELEASE_CONTROL = 1;
     private static final int HANDLER_RECORDING_COUNTER = 2;

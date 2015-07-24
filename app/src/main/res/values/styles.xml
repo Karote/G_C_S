@@ -27,9 +27,6 @@
     <style name="progress_style">
         <item name="android:progressDrawable">@drawable/progress_drawable</item>
         <item name="android:thumb">@drawable/thumb</item>
-        <!--<item name="android:thumbOffset">9dp</item>-->
-        <!--<item name="android:paddingLeft">9dp</item>-->
-        <!--<item name="android:paddingRight">9dp</item>-->
     </style>
 
     <style name="mav_info_title_text_style">

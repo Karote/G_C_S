@@ -8,6 +8,7 @@ import com.coretronic.drone.service.Parameter.Orientation;
  */
 public class Setting {
     private static final String TAG = Setting.class.getSimpleName();
+
     public static final int ON = 1;
     public static final int OFF = 0;
 
