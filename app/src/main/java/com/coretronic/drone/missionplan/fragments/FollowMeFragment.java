@@ -1,5 +1,6 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter
 /**
  * Created by karot.chuang on 2015/7/21.
  */
-public class FollowMeFragment extends MavInfoFragment implements DroneController.FollowMeStatueListener {
+public class FollowMeFragment extends MavInfoFragment implements DroneController.FollowMeStateListener {
     private static final String TAG = FollowMeFragment.class.getSimpleName();
 
     public static final int DEFAULT_ALTITUDE = 8;
@@ -137,14 +138,14 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         }
     };
 
-    // Implement DroneController.FollowMeStatueListener
+    // Implement DroneController.FollowMeStateListener
     @Override
     public void onStart(float latOffset, float longOffset) {
         Toast.makeText(getActivity(), "Start Follow Me", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onMissionItemUpdated(float lat, float lon) {
+    public void onMissionItemUpdated(float lat, float lon, float yaw, int clock) {
 
     }
 
@@ -152,5 +153,10 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     public void onLocationUpdated(float lat, float lon) {
 
     }
-    // End DroneController.FollowMeStatueListener
+
+    @Override
+    public void onLocationUpdated(Location location) {
+
+    }
+    // End DroneController.FollowMeStateListener
 }
