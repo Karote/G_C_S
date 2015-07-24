@@ -2,7 +2,6 @@ package com.coretronic.drone.missionplan.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -282,7 +280,7 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setWaitSeconds(missionDelay);
     }
 
-    public static void deleteItemMission(){
+    public static void deleteItemMission() {
         mMissionItemAdapter.remove(mMissionItemAdapter.getFocusIndex());
         mMissionItemAdapter.clearFocusIndex();
         mMissionItemAdapter.notifyDataSetChanged();

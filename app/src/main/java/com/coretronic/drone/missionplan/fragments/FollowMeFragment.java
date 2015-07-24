@@ -1,7 +1,6 @@
 package com.coretronic.drone.missionplan.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
-import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 
 /**
@@ -23,13 +22,15 @@ import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter
 public class FollowMeFragment extends MavInfoFragment implements DroneController.FollowMeStatueListener {
     private static final String TAG = FollowMeFragment.class.getSimpleName();
 
+    public static final int DEFAULT_ALTITUDE = 8;
+
     private LinearLayout layout_start_follow = null;
     private Button btn_stop_follow = null;
-    private int mFollowMeAltitude = 0;
 
     private TextView tv_droneAltitude, tv_droneSpeed, tv_droneLatLng;
 
     OnFollowMeClickListener mCallback;
+    private AbstractWheel followMeAltitudeWheel;
 
     public interface OnFollowMeClickListener extends PlanningFragment.MissionAdapterListener {
         void fitMapShowDroneAndMe();
@@ -58,15 +59,10 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         // FollowMe Control Panel
         layout_start_follow = (LinearLayout) view.findViewById(R.id.layout_start_follow);
 
-        final AbstractWheel followMeAltitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
+        followMeAltitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
         followMeAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%02d"));
         followMeAltitudeWheel.setCyclic(false);
-        followMeAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
-            @Override
-            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mFollowMeAltitude = newValue;
-            }
-        });
+        followMeAltitudeWheel.setCurrentItem(DEFAULT_ALTITUDE);
 
         final RelativeLayout btn_start_follow = (RelativeLayout) view.findViewById(R.id.btn_start_follow);
         btn_start_follow.setOnClickListener(onFollowBtnClickListener);
@@ -119,7 +115,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
             }
             switch (v.getId()) {
                 case R.id.btn_start_follow:
-                    drone.startFollowMe(mFollowMeAltitude, FollowMeFragment.this);
+                    drone.startFollowMe(followMeAltitudeWheel.getCurrentItem(), FollowMeFragment.this);
                     layout_start_follow.setVisibility(View.GONE);
                     btn_stop_follow.setVisibility(View.VISIBLE);
                     break;
@@ -144,7 +140,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     // Implement DroneController.FollowMeStatueListener
     @Override
     public void onStart(float latOffset, float longOffset) {
-
+        Toast.makeText(getActivity(), "Start Follow Me", Toast.LENGTH_LONG).show();
     }
 
     @Override
