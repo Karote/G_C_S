@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
-import com.coretronic.drone.service.DroneDevice;
+import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.ui.ViewManager;
 
 import java.util.List;
@@ -62,31 +62,6 @@ public class LandscapeFragmentActivity extends MiniDronesActivity {
 
     @Override
     public void onDeviceRemoved(DroneDevice droneDevice) {
-
-    }
-
-    @Override
-    public void onBatteryUpdate(int battery) {
-
-    }
-
-    @Override
-    public void onAltitudeUpdate(float altitude) {
-
-    }
-
-    @Override
-    public void onRadioSignalUpdate(int rssi) {
-
-    }
-
-    @Override
-    public void onSpeedUpdate(float groundSpeed) {
-
-    }
-
-    @Override
-    public void onLocationUpdate(long lat, long lon, int eph) {
 
     }
 }

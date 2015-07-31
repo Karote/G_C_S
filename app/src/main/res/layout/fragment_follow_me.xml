@@ -116,6 +116,7 @@
                 android:background="@drawable/ico_action_start_follow" />
 
         </RelativeLayout>
+
         <Button
             android:id="@+id/btn_stop_follow"
             android:layout_width="match_parent"

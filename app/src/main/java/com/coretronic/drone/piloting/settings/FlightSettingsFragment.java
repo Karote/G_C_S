@@ -37,7 +37,9 @@ public class FlightSettingsFragment extends UnBindDrawablesFragment {
         btnFlatTrim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                (activity.getDroneController()).flatTrim();
+                if (activity.getDroneController() != null) {
+                    activity.getDroneController().flatTrim();
+                }
             }
         });
         return fragmentView;

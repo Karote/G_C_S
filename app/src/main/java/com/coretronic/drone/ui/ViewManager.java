@@ -52,8 +52,8 @@ public class ViewManager {
 
                     Setting setting = activity.getSetting(settingType);
 
-                    if (setting.getParameterType() != null) {
-                        activity.setParameters(setting.getParameterType(), setting.getParameter());
+                    if (setting.getParameterType() != null && activity.getDroneController() != null) {
+                        activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
                     }
 
                 }
@@ -73,8 +73,8 @@ public class ViewManager {
                 if (buttonView.isPressed()) {
                     activity.setSettingValue(settingType, isChecked == true ? Setting.ON : Setting.OFF);
                     Log.d(TAG, "isSetting[" + type + "]: " + setting.getValue());
-                    if (setting.getParameterType() != null) {
-                        activity.setParameters(setting.getParameterType(), setting.getParameter());
+                    if (setting.getParameterType() != null && activity.getDroneController() != null) {
+                        activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
                     }
                 }
             }

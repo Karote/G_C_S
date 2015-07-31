@@ -45,8 +45,10 @@ public class StatusSettingsFragment extends UnBindDrawablesFragment implements D
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.readParameters(this, Parameter.Type.FLIGHT_BOARD_SOFTWARE_VERSION, Parameter.Type.FLIGHT_BOARD_HARDWARE_VERSION,
-                Parameter.Type.CAMERA_BOARD_SOFTWARE_VERSION, Parameter.Type.CAMERA_BOARD_HARDWARE_VERSION);
+        if (activity.getDroneController() != null) {
+            activity.getDroneController().readParameters(this, Parameter.Type.FLIGHT_BOARD_SOFTWARE_VERSION, Parameter.Type.FLIGHT_BOARD_HARDWARE_VERSION,
+                    Parameter.Type.CAMERA_BOARD_SOFTWARE_VERSION, Parameter.Type.CAMERA_BOARD_HARDWARE_VERSION);
+        }
     }
 
     @Override

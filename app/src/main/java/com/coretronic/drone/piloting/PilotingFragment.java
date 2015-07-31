@@ -32,8 +32,8 @@ import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
+import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
-import com.coretronic.drone.service.DroneDevice;
 import com.coretronic.drone.ui.JoyStickSurfaceView;
 import com.coretronic.drone.ui.SemiCircleProgressBarView;
 import com.coretronic.drone.ui.StatusView;
@@ -405,7 +405,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
         int[] controlType = new int[0];
         boolean[] isJoypads = new boolean[0];
         int joypadMode = activity.getSettingValue(Setting.SettingType.JOYPAD_MODE);
-        boolean leftHanded = activity.getSettingValue(Setting.SettingType.LEFT_HANDED) == Setting.ON ;
+        boolean leftHanded = activity.getSettingValue(Setting.SettingType.LEFT_HANDED) == Setting.ON;
         switch (joypadMode) {
             case Setting.JOYPAD_MODE_USA:
                 if (leftHanded) {
@@ -808,8 +808,10 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     private void initialG2Setting() {
         for (Setting setting : activity.getSettings()) {
             if (setting.getParameterType() != null) {
-                activity.setParameters(setting.getParameterType(), setting.getParameter());
-                Log.d(TAG, "Initial G2 parameter" + setting.getParameterType() + ", " + setting.getParameter().getValue());
+                if (activity.getDroneController() != null) {
+                    activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
+                    Log.d(TAG, "Initial G2 parameter" + setting.getParameterType() + ", " + setting.getParameter().getValue());
+                }
             }
         }
     }

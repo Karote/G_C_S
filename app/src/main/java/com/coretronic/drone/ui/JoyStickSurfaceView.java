@@ -117,7 +117,7 @@ public class JoyStickSurfaceView extends SurfaceView implements Runnable, Surfac
         rockerPoint = new Point(startPoint);
         padRadius = (int) ((width >> 1) - getResources().getDimension(R.dimen.joypad_rim_width) / 2f);
         stickShiftRadius = (int) (padRadius - getResources().getDimension(R.dimen.stick_size) / 2f);
-  }
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {

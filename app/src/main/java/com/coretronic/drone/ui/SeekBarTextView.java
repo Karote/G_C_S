@@ -47,8 +47,8 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
             public void onStopTrackingTouch(int value) {
                 Log.d(TAG, "onStopTrackingTouch");
                 activity.setSettingValue(settingType, value);
-                if (setting.getParameterType() != null) {
-                    activity.setParameters(setting.getParameterType(), setting.getParameter());
+                if (setting.getParameterType() != null && activity.getDroneController() != null) {
+                    activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
                 }
             }
         });

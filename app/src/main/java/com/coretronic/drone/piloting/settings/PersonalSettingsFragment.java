@@ -58,7 +58,9 @@ public class PersonalSettingsFragment extends UnBindDrawablesFragment implements
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
-                    activity.setParameters(Parameter.Type.NETWORK_NAME, Parameter.Text.getInstance().setValue(etNetworkName.getText().toString()));
+                    if (activity.getDroneController() != null) {
+                        activity.getDroneController().setParameters(Parameter.Type.NETWORK_NAME, Parameter.Text.getInstance().setValue(etNetworkName.getText().toString()));
+                    }
                 }
                 return false;
             }
@@ -70,7 +72,9 @@ public class PersonalSettingsFragment extends UnBindDrawablesFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.readParameters(this, Parameter.Type.NETWORK_NAME);
+        if (activity.getDroneController() != null) {
+            activity.getDroneController().readParameters(this, Parameter.Type.NETWORK_NAME);
+        }
     }
 
     @Override
