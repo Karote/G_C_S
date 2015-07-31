@@ -2,18 +2,24 @@ package com.coretronic.drone;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.service.Parameter;
+import com.coretronic.drone.ui.ViewManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class MainActivity extends LandscapeFragmentActivity implements DroneController.ParameterLoaderListener {
+import java.util.List;
+
+public class MainActivity extends MiniDronesActivity implements DroneController.ParameterLoaderListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final char DEGREE_SYMBOL = 0x00B0;   //º
@@ -27,11 +33,41 @@ public class MainActivity extends LandscapeFragmentActivity implements DroneCont
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private DroneDevice.OnDeviceChangedListener deviceChangedListener;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         replaceFragment();
         initialSetting();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ViewManager.unbindDrawables(findViewById(android.R.id.content));
+    }
+
+    @Override
+    public void onBackPressed() {
+        // if there is a fragment and the back stack of this fragment is not empty,
+        // then emulate 'onBackPressed' behaviour, because in default, it is not working
+        FragmentManager fm = getSupportFragmentManager();
+        List<Fragment> fragList = fm.getFragments();
+        if (fragList != null && fragList.size() > 0) {
+            for (Fragment frag : fragList) {
+                if (frag == null) {
+                    continue;
+                }
+                if (frag.isVisible()) {
+                    FragmentManager childFm = frag.getChildFragmentManager();
+                    if (childFm.getBackStackEntryCount() > 0) {
+                        childFm.popBackStack();
+                        return;
+                    }
+                }
+            }
+        }
+        super.onBackPressed();
     }
 
     @Override

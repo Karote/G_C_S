@@ -12,17 +12,11 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by jiaLian on 15/3/11.
  */
 public class ViewManager {
     private static final String TAG = ViewManager.class.getSimpleName();
-    private static final float HALF_ALPHA = 0.3f;
-    private static final float NON_ALPHA = 1f;
 
     public static void assignSingleSelectionButton(final MainActivity activity, final View view, final Setting.SettingType settingType, int[] ids, int[] tags) {
         int currentValue = activity.getSettingValue(settingType);
@@ -79,30 +73,6 @@ public class ViewManager {
                 }
             }
         });
-    }
-
-
-    public static void setEnabled(boolean enabled, View[] viewArray, View... views) {
-        List<View> combineAll = new ArrayList<View>(viewArray.length + views.length);
-        Collections.addAll(combineAll, viewArray);
-        Collections.addAll(combineAll, views);
-        doEnabled(enabled, combineAll.toArray(new View[combineAll.size()]));
-    }
-
-    public static void setEnabled(boolean enabled, View... views) {
-        doEnabled(enabled, views);
-    }
-
-    private static void doEnabled(boolean enabled, View[] views) {
-        float alpha = setAlpha(enabled);
-        for (View view : views) {
-            view.setEnabled(enabled);
-            view.setAlpha(alpha);
-        }
-    }
-
-    private static float setAlpha(boolean enabled) {
-        return enabled ? NON_ALPHA : HALF_ALPHA;
     }
 
     public static void unbindDrawables(View view) {
