@@ -128,7 +128,7 @@ public class WaypointDetailFragment extends Fragment {
         });
 
         altitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.altitude_wheel);
-        altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%02d"));
+        altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%01d"));
         altitudeWheel.setCyclic(false);
         altitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
@@ -138,7 +138,7 @@ public class WaypointDetailFragment extends Fragment {
         });
 
         delayWheel = (AbstractWheel) fragmentView.findViewById(R.id.delay_wheel);
-        delayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 99, "%02d"));
+        delayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 99, "%01d"));
         delayWheel.setCyclic(false);
         delayWheel.addChangingListener(new OnWheelChangedListener() {
             @Override

@@ -1,5 +1,6 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 
@@ -28,15 +30,16 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 20;
 
-    private TextView tvAltitude;
-    private TextView tvSpeed;
-    private TextView tvLatLng;
+    private TextView tvAltitude = null;
+    private TextView tvSpeed = null;
+    private TextView tvLatLng = null;
 
-    private OnFollowMeClickListener mCallback;
+    OnFollowMeClickListener mCallback;
 
-    private AbstractWheel altitudeWheel;
-    private RelativeLayout startFollowMe;
-    private Button stopFollowMe;
+    private AbstractWheel altitudeWheel = null;
+    private NumericWheelAdapter altitudeAdapter = null;
+    private RelativeLayout startFollowMe = null;
+    private Button stopFollowMe = null;
 
     public interface OnFollowMeClickListener extends PlanningFragment.MissionAdapterListener {
         void fitMapShowDroneAndMe();
@@ -71,7 +74,10 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         stopFollowMe.setVisibility(View.GONE);
 
         altitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
-        altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, MIN_VALUE, MAX_VALUE, "%02d"));
+        altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), MIN_VALUE, MAX_VALUE, "%01d");
+        altitudeAdapter.setItemResource(R.layout.text_wheel_number);
+        altitudeAdapter.setItemTextResource(R.id.number_picker_text);
+        altitudeWheel.setViewAdapter(altitudeAdapter);
         altitudeWheel.setCyclic(false);
         altitudeWheel.setCurrentItem(DEFAULT_ALTITUDE - MIN_VALUE);
         altitudeWheel.addScrollingListener(new OnWheelScrollListener() {
@@ -110,24 +116,18 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
     @Override
     public void setMavInfoAltitude(float altitude) {
-        if (tvAltitude != null) {
-            String tx_alt = String.format("%d", (int) altitude);
-            tvAltitude.setText(tx_alt + "m");
-        }
+        String tx_alt = String.format("%d", (int) altitude);
+        tvAltitude.setText(tx_alt + "m");
     }
 
     @Override
     public void setMavInfoSpeed(float groundSpeed) {
-        if (tvSpeed != null) {
-            tvSpeed.setText(groundSpeed + " km/h");
-        }
+        tvSpeed.setText(groundSpeed + " km/h");
     }
 
     @Override
     public void setMavInfoLocation(double droneLat, double droneLng) {
-        if (tvLatLng != null) {
-            tvLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
-        }
+        tvLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
     }
 
     View.OnClickListener onFollowBtnClickListener = new View.OnClickListener() {
@@ -161,10 +161,10 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         }
     };
 
-    // Implement DroneController.FollowMeStatueListener
+    // Implement DroneController.FollowMeStateListener
     @Override
     public void onStart(float latOffset, float longOffset) {
-        Toast.makeText(getActivity(), "Start Follow Me", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Start Follow Me", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -181,5 +181,5 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     public void onLocationUpdated(Location location) {
 
     }
-    // End DroneController.FollowMeStatueListener
+    // End DroneController.FollowMeStateListener
 }

@@ -484,6 +484,10 @@ public class WaypointEditorFragment extends Fragment
         }
     }
 
+    private DroneController getDroneController() {
+        return ((MainActivity) getActivity()).getDroneController();
+    }
+
     private void setDeleteOptionShow(boolean isShow) {
         if (isShow) {
             layout_deleteOption.setVisibility(View.VISIBLE);

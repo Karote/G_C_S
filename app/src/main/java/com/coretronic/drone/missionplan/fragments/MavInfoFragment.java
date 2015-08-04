@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 /**
  * Created by karot.chuang on 2015/7/23.
  */
-public class MavInfoFragment extends Fragment {
+public class MavInfoFragment extends Fragment{
     public void setMavInfoAltitude(float altitude) {
     }
 

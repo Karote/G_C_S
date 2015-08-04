@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
@@ -30,77 +32,116 @@ import java.util.Timer;
  * Created by karot.chuang on 2015/7/9.
  */
 public class DownloadProgressDialogFragment extends DialogFragment {
-    private static final String TAG = DownloadProgressDialogFragment.class.getSimpleName();
+
+    private static String TAG = DownloadProgressDialogFragment.class.getSimpleName();
+    private Context context = null;
 
     private static final String ARGUMENT_FILENAME = "filename";
     private static final String ARGUMENT_FILESIZE = "filesize";
-    private static final int INTERVAL_DOWNLOAD_TIME = 1000;
-    private static final boolean IS_DOWNLOAD_FINISHED_DELETE_FILE = false;
+    String fileName = "";
+    String fileSize = "";
 
-    private Context context;
+    private LinearLayout wraningLL = null;
+    private TextView timeTV = null;
+    private TextView stopBtn = null;
+    private ProgressBar downloadBar = null;
 
-    private LinearLayout llWarning;
-    private TextView tvTime;
-    private ProgressBar progressBar;
-
-    private Thread progressThread;
-
-    private Timer speedTimer;
-
-    private float intervalCalculateSum = 0;
+    // progress bar events declare
+    private Thread progressThread = null;
+    private Runnable progressRunnable = null;
+    private int progressValue = 0;
     private long totalFileSize = 0;
     private long getFileSize = 0;
-    private DroneController droneController;
+
+    // speed thread and timer
+    private Timer speedTimer = null;
+    private static int INTERVAL_DOWNLOAD_TIME = 1000;
+    private float intervalCalculateSum = 0;
+    DroneController droneController = null;
     private String albumFilePath = "";
-    private String fileName = "";
+
+    Handler progressHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            progressValue = msg.arg1;
+            downloadBar.setProgress(progressValue);
+            Log.i(TAG, "progressValue:" + progressValue);
+            if (progressValue == 100) {
+                Log.i(TAG, " progressValue == 100");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        deleteAMMBAFile();
+                    }
+                }).start();
+//                closeDownloadFragment();
+            }
+        }
+    };
+
+
+    public Handler timeHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            int wasteTime = msg.what;
+            timeTV.setText(millisecondsToHumanRead((int) wasteTime));
+        }
+    };
+
+
+    public Handler deleteCompletedHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            closeDownloadFragment();
+        }
+    };
 
     public static DownloadProgressDialogFragment newInstance(MediaListItem mediaListItem) {
-        DownloadProgressDialogFragment dialogFragment = new DownloadProgressDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(ARGUMENT_FILENAME, mediaListItem.getMediaFileName());
-        bundle.putString(ARGUMENT_FILESIZE, mediaListItem.getMediaSize());
-        dialogFragment.setArguments(bundle);
-        return dialogFragment;
+        DownloadProgressDialogFragment df = new DownloadProgressDialogFragment();
+        Bundle args = new Bundle();
+        Log.i(TAG, "putString fileName:" + mediaListItem.getMediaFileName());
+        Log.i(TAG, "putString fileSize:" + mediaListItem.getMediaSize());
+        args.putString(ARGUMENT_FILENAME, mediaListItem.getMediaFileName());
+        args.putString(ARGUMENT_FILESIZE, mediaListItem.getMediaSize());
+        df.setArguments(args);
+
+        return df;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setCancelable(false);
-        albumFilePath = AppConfig.getMediaFolderPosition();
-
-        Dialog dialog = new Dialog(getActivity());
+        final Dialog dialog = new Dialog(getActivity());
         context = dialog.getContext();
+        albumFilePath = AppConfig.getMediaFolderPosition();
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         dialog.setContentView(R.layout.fragment_album_warning);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        llWarning = (LinearLayout) dialog.findViewById(R.id.wraning_ll);
-        tvTime = (TextView) dialog.findViewById(R.id.timetv);
-
-        TextView btnStop = (TextView) dialog.findViewById(R.id.stopdownload_btn);
-
-        btnStop.setOnClickListener(new View.OnClickListener() {
+        wraningLL = (LinearLayout) dialog.findViewById(R.id.wraning_ll);
+        timeTV = (TextView) dialog.findViewById(R.id.timetv);
+        stopBtn = (TextView) dialog.findViewById(R.id.stopdownload_btn);
+        stopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeDownloadFragment();
             }
         });
-
-        progressBar = (ProgressBar) dialog.findViewById(R.id.downloadbar);
+        downloadBar = (ProgressBar) dialog.findViewById(R.id.downloadbar);
         dialog.show();
+
         return dialog;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Bundle bundle = getArguments();
+        Bundle arguments = getArguments();
 
-        if (bundle != null) {
-            Log.i(TAG, "bundle!=null");
-            fileName = bundle.getString(ARGUMENT_FILENAME);
-            String fileSize = bundle.getString(ARGUMENT_FILESIZE);
+        if (arguments != null) {
+            Log.i(TAG, "arguments!=null");
+            fileName = arguments.getString(ARGUMENT_FILENAME);
+            fileSize = arguments.getString(ARGUMENT_FILESIZE);
+
 
             Log.i(TAG, "fileName:" + fileName);
             Log.i(TAG, "fileSize:" + fileSize);
@@ -110,21 +151,26 @@ public class DownloadProgressDialogFragment extends DialogFragment {
             // if > 50MB show warning
             if (fileSizeNumber > 50 * 1000 * 1000) {
                 // set if warning
-                llWarning.setVisibility(View.VISIBLE);
+                wraningLL.setVisibility(View.VISIBLE);
+
             } else {
-                llWarning.setVisibility(View.GONE);
+                wraningLL.setVisibility(View.GONE);
             }
         }
 
-        progressThread = new Thread() {
+        downloadBar.setProgress(progressValue);
+
+        progressRunnable = new Runnable() {
             @Override
             public void run() {
                 connectToAMBA();
             }
         };
+        progressThread = new Thread(progressRunnable);
         progressThread.start();
 
         speedTimer = new Timer();
+        intervalCalculateSum = 0;
         speedTimer.schedule(new SpeedTimerTask(), 500, INTERVAL_DOWNLOAD_TIME);
     }
 
@@ -135,19 +181,32 @@ public class DownloadProgressDialogFragment extends DialogFragment {
         }
         speedTimer.cancel();
         dismiss();
+
     }
 
     private void deleteAMMBAFile() {
-        droneController.removeContent(fileName, new DroneController.MediaCommandListener<Void>() {
+        DroneController.MediaCommandListener droneDeleFileReceiver = new DroneController.MediaCommandListener() {
             @Override
-            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Void data) {
-                Log.i(TAG, "delete file completed");
-                closeDownloadFragment();
+            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
+                if (MediaCommand.REMOVE_CONTENT == mediaCommand) {
+                    Log.i(TAG, "delete file completed");
+                    deleteCompletedHandler.sendMessage(deleteCompletedHandler.obtainMessage());
+                }
+            }
+        };
+        droneController.removeContent(fileName, droneDeleFileReceiver);
+
+        droneController.getMediaContents(new DroneController.MediaCommandListener() {
+            @Override
+            public void onCommandResult(MediaCommand mediaCommand, boolean isSuccess, Object data) {
+                if (MediaCommand.LIST_CONTENTS == mediaCommand) {
+                    closeDownloadFragment();
+                }
             }
         });
     }
 
-    private class SpeedTimerTask extends java.util.TimerTask {
+    class SpeedTimerTask extends java.util.TimerTask {
 
         @Override
         public void run() {
@@ -156,16 +215,15 @@ public class DownloadProgressDialogFragment extends DialogFragment {
             intervalCalculateSum++;
             if (getFileSize != 0 && totalFileSize != 0) {
 
-                final float wasteTime = ((float) (totalFileSize - getFileSize) / ((float) getFileSize / (INTERVAL_DOWNLOAD_TIME * intervalCalculateSum)));
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvTime.setText(millisecondsToHumanRead(wasteTime));
-                    }
-                });
+
+                float wasteTime = ((float) (totalFileSize - getFileSize) / ((float) getFileSize / (INTERVAL_DOWNLOAD_TIME * intervalCalculateSum)));
+
+
+                Message msg = Message.obtain();
+                msg.what = (int) wasteTime;
+                timeHandler.sendMessage(msg);
             }
         }
-
     }
 
     private String millisecondsToHumanRead(float mills) {
@@ -195,41 +253,27 @@ public class DownloadProgressDialogFragment extends DialogFragment {
         Log.i(TAG, "fileName:" + fileName);
         droneController.downloadMedia(albumFilePath, fileName, new DroneController.OnProgressUpdatedListener() {
             @Override
-            public void onProgressUpdated(final long downloadedSize, final long totalSize) {
+            public void onProgressUpdated(long downloadedSize, long totalSize) {
+                Log.i(TAG, "downloadedSize / fileSize / 100/(int):" + downloadedSize + "/" + totalSize + "/" + (downloadedSize / totalSize) + "/" + (int) (downloadedSize * 100 / totalSize));
 
                 getFileSize = downloadedSize;
                 totalFileSize = totalSize;
 
-                final int progressValue = (int) (downloadedSize * 100 / totalSize);
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setProgress(progressValue);
-                    }
-                });
+                Message msg = Message.obtain();
+                msg.arg1 = (int) (downloadedSize * 100 / totalSize);
+                Log.i(TAG, "msg.arg1:" + msg.arg1);
+                progressHandler.sendMessage(msg);
             }
 
             @Override
             public void onCompleted(long size) {
-                Log.i(TAG, "download image onCompleted");
+                Log.i(TAG, "downlaod image onCompleted");
 
                 ArrayList<String> toBeScanned = new ArrayList<String>();
                 toBeScanned.add(albumFilePath + fileName);
                 String[] toBeScannedStr = new String[toBeScanned.size()];
                 toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
                 MediaScannerConnection.scanFile(context, toBeScannedStr, null, null);
-
-                if (IS_DOWNLOAD_FINISHED_DELETE_FILE) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            deleteAMMBAFile();
-                        }
-                    }).start();
-                } else {
-                    closeDownloadFragment();
-                }
             }
         });
 
@@ -238,8 +282,6 @@ public class DownloadProgressDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (IS_DOWNLOAD_FINISHED_DELETE_FILE) {
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
-        }
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
     }
 }
