@@ -1,12 +1,13 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 
 /**
@@ -23,15 +26,20 @@ import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter
 public class FollowMeFragment extends MavInfoFragment implements DroneController.FollowMeStateListener {
     private static final String TAG = FollowMeFragment.class.getSimpleName();
 
-    public static final int DEFAULT_ALTITUDE = 8;
+    private static final int DEFAULT_ALTITUDE = 8;
+    private static final int MIN_VALUE = 1;
+    private static final int MAX_VALUE = 20;
 
-    private LinearLayout layout_start_follow = null;
-    private Button btn_stop_follow = null;
-
-    private TextView tv_droneAltitude, tv_droneSpeed, tv_droneLatLng;
+    private TextView tvAltitude = null;
+    private TextView tvSpeed = null;
+    private TextView tvLatLng = null;
 
     OnFollowMeClickListener mCallback;
-    private AbstractWheel followMeAltitudeWheel;
+
+    private AbstractWheel altitudeWheel = null;
+    private NumericWheelAdapter altitudeAdapter = null;
+    private RelativeLayout startFollowMe = null;
+    private Button stopFollowMe = null;
 
     public interface OnFollowMeClickListener extends PlanningFragment.MissionAdapterListener {
         void fitMapShowDroneAndMe();
@@ -66,7 +74,10 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         stopFollowMe.setVisibility(View.GONE);
 
         altitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
-        altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, MIN_VALUE, MAX_VALUE, "%02d"));
+        altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), MIN_VALUE, MAX_VALUE, "%01d");
+        altitudeAdapter.setItemResource(R.layout.text_wheel_number);
+        altitudeAdapter.setItemTextResource(R.id.number_picker_text);
+        altitudeWheel.setViewAdapter(altitudeAdapter);
         altitudeWheel.setCyclic(false);
         altitudeWheel.setCurrentItem(DEFAULT_ALTITUDE - MIN_VALUE);
         altitudeWheel.addScrollingListener(new OnWheelScrollListener() {

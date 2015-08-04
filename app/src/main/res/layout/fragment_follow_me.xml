@@ -47,13 +47,26 @@
                 android:layout_height="1dp"
                 android:background="#e5e5e5" />
 
-            <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-                android:id="@+id/follow_me_altitude_wheel"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
-                app:isAllVisible="false"
-                app:isCyclic="false"
-                app:visibleItems="5" />
+                android:layout_height="28dp">
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:background="#34a7ff" />
+
+                <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+                    android:id="@+id/follow_me_altitude_wheel"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:background="#00000000"
+                    app:isCyclic="false"
+                    app:itemsDimmedAlpha="100"
+                    app:visibleItems="5" />
+
+            </FrameLayout>
 
             <!--<RelativeLayout-->
             <!--android:layout_width="wrap_content"-->
@@ -116,6 +129,7 @@
                 android:background="@drawable/ico_action_start_follow" />
 
         </RelativeLayout>
+
         <Button
             android:id="@+id/btn_stop_follow"
             android:layout_width="match_parent"
