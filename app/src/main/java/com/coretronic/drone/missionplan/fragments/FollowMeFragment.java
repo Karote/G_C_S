@@ -76,7 +76,6 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         altitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
         altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), MIN_VALUE, MAX_VALUE, "%01d");
         altitudeAdapter.setItemResource(R.layout.text_wheel_number);
-        altitudeAdapter.setItemTextResource(R.id.number_picker_text);
         altitudeWheel.setViewAdapter(altitudeAdapter);
         altitudeWheel.setCyclic(false);
         altitudeWheel.setCurrentItem(DEFAULT_ALTITUDE - MIN_VALUE);

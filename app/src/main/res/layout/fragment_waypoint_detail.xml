@@ -35,7 +35,7 @@
             android:layout_height="16dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ico_indicator_plan_waypoint" />
+            android:background="@drawable/ico_indicator_plan_waypoint"/>
 
         <Spinner
             android:id="@+id/spinner_detail_waypoint_type"
@@ -86,26 +86,13 @@
                 android:layout_height="1dp"
                 android:background="#e5e5e5" />
 
-            <FrameLayout
+            <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+                android:id="@+id/altitude_wheel"
                 android:layout_width="match_parent"
-                android:layout_height="28dp">
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:background="#34a7ff" />
-
-                <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-                    android:id="@+id/altitude_wheel"
-                    android:layout_width="match_parent"
-                    android:layout_height="28dp"
-                    android:background="#00000000"
-                    app:isCyclic="false"
-                    app:itemsDimmedAlpha="100"
-                    app:visibleItems="5" />
-
-            </FrameLayout>
+                android:layout_height="28dp"
+                app:isAllVisible="false"
+                app:isCyclic="false"
+                app:visibleItems="5" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -134,25 +121,13 @@
                 android:layout_height="1dp"
                 android:background="#e5e5e5" />
 
-            <FrameLayout
+            <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+                android:id="@+id/delay_wheel"
                 android:layout_width="match_parent"
-                android:layout_height="28dp">
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:background="#34a7ff" />
-
-                <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-                    android:id="@+id/delay_wheel"
-                    android:layout_width="match_parent"
-                    android:layout_height="28dp"
-                    android:background="#00000000"
-                    app:isCyclic="false"
-                    app:itemsDimmedAlpha="100"
-                    app:visibleItems="5" />
-            </FrameLayout>
+                android:layout_height="28dp"
+                app:isAllVisible="false"
+                app:isCyclic="false"
+                app:visibleItems="5" />
 
             <LinearLayout
                 android:layout_width="match_parent"
