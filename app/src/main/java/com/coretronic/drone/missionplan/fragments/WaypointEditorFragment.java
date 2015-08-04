@@ -453,19 +453,17 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onClick(View v) {
-        DroneController drone = ((MainActivity) getActivity()).getDroneController();
-        if (drone == null) {
-            return;
-        }
         switch (v.getId()) {
             case R.id.button_back_to_main:
                 getFragmentManager().popBackStack();
                 break;
             case R.id.btn_action_plan_undo:
-                drone.readMissions(WaypointEditorFragment.this);
-                progressDialog.setTitle("Loading");
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
+                if (getDroneController() != null) {
+                    getDroneController().readMissions(WaypointEditorFragment.this);
+                    progressDialog.setTitle("Loading");
+                    progressDialog.setMessage("Please wait...");
+                    progressDialog.show();
+                }
                 break;
             case R.id.btn_delete_all:
                 webview_Map.loadUrl("javascript:clearMarkers()");
