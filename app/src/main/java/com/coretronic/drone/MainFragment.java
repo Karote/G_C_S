@@ -24,7 +24,6 @@ import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
-import com.coretronic.drone.piloting.PilotingFragment;
 import com.coretronic.drone.ui.StatusView;
 
 import java.util.ArrayList;
@@ -194,7 +193,8 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         String backStackName = null;
         switch (v.getId()) {
             case R.id.btn_piloting:
-                fragment = new PilotingFragment();
+                // 20150805 morris : disable pilotion function
+                //fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
