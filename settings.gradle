@@ -1,4 +1,4 @@
-include ':app', 'ControlCoreLib', ':AndroidLog', ':Mavlink', ':MavlinkMessage', ':DroneControlLibrary', ':G2Command', ':AmbarellaClient',':MulticastDiscoverService'
+include ':app', 'ControlCoreLib', ':AndroidLog', ':Mavlink', ':MavlinkMessage', ':DroneControlLibrary', ':G2Command', ':AmbarellaClient',':MulticastDiscoverService',':TTSLib'
 project(':AndroidLog').projectDir = new File('DroneControlLibrary/AndroidLog')
 project(':Mavlink').projectDir = new File('DroneControlLibrary/Mavlink')
 project(':MavlinkMessage').projectDir = new File('DroneControlLibrary/MavlinkMessage')

@@ -20,6 +20,7 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.ttslib.Speaker;
 
 import java.util.List;
 
@@ -55,6 +56,9 @@ public class PlanningFragment extends MavInfoFragment {
         void fitMapShowAllMission();
     }
 
+    // TTS
+    private Speaker ttsSpeaker;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -65,6 +69,7 @@ public class PlanningFragment extends MavInfoFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fragmentActivity = getActivity();
+        ttsSpeaker = new Speaker(getActivity());
     }
 
     @Override
@@ -154,19 +159,31 @@ public class PlanningFragment extends MavInfoFragment {
         @Override
         public void onClick(View v) {
             drone = ((MainActivity) getActivity()).getDroneController();
-            if (drone == null) {
-                return;
-            }
+//            if (drone == null) {
+//                return;
+//            }
             switch (v.getId()) {
                 case R.id.btn_plan_go:
+                    if (drone == null) {
+                        if(ttsSpeaker != null){
+                            ttsSpeaker.speak("Drone not found!");
+                        }
+                        return;
+                    }
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     droneMissionList.add(0, createNewMission(0, 0, 0, 0, false, 0, Mission.Type.WAY_POINT));
                     drone.writeMissions(droneMissionList, missionLoaderListener);
                     progressDialog.setTitle("Sending");
                     progressDialog.setMessage("Please wait...");
                     progressDialog.show();
+                    if(ttsSpeaker != null){
+                        ttsSpeaker.speak("Mission Plan Start!");
+                    }
                     break;
                 case R.id.btn_plan_stop:
+                    if(ttsSpeaker != null){
+                        ttsSpeaker.speak("Mission Plan Stop!");
+                    }
                     break;
                 case R.id.button_my_location:
                     mCallback.setMapToMyLocation();
@@ -286,5 +303,14 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.notifyDataSetChanged();
         mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
         layout_waypointDetail.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(ttsSpeaker != null) {
+            ttsSpeaker.destroy();
+        }
+
     }
 }
