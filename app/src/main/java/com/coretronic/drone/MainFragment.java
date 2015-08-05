@@ -2,7 +2,9 @@ package com.coretronic.drone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -25,6 +27,7 @@ import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.ui.StatusView;
+import com.coretronic.ttslib.Speaker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,11 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
     private MainActivity activity;
+
+    // TTS
+    private Speaker ttsSpeaker;
+    private final int CHECK_CODE = 0x1;
+
 
     private void assignViews(View view) {
         Button btnPiloting = (Button) view.findViewById(R.id.btn_piloting);
@@ -67,6 +75,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
+        checkTTS();
     }
 
     @Override
@@ -210,6 +219,23 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             transaction.add(R.id.frame_view, fragment, "fragment");
             transaction.addToBackStack(backStackName);
             transaction.commit();
+        }
+    }
+
+    private void checkTTS(){
+        Intent check = new Intent();
+        check.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(check, CHECK_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == CHECK_CODE){
+            if(resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS){
+                Intent install = new Intent();
+                install.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(install);
+            }
         }
     }
 
