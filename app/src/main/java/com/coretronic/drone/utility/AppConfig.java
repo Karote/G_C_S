@@ -7,6 +7,9 @@ import android.os.Environment;
  */
 public class AppConfig {
     public static String ALBUM_PATH = "/CoretronicDrone/";
+    public static String SHAREDPREFERENCE_ID = "CoretronicDrone";
+    public static String PREF_LOGFILE_NAME = "logFileName";
+    public static String PREF_MISSION_LIST = "missionList";
 
     public static String getMediaFolderPosition() {
         return Environment.getExternalStoragePublicDirectory(

@@ -1,6 +1,7 @@
 package com.coretronic.drone.missionplan.fragments;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -20,9 +21,14 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.utility.FileHelper;
 import com.coretronic.ttslib.Speaker;
+import com.google.gson.Gson;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by karot.chuang on 2015/7/21.
@@ -59,6 +65,11 @@ public class PlanningFragment extends MavInfoFragment {
     // TTS
     private Speaker ttsSpeaker;
 
+    // Drone info
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+    private FileHelper fileHelper;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -70,6 +81,9 @@ public class PlanningFragment extends MavInfoFragment {
         super.onCreate(savedInstanceState);
         fragmentActivity = getActivity();
         ttsSpeaker = new Speaker(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID,0);
+        gson = new Gson();
+        fileHelper = new FileHelper(getActivity());
     }
 
     @Override
@@ -164,26 +178,37 @@ public class PlanningFragment extends MavInfoFragment {
 //            }
             switch (v.getId()) {
                 case R.id.btn_plan_go:
-                    if (drone == null) {
-                        if(ttsSpeaker != null){
-                            ttsSpeaker.speak("Drone not found!");
-                        }
-                        return;
-                    }
+//                    if (drone == null) {
+//                        if(ttsSpeaker != null){
+//                            ttsSpeaker.speak("Drone not found!");
+//                        }
+//                        return;
+//                    }
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     droneMissionList.add(0, createNewMission(0, 0, 0, 0, false, 0, Mission.Type.WAY_POINT));
-                    drone.writeMissions(droneMissionList, missionLoaderListener);
+                    if(drone != null) {
+                        drone.writeMissions(droneMissionList, missionLoaderListener);
+                    }
                     progressDialog.setTitle("Sending");
                     progressDialog.setMessage("Please wait...");
-                    progressDialog.show();
+//                    progressDialog.show();
                     if(ttsSpeaker != null){
                         ttsSpeaker.speak("Mission Plan Start!");
                     }
+                    String fileName = String.valueOf(System.currentTimeMillis());
+                    sharedPreferences.edit()
+                            .putString(AppConfig.PREF_LOGFILE_NAME,fileName )
+                            .putString(AppConfig.PREF_MISSION_LIST,gson.toJson(droneMissionList))
+                            .apply();
+                    fileHelper.writeToFile(gson.toJson(droneMissionList), fileName);
+                    EventBus.getDefault().post(new CustomerEvent("Start"));
                     break;
                 case R.id.btn_plan_stop:
                     if(ttsSpeaker != null){
                         ttsSpeaker.speak("Mission Plan Stop!");
                     }
+                    EventBus.getDefault().post(new CustomerEvent("Stop"));
+
                     break;
                 case R.id.button_my_location:
                     mCallback.setMapToMyLocation();
