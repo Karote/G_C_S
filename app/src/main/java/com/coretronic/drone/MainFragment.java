@@ -27,7 +27,6 @@ import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.ui.StatusView;
-import com.coretronic.ttslib.Speaker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private MainActivity activity;
 
     // TTS
-    private Speaker ttsSpeaker;
     private final int CHECK_CODE = 0x1;
 
 
