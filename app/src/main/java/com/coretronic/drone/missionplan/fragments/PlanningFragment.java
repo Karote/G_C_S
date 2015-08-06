@@ -142,6 +142,12 @@ public class PlanningFragment extends MavInfoFragment {
         final Button goButton = (Button) view.findViewById(R.id.btn_plan_go);
         goButton.setOnClickListener(onPlanningBtnClickListener);
 
+        final Button landButton = (Button) view.findViewById(R.id.btn_plan_land);
+        landButton.setOnClickListener(onPlanningBtnClickListener);
+
+        final Button rtlButton = (Button) view.findViewById(R.id.btn_plan_rtl);
+        rtlButton.setOnClickListener(onPlanningBtnClickListener);
+
         final Button stopButton = (Button) view.findViewById(R.id.btn_plan_stop);
         stopButton.setOnClickListener(onPlanningBtnClickListener);
 
@@ -190,6 +196,18 @@ public class PlanningFragment extends MavInfoFragment {
                         fileHelper.writeToFile(gson.toJson(mMissionItemAdapter.cloneMissionList()), fileName);
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                    break;
+                case R.id.btn_plan_land:
+                    Log.d("morris", "btn_plan_land");
+                    if (drone != null) {
+                        drone.land();
+                    }
+                    break;
+                case R.id.btn_plan_rtl:
+                    Log.d("morris", "btn_plan_rtl");
+                    if (drone != null) {
+                        drone.returnToLaunch();
                     }
                     break;
                 case R.id.btn_plan_stop:
