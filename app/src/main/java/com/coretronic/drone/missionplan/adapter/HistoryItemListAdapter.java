@@ -24,6 +24,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
     private int focusIndex = -1;
     private String[] FILENAME = {"2015/08/03", "2015/08/04", "2015/08/05"};
     private String[] FILETIME = {"09:08", "11:28", "10:40"};
+    private String[] FLIGHTDURATION = {"01:48", "00:54", "03:21"};
     private Double[] FLIGHTLAT = {24.713700, 24.713724, 24.709226, 24.709221,
             24.712004, 24.711405, 24.709967,
             24.712038, 24.710337, 24.711911, 24.710288, 24.712125};
@@ -47,7 +48,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
                 path.add(lat);
                 path.add(lng);
             }
-            FlightLogItem item = new FlightLogItem(FILENAME[i], FILETIME[i], path);
+            FlightLogItem item = new FlightLogItem(FILENAME[i], FILETIME[i], path, FLIGHTDURATION[i]);
             this.mLogList.add(i, item);
         }
     }

@@ -10,11 +10,13 @@ public class FlightLogItem {
     private String mFlightFileName = "";
     private String mFlightDate = null;
     private List<Double> mFlightPath = null;
+    private String mFlightTime = "";
 
-    public FlightLogItem(String flightFileName, String flightDate, List<Double> flightPath){
+    public FlightLogItem(String flightFileName, String flightDate, List<Double> flightPath, String flightTime){
         mFlightFileName= flightFileName;
         mFlightDate = flightDate;
         mFlightPath = flightPath;
+        mFlightTime = flightTime;
     }
 
     public String getFlightFileName(){
@@ -27,5 +29,9 @@ public class FlightLogItem {
 
     public List<Double> getFlightPath() {
         return mFlightPath;
+    }
+
+    public String getFlightTime(){
+        return mFlightTime;
     }
 }

@@ -314,6 +314,16 @@ public class WaypointEditorFragment extends Fragment
                 }
             });
         }
+
+        @JavascriptInterface
+        public void setPolylineLengthText(final int lengthInMeters){
+            ((Activity) mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((HistoryFragment) currentFragment).setFlightDistance(lengthInMeters);
+                }
+            });
+        }
     }
 
     private void setUpTopBarButton(View view) {
@@ -355,6 +365,7 @@ public class WaypointEditorFragment extends Fragment
                 setDeleteOptionShow(false);
                 webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
                 webview_Map.loadUrl("javascript:clearMarkers()");
+                ClearPath();
             }
 
             @Override

@@ -19,7 +19,7 @@
 				color: #FFFFFF;
 			}
 		</style>
-		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw&libraries=geometry"></script>
 		<script src="geolocationmarker-compiled.js"></script>
 		<script src="markerwithlabel.js"></script>
 		<script>
@@ -333,6 +333,9 @@
                     flightbounds.extend(flightPlanCoordinates[i]);
                 }
                 map.fitBounds(flightbounds);
+                
+                var lengthInMeters = google.maps.geometry.spherical.computeLength(flightPath.getPath());
+                AndroidFunction.setPolylineLengthText(lengthInMeters);
             }
 
             function ClearPath() {

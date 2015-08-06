@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
@@ -25,7 +27,8 @@ public class HistoryFragment extends MavInfoFragment {
     private static final String TAG = HistoryFragment.class.getSimpleName();
 
     private FragmentActivity fragmentActivity = null;
-    private RecyclerView recyclerView = null;
+    private LinearLayout drone_log_info = null;
+    private TextView tv_flightDistance = null;
     private static HistoryItemListAdapter mHistoryItemAdapter = null;
 
     private static HistoryAdapterListener mCallback = null;
@@ -67,7 +70,16 @@ public class HistoryFragment extends MavInfoFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.flight_history_recycler_view);
+        drone_log_info = (LinearLayout) view.findViewById(R.id.drone_log_info);
+        drone_log_info.setVisibility(View.GONE);
+
+        tv_flightDistance = (TextView) view.findViewById(R.id.tv_flight_distance);
+        tv_flightDistance.setText("0 m");
+
+        final TextView tv_flightTime = (TextView) view.findViewById(R.id.tv_flight_time);
+        tv_flightTime.setText("00:00");
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.flight_history_recycler_view);
         recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager recyclerLayoutMgr = new LinearLayoutManager(getActivity()
                 .getApplicationContext(), LinearLayoutManager.VERTICAL, false);
@@ -82,10 +94,17 @@ public class HistoryFragment extends MavInfoFragment {
             public void onItemClick(View view, int position) {
                 if (mHistoryItemAdapter.getFocusIndex() < 0 || position != mHistoryItemAdapter.getFocusIndex()) {
                     mCallback.LoadPathLog(mHistoryItemAdapter.getFlightLog(position).getFlightPath());
+                    tv_flightTime.setText(mHistoryItemAdapter.getFlightLog(position).getFlightTime());
+                    drone_log_info.setVisibility(View.VISIBLE);
                 } else {
                     mCallback.ClearPath();
+                    drone_log_info.setVisibility(View.GONE);
                 }
             }
         });
+    }
+
+    public void setFlightDistance(int lengthInMeters) {
+        tv_flightDistance.setText(String.valueOf(lengthInMeters) + " m");
     }
 }
