@@ -33,4 +33,5 @@ dependencies {
     compile project(':ControlCoreLib')
     compile 'com.android.support:support-v4:22.2.1'
     compile project(':TTSLib')
+    compile 'de.greenrobot:eventbus:2.4.0'
 }

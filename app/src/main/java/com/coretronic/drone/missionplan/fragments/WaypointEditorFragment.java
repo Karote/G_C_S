@@ -5,12 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +34,11 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.Mission.Type;
 import com.coretronic.drone.R;
+import com.coretronic.drone.missionplan.fragments.module.CustomerEvent;
+import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
 import com.coretronic.drone.ui.StatusView;
+import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.utility.FileHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -44,10 +51,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import de.greenrobot.event.EventBus;
 
 public class WaypointEditorFragment extends Fragment
         implements View.OnClickListener, LocationListener,
@@ -86,6 +96,17 @@ public class WaypointEditorFragment extends Fragment
 
     private MavInfoFragment currentFragment = null;
 
+    // Save Drone Info
+    private DroneInfo currentDroneInfo;
+    private DroneInfo tmpDroneInfo;
+    // File Helper
+    private FileHelper fileHelper;
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+    private Handler handler;
+    private boolean saveFlag = false;
+    private int saveDelayTime = 2000;
+    private String saveFileName;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +114,16 @@ public class WaypointEditorFragment extends Fragment
 
         fragmentActivity = getActivity();
         fragmentChildManager = getChildFragmentManager();
+
+        // Drone info init
+        currentDroneInfo = new DroneInfo();
+        tmpDroneInfo = new DroneInfo();
+
+        // File Helper init
+        fileHelper = new FileHelper(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, 0);
+        gson = new Gson();
+        handler = new Handler();
     }
 
     @Override
@@ -129,12 +160,28 @@ public class WaypointEditorFragment extends Fragment
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
+        // Event bus
+        EventBus.getDefault().register(this);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+        EventBus.getDefault().unregister(this);
+
+    }
+
+    public void onEvent(CustomerEvent event) {
+        if (AppConfig.MISSION_LOG_START.equals(event.getMsg())) {
+            saveFlag = true;
+            saveFileName = event.getFileName();
+            handler.post(saveFileRunnable);
+        } else {
+            saveFlag = false;
+        }
     }
 
     // Implement GoogleApiClient.ConnectionCallbacks
@@ -226,6 +273,9 @@ public class WaypointEditorFragment extends Fragment
                 statusView.setBatteryStatus(battery);
             }
         });
+
+        // save info
+        currentDroneInfo.setBatter(battery);
     }
 
     @Override
@@ -236,11 +286,14 @@ public class WaypointEditorFragment extends Fragment
                 currentFragment.setMavInfoAltitude(altitude);
             }
         });
+        // save info
+        currentDroneInfo.setAltitude(altitude);
     }
 
     @Override
     public void onRadioSignalUpdate(int rssi) {
-
+        // save info
+        currentDroneInfo.setRssi(rssi);
     }
 
     @Override
@@ -251,6 +304,8 @@ public class WaypointEditorFragment extends Fragment
                 currentFragment.setMavInfoSpeed(groundSpeed);
             }
         });
+        // save info
+        currentDroneInfo.setGroundSpeed(groundSpeed);
     }
 
     @Override
@@ -264,6 +319,10 @@ public class WaypointEditorFragment extends Fragment
                 webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
             }
         });
+        // save info
+        currentDroneInfo.setLat(lat);
+        currentDroneInfo.setLon(lon);
+        currentDroneInfo.setEph(eph);
     }
 
     @Override
@@ -275,12 +334,14 @@ public class WaypointEditorFragment extends Fragment
                 webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
             }
         });
+        // save info
+        currentDroneInfo.setHeading(heading);
     }
     // End Drone.StatusChangedListener
 
 
     /**
-     * «Ø¥ßµ¹ JavaScript ©I¥sªº¨ç¦¡ *
+     * ï¿½Ø¥ßµï¿½ JavaScript ï¿½Iï¿½sï¿½ï¿½ï¿½ç¦¡ *
      */
     public class javascriptInterface {
         Context mContext;
@@ -526,4 +587,22 @@ public class WaypointEditorFragment extends Fragment
 
     }
     // End FollowMeFragment.OnFollowMeClickListener
+
+
+    Runnable saveFileRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (saveFlag) {
+//                String fileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
+                Log.d("morris", "saveFileRunnable");
+                if (saveFileName != null) {
+                    tmpDroneInfo = currentDroneInfo;
+                    tmpDroneInfo.setTimeStamp(System.currentTimeMillis());
+                    Log.d("morris", "tmpDroneInfo: " + gson.toJson(tmpDroneInfo));
+                    fileHelper.writeToFile(gson.toJson(tmpDroneInfo), saveFileName);
+                    handler.postDelayed(saveFileRunnable, saveDelayTime);
+                }
+            }
+        }
+    };
 }
