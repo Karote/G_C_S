@@ -160,6 +160,11 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     }
 
     @Override
+    public void onMissionStateUpdate(int missionState) {
+
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
         final DroneDevice droneDevice = mDroneDevices.get(position);
         Log.d(TAG, "onItemSelected: " + droneDevice.getName());

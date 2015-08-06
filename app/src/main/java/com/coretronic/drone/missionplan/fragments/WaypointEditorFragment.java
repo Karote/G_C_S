@@ -34,11 +34,11 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.Mission.Type;
 import com.coretronic.drone.R;
-import com.coretronic.drone.missionplan.fragments.module.CustomerEvent;
 import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
 import com.coretronic.drone.utility.FileHelper;
+import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -58,8 +58,6 @@ import org.json.JSONArray;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import de.greenrobot.event.EventBus;
 
 public class WaypointEditorFragment extends Fragment
         implements View.OnClickListener, LocationListener,
@@ -109,6 +107,10 @@ public class WaypointEditorFragment extends Fragment
     private boolean saveFlag = false;
     private int saveDelayTime = 2000;
     private String saveFileName;
+    private int droneMissionState = DroneController.MISSION_FINISHED;
+    // TTS
+    private Speaker ttsSpeaker;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +128,9 @@ public class WaypointEditorFragment extends Fragment
         sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, 0);
         gson = new Gson();
         handler = new Handler();
+        // tts init
+        ttsSpeaker = new Speaker(getActivity());
+
     }
 
     @Override
@@ -162,28 +167,21 @@ public class WaypointEditorFragment extends Fragment
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-
-        // Event bus
-        EventBus.getDefault().register(this);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-        EventBus.getDefault().unregister(this);
-
     }
 
-    public void onEvent(CustomerEvent event) {
-        if (AppConfig.MISSION_LOG_START.equals(event.getMsg())) {
-            saveFlag = true;
-            saveFileName = event.getFileName();
-            handler.post(saveFileRunnable);
-        } else {
-            saveFlag = false;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (ttsSpeaker != null) {
+            ttsSpeaker.destroy();
         }
+        saveFlag = false;
     }
 
     // Implement GoogleApiClient.ConnectionCallbacks
@@ -338,6 +336,39 @@ public class WaypointEditorFragment extends Fragment
         });
         // save info
         currentDroneInfo.setHeading(heading);
+    }
+
+    @Override
+    public void onMissionStateUpdate(int missionState) {
+        Log.d("morris", "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionState);
+        if(droneMissionState == missionState) {
+            return;
+        }
+        droneMissionState = missionState;
+
+        switch (droneMissionState){
+            case DroneController.MISSION_START:
+                // tts to start
+                if (ttsSpeaker != null) {
+                    ttsSpeaker.speak("Mission Plan Start!");
+                }
+                saveFlag = true;
+                handler.post(saveFileRunnable);
+                break;
+            case DroneController.MISSION_PAUSE:
+                if (ttsSpeaker != null) {
+                    ttsSpeaker.speak("Mission Plan Pause!");
+                }
+                saveFlag = false;
+                break;
+            case  DroneController.MISSION_FINISHED:
+                if (ttsSpeaker != null) {
+                    ttsSpeaker.speak("Mission Plan Stop!");
+                }
+                saveFlag = false;
+                break;
+        }
+
     }
     // End Drone.StatusChangedListener
 
@@ -606,7 +637,7 @@ public class WaypointEditorFragment extends Fragment
         @Override
         public void run() {
             if (saveFlag) {
-//                String fileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
+               saveFileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
                 Log.d("morris", "saveFileRunnable");
                 if (saveFileName != null) {
                     tmpDroneInfo = currentDroneInfo;

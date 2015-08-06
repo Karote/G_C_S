@@ -238,6 +238,11 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
 
     }
 
+    @Override
+    public void onMissionStateUpdate(int missionState) {
+
+    }
+
     private void assignViews(View view) {
         Button btnHome = (Button) view.findViewById(R.id.btn_home);
         Button btnEmergency = (Button) view.findViewById(R.id.btn_emergency);

@@ -338,4 +338,9 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
 
     }
 
+    @Override
+    public void onMissionStateUpdate(int missionState) {
+
+    }
+
 }

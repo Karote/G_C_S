@@ -1,4 +1,4 @@
-include ':app', 'ControlCoreLib', ':AndroidLog', ':Mavlink', ':MavlinkMessage', ':DroneControlLibrary', ':G2Command', ':AmbarellaClient',':MulticastDiscoverService',':TTSLib'
+include ':app', 'ControlCoreLib', ':AndroidLog', ':Mavlink', ':MavlinkMessage', ':DroneControlLibrary', ':G2Command', ':AmbarellaClient',':MulticastDiscoverService',':TTSLib',':BluetoothDiscoverService'
 project(':AndroidLog').projectDir = new File('DroneControlLibrary/AndroidLog')
 project(':Mavlink').projectDir = new File('DroneControlLibrary/Mavlink')
 project(':MavlinkMessage').projectDir = new File('DroneControlLibrary/MavlinkMessage')
@@ -6,3 +6,4 @@ project(':ControlCoreLib').projectDir = new File('DroneControlLibrary/ControlCor
 project(':G2Command').projectDir = new File('DroneControlLibrary/G2Command')
 project(':AmbarellaClient').projectDir = new File('DroneControlLibrary/AmbarellaClient')
 project(':MulticastDiscoverService').projectDir = new File('DroneControlLibrary/MulticastDiscoverService')
+project(':BluetoothDiscoverService').projectDir = new File('DroneControlLibrary/BluetoothDiscoverService')
