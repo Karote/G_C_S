@@ -53,6 +53,8 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -63,7 +65,7 @@ public class WaypointEditorFragment extends Fragment
         implements View.OnClickListener, LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         Drone.StatusChangedListener, DroneController.MissionLoaderListener,
-        FollowMeFragment.OnFollowMeClickListener {
+        FollowMeFragment.OnFollowMeClickListener, HistoryFragment.HistoryAdapterListener {
 
     private static final String TAG = WaypointEditorFragment.class.getSimpleName();
 
@@ -372,6 +374,16 @@ public class WaypointEditorFragment extends Fragment
                 }
             });
         }
+
+        @JavascriptInterface
+        public void setPolylineLengthText(final int lengthInMeters){
+            ((Activity) mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((HistoryFragment) currentFragment).setFlightDistance(lengthInMeters);
+                }
+            });
+        }
     }
 
     private void setUpTopBarButton(View view) {
@@ -413,6 +425,7 @@ public class WaypointEditorFragment extends Fragment
                 setDeleteOptionShow(false);
                 webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
                 webview_Map.loadUrl("javascript:clearMarkers()");
+                ClearPath();
             }
 
             @Override
@@ -584,7 +597,7 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void fitMapShowDroneAndMe() {
-
+        webview_Map.loadUrl("javascript:fitMapShowDroneAndMe()");
     }
     // End FollowMeFragment.OnFollowMeClickListener
 
@@ -605,4 +618,17 @@ public class WaypointEditorFragment extends Fragment
             }
         }
     };
+    // Implement HistoryFragment.HistoryAdapterListener
+    @Override
+    public void LoadPathLog(List<Double> path) {
+        JSONArray mJSONArray = new JSONArray(path);
+        Log.d(TAG, "pathArray(Json):" + mJSONArray);
+        webview_Map.loadUrl("javascript:LoadPathLog(" + mJSONArray + ")");
+    }
+
+    @Override
+    public void ClearPath() {
+        webview_Map.loadUrl("javascript:ClearPath()");
+    }
+    // End HistoryFragment.HistoryAdapterListener
 }

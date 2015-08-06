@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <title>Google Map</title>
-    <style>
-        html {
-        height: 100%
-        }
-        body {
-        height: 100%;
-        margin: 0;
-        padding: 0
-        }
-        .mapIconLabel {
-        font-size: 14px;
-        font-weight: bold;
-        color: #FFFFFF;
-        }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw"></script>
-    <script src="geolocationmarker-compiled.js"></script>
-    <script src="markerwithlabel.js"></script>
-    <script>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+		<title>Google Map</title>
+		<style>
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0
+			}
+			.mapIconLabel {
+				font-size: 14px;
+				font-weight: bold;
+				color: #FFFFFF;
+			}
+		</style>
+		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw&libraries=geometry"></script>
+		<script src="geolocationmarker-compiled.js"></script>
+		<script src="markerwithlabel.js"></script>
+		<script>
             var map,
                 GeoMarker,
                 droneMarkerOuter,
@@ -31,13 +31,14 @@
                 mapClickable;
             var markers = [];
             var poly;
+            var flightPath;
+            var flightPlanCoordinates = [];
 
             function initialize() {
-                var latlng;
-                latlng = new google.maps.LatLng(24.712299, 120.916408);
-                // 中強光電竹南廠
+                var initial_location;
+                initial_location = new google.maps.LatLng(24.712299, 120.916408); // 中強光電竹南廠
                 //latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
-                
+
                 mapClickable = true;
 
                 var styleArray = [{
@@ -55,13 +56,13 @@
                 }];
 
                 var mapOptions = {
-                    center : latlng,
+                    center : initial_location,
                     zoom : 15,
                     mapTypeId : google.maps.MapTypeId.ROAD,
                     disableDefaultUI : true,
                     mapTypeControl : true,
                     mapTypeControlOptions : {
-                    position : google.maps.ControlPosition.LEFT_CENTER
+                        position : google.maps.ControlPosition.LEFT_CENTER
                     },
                     // zoomControl : true,
                     // zoomControlOptions : {
@@ -71,28 +72,25 @@
                     styles : styleArray
                 };
                 map = new google.maps.Map(document.getElementById("map"), mapOptions);
-                
+
                 var GeoMarkerOption = {
-                	icon :{
-                		//path :'M28.6,18.5c1.4,4.2-0.9,8.7-5.1,10.1c-4.2,1.4-8.7-0.9-10.1-5.1c-1.4-4.2,0.9-8.7,5.1-10.1S27.2,14.3,28.6,18.5L28.6,18.5z',
-                		path : google.maps.SymbolPath.CIRCLE,
-                		scale : 10,
-                		strokeColor : '#34a7ff',
-                		strokeOpacity : 1,
-                		fillColor : '#34a7ff',
-                		fillOpacity : 1
-                		//anchor : new google.maps.Point(21,21)
-                	}
+                    icon : {
+                        path : google.maps.SymbolPath.CIRCLE,
+                        scale : 10,
+                        strokeColor : '#34a7ff',
+                        strokeOpacity : 1,
+                        fillColor : '#34a7ff',
+                        fillOpacity : 1
+                    }
                 }
-                                
+
                 GeoMarker = new GeolocationMarker(map, GeoMarkerOption);
                 GeoMarker.setCircleOptions({
-                	fillColor: '#34a7ff',
-                	strokeColor : '#34a7ff',
-                	strokeOpacity : 1,
-                	strokeWeight : 2
-                	});
-                
+                    fillColor : '#34a7ff',
+                    strokeColor : '#34a7ff',
+                    strokeOpacity : 1,
+                    strokeWeight : 2
+                });
 
                 var polyOptions = {
                     strokeColor : '#4EC3F5',
@@ -102,48 +100,48 @@
                     map : map
                 };
                 poly = new google.maps.Polyline(polyOptions);
-                
+
                 var droneMarkerOuterOption = {
-                	icon : {
-                		path : 'M40,14.7c3.5,10.5-2.2,21.8-12.7,25.3C16.8,43.5,5.5,37.8,2,27.3S4.2,5.5,14.7,2C25.2-1.5,36.5,4.2,40,14.7L40,14.7z',
-                		strokeColor : '#000000',
-                		strokeOpacity : 0.4,
-                		fillColor : '#000000',
-                		fillOpacity : 0.4,
-                        anchor: new google.maps.Point(21, 21),
-                		scale : 1
-                	},
-                	zIndex : 97,
-                	map : map
+                    icon : {
+                        path : 'M40,14.7c3.5,10.5-2.2,21.8-12.7,25.3C16.8,43.5,5.5,37.8,2,27.3S4.2,5.5,14.7,2C25.2-1.5,36.5,4.2,40,14.7L40,14.7z',
+                        strokeColor : '#000000',
+                        strokeOpacity : 0.4,
+                        fillColor : '#000000',
+                        fillOpacity : 0.4,
+                        anchor : new google.maps.Point(21, 21),
+                        scale : 1
+                    },
+                    zIndex : 97,
+                    map : map
                 };
-                
+
                 var droneMarkerInnerOption = {
-                	icon : {
-                		path : 'M30.5,17.9c1.7,5.2-1.1,10.9-6.4,12.6c-5.2,1.7-10.9-1.1-12.6-6.4c-1.7-5.2,1.1-10.9,6.4-12.6C23.1,9.8,28.8,12.6,30.5,17.9L30.5,17.9z',
-                		strokeColor : '#ffffff',
-                		fillColor : '#ffffff',
-                		fillOpacity : 1,
-                        anchor: new google.maps.Point(21, 21),
-                		scale : 1
-                	},
-                	zIndex : 98,
-                	map : map
+                    icon : {
+                        path : 'M30.5,17.9c1.7,5.2-1.1,10.9-6.4,12.6c-5.2,1.7-10.9-1.1-12.6-6.4c-1.7-5.2,1.1-10.9,6.4-12.6C23.1,9.8,28.8,12.6,30.5,17.9L30.5,17.9z',
+                        strokeColor : '#ffffff',
+                        fillColor : '#ffffff',
+                        fillOpacity : 1,
+                        anchor : new google.maps.Point(21, 21),
+                        scale : 1
+                    },
+                    zIndex : 98,
+                    map : map
                 };
 
                 var droneMarkerArrowOption = {
                     icon : {
-                        path :'M20.9,13L26,26.9c0,0-5-3.7-5.1-3.7c0,0-4.9,3.8-4.9,3.8L20.9,13L20.9,13z',
+                        path : 'M20.9,13L26,26.9c0,0-5-3.7-5.1-3.7c0,0-4.9,3.8-4.9,3.8L20.9,13L20.9,13z',
                         strokeColor : '#ff8800',
                         fillColor : '#ff8800',
                         fillOpacity : 1,
-                        anchor: new google.maps.Point(21, 21),
+                        anchor : new google.maps.Point(21, 21),
                         rotation : 0,
                         scale : 1
                     },
-                	zIndex : 99,
+                    zIndex : 99,
                     map : map
                 };
-                
+
                 droneMarkerOuter = new google.maps.Marker(droneMarkerOuterOption);
                 droneMarkerInner = new google.maps.Marker(droneMarkerInnerOption);
                 droneMarkerArrow = new google.maps.Marker(droneMarkerArrowOption);
@@ -151,18 +149,26 @@
                 google.maps.event.addListener(map, 'click', addLatLng);
 
                 // updateDroneLocation(24.712299, 120.916408);
+
+                flightPath = new google.maps.Polyline({
+                    path : flightPlanCoordinates,
+                    geodesic : true,
+                    strokeColor : '#4EC3F5',
+                    strokeOpacity : 1.0,
+                    strokeWeight : 6
+                });
             }
-            
-            function setMapClickable(isClickable){
-            	mapClickable = isClickable;
+
+            function setMapClickable(isClickable) {
+                mapClickable = isClickable;
             }
 
             function addLatLng(event) {
-            	if(mapClickable){
-                	AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
-                	
-                	// addMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
-               }
+                if (mapClickable) {
+                    AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
+
+                    // addMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
+                }
             }
 
             function addMarker(lat, lng, sn) {
@@ -204,8 +210,8 @@
                 } else {
                     AndroidFunction.showToast("無法取得現在位置");
                 }
-                if(map.getZoom() <15 ){
-                	map.setZoom(15);
+                if (map.getZoom() < 15) {
+                    map.setZoom(15);
                 }
             }
 
@@ -236,8 +242,8 @@
             }
 
             function updateDroneLocation(droneLat, droneLng, heading) {
-            	droneMarkerOuter.setMap(null);
-            	droneMarkerInner.setMap(null);
+                droneMarkerOuter.setMap(null);
+                droneMarkerInner.setMap(null);
                 droneMarkerArrow.setMap(null);
                 droneMarkerArrow.icon.rotation = heading;
                 droneMarkerOuter.setPosition(new google.maps.LatLng(droneLat, droneLng));
@@ -249,48 +255,98 @@
             }
 
             function fitMapShowAll() {
-            	var i, j;
+                var i,
+                    j;
                 var bounds = new google.maps.LatLngBounds();
-                for (i = 0, j = markers.length; i < j; i++) {
+                for ( i = 0,
+                j = markers.length; i < j; i++) {
                     bounds.extend(markers[i].position);
                 }
                 map.fitBounds(bounds);
             }
-            
-            function hideMarkerOnMap(){
-            	var i, j;
-            	for (i = 0, j = markers.length; i < j; i++){
-            		markers[i].setMap(null);
-            	}
-            	poly.setMap(null);
-            }
-            
-            function showMarkerOnMap(){
-            	var i, j;
-            	for (i = 0, j = markers.length; i < j; i++){
-            		markers[i].setMap(map);
-            	}
-            	poly.setMap(map);            	
-            }
-            
-            function setMarkerShow(isMarkerShow){
-            	var i, j, option;
-            	if(isMarkerShow){
-            		option = map;
-            	}else{
-            		option = null;
-            	}
-            	for(i=0, j = markers.length; i < j; i++){
-            		markers[i].setMap(option);
-            	}
-            	poly.setMap(option);
-            }
-            
 
+            function fitMapShowDroneAndMe() {
+                var droneBound = new google.maps.LatLngBounds();
+                droneBound.extend(droneMarkerOuter.position);
+                droneBound.extend(GeoMarker.getPosition());
 
-    </script>
-</head>
-<body onload="initialize()">
-<div id="map" style="width: 100%; height: 100%;"></div>
-</body>
+                map.fitBounds(droneBound);
+            }
+
+            function hideMarkerOnMap() {
+                var i,
+                    j;
+                for ( i = 0,
+                j = markers.length; i < j; i++) {
+                    markers[i].setMap(null);
+                }
+                poly.setMap(null);
+            }
+
+            function showMarkerOnMap() {
+                var i,
+                    j;
+                for ( i = 0,
+                j = markers.length; i < j; i++) {
+                    markers[i].setMap(map);
+                }
+                poly.setMap(map);
+            }
+
+            function setMarkerShow(isMarkerShow) {
+                var i,
+                    j,
+                    option;
+                if (isMarkerShow) {
+                    option = map;
+                } else {
+                    option = null;
+                }
+                for ( i = 0,
+                j = markers.length; i < j; i++) {
+                    markers[i].setMap(option);
+                }
+                poly.setMap(option);
+            }
+
+            function LoadPathLog(pathLog) {
+                var i,
+                    j;
+
+                var logData = JSON.parse("[" + pathLog + "]");
+
+                // flightPath.setMap(null);
+                // flightPath.setPath([]);
+                // flightPlanCoordinates = [];
+                ClearPath();
+
+                for ( i = 0,
+                j = logData.length; i < j; i += 2) {
+                    flightPlanCoordinates.push(new google.maps.LatLng(logData[i], logData[i + 1]));
+                }
+                flightPath.setPath(flightPlanCoordinates);
+                flightPath.setMap(map);
+
+                var flightbounds = new google.maps.LatLngBounds();
+                for ( i = 0,
+                j = flightPlanCoordinates.length; i < j; i++) {
+                    flightbounds.extend(flightPlanCoordinates[i]);
+                }
+                map.fitBounds(flightbounds);
+                
+                var lengthInMeters = google.maps.geometry.spherical.computeLength(flightPath.getPath());
+                AndroidFunction.setPolylineLengthText(lengthInMeters);
+            }
+
+            function ClearPath() {
+                flightPath.setMap(null);
+                flightPath.setPath([]);
+                flightPlanCoordinates = [];
+            }
+
+		</script>
+	</head>
+	<body onload="initialize()">
+		<div id="map" style="width: 100%; height: 100%;"> </div>
+	</body>
 </html>
