@@ -25,7 +25,7 @@ public class FileHelper {
     }
 
 
-    public void writeToFile(String data, String fileName) {
+    public synchronized void writeToFile(String data, String fileName) {
         try {
             File file = new File(filePath + "/" + fileName);
             FileWriter fileWriter = new FileWriter(file, true);
@@ -39,7 +39,7 @@ public class FileHelper {
 
     }
 
-    public String readFromFile(String fileName) {
+    public synchronized String readFromFile(String fileName) {
         String str = null;
         try {
             File file = new File(filePath + "/" + fileName);

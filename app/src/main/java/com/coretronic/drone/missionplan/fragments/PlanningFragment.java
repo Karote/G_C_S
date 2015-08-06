@@ -21,6 +21,7 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.drone.missionplan.fragments.module.CustomerEvent;
 import com.coretronic.drone.utility.AppConfig;
 import com.coretronic.drone.utility.FileHelper;
 import com.coretronic.ttslib.Speaker;
@@ -81,7 +82,7 @@ public class PlanningFragment extends MavInfoFragment {
         super.onCreate(savedInstanceState);
         fragmentActivity = getActivity();
         ttsSpeaker = new Speaker(getActivity());
-        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID,0);
+        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, 0);
         gson = new Gson();
         fileHelper = new FileHelper(getActivity());
     }
@@ -186,29 +187,40 @@ public class PlanningFragment extends MavInfoFragment {
 //                    }
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     droneMissionList.add(0, createNewMission(0, 0, 0, 0, false, 0, Mission.Type.WAY_POINT));
-                    if(drone != null) {
+                    if (drone != null) {
                         drone.writeMissions(droneMissionList, missionLoaderListener);
                     }
                     progressDialog.setTitle("Sending");
                     progressDialog.setMessage("Please wait...");
-//                    progressDialog.show();
-                    if(ttsSpeaker != null){
+                    progressDialog.show();
+
+                    // tts to start
+                    if (ttsSpeaker != null) {
                         ttsSpeaker.speak("Mission Plan Start!");
                     }
-                    String fileName = String.valueOf(System.currentTimeMillis());
-                    sharedPreferences.edit()
-                            .putString(AppConfig.PREF_LOGFILE_NAME,fileName )
-                            .putString(AppConfig.PREF_MISSION_LIST,gson.toJson(droneMissionList))
-                            .apply();
-                    fileHelper.writeToFile(gson.toJson(droneMissionList), fileName);
-                    EventBus.getDefault().post(new CustomerEvent("Start"));
+
+                    try {
+                        String fileName = String.valueOf(System.currentTimeMillis());
+//                    sharedPreferences.edit()
+//                            .putString(AppConfig.PREF_LOGFILE_NAME,fileName )
+//                            .putString(AppConfig.PREF_MISSION_LIST,gson.toJson(droneMissionList))
+//                            .apply();
+                        fileHelper.writeToFile(gson.toJson(mMissionItemAdapter.cloneMissionList()), fileName);
+                        CustomerEvent startEvent = new CustomerEvent();
+                        startEvent.setFileName(fileName);
+                        startEvent.setMsg(AppConfig.MISSION_LOG_START);
+                        EventBus.getDefault().post(startEvent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case R.id.btn_plan_stop:
-                    if(ttsSpeaker != null){
+                    if (ttsSpeaker != null) {
                         ttsSpeaker.speak("Mission Plan Stop!");
                     }
-                    EventBus.getDefault().post(new CustomerEvent("Stop"));
-
+                    CustomerEvent stopEvent = new CustomerEvent();
+                    stopEvent.setMsg(AppConfig.MISSION_LOG_STOP);
+                    EventBus.getDefault().post(stopEvent);
                     break;
                 case R.id.button_my_location:
                     mCallback.setMapToMyLocation();
@@ -333,7 +345,7 @@ public class PlanningFragment extends MavInfoFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(ttsSpeaker != null) {
+        if (ttsSpeaker != null) {
             ttsSpeaker.destroy();
         }
 

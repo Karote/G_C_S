@@ -34,6 +34,8 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.Mission.Type;
 import com.coretronic.drone.R;
+import com.coretronic.drone.missionplan.fragments.module.CustomerEvent;
+import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
 import com.coretronic.drone.utility.FileHelper;
@@ -103,7 +105,8 @@ public class WaypointEditorFragment extends Fragment
     private Gson gson;
     private Handler handler;
     private boolean saveFlag = false;
-
+    private int saveDelayTime = 2000;
+    private String saveFileName;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,8 +175,9 @@ public class WaypointEditorFragment extends Fragment
     }
 
     public void onEvent(CustomerEvent event) {
-        if ("Start".equals(event.getMsg())) {
+        if (AppConfig.MISSION_LOG_START.equals(event.getMsg())) {
             saveFlag = true;
+            saveFileName = event.getFileName();
             handler.post(saveFileRunnable);
         } else {
             saveFlag = false;
@@ -589,62 +593,16 @@ public class WaypointEditorFragment extends Fragment
         @Override
         public void run() {
             if (saveFlag) {
-                String fileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
+//                String fileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
                 Log.d("morris", "saveFileRunnable");
-                if (fileName != null) {
+                if (saveFileName != null) {
                     tmpDroneInfo = currentDroneInfo;
+                    tmpDroneInfo.setTimeStamp(System.currentTimeMillis());
                     Log.d("morris", "tmpDroneInfo: " + gson.toJson(tmpDroneInfo));
-                    fileHelper.writeToFile(gson.toJson(tmpDroneInfo), fileName);
-                    handler.postDelayed(saveFileRunnable, 2000);
+                    fileHelper.writeToFile(gson.toJson(tmpDroneInfo), saveFileName);
+                    handler.postDelayed(saveFileRunnable, saveDelayTime);
                 }
             }
         }
     };
-
-
-    // Drone info class
-
-    class DroneInfo {
-        private float timeStamp;
-        private float altitude;
-        private float groundSpeed;
-        private long lat;
-        private long lon;
-        private int eph;
-        private int heading;
-        private int rssi;
-        private int batter;
-
-        public void setAltitude(float altitude) {
-            this.altitude = altitude;
-        }
-
-        public void setGroundSpeed(float groundSpeed) {
-            this.groundSpeed = groundSpeed;
-        }
-
-        public void setLat(long lat) {
-            this.lat = lat;
-        }
-
-        public void setLon(long lon) {
-            this.lon = lon;
-        }
-
-        public void setEph(int eph) {
-            this.eph = eph;
-        }
-
-        public void setHeading(int heading) {
-            this.heading = heading;
-        }
-
-        public void setRssi(int rssi) {
-            this.rssi = rssi;
-        }
-
-        public void setBatter(int batter) {
-            this.batter = batter;
-        }
-    }
 }

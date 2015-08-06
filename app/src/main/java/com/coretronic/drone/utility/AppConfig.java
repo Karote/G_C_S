@@ -10,6 +10,8 @@ public class AppConfig {
     public static String SHAREDPREFERENCE_ID = "CoretronicDrone";
     public static String PREF_LOGFILE_NAME = "logFileName";
     public static String PREF_MISSION_LIST = "missionList";
+    public static String MISSION_LOG_START = "missionLogStart";
+    public static String MISSION_LOG_STOP = "missionLogStop";
 
     public static String getMediaFolderPosition() {
         return Environment.getExternalStoragePublicDirectory(
