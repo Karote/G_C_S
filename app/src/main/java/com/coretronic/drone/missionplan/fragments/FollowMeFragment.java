@@ -1,5 +1,6 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 
@@ -30,8 +32,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
     private TextView tvAltitude = null;
     private TextView tvSpeed = null;
-    private TextView tvLat = null;
-    private TextView tvLng = null;
+    private TextView tvLatLng = null;
 
     OnFollowMeClickListener mCallback;
 
@@ -108,60 +109,33 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         tvAltitude.setText("0m");
         tvSpeed = (TextView) view.findViewById(R.id.speed_text);
         tvSpeed.setText("0 km/h");
-        tvLat = (TextView) view.findViewById(R.id.location_lat_text);
-        tvLat.setText("0.000000,");
-        tvLng = (TextView) view.findViewById(R.id.location_lng_text);
-        tvLng.setText("0.000000");
+        tvLatLng = (TextView) view.findViewById(R.id.location_text);
+        tvLatLng.setText("0.000000, 0.000000");
     }
 
     @Override
     public void setMavInfoAltitude(float altitude) {
-        if (tvAltitude == null)
-            return;
         String tx_alt = String.format("%d", (int) altitude);
         tvAltitude.setText(tx_alt + "m");
     }
 
     @Override
     public void setMavInfoSpeed(float groundSpeed) {
-        if (tvSpeed == null)
-            return;
         tvSpeed.setText(groundSpeed + " km/h");
     }
 
     @Override
-    public void setMavInfoLocation(long droneLat, long droneLng) {
-        if (tvLat == null)
-            return;
-        String latLongStr = String.valueOf(droneLat);
-        String lngLongStr = String.valueOf(droneLng);
-        int latDecimalPos = latLongStr.length() - 7;
-        int lngDecimalPos = lngLongStr.length() - 7;
-
-        String lat_output, lng_output;
-        if (latDecimalPos <= 0) {
-            lat_output = String.format("0.%07d", droneLat);
-        } else {
-            lat_output = latLongStr.substring(0, latDecimalPos) + "." + latLongStr.substring(latDecimalPos);
-        }
-
-        if (lngDecimalPos <= 0) {
-            lng_output = String.format("0.%07d", droneLng);
-        } else {
-            lng_output = lngLongStr.substring(0, lngDecimalPos) + "." + lngLongStr.substring(lngDecimalPos);
-        }
-
-        tvLat.setText(lat_output + ",");
-        tvLng.setText(lng_output);
+    public void setMavInfoLocation(double droneLat, double droneLng) {
+        tvLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
     }
 
     View.OnClickListener onFollowBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             final DroneController drone = ((MainActivity) getActivity()).getDroneController();
-//            if (drone == null) {
-//                return;
-//            }
+            if (drone == null) {
+                return;
+            }
             switch (v.getId()) {
                 case R.id.rl_start_follow:
                     drone.startFollowMe(altitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
