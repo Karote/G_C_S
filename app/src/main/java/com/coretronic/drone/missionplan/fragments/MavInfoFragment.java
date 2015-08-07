@@ -12,6 +12,6 @@ public class MavInfoFragment extends Fragment{
     public void setMavInfoSpeed(float groundSpeed) {
     }
 
-    public void setMavInfoLocation(double droneLat, double droneLng) {
+    public void setMavInfoLocation(long droneLat, long droneLng) {
     }
 }

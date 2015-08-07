@@ -33,6 +33,9 @@
             var poly;
             var flightPath;
             var flightPlanCoordinates = [];
+            var droneLat_old = -1;
+            var droneLng_old = -1;
+            var droneHeading_old = 0;
 
             function initialize() {
                 var initial_location;
@@ -206,7 +209,7 @@
 
                 currPosition = GeoMarker.getPosition();
                 if (currPosition != null) {
-                    setMapTo(currPosition.lat(), currPosition.lng());
+                    map.setCenter(currPosition);
                 } else {
                     AndroidFunction.showToast("無法取得現在位置");
                 }
@@ -216,7 +219,9 @@
             }
 
             function setMapTo(nowLatget, nowLngget) {
-                map.setCenter(new google.maps.LatLng(nowLatget, nowLngget));
+                var nlat = nowLatget / Math.pow(10, 7);
+                var nlng = nowLngget / Math.pow(10, 7);
+                map.setCenter(new google.maps.LatLng(nlat, nlng));
             }
 
             function clearMarkers() {
@@ -242,16 +247,24 @@
             }
 
             function updateDroneLocation(droneLat, droneLng, heading) {
-                droneMarkerOuter.setMap(null);
-                droneMarkerInner.setMap(null);
-                droneMarkerArrow.setMap(null);
-                droneMarkerArrow.icon.rotation = heading;
-                droneMarkerOuter.setPosition(new google.maps.LatLng(droneLat, droneLng));
-                droneMarkerInner.setPosition(new google.maps.LatLng(droneLat, droneLng));
-                droneMarkerArrow.setPosition(new google.maps.LatLng(droneLat, droneLng));
-                droneMarkerOuter.setMap(map);
-                droneMarkerInner.setMap(map);
-                droneMarkerArrow.setMap(map);
+                if (droneLat_old != droneLat || droneLng_old != droneLng || droneHeading_old != heading) {
+                	droneLat_old = droneLat;
+                	droneLng_old = droneLng;
+                	droneHeading_old = heading;
+                	
+                    var lat = droneLat / Math.pow(10, 7);
+                    var lng = droneLng / Math.pow(10, 7);
+                    droneMarkerOuter.setMap(null);
+                    droneMarkerInner.setMap(null);
+                    droneMarkerArrow.setMap(null);
+                    droneMarkerArrow.icon.rotation = heading;
+                    droneMarkerOuter.setPosition(new google.maps.LatLng(lat, lng));
+                    droneMarkerInner.setPosition(new google.maps.LatLng(lat, lng));
+                    droneMarkerArrow.setPosition(new google.maps.LatLng(lat, lng));
+                    droneMarkerOuter.setMap(map);
+                    droneMarkerInner.setMap(map);
+                    droneMarkerArrow.setMap(map);
+                }
             }
 
             function fitMapShowAll() {
