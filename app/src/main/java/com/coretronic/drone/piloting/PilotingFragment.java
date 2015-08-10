@@ -239,7 +239,7 @@ public class PilotingFragment extends UnBindDrawablesFragment implements Drone.S
     }
 
     @Override
-    public void onMissionStateUpdate(int missionState) {
+    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
 
     }
 

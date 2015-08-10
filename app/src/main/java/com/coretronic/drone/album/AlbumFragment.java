@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.coretronic.drone.Drone;
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
@@ -339,7 +340,7 @@ public class AlbumFragment extends UnBindDrawablesFragment implements Drone.Stat
     }
 
     @Override
-    public void onMissionStateUpdate(int missionState) {
+    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
 
     }
 
