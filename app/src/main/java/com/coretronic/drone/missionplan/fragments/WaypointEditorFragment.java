@@ -84,7 +84,7 @@ public class WaypointEditorFragment extends Fragment
 
     private double nowLatget, nowLngget;
 
-    private double droneLat = 0, droneLng = 0;
+    private long droneLat = 0, droneLng = 0;
     private int droneHeading = 0;
 
     public boolean canMapAddMarker, isShowMarker;
@@ -321,8 +321,8 @@ public class WaypointEditorFragment extends Fragment
         if (currentFragment == null)
             return;
 
-        droneLat = lat * Math.pow(10, -7);
-        droneLng = lon * Math.pow(10, -7);
+        droneLat = lat;
+        droneLng = lon;
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -352,12 +352,12 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onMissionStateUpdate(int missionState) {
         Log.d("morris", "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionState);
-        if(droneMissionState == missionState) {
+        if (droneMissionState == missionState) {
             return;
         }
         droneMissionState = missionState;
 
-        switch (droneMissionState){
+        switch (droneMissionState) {
             case DroneController.MISSION_START:
                 // tts to start
                 if (ttsSpeaker != null) {
@@ -372,7 +372,7 @@ public class WaypointEditorFragment extends Fragment
                 }
                 saveFlag = false;
                 break;
-            case  DroneController.MISSION_FINISHED:
+            case DroneController.MISSION_FINISHED:
                 if (ttsSpeaker != null) {
                     ttsSpeaker.speak("Mission Plan Stop!");
                 }
@@ -414,7 +414,7 @@ public class WaypointEditorFragment extends Fragment
         }
 
         @JavascriptInterface
-        public void setPolylineLengthText(final int lengthInMeters){
+        public void setPolylineLengthText(final int lengthInMeters) {
             ((Activity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -638,7 +638,7 @@ public class WaypointEditorFragment extends Fragment
         @Override
         public void run() {
             if (saveFlag) {
-               saveFileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
+                saveFileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
                 Log.d("morris", "saveFileRunnable");
                 if (saveFileName != null) {
                     tmpDroneInfo = currentDroneInfo;
@@ -650,6 +650,7 @@ public class WaypointEditorFragment extends Fragment
             }
         }
     };
+
     // Implement HistoryFragment.HistoryAdapterListener
     @Override
     public void LoadPathLog(List<Double> path) {

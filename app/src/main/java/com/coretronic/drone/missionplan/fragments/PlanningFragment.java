@@ -40,7 +40,9 @@ public class PlanningFragment extends MavInfoFragment {
 
     private TextView tv_droneAltitude = null;
     private TextView tv_droneSpeed = null;
-    private TextView tv_droneLatLng = null;
+    private TextView tv_droneLat = null;
+    private TextView tv_droneLng = null;
+
 
     private FragmentActivity fragmentActivity = null;
     private FragmentManager fragmentChildManager = null;
@@ -165,8 +167,11 @@ public class PlanningFragment extends MavInfoFragment {
         tv_droneAltitude.setText("0m");
         tv_droneSpeed = (TextView) view.findViewById(R.id.speed_text);
         tv_droneSpeed.setText("0 km/h");
-        tv_droneLatLng = (TextView) view.findViewById(R.id.location_text);
-        tv_droneLatLng.setText("0.000000, 0.000000");
+        tv_droneLat = (TextView) view.findViewById(R.id.location_lat_text);
+        tv_droneLat.setText("0.000000,");
+        tv_droneLng = (TextView) view.findViewById(R.id.location_lng_text);
+        tv_droneLng.setText("0.000000");
+
     }
 
     View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -268,7 +273,7 @@ public class PlanningFragment extends MavInfoFragment {
     // Public Method
     @Override
     public void setMavInfoAltitude(float altitude) {
-        if(tv_droneAltitude == null)
+        if (tv_droneAltitude == null)
             return;
 
         String tx_alt = String.format("%d", (int) altitude);
@@ -277,18 +282,36 @@ public class PlanningFragment extends MavInfoFragment {
 
     @Override
     public void setMavInfoSpeed(float groundSpeed) {
-        if(tv_droneSpeed == null)
+        if (tv_droneSpeed == null)
             return;
 
         tv_droneSpeed.setText(groundSpeed + " km/h");
     }
 
     @Override
-    public void setMavInfoLocation(double droneLat, double droneLng) {
-        if(tv_droneLatLng == null)
+    public void setMavInfoLocation(long droneLat, long droneLng) {
+        if (tv_droneLat == null)
             return;
+        String latLongStr = String.valueOf(droneLat);
+        String lngLongStr = String.valueOf(droneLng);
+        int latDecimalPos = latLongStr.length() - 7;
+        int lngDecimalPos = lngLongStr.length() - 7;
 
-        tv_droneLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
+        String lat_output, lng_output;
+        if (latDecimalPos <= 0) {
+            lat_output = String.format("0.%07d", droneLat);
+        } else {
+            lat_output = latLongStr.substring(0, latDecimalPos) + "." + latLongStr.substring(latDecimalPos);
+        }
+
+        if (lngDecimalPos <= 0) {
+            lng_output = String.format("0.%07d", droneLng);
+        } else {
+            lng_output = lngLongStr.substring(0, lngDecimalPos) + "." + lngLongStr.substring(lngDecimalPos);
+        }
+
+        tv_droneLat.setText(lat_output + ",");
+        tv_droneLng.setText(lng_output);
     }
 
     public List<Mission> missionAdapterGetList() {
