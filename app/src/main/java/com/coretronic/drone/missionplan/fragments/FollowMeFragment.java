@@ -115,17 +115,26 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
     @Override
     public void setMavInfoAltitude(float altitude) {
+        if(tvAltitude == null)
+            return;
+
         String tx_alt = String.format("%d", (int) altitude);
         tvAltitude.setText(tx_alt + "m");
     }
 
     @Override
     public void setMavInfoSpeed(float groundSpeed) {
+        if(tvSpeed == null)
+            return;
+
         tvSpeed.setText(groundSpeed + " km/h");
     }
 
     @Override
     public void setMavInfoLocation(double droneLat, double droneLng) {
+        if(tvLatLng == null)
+            return;
+
         tvLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
     }
 
