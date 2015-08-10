@@ -240,7 +240,6 @@ public class WaypointEditorFragment extends Fragment
                 if (missions == null || missions.size() == 0) {
                     Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
                 } else {
-                    missions.remove(0);
                     ((PlanningFragment) currentFragment).missionAdapterSetData(missions);
                     writeMissionsToMap(missions);
                     progressDialog.dismiss();
@@ -384,10 +383,6 @@ public class WaypointEditorFragment extends Fragment
     }
     // End Drone.StatusChangedListener
 
-
-    /**
-     * �إߵ� JavaScript �I�s���禡 *
-     */
     public class javascriptInterface {
         Context mContext;
 

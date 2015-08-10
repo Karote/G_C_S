@@ -179,7 +179,6 @@ public class PlanningFragment extends MavInfoFragment {
             switch (v.getId()) {
                 case R.id.btn_plan_go:
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
-                    droneMissionList.add(0, createNewMission(0, 0, 0, 0, false, 0, Mission.Type.WAY_POINT));
                     if (drone != null) {
                         drone.writeMissions(droneMissionList, missionLoaderListener);
                     }
