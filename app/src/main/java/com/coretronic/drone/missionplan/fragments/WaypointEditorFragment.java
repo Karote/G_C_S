@@ -160,19 +160,22 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
+        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+
+        ((MainActivity) fragmentActivity).unregisterDroneStatusChangedListener(this);
     }
 
     @Override
@@ -280,6 +283,9 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onAltitudeUpdate(final float altitude) {
+        if (currentFragment == null)
+            return;
+
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -298,6 +304,9 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onSpeedUpdate(final float groundSpeed) {
+        if (currentFragment == null)
+            return;
+
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -310,6 +319,9 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onLocationUpdate(final long lat, final long lon, final int eph) {
+        if (currentFragment == null)
+            return;
+
         droneLat = lat * Math.pow(10, -7);
         droneLng = lon * Math.pow(10, -7);
         fragmentActivity.runOnUiThread(new Runnable() {
