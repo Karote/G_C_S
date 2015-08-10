@@ -184,6 +184,10 @@ public class PlanningFragment extends MavInfoFragment {
             switch (v.getId()) {
                 case R.id.btn_plan_go:
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
+                    if(droneMissionList == null || droneMissionList.size() == 0){
+                        Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     if (drone != null) {
                         drone.writeMissions(droneMissionList, missionLoaderListener);
                     }

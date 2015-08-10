@@ -107,7 +107,9 @@ public class WaypointEditorFragment extends Fragment
     private boolean saveFlag = false;
     private int saveDelayTime = 2000;
     private String saveFileName;
-    private int droneMissionState = DroneController.MISSION_FINISHED;
+    private DroneController.MissionStatus droneMissionState = DroneController.MissionStatus.FINISHED;
+    private DroneController.DroneMode currentDroneMode = null;
+
     // TTS
     private Speaker ttsSpeaker;
 
@@ -350,37 +352,48 @@ public class WaypointEditorFragment extends Fragment
     }
 
     @Override
-    public void onMissionStateUpdate(int missionState) {
-        Log.d("morris", "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionState);
-        if (droneMissionState == missionState) {
-            return;
-        }
-        droneMissionState = missionState;
+    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
+        Log.d("morris", "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionStatus);
+        if (droneMissionState != missionStatus) {
 
-        switch (droneMissionState) {
-            case DroneController.MISSION_START:
-                // tts to start
-                if (ttsSpeaker != null) {
-                    ttsSpeaker.speak("Mission Plan Start!");
-                }
-                saveFlag = true;
-                handler.post(saveFileRunnable);
-                break;
-            case DroneController.MISSION_PAUSE:
-                if (ttsSpeaker != null) {
-                    ttsSpeaker.speak("Mission Plan Pause!");
-                }
-                saveFlag = false;
-                break;
-            case DroneController.MISSION_FINISHED:
-                if (ttsSpeaker != null) {
-                    ttsSpeaker.speak("Mission Plan Stop!");
-                }
-                saveFlag = false;
-                break;
+            droneMissionState = missionStatus;
+
+            switch (droneMissionState) {
+                case START:
+                    // tts to start
+                    if (ttsSpeaker != null) {
+                        ttsSpeaker.speak("Mission Plan Start!");
+                    }
+                    saveFlag = true;
+                    handler.post(saveFileRunnable);
+                    break;
+                case PAUSE:
+                    if (ttsSpeaker != null) {
+                        ttsSpeaker.speak("Mission Plan Pause!");
+                    }
+                    saveFlag = false;
+                    break;
+                case FINISHED:
+                    if (ttsSpeaker != null) {
+                        ttsSpeaker.speak("Mission Plan Stop!");
+                    }
+                    saveFlag = false;
+                    break;
+            }
         }
 
+        // Drone Mode
+        Log.d("morris", "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
+
+        if(currentDroneMode != droneMode) {
+            currentDroneMode = droneMode;
+            if (ttsSpeaker != null) {
+                ttsSpeaker.speak(currentDroneMode.toString() + " Mode");
+                ttsSpeaker.pause(1000);
+            }
+        }
     }
+
     // End Drone.StatusChangedListener
 
     public class javascriptInterface {
