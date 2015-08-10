@@ -449,13 +449,7 @@ public class WaypointEditorFragment extends Fragment
                         layout_editMarker.setVisibility(View.VISIBLE);
                         currentFragment = new PlanningFragment();
                         break;
-                    case 1: // FOLLOW ME
-                        canMapAddMarker = false;
-                        isShowMarker = false;
-                        layout_editMarker.setVisibility(View.GONE);
-                        currentFragment = new FollowMeFragment();
-                        break;
-                    case 2: // FLIGHT HISTORY
+                    case 1: // FLIGHT HISTORY
                         canMapAddMarker = false;
                         isShowMarker = false;
                         layout_editMarker.setVisibility(View.GONE);
