@@ -653,10 +653,10 @@ public class WaypointEditorFragment extends Fragment
 
     // Implement HistoryFragment.HistoryAdapterListener
     @Override
-    public void LoadPathLog(List<Double> path) {
-        JSONArray mJSONArray = new JSONArray(path);
-        Log.d(TAG, "pathArray(Json):" + mJSONArray);
-        webview_Map.loadUrl("javascript:LoadPathLog(" + mJSONArray + ")");
+    public void LoadPathLog(List<Float> markers, List<Long> path) {
+        JSONArray markerJSON = new JSONArray(markers);
+        JSONArray pathJson = new JSONArray(path);
+         webview_Map.loadUrl("javascript:LoadPathLog(" + markerJSON + "," + pathJson + ")");
     }
 
     @Override

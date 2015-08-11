@@ -2,11 +2,9 @@ package com.coretronic.drone.missionplan.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +13,9 @@ import android.widget.TextView;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
-import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class HistoryFragment extends MavInfoFragment {
     private static HistoryAdapterListener mCallback = null;
 
     public interface HistoryAdapterListener {
-        void LoadPathLog(List<Double> path);
+        void LoadPathLog(List<Float> markers, List<Long> path);
         void ClearPath();
     }
 
@@ -85,7 +84,7 @@ public class HistoryFragment extends MavInfoFragment {
                 .getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(recyclerLayoutMgr);
 
-        mHistoryItemAdapter = new HistoryItemListAdapter();
+        mHistoryItemAdapter = new HistoryItemListAdapter(view.getContext());
         recyclerView.setAdapter(mHistoryItemAdapter);
 
         mHistoryItemAdapter.SetOnItemClickListener(new HistoryItemListAdapter.OnItemClickListener() {
@@ -93,8 +92,29 @@ public class HistoryFragment extends MavInfoFragment {
             @Override
             public void onItemClick(View view, int position) {
                 if (mHistoryItemAdapter.getFocusIndex() < 0 || position != mHistoryItemAdapter.getFocusIndex()) {
-                    mCallback.LoadPathLog(mHistoryItemAdapter.getFlightLog(position).getFlightPath());
-                    tv_flightTime.setText(mHistoryItemAdapter.getFlightLog(position).getFlightTime());
+                    List<Float> markerList = new ArrayList<Float>();
+                    List<Long> flightPath = new ArrayList<Long>();
+                    int j = mHistoryItemAdapter.getFlightLog(position).getMissionList().size();
+                    for(int i = 0 ; i < j ; i++){
+                        markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLatitude());
+                        markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLongitude());
+                    }
+
+                    j = mHistoryItemAdapter.getFlightLog(position).getPathList().size();
+                    for(int i = 0 ; i < j ; i++){
+                        flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLat());
+                        flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLon());
+                    }
+                    mCallback.LoadPathLog(markerList, flightPath);
+
+
+                    long durationTime = 0;
+                    if(j > 2) {
+                        durationTime = mHistoryItemAdapter.getFlightLog(position).getPathList().get(j - 1).getTimeStamp() -
+                                mHistoryItemAdapter.getFlightLog(position).getPathList().get(0).getTimeStamp();
+                    }
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+                    tv_flightTime.setText(timeFormat.format(durationTime));
                     drone_log_info.setVisibility(View.VISIBLE);
                 } else {
                     mCallback.ClearPath();

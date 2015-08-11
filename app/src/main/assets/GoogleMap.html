@@ -18,6 +18,16 @@
 				font-weight: bold;
 				color: #FFFFFF;
 			}
+			.startMarkerLabel {
+				font-size: 14px;
+				font-weight: bold;
+				color: #00FF00;
+			}
+			.endMarkerLabel {
+				font-size: 14px;
+				font-weight: bold;
+				color: #FF0000;
+			}
 		</style>
 		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw&libraries=geometry"></script>
 		<script src="geolocationmarker-compiled.js"></script>
@@ -33,15 +43,15 @@
             var poly;
             var flightPath;
             var flightPlanCoordinates = [];
+            var historyMarkers = [];
             var droneLat_old = -1;
             var droneLng_old = -1;
             var droneHeading_old = 0;
 
-
             function initialize() {
                 var initial_location;
-                initial_location = new google.maps.LatLng(24.712299, 120.916408); // 中強光電竹南廠
-                //latlng = new google.maps.LatLng(25.033908, 121.565003); // 台北101
+                initial_location = new google.maps.LatLng(24.712299, 120.916408);
+                // 中強光電竹南廠
 
                 mapClickable = true;
 
@@ -182,11 +192,8 @@
                 }
                 var markerImage = {
                     url : 'ico_indicator_waypoint_circle.png',
-                    // This marker is 20 pixels wide by 32 pixels tall.
                     size : new google.maps.Size(40, 40),
-                    // The origin for this image is 0,0.
                     origin : new google.maps.Point(0, 0),
-                    // The anchor for this image is the base of the flagpole at 0,32.
                     anchor : new google.maps.Point(20, 20)
                 };
                 var marker = new MarkerWithLabel({
@@ -323,21 +330,87 @@
                 poly.setMap(option);
             }
 
-            function LoadPathLog(pathLog) {
+            function LoadPathLog(markerJson, pathJson) {
                 var i,
-                    j;
+                    j,
+                    lat,
+                    lng;
 
-                var logData = JSON.parse("[" + pathLog + "]");
+                var pathData = JSON.parse("[" + pathJson + "]");
+                var markerData = JSON.parse("[" + markerJson + "]");
 
-                // flightPath.setMap(null);
-                // flightPath.setPath([]);
-                // flightPlanCoordinates = [];
+                var markerImage = {
+                    url : 'ico_indicator_waypoint_circle.png',
+                    size : new google.maps.Size(40, 40),
+                    origin : new google.maps.Point(0, 0),
+                    anchor : new google.maps.Point(20, 20)
+                };
+
                 ClearPath();
 
                 for ( i = 0,
-                j = logData.length; i < j; i += 2) {
-                    flightPlanCoordinates.push(new google.maps.LatLng(logData[i], logData[i + 1]));
+                j = pathData.length; i < j; i += 2) {
+                    lat = pathData[i] / Math.pow(10, 7);
+                    lng = pathData[i + 1] / Math.pow(10, 7);
+                    flightPlanCoordinates.push(new google.maps.LatLng(lat, lng));
                 }
+
+                if (flightPlanCoordinates.length > 1) {
+                    var startMarker = new MarkerWithLabel({
+                        position : flightPlanCoordinates[0],
+                        icon : {
+                            path : google.maps.SymbolPath.CIRCLE,
+                            scale : 8,
+                            strokeColor : '#000',
+                            fillColor : '#000',
+                            fillOpacity : 1.0
+                        },
+                        labelAnchor : new google.maps.Point(4, 8),
+                        labelContent : 'S',
+                        labelClass : "startMarkerLabel",
+                        labelInBackground : false,
+                        map : map
+                    });
+                    historyMarkers.push(startMarker);
+
+                    var endMarker = new MarkerWithLabel({
+                        position : flightPlanCoordinates[flightPlanCoordinates.length - 1],
+                        icon : {
+                            path : google.maps.SymbolPath.CIRCLE,
+                            scale : 8,
+                            strokeColor : '#000',
+                            fillColor : '#000',
+                            fillOpacity : 1.0
+                        },
+                        labelAnchor : new google.maps.Point(4, 8),
+                        labelContent : 'E',
+                        labelClass : "endMarkerLabel",
+                        labelInBackground : false,
+                        map : map
+                    });
+                    historyMarkers.push(endMarker);
+                }
+
+                for ( i = 0,
+                j = markerData.length; i < j; i += 2) {
+
+                    var x = 4;
+                    if (i > 18) {
+                        x = 8;
+                    }
+                    var flightMarker = new MarkerWithLabel({
+                        position : new google.maps.LatLng(markerData[i], markerData[i + 1]),
+                        icon : markerImage,
+                        labelContent : (i / 2) + 1,
+                        labelAnchor : new google.maps.Point(x, 8),
+                        labelClass : "mapIconLabel",
+                        labelInBackground : false,
+                        map : map
+                    });
+
+                    historyMarkers.push(flightMarker);
+                }
+
                 flightPath.setPath(flightPlanCoordinates);
                 flightPath.setMap(map);
 
@@ -356,6 +429,14 @@
                 flightPath.setMap(null);
                 flightPath.setPath([]);
                 flightPlanCoordinates = [];
+
+                var i,
+                    j;
+                for ( i = 0,
+                j = historyMarkers.length; i < j; i++) {
+                    historyMarkers[i].setMap(null);
+                }
+                historyMarkers = [];
             }
 
 		</script>

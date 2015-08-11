@@ -1,37 +1,27 @@
 package com.coretronic.drone.missionplan.model;
 
-import java.util.Date;
+import com.coretronic.drone.Mission;
+import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
+
 import java.util.List;
 
 /**
  * Created by karot.chuang on 2015/8/5.
  */
 public class FlightLogItem {
-    private String mFlightFileName = "";
-    private String mFlightDate = null;
-    private List<Double> mFlightPath = null;
-    private String mFlightTime = "";
+    private List<Mission> mMissionList = null;
+    private List<DroneInfo> mPathList = null;
 
-    public FlightLogItem(String flightFileName, String flightDate, List<Double> flightPath, String flightTime){
-        mFlightFileName= flightFileName;
-        mFlightDate = flightDate;
-        mFlightPath = flightPath;
-        mFlightTime = flightTime;
+    public FlightLogItem(List<Mission> missionList, List<DroneInfo> pathList) {
+        mMissionList = missionList;
+        mPathList = pathList;
     }
 
-    public String getFlightFileName(){
-        return mFlightFileName;
+    public List<Mission> getMissionList() {
+        return mMissionList;
     }
 
-    public String getFlightDate(){
-        return mFlightDate;
-    }
-
-    public List<Double> getFlightPath() {
-        return mFlightPath;
-    }
-
-    public String getFlightTime(){
-        return mFlightTime;
+    public List<DroneInfo> getPathList() {
+        return mPathList;
     }
 }
