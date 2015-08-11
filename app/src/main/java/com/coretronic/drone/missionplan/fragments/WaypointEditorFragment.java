@@ -105,13 +105,14 @@ public class WaypointEditorFragment extends Fragment
     private Gson gson;
     private Handler handler;
     private boolean saveFlag = false;
-    private int saveDelayTime = 2000;
+    private int saveDelayTime = 1000;
     private String saveFileName;
     private DroneController.MissionStatus droneMissionState = DroneController.MissionStatus.FINISHED;
     private DroneController.DroneMode currentDroneMode = null;
 
     // TTS
     private Speaker ttsSpeaker;
+    private Runnable saveFileRunnable = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,7 @@ public class WaypointEditorFragment extends Fragment
         // tts init
         ttsSpeaker = new Speaker(getActivity());
 
+        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
     }
 
     @Override
@@ -151,12 +153,9 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setUpWebView(view);
         setUpTopBarButton(view);
         statusView = (StatusView) view.findViewById(R.id.status);
-
-
     }
 
     @Override
@@ -168,16 +167,14 @@ public class WaypointEditorFragment extends Fragment
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-
-        ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
+        saveFlag = true;
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-
-        ((MainActivity) fragmentActivity).unregisterDroneStatusChangedListener(this);
+        saveFlag = false;
     }
 
     @Override
@@ -186,7 +183,13 @@ public class WaypointEditorFragment extends Fragment
         if (ttsSpeaker != null) {
             ttsSpeaker.destroy();
         }
+        // log record stop
+        ((MainActivity) fragmentActivity).unregisterDroneStatusChangedListener(this);
         saveFlag = false;
+        if (saveFileRunnable != null) {
+            handler.removeCallbacks(saveFileRunnable);
+            saveFileRunnable = null;
+        }
     }
 
     // Implement GoogleApiClient.ConnectionCallbacks
@@ -328,10 +331,14 @@ public class WaypointEditorFragment extends Fragment
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                currentFragment.setMavInfoLocation(droneLat, droneLng);
-                webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
-                // GPS status
-                statusView.setGpsVisibility(((MainActivity)getActivity()).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
+                try {
+                    currentFragment.setMavInfoLocation(droneLat, droneLng);
+                    webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
+                    // GPS status
+                    statusView.setGpsVisibility(((MainActivity) getActivity()).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         // save info
@@ -355,43 +362,62 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
-        Log.d("morris", "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionStatus);
+        Log.d(TAG, "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionStatus);
         if (droneMissionState != missionStatus) {
-
             droneMissionState = missionStatus;
-
             switch (droneMissionState) {
                 case START:
+                    saveFlag = true;
                     // tts to start
                     if (ttsSpeaker != null) {
                         ttsSpeaker.speak("Mission Plan Start!");
                     }
-                    saveFlag = true;
+                    if (saveFileRunnable != null) {
+                        return;
+                    }
+                    saveFileName = String.valueOf(System.currentTimeMillis());
+                    fileHelper.writeToFile(gson.toJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null)), saveFileName);
+                    saveFileRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            if (saveFlag) {
+                                if (saveFileName != null) {
+                                    tmpDroneInfo = currentDroneInfo;
+                                    tmpDroneInfo.setTimeStamp(System.currentTimeMillis());
+                                    Log.d(TAG, "tmpDroneInfo: " + gson.toJson(tmpDroneInfo));
+                                    fileHelper.writeToFile(gson.toJson(tmpDroneInfo), saveFileName);
+                                }
+                            }
+                            handler.postDelayed(saveFileRunnable, saveDelayTime);
+                        }
+                    };
                     handler.post(saveFileRunnable);
                     break;
                 case PAUSE:
+                    saveFlag = false;
                     if (ttsSpeaker != null) {
                         ttsSpeaker.speak("Mission Plan Pause!");
                     }
-                    saveFlag = false;
                     break;
                 case FINISHED:
-                    if (ttsSpeaker != null) {
-                        ttsSpeaker.speak("Mission Plan Stop!");
-                    }
                     saveFlag = false;
+                    if (ttsSpeaker != null) {
+                        ttsSpeaker.speak("Mission Plan finish!");
+                    }
+                    if (saveFileRunnable != null) {
+                        handler.removeCallbacks(saveFileRunnable);
+                        saveFileRunnable = null;
+                    }
                     break;
             }
         }
 
         // Drone Mode
-        Log.d("morris", "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
-
+        Log.d(TAG, "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
         if(currentDroneMode != droneMode) {
             currentDroneMode = droneMode;
             if (ttsSpeaker != null) {
                 ttsSpeaker.speak(currentDroneMode.toString() + " Mode");
-                ttsSpeaker.pause(1000);
             }
         }
     }
@@ -648,23 +674,6 @@ public class WaypointEditorFragment extends Fragment
     }
     // End FollowMeFragment.OnFollowMeClickListener
 
-
-    Runnable saveFileRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (saveFlag) {
-                saveFileName = sharedPreferences.getString(AppConfig.PREF_LOGFILE_NAME, null);
-                Log.d("morris", "saveFileRunnable");
-                if (saveFileName != null) {
-                    tmpDroneInfo = currentDroneInfo;
-                    tmpDroneInfo.setTimeStamp(System.currentTimeMillis());
-                    Log.d("morris", "tmpDroneInfo: " + gson.toJson(tmpDroneInfo));
-                    fileHelper.writeToFile(gson.toJson(tmpDroneInfo), saveFileName);
-                    handler.postDelayed(saveFileRunnable, saveDelayTime);
-                }
-            }
-        }
-    };
 
     // Implement HistoryFragment.HistoryAdapterListener
     @Override

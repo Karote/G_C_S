@@ -23,7 +23,6 @@ import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 import com.coretronic.drone.utility.AppConfig;
-import com.coretronic.drone.utility.FileHelper;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class PlanningFragment extends MavInfoFragment {
     // Drone info
     private SharedPreferences sharedPreferences;
     private Gson gson;
-    private FileHelper fileHelper;
+//    private FileHelper fileHelper;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -79,7 +78,7 @@ public class PlanningFragment extends MavInfoFragment {
         fragmentActivity = getActivity();
         sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, 0);
         gson = new Gson();
-        fileHelper = new FileHelper(getActivity());
+//        fileHelper = new FileHelper(getActivity());
     }
 
     @Override
@@ -188,6 +187,11 @@ public class PlanningFragment extends MavInfoFragment {
                         Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    // mission list
+                    sharedPreferences.edit()
+                            .putString(AppConfig.PREF_MISSION_LIST, gson.toJson(droneMissionList))
+                            .apply();
+
                     if (drone != null) {
                         drone.writeMissions(droneMissionList, missionLoaderListener);
                     }
@@ -195,16 +199,6 @@ public class PlanningFragment extends MavInfoFragment {
                     progressDialog.setMessage("Please wait...");
                     progressDialog.show();
 
-                    try {
-                        String fileName = String.valueOf(System.currentTimeMillis());
-                        sharedPreferences.edit()
-                                .putString(AppConfig.PREF_LOGFILE_NAME, fileName)
-                                .putString(AppConfig.PREF_MISSION_LIST, gson.toJson(droneMissionList))
-                                .apply();
-                        fileHelper.writeToFile(gson.toJson(mMissionItemAdapter.cloneMissionList()), fileName);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     break;
                 case R.id.btn_plan_land:
                     Log.d("morris", "btn_plan_land");
