@@ -85,7 +85,7 @@
                 android:text="@string/delete_all"
                 android:gravity="center"
                 android:background="@drawable/btn_delete_bg"
-                android:textColor="#FFFFFF"
+                android:textColor="#FF0000"
                 android:textSize="12sp" />
         </LinearLayout>
 
