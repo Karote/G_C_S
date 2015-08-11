@@ -18,7 +18,7 @@
             android:layout_width="28dp"
             android:layout_height="44dp"
             android:background="@drawable/btn_plan_waypoint_bg"
-            android:src="@drawable/ico_plan_waypoint_delet" />
+            android:src="@drawable/ico_plan_waypoint_delete" />
     </LinearLayout>
 
     <RelativeLayout
