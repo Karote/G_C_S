@@ -126,10 +126,8 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     }
 
     public boolean hasGPSSignal(int eph) {
-        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC_G2) {
-            return eph == 1;
-        } else if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
-            return !(eph == 0 || eph == 9999);
+        if(eph > 0){
+            return true;
         }
         return false;
     }

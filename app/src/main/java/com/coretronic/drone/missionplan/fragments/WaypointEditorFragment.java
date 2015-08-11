@@ -330,6 +330,8 @@ public class WaypointEditorFragment extends Fragment
             public void run() {
                 currentFragment.setMavInfoLocation(droneLat, droneLng);
                 webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
+                // GPS status
+                statusView.setGpsVisibility(((MainActivity)getActivity()).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
             }
         });
         // save info
