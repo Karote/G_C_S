@@ -41,6 +41,7 @@ public class PlanningFragment extends MavInfoFragment {
     private TextView tv_droneSpeed = null;
     private TextView tv_droneLat = null;
     private TextView tv_droneLng = null;
+    private TextView tv_droneFlightTime = null;
 
 
     private FragmentActivity fragmentActivity = null;
@@ -170,7 +171,8 @@ public class PlanningFragment extends MavInfoFragment {
         tv_droneLat.setText("0.000000,");
         tv_droneLng = (TextView) view.findViewById(R.id.location_lng_text);
         tv_droneLng.setText("0.000000");
-
+        tv_droneFlightTime = (TextView) view.findViewById(R.id.flight_time_text);
+        tv_droneFlightTime.setText("00:00");
     }
 
     View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -182,6 +184,7 @@ public class PlanningFragment extends MavInfoFragment {
 //            }
             switch (v.getId()) {
                 case R.id.btn_plan_go:
+                    drone.clearMission();
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     if(droneMissionList == null || droneMissionList.size() == 0){
                         Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
@@ -310,6 +313,31 @@ public class PlanningFragment extends MavInfoFragment {
 
         tv_droneLat.setText(lat_output + ",");
         tv_droneLng.setText(lng_output);
+    }
+
+    @Override
+    public void setMavInfoFlightTime(int flightTime) {
+        if (tv_droneFlightTime == null || flightTime < 1)
+            return;
+        String showTime = "";
+        if(flightTime >= 6000){
+            showTime = "99:99";
+            tv_droneFlightTime.setText(showTime);
+            return;
+        }
+        int min = flightTime / 60;
+        if(min < 10){
+            showTime += "0";
+        }
+        showTime += min;
+        showTime += ":";
+
+        int sec = flightTime % 60;
+        if(sec < 10){
+            showTime += "0";
+        }
+        showTime += sec;
+        tv_droneFlightTime.setText(showTime);
     }
 
     public List<Mission> missionAdapterGetList() {

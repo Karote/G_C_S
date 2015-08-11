@@ -32,6 +32,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     private TextView tvSpeed = null;
     private TextView tvLat = null;
     private TextView tvLng = null;
+    private TextView tv_droneFlightTime = null;
 
 
     OnFollowMeClickListener mCallback;
@@ -113,6 +114,8 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         tvLat.setText("0.000000,");
         tvLng = (TextView) view.findViewById(R.id.location_lng_text);
         tvLng.setText("0.000000");
+        tv_droneFlightTime = (TextView) view.findViewById(R.id.flight_time_text);
+        tv_droneFlightTime.setText("00:00");
     }
 
     @Override
@@ -156,6 +159,32 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
         tvLat.setText(lat_output + ",");
         tvLng.setText(lng_output);
+    }
+
+    @Override
+    public void setMavInfoFlightTime(int flightTime) {
+        if (tv_droneFlightTime == null || flightTime < 1)
+            return;
+
+        String showTime = "";
+        if (flightTime >= 6000) {
+            showTime = "99:99";
+            tv_droneFlightTime.setText(showTime);
+            return;
+        }
+        int min = flightTime / 60;
+        if (min < 10) {
+            showTime += "0";
+        }
+        showTime += min;
+        showTime += ":";
+
+        int sec = flightTime % 60;
+        if (sec < 10) {
+            showTime += "0";
+        }
+        showTime += sec;
+        tv_droneFlightTime.setText(showTime);
     }
 
     View.OnClickListener onFollowBtnClickListener = new View.OnClickListener() {

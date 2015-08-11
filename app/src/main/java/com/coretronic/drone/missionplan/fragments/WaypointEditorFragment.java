@@ -242,12 +242,13 @@ public class WaypointEditorFragment extends Fragment
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (progressDialog != null)
+                    progressDialog.dismiss();
                 if (missions == null || missions.size() == 0) {
                     Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
                 } else {
                     ((PlanningFragment) currentFragment).missionAdapterSetData(missions);
                     writeMissionsToMap(missions);
-                    progressDialog.dismiss();
                 }
             }
         });
@@ -336,7 +337,7 @@ public class WaypointEditorFragment extends Fragment
                     webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
                     // GPS status
                     statusView.setGpsVisibility(((MainActivity) getActivity()).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -361,7 +362,7 @@ public class WaypointEditorFragment extends Fragment
     }
 
     @Override
-    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
+    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
         Log.d(TAG, "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionStatus);
         if (droneMissionState != missionStatus) {
             droneMissionState = missionStatus;
@@ -414,11 +415,20 @@ public class WaypointEditorFragment extends Fragment
 
         // Drone Mode
         Log.d(TAG, "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
-        if(currentDroneMode != droneMode) {
+        if (currentDroneMode != droneMode) {
             currentDroneMode = droneMode;
             if (ttsSpeaker != null) {
                 ttsSpeaker.speak(currentDroneMode.toString() + " Mode");
             }
+        }
+        Log.d(TAG, "Flight Time:" + duration);
+        if (currentFragment != null) {
+            fragmentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    currentFragment.setMavInfoFlightTime(duration);
+                }
+            });
         }
     }
 
