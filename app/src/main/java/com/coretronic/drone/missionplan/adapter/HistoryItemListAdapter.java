@@ -1,5 +1,6 @@
 package com.coretronic.drone.missionplan.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,10 +9,19 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
+import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
 import com.coretronic.drone.missionplan.model.FlightLogItem;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,37 +30,52 @@ import java.util.List;
 public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemListAdapter.HistoryItemListViewHolder> {
     private static final String TAG = HistoryItemListAdapter.class.getSimpleName();
 
-    private List<FlightLogItem> mLogList = new ArrayList<FlightLogItem>();
+    private static Context context;
+    private List<FlightLogItem> mFlightLogItems = null;
+
     private int focusIndex = -1;
-    private String[] FILENAME = {"2015/08/03", "2015/08/04", "2015/08/05"};
-    private String[] FILETIME = {"09:08", "11:28", "10:40"};
-    private String[] FLIGHTDURATION = {"01:48", "00:54", "03:21"};
-    private Double[] FLIGHTLAT = {24.713700, 24.713724, 24.709226, 24.709221,
-            24.712004, 24.711405, 24.709967,
-            24.712038, 24.710337, 24.711911, 24.710288, 24.712125};
-    private Double[] FLIGHTLNG = {120.908586, 120.914433, 120.914422, 120.909079,
-            120.916278, 120.913006, 120.916032,
-            120.909938, 120.910668, 120.912256, 120.913619, 120.915142};
-    private int[] pointCount = {4, 7, 12};
+    private File files[] = null;
 
-    public HistoryItemListAdapter() {
-        this.mLogList = new ArrayList<FlightLogItem>();
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-        int j = 0;
-        int max;
-        for (int i = 0; i < 3; i++) {
-            max = pointCount[i];
-            List<Double> path = new ArrayList<Double>();
-            Double lat, lng;
-            for (; j < max; j++) {
-                lat = FLIGHTLAT[j];
-                lng = FLIGHTLNG[j];
-                path.add(lat);
-                path.add(lng);
-            }
-            FlightLogItem item = new FlightLogItem(FILENAME[i], FILETIME[i], path, FLIGHTDURATION[i]);
-            this.mLogList.add(i, item);
+    public HistoryItemListAdapter(Context context) {
+        this.context = context;
+        this.mFlightLogItems = new ArrayList<FlightLogItem>();
+
+        String filePath = this.context.getExternalFilesDir(null).getAbsolutePath();
+        File f = new File(filePath);
+        files = f.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            String filename = files[i].getName();
+            this.mFlightLogItems.add(readFile(filePath, filename));
         }
+    }
+
+    private FlightLogItem readFile(String filePath, String filename) {
+        File file = new File(filePath + "/" + filename);
+        Gson gson = new Gson();
+        List<Mission> missionList = null;
+        List<DroneInfo> pathList = new ArrayList<DroneInfo>();
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String bufferStr = bufferedReader.readLine();
+            if (bufferStr != null) {
+                missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {}.getType());
+
+                bufferStr = bufferedReader.readLine();
+                while (bufferStr != null) {
+                    DroneInfo droneInfoObj = gson.fromJson(bufferStr, DroneInfo.class);
+                    pathList.add(droneInfoObj);
+                    bufferStr = bufferedReader.readLine();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new FlightLogItem(missionList, pathList);
     }
 
     public interface OnItemClickListener {
@@ -71,8 +96,10 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
 
     @Override
     public void onBindViewHolder(HistoryItemListViewHolder viewHolder, int i) {
-        viewHolder.tvLogDate.setText(mLogList.get(i).getFlightFileName());
-        viewHolder.tvLogTime.setText(mLogList.get(i).getFlightDate());
+        String filename = files[i].getName();
+        Date resultdate = new Date(Long.parseLong(filename));
+        viewHolder.tvLogDate.setText(dateFormat.format(resultdate));
+        viewHolder.tvLogTime.setText(timeFormat.format(resultdate));
 
         if (i == focusIndex) {
             viewHolder.focusBarView.setVisibility(View.VISIBLE);
@@ -83,7 +110,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
 
     @Override
     public int getItemCount() {
-        return mLogList.size();
+        return mFlightLogItems.size();
     }
 
     @Override
@@ -118,14 +145,13 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
                 } else {
                     focusIndex = -1;
                 }
-                Log.d(TAG, "focusIndex:" + focusIndex);
                 notifyDataSetChanged();
             }
         }
     }
 
     public FlightLogItem getFlightLog(int position) {
-        return mLogList.get(position);
+        return mFlightLogItems.get(position);
     }
 
     public int getFocusIndex() {
