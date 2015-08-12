@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
@@ -91,34 +92,39 @@ public class HistoryFragment extends MavInfoFragment {
 
             @Override
             public void onItemClick(View view, int position) {
-                if (mHistoryItemAdapter.getFocusIndex() < 0 || position != mHistoryItemAdapter.getFocusIndex()) {
-                    List<Float> markerList = new ArrayList<Float>();
-                    List<Long> flightPath = new ArrayList<Long>();
-                    int j = mHistoryItemAdapter.getFlightLog(position).getMissionList().size();
-                    for(int i = 0 ; i < j ; i++){
-                        markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLatitude());
-                        markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLongitude());
-                    }
+                try {
+                    if (mHistoryItemAdapter.getFocusIndex() < 0 || position != mHistoryItemAdapter.getFocusIndex()) {
+                        List<Float> markerList = new ArrayList<Float>();
+                        List<Long> flightPath = new ArrayList<Long>();
+                        int j = mHistoryItemAdapter.getFlightLog(position).getMissionList().size();
+                        for (int i = 0; i < j; i++) {
+                            markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLatitude());
+                            markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLongitude());
+                        }
 
-                    j = mHistoryItemAdapter.getFlightLog(position).getPathList().size();
-                    for(int i = 0 ; i < j ; i++){
-                        flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLat());
-                        flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLon());
-                    }
-                    mCallback.LoadPathLog(markerList, flightPath);
+                        j = mHistoryItemAdapter.getFlightLog(position).getPathList().size();
+                        for (int i = 0; i < j; i++) {
+                            flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLat());
+                            flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLon());
+                        }
+                        mCallback.LoadPathLog(markerList, flightPath);
 
 
-                    long durationTime = 0;
-                    if(j > 2) {
-                        durationTime = mHistoryItemAdapter.getFlightLog(position).getPathList().get(j - 1).getTimeStamp() -
-                                mHistoryItemAdapter.getFlightLog(position).getPathList().get(0).getTimeStamp();
+                        long durationTime = 0;
+                        if (j > 2) {
+                            durationTime = mHistoryItemAdapter.getFlightLog(position).getPathList().get(j - 1).getTimeStamp() -
+                                    mHistoryItemAdapter.getFlightLog(position).getPathList().get(0).getTimeStamp();
+                        }
+                        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+                        tv_flightTime.setText(timeFormat.format(durationTime));
+                        drone_log_info.setVisibility(View.VISIBLE);
+                    } else {
+                        mCallback.ClearPath();
+                        drone_log_info.setVisibility(View.GONE);
                     }
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
-                    tv_flightTime.setText(timeFormat.format(durationTime));
-                    drone_log_info.setVisibility(View.VISIBLE);
-                } else {
-                    mCallback.ClearPath();
-                    drone_log_info.setVisibility(View.GONE);
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"History content was wrong",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
             }
         });
