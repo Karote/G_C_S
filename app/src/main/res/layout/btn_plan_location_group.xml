@@ -16,7 +16,7 @@
         android:layout_width="1dp"
         android:layout_height="34dp"
         android:background="#d1d1d1"
-        android:layout_gravity="center_vertical"/>
+        android:layout_gravity="center_vertical" />
 
     <Button
         android:id="@+id/button_my_location"
@@ -28,7 +28,7 @@
         android:layout_width="1dp"
         android:layout_height="34dp"
         android:background="#d1d1d1"
-        android:layout_gravity="center_vertical"/>
+        android:layout_gravity="center_vertical" />
 
     <Button
         android:id="@+id/button_fit_map"

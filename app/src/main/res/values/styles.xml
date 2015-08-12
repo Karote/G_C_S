@@ -11,7 +11,7 @@
         <item name="android:textColor">#ffffff</item>
     </style>
 
-    <style name="setting_flip_orientation">
+    <style name="setting_btn">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">28dp</item>
         <item name="android:layout_weight">1</item>
@@ -27,11 +27,8 @@
     <style name="progress_style">
         <item name="android:progressDrawable">@drawable/progress_drawable</item>
         <item name="android:thumb">@drawable/thumb</item>
-        <!--<item name="android:thumbOffset">9dp</item>-->
-        <!--<item name="android:paddingLeft">9dp</item>-->
-        <!--<item name="android:paddingRight">9dp</item>-->
     </style>
-    
+
     <style name="mav_info_title_text_style">
         <item name="android:layout_gravity">bottom</item>
         <item name="android:layout_marginLeft">4dp</item>

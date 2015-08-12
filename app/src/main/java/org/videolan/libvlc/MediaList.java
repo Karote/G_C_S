@@ -66,8 +66,7 @@ public class MediaList {
     /**
      * Adds a media URI to the media list.
      *
-     * @param mrl
-     *            The MRL to add. Must be a location and not a path.
+     * @param mrl The MRL to add. Must be a location and not a path.
      *            {@link LibVLC#PathToURI(String)} can be used to convert a path
      *            to a MRL.
      */
@@ -151,7 +150,7 @@ public class MediaList {
      * Move a media from one position to another
      *
      * @param startPosition start position
-     * @param endPosition end position
+     * @param endPosition   end position
      * @throws IndexOutOfBoundsException
      */
     public void move(int startPosition, int endPosition) {

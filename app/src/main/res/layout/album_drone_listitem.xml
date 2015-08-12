@@ -11,13 +11,26 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/media_download_btn"
+        <FrameLayout
+            android:id="@+id/media_download_delete_layout"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/btn_action_list_download" />
+            android:layout_alignParentStart="true">
+
+            <ImageButton
+                android:id="@+id/media_download_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/btn_action_list_download" />
+
+            <ImageView
+                android:id="@+id/media_list_select_tag"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/btn_action_list_select"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/media_filename"
@@ -26,7 +39,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@id/media_download_btn"
+            android:layout_toRightOf="@id/media_download_delete_layout"
             android:fontFamily="sans-serif"
             android:text="video0011.mp4"
             android:textColor="#474747"
@@ -40,8 +53,8 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@id/media_download_btn"
-            android:fontFamily="sans-serif"
+            android:layout_toRightOf="@id/media_download_delete_layout"
+            android:fontFamily="sans-serif-light"
             android:text="2015/01/01"
             android:textColor="#191919"
             android:textSize="12sp" />
@@ -58,12 +71,5 @@
             android:text="100MB"
             android:textColor="#989898"
             android:textSize="16sp" />
-        <!--<ImageButton android:id="@+id/media_listdelete_btn"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@drawable/ic_album_delete_n"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_marginRight="20dp"-->
-        <!--/>-->
     </RelativeLayout>
 </RelativeLayout>

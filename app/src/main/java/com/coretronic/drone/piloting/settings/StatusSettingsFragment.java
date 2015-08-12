@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coretronic.drone.BuildConfig;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
@@ -15,7 +16,7 @@ import com.coretronic.drone.service.Parameter;
 /**
  * Created by jiaLian on 15/4/1.
  */
-public class SettingsFragmentStatusPage extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
+public class StatusSettingsFragment extends UnBindDrawablesFragment implements DroneController.ParameterLoaderListener {
 
     private MainActivity activity;
     private TextView tvFlightSoftware;
@@ -36,15 +37,18 @@ public class SettingsFragmentStatusPage extends UnBindDrawablesFragment implemen
         tvFlightHardware = (TextView) fragmentView.findViewById(R.id.tv_flight_hardware_version);
         tvCameraSoftware = (TextView) fragmentView.findViewById(R.id.tv_camera_software_version);
         tvCameraHardware = (TextView) fragmentView.findViewById(R.id.tv_camera_hardware_version);
-
+        TextView tvAppVersion = (TextView) fragmentView.findViewById(R.id.tv_app_version);
+        tvAppVersion.setText(BuildConfig.VERSION_NAME);
         return fragmentView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.readParameters(this, Parameter.Type.FLIGHT_BOARD_SOFTWARE_VERSION, Parameter.Type.FLIGHT_BOARD_HARDWARE_VERSION,
-                Parameter.Type.CAMERA_BOARD_SOFTWARE_VERSION, Parameter.Type.CAMERA_BOARD_HARDWARE_VERSION);
+        if (activity.getDroneController() != null) {
+            activity.getDroneController().readParameters(this, Parameter.Type.FLIGHT_BOARD_SOFTWARE_VERSION, Parameter.Type.FLIGHT_BOARD_HARDWARE_VERSION,
+                    Parameter.Type.CAMERA_BOARD_SOFTWARE_VERSION, Parameter.Type.CAMERA_BOARD_HARDWARE_VERSION);
+        }
     }
 
     @Override

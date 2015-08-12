@@ -1,3 +1,6 @@
 [submodule "DroneControlLibrary"]
 	path = DroneControlLibrary
 	url = git@git.coretronic.com:coretronicdrone/dronecontrollibrary.git
+[submodule "TTSLib"]
+	path = TTSLib
+	url = git@git.coretronic.com:coretronicdrone/ttslib.git

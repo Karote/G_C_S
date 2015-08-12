@@ -97,7 +97,9 @@ public class Media implements Comparable<Media> {
     public final static int TYPE_AUDIO = 1;
     public final static int TYPE_GROUP = 2;
 
-    /** Metadata from libvlc_media */
+    /**
+     * Metadata from libvlc_media
+     */
     protected String mTitle;
     private String mArtist;
     private String mGenre;
@@ -128,8 +130,9 @@ public class Media implements Comparable<Media> {
 
     /**
      * Create a new Media
+     *
      * @param libVLC A pointer to the libVLC instance. Should not be NULL
-     * @param URI The URI of the media.
+     * @param URI    The URI of the media.
      */
     public Media(LibVLC libVLC, String URI) {
         if (libVLC == null)
@@ -212,11 +215,10 @@ public class Media implements Comparable<Media> {
      * hard-coded dependency gracefully for 3rd party libvlc apps while still
      * maintaining good l10n in VLC for Android.
      *
-     * @see org.videolan.vlc.Util#getValue(String, int)
-     *
      * @param string The default string
-     * @param type Alias for R.string.xxx
+     * @param type   Alias for R.string.xxx
      * @return The default string if not empty or string from introspection
+     * @see org.videolan.vlc.Util#getValue(String, int)
      */
     private static String getValueWrapper(String string, UnknownStringType type) {
         if (string != null && string.length() > 0) return string;
@@ -330,7 +332,7 @@ public class Media implements Comparable<Media> {
     /**
      * Returns the raw picture object. Likely to be NULL in VLC for Android
      * due to lazy-loading.
-     *
+     * <p/>
      * Use {@link org.videolan.vlc.Util#getPictureFromCache(Media)} instead.
      *
      * @return The raw picture or NULL
@@ -341,7 +343,7 @@ public class Media implements Comparable<Media> {
 
     /**
      * Sets the raw picture object.
-     *
+     * <p/>
      * In VLC for Android, use {@link org.videolan.vlc.Util#setPicture(Context, Media, Bitmap)} instead.
      *
      * @param p

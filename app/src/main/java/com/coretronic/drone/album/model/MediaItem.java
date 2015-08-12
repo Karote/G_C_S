@@ -30,10 +30,10 @@ public class MediaItem {
     }
 
 
-
     public String getMediaPath() {
         return mediaPath;
     }
+
     public void setMediaPath(String mediaPath) {
         this.mediaPath = mediaPath;
     }
@@ -41,6 +41,7 @@ public class MediaItem {
     public Date getMediaDate() {
         return mediaDate;
     }
+
     public void setMediaDate(Date mediaDate) {
         this.mediaDate = mediaDate;
     }
@@ -48,6 +49,7 @@ public class MediaItem {
     public String getMediaTitle() {
         return mediaTitle;
     }
+
     public void setMediaTitle(String mediaTitle) {
         this.mediaTitle = mediaTitle;
     }
@@ -55,6 +57,7 @@ public class MediaItem {
     public long getMediaId() {
         return mediaId;
     }
+
     public void setMediaId(int mediaId) {
         this.mediaId = mediaId;
     }
@@ -62,6 +65,7 @@ public class MediaItem {
     public int getMediaType() {
         return mediaType;
     }
+
     public void setMediaType(int imgType) {
         this.mediaType = imgType;
     }
@@ -77,6 +81,7 @@ public class MediaItem {
     public boolean getIsMediaSelect() {
         return isMediaSelect;
     }
+
     public void setIsMediaSelect(boolean isMediaSelect) {
         this.isMediaSelect = isMediaSelect;
     }
@@ -84,6 +89,7 @@ public class MediaItem {
     public String getMediaFileName() {
         return mediaFileName;
     }
+
     public void setMediaFileName(String mediaFileName) {
         this.mediaFileName = mediaFileName;
     }
@@ -91,6 +97,7 @@ public class MediaItem {
     public String getMediaSize() {
         return mediaSize;
     }
+
     public void setMediaSize(String mediaSize) {
         this.mediaSize = mediaSize;
     }

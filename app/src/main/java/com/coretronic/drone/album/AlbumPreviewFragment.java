@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
@@ -152,7 +151,6 @@ public class AlbumPreviewFragment extends UnBindDrawablesFragment implements Vie
         public void onClick(View v) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-
 
             if (mediaItems.get(currentMediaIdx).getMediaType() == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE) {
                 shareIntent.setType("image/*");

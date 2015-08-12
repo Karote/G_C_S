@@ -91,22 +91,22 @@
 
                 <Button
                     android:id="@+id/btn_front"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="FRONT" />
 
                 <Button
                     android:id="@+id/btn_back"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="BACK" />
 
                 <Button
                     android:id="@+id/btn_left"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="LEFT" />
 
                 <Button
                     android:id="@+id/btn_right"
-                    style="@style/setting_flip_orientation"
+                    style="@style/setting_btn"
                     android:text="RIGHT" />
             </LinearLayout>
         </LinearLayout>

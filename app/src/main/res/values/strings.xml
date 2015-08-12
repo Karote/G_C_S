@@ -3,7 +3,6 @@
     <string name="app_name">Drone</string>
     <string-array name="mission_plan_menu">
         <item>PLANNING</item>
-        <item>FOLLOW ME</item>
         <item>FLIGHT HISTORY</item>
     </string-array>
     <string-array name="waypoint_type">

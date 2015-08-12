@@ -8,6 +8,7 @@ import com.coretronic.drone.service.Parameter.Orientation;
  */
 public class Setting {
     private static final String TAG = Setting.class.getSimpleName();
+
     public static final int ON = 1;
     public static final int OFF = 0;
 
@@ -27,13 +28,12 @@ public class Setting {
     private String unit = null;
 
     public enum SettingType {
-        INTERFACE_OPACTITY, SD_RECORD, FLIP_ENABLE, FLIP_ORIENTATION,
+        INTERFACE_OPACITY, SD_RECORD, FLIP_ENABLE, FLIP_ORIENTATION,
         ALTITUDE_LIMIT, VERTICAL_SPEED_MAX, ROTATION_SPEED_MAX, TILT_ANGLE_MAX,
         JOYPAD_MODE, ABSOLUTE_CONTROL, LEFT_HANDED, PHONE_TILT, LENGTH
     }
 
     public Setting(int value) {
-//        this.value = value;
         this(null, value);
     }
 
@@ -43,17 +43,10 @@ public class Setting {
     }
 
     public Setting(int minVale, int maxValue, int value) {
-//        this.minVale = minVale;
-//        this.maxValue = maxValue;
-//        this.value = value;
         this(null, minVale, maxValue, value, null);
     }
 
     public Setting(int minVale, int maxValue, int value, String unit) {
-//        this.minVale = minVale;
-//        this.maxValue = maxValue;
-//        this.value = value;
-//        this.unit = unit;
         this(null, minVale, maxValue, value, unit);
     }
 
@@ -71,6 +64,23 @@ public class Setting {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+
+    public int getMinValue() {
+        return minVale;
+    }
+
+    public int getMaxValue() {
+        return maxValue;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public Parameter.Type getParameterType() {
+        return parameterType;
     }
 
     public void setValue(Parameter parameter) {
@@ -100,22 +110,6 @@ public class Setting {
                 break;
         }
 
-    }
-
-    public int getMinValue() {
-        return minVale;
-    }
-
-    public int getMaxValue() {
-        return maxValue;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public Parameter.Type getParameterType() {
-        return parameterType;
     }
 
     public Parameter getParameter() {
