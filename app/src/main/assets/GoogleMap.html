@@ -28,6 +28,19 @@
 				font-weight: bold;
 				color: #FF0000;
 			}
+			a[href^="http://maps.google.com/maps"] {
+				display: none !important
+			}
+			a[href^="https://maps.google.com/maps"] {
+				display: none !important
+			}
+
+			.gmnoprint a, .gmnoprint span, .gm-style-cc {
+				display: none;
+			}
+			.gmnoprint div {
+				background: none !important;
+			}
 		</style>
 		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&language=zh-tw&libraries=geometry"></script>
 		<script src="geolocationmarker-compiled.js"></script>
@@ -499,6 +512,8 @@
 		</script>
 	</head>
 	<body onload="initialize()">
-		<div id="map" style="width: 100%; height: 100%;"> </div>
+		<div id="map" style="width: 100%; height: 100%;">
+
+		</div>
 	</body>
 </html>
