@@ -524,7 +524,8 @@ public class WaypointEditorFragment extends Fragment
                         canMapAddMarker = true;
                         isShowMarker = true;
                         layout_editMarker.setVisibility(View.VISIBLE);
-                        currentFragment = new PlanningFragment();
+                        currentFragment = PlanningFragment.newInstance(planningMissionListFile);
+                        planningMissionListFile = "";
                         break;
                     case 1: // FLIGHT HISTORY
                         canMapAddMarker = false;
