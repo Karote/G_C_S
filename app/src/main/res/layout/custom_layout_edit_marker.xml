@@ -3,6 +3,7 @@
     android:layout_width="158dp"
     android:layout_height="48dp"
     android:background="#00000000"
+    android:gravity="right"
     android:orientation="horizontal">
 
     <Button
@@ -62,29 +63,29 @@
             android:layout_width="116dp"
             android:layout_height="48dp"
             android:background="#66000000"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_delete_done"
                 android:layout_width="52dp"
                 android:layout_height="44dp"
-                android:layout_marginLeft="4dp"
                 android:layout_gravity="bottom"
+                android:layout_marginLeft="4dp"
+                android:background="@drawable/btn_delete_bg"
                 android:text="@string/delete_done"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/btn_delete_bg"
                 android:textSize="12sp" />
 
             <Button
                 android:id="@+id/btn_delete_all"
                 android:layout_width="52dp"
                 android:layout_height="44dp"
-                android:layout_marginLeft="4dp"
                 android:layout_gravity="bottom"
-                android:text="@string/delete_all"
-                android:gravity="center"
+                android:layout_marginLeft="4dp"
                 android:background="@drawable/btn_delete_bg"
+                android:gravity="center"
+                android:text="@string/delete_all"
                 android:textColor="#FF0000"
                 android:textSize="12sp" />
         </LinearLayout>

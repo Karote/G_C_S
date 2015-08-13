@@ -74,6 +74,8 @@ public class WaypointEditorFragment extends Fragment
     private LinearLayout layout_deleteIcon = null;
     private LinearLayout layout_deleteOption = null;
 
+    private Button b_action_plan_undo = null;
+
     private Spinner spinnerView = null;
     private String planningMissionListFile = "";
 
@@ -558,7 +560,7 @@ public class WaypointEditorFragment extends Fragment
         layout_deleteOption = (LinearLayout) view.findViewById(R.id.layout_delete_option);
         layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
 
-        final Button b_action_plan_undo = (Button) view.findViewById(R.id.btn_action_plan_undo);
+        b_action_plan_undo = (Button) view.findViewById(R.id.btn_action_plan_undo);
         b_action_plan_undo.setOnClickListener(this);
 
         final Button b_action_plan_delete = (Button) view.findViewById(R.id.btn_action_plan_delete);
@@ -679,9 +681,11 @@ public class WaypointEditorFragment extends Fragment
         if (isShow) {
             layout_deleteOption.setVisibility(View.VISIBLE);
             layout_deleteIcon.setVisibility(View.INVISIBLE);
+            b_action_plan_undo.setVisibility(View.GONE);
         } else {
             layout_deleteOption.setVisibility(View.INVISIBLE);
             layout_deleteIcon.setVisibility(View.VISIBLE);
+            b_action_plan_undo.setVisibility(View.VISIBLE);
         }
     }
 
