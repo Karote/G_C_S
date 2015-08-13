@@ -37,7 +37,10 @@ public class HistoryFragment extends MavInfoFragment {
 
     public interface HistoryAdapterListener {
         void LoadPathLog(List<Float> markers, List<Long> path);
+
         void ClearPath();
+
+        void SpinnerSetToPlanning(String filePath);
     }
 
     @Override
@@ -85,6 +88,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFilePath(mHistoryItemAdapter.getFocusIndex()));
             }
         });
 

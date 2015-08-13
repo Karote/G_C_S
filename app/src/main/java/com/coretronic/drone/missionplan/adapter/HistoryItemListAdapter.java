@@ -2,7 +2,6 @@ package com.coretronic.drone.missionplan.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
     private List<FlightLogItem> mFlightLogItems = null;
 
     private int focusIndex = -1;
+    private String filePath;
     private File files[] = null;
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -43,16 +43,16 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
         this.context = context;
         this.mFlightLogItems = new ArrayList<FlightLogItem>();
 
-        String filePath = this.context.getExternalFilesDir(null).getAbsolutePath();
+        filePath = this.context.getExternalFilesDir(null).getAbsolutePath();
         File f = new File(filePath);
         files = f.listFiles();
         for (int i = 0; i < files.length; i++) {
             String filename = files[i].getName();
-            this.mFlightLogItems.add(readFile(filePath, filename));
+            this.mFlightLogItems.add(readFile(filename));
         }
     }
 
-    private FlightLogItem readFile(String filePath, String filename) {
+    private FlightLogItem readFile(String filename) {
         File file = new File(filePath + "/" + filename);
         Gson gson = new Gson();
         List<Mission> missionList = null;
@@ -156,5 +156,9 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
 
     public int getFocusIndex() {
         return focusIndex;
+    }
+
+    public String getFilePath(int position) {
+        return filePath + "/" + files[position].getName();
     }
 }

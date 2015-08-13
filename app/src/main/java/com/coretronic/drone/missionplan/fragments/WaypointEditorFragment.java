@@ -74,6 +74,9 @@ public class WaypointEditorFragment extends Fragment
     private LinearLayout layout_deleteIcon = null;
     private LinearLayout layout_deleteOption = null;
 
+    private Spinner spinnerView = null;
+    private String planningMissionListFile = "";
+
     private GoogleApiClient mGoogleApiClient = null;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequestHighAccuracy = null;
@@ -508,7 +511,7 @@ public class WaypointEditorFragment extends Fragment
         final Button backToMainButton = (Button) view.findViewById(R.id.button_back_to_main);
         backToMainButton.setOnClickListener(this);
 
-        Spinner spinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
+        spinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
         spinnerView.setAdapter(spinnerAdapter);
@@ -724,6 +727,12 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void ClearPath() {
         webview_Map.loadUrl("javascript:ClearPath()");
+    }
+
+    @Override
+    public void SpinnerSetToPlanning(String filePath) {
+        planningMissionListFile = filePath;
+        spinnerView.setSelection(0);
     }
     // End HistoryFragment.HistoryAdapterListener
 }
