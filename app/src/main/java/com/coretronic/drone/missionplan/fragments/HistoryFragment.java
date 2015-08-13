@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +31,16 @@ public class HistoryFragment extends MavInfoFragment {
     private LinearLayout drone_log_info = null;
     private TextView tv_flightDistance = null;
     private static HistoryItemListAdapter mHistoryItemAdapter = null;
+    private Button btn_activate_plan = null;
 
     private static HistoryAdapterListener mCallback = null;
 
     public interface HistoryAdapterListener {
         void LoadPathLog(List<Float> markers, List<Long> path);
+
         void ClearPath();
+
+        void SpinnerSetToPlanning(String filePath);
     }
 
     @Override
@@ -79,6 +84,14 @@ public class HistoryFragment extends MavInfoFragment {
         final TextView tv_flightTime = (TextView) view.findViewById(R.id.tv_flight_time);
         tv_flightTime.setText("00:00");
 
+        btn_activate_plan = (Button) view.findViewById(R.id.btn_activate_plan);
+        btn_activate_plan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFilePath(mHistoryItemAdapter.getFocusIndex()));
+            }
+        });
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.flight_history_recycler_view);
         recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager recyclerLayoutMgr = new LinearLayoutManager(getActivity()
@@ -118,9 +131,11 @@ public class HistoryFragment extends MavInfoFragment {
                         SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
                         tv_flightTime.setText(timeFormat.format(durationTime));
                         drone_log_info.setVisibility(View.VISIBLE);
+                        btn_activate_plan.setVisibility(View.VISIBLE);
                     } else {
                         mCallback.ClearPath();
                         drone_log_info.setVisibility(View.GONE);
+                        btn_activate_plan.setVisibility(View.GONE);
                     }
                 }catch (Exception e){
                     Toast.makeText(getActivity(),"History content was wrong",Toast.LENGTH_SHORT).show();

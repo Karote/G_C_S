@@ -24,7 +24,11 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 import com.coretronic.drone.utility.AppConfig;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.List;
 
 /**
@@ -50,6 +54,14 @@ public class PlanningFragment extends MavInfoFragment {
     private DroneController drone = null;
     private ProgressDialog progressDialog = null;
 
+    public static PlanningFragment newInstance(String filePath) {
+        PlanningFragment f = new PlanningFragment();
+        Bundle args = new Bundle();
+        args.putString("filePath", filePath);
+        f.setArguments(args);
+        return f;
+    }
+
     private static MissionAdapterListener mCallback = null;
 
     public interface MissionAdapterListener {
@@ -71,6 +83,23 @@ public class PlanningFragment extends MavInfoFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
+
+        Bundle arguments = getArguments();
+        String filePath = arguments.getString("filePath");
+        File file = new File(filePath);
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String bufferStr = bufferedReader.readLine();
+            if (bufferStr != null) {
+                List<Mission> missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {}.getType());
+                mMissionItemAdapter.update(missionList);
+                mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
+                mCallback.fitMapShowAllMission();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
