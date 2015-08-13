@@ -417,8 +417,36 @@ public class WaypointEditorFragment extends Fragment
         Log.d(TAG, "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
         if (currentDroneMode != droneMode) {
             currentDroneMode = droneMode;
+            String ttsStr = null;
             if (ttsSpeaker != null) {
-                ttsSpeaker.speak(currentDroneMode.toString() + " Mode");
+                switch (currentDroneMode) {
+                    case MANUAL:
+                        ttsStr = "MANUAL";
+                        break;
+                    case ATTITUDE:
+                        ttsStr = "ATTITUDE";
+                        break;
+                    case GPS:
+                        ttsStr = "GPS";
+                        break;
+                    case IOC:
+                        ttsStr = "IOC";
+                        break;
+                    case LAND:
+                        ttsStr = "LAND";
+                        break;
+                    case RTL:
+                        ttsStr = "RTL";
+                        break;
+                    case POI:
+                        ttsStr = "POI";
+                        break;
+                    case HEADING_LOCK:
+                        ttsStr = "HEADING LOCK";
+                        break;
+                }
+                if (ttsStr != null)
+                    ttsSpeaker.speak(ttsStr + " Mode");
             }
         }
         Log.d(TAG, "Flight Time:" + duration);
@@ -690,7 +718,7 @@ public class WaypointEditorFragment extends Fragment
     public void LoadPathLog(List<Float> markers, List<Long> path) {
         JSONArray markerJSON = new JSONArray(markers);
         JSONArray pathJson = new JSONArray(path);
-         webview_Map.loadUrl("javascript:LoadPathLog(" + markerJSON + "," + pathJson + ")");
+        webview_Map.loadUrl("javascript:LoadPathLog(" + markerJSON + "," + pathJson + ")");
     }
 
     @Override
