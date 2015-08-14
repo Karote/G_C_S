@@ -78,6 +78,7 @@ public class WaypointEditorFragment extends Fragment
 
     private Spinner spinnerView = null;
     private String planningMissionListFile = "";
+    private int spinnerIndex = 0;
 
     private GoogleApiClient mGoogleApiClient = null;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
@@ -123,6 +124,9 @@ public class WaypointEditorFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpLocationService();
+
+        Bundle bundle = this.getArguments();
+        spinnerIndex = bundle.getInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
 
         fragmentActivity = getActivity();
         fragmentChildManager = getChildFragmentManager();
@@ -517,6 +521,7 @@ public class WaypointEditorFragment extends Fragment
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
         spinnerView.setAdapter(spinnerAdapter);
+        spinnerView.setSelection(spinnerIndex);
         spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -571,6 +576,12 @@ public class WaypointEditorFragment extends Fragment
 
         final Button b_delete_all = (Button) view.findViewById(R.id.btn_delete_all);
         b_delete_all.setOnClickListener(this);
+
+        if(spinnerIndex == 0){
+            layout_editMarker.setVisibility(View.VISIBLE);
+        }else if(spinnerIndex == 1){
+            layout_editMarker.setVisibility(View.GONE);
+        }
     }
 
     private void setUpLocationService() {
