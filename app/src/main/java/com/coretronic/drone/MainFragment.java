@@ -26,7 +26,9 @@ import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
+import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
 import com.coretronic.drone.ui.StatusView;
+import com.coretronic.drone.utility.AppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,13 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         btnMissionPlan.setOnClickListener(this);
         llAlbum.setOnClickListener(this);
         llUpdate.setOnClickListener(this);
+
+        // 20150814 add flight history and flight setting button
+        Button btnFlightHistory = (Button) view.findViewById(R.id.btn_flight_history);
+        Button btnFlightSetting = (Button) view.findViewById(R.id.btn_flight_setting);
+        btnFlightHistory.setOnClickListener(this);
+        btnFlightSetting.setOnClickListener(this);
+
 
         statusView = (StatusView) view.findViewById(R.id.status);
 
@@ -203,13 +212,16 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Fragment fragment = null;
         String backStackName = null;
+        Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.btn_piloting:
-                // 20150805 morris : disable pilotion function
+                // 20150805 : disable pilotion function
                 //fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
+                bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
+                fragment.setArguments(bundle);
                 break;
             case R.id.ll_album:
                 fragment = new AlbumFragment();
@@ -217,9 +229,17 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 break;
             case R.id.ll_updates:
                 break;
+            case R.id.btn_flight_history:
+                fragment = new WaypointEditorFragment();
+                bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 1);
+                fragment.setArguments(bundle);
+                break;
+            case R.id.btn_flight_setting:
+                fragment = new SettingViewPagerFragment();
+                break;
         }
         if (fragment != null) {
-            transaction.add(R.id.frame_view, fragment, "fragment");
+            transaction.replace(R.id.frame_view, fragment, "fragment");
             transaction.addToBackStack(backStackName);
             transaction.commit();
         }

@@ -12,6 +12,7 @@ public class AppConfig {
     public static String PREF_MISSION_LIST = "missionList";
     public static String MISSION_LOG_START = "missionLogStart";
     public static String MISSION_LOG_STOP = "missionLogStop";
+    public static String MAIN_FRAG_ARGUMENT = "mainFragArg";
 
     public static String getMediaFolderPosition() {
         return Environment.getExternalStoragePublicDirectory(
