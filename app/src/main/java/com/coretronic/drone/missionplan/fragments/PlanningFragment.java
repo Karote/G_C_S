@@ -77,7 +77,6 @@ public class PlanningFragment extends MavInfoFragment {
     // Drone info
     private SharedPreferences sharedPreferences;
     private Gson gson;
-//    private FileHelper fileHelper;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -108,7 +107,6 @@ public class PlanningFragment extends MavInfoFragment {
         fragmentActivity = getActivity();
         sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, 0);
         gson = new Gson();
-//        fileHelper = new FileHelper(getActivity());
     }
 
     @Override
@@ -140,7 +138,15 @@ public class PlanningFragment extends MavInfoFragment {
         recyclerView.setLayoutManager(recyclerLayoutMgr);
 
         mMissionItemAdapter = new MissionItemListAdapter();
+        mMissionItemAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                checkAdapterIsEmpty();
+            }
+        });
         recyclerView.setAdapter(mMissionItemAdapter);
+        checkAdapterIsEmpty();
 
         layout_waypointDetail = (FrameLayout) view.findViewById(R.id.waypoint_detail_container);
         layout_waypointDetail.setVisibility(View.GONE);
@@ -300,6 +306,14 @@ public class PlanningFragment extends MavInfoFragment {
         return builder.create();
     }
 
+    private void checkAdapterIsEmpty () {
+        if (mMissionItemAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     // Public Method
     @Override
     public void setMavInfoAltitude(float altitude) {
@@ -422,6 +436,4 @@ public class PlanningFragment extends MavInfoFragment {
         mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
         layout_waypointDetail.setVisibility(View.GONE);
     }
-
-
 }
