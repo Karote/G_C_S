@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.Mission.Type;
 import com.coretronic.drone.R;
+import com.coretronic.drone.piloting.PilotingFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -115,7 +117,10 @@ public class WaypointEditorFragment extends Fragment
         setUpWebView(view);
         setUpTopBarButton(view);
         statusView = (StatusView) view.findViewById(R.id.status);
-
+        view.findViewById(R.id.btn_take_off).setOnClickListener(this);
+        view.findViewById(R.id.btn_emergency).setOnClickListener(this);
+        view.findViewById(R.id.btn_landing).setOnClickListener(this);
+        view.findViewById(R.id.btn_rtl).setOnClickListener(this);
 
     }
 
@@ -262,6 +267,7 @@ public class WaypointEditorFragment extends Fragment
             public void run() {
                 currentFragment.setMavInfoLocation(droneLat, droneLng);
                 webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
+
             }
         });
     }
@@ -480,6 +486,23 @@ public class WaypointEditorFragment extends Fragment
                 setDeleteOptionShow(false);
                 ((PlanningFragment) currentFragment).missionAdapterShowDelete(false);
                 canMapAddMarker = true;
+                break;
+
+            case R.id.btn_take_off:
+                Log.d(TAG, "Take Off");
+                drone.takeOff(PilotingFragment.DEFAULT_TAKE_OFF_ALTITUDE);
+                break;
+            case R.id.btn_emergency:
+                Log.d(TAG, "Emergency");
+                drone.emergency();
+                break;
+            case R.id.btn_landing:
+                Log.d(TAG, "Landing");
+                drone.land();
+                break;
+            case R.id.btn_rtl:
+                Log.d(TAG, "RTL");
+                drone.returnToLaunch();
                 break;
         }
     }

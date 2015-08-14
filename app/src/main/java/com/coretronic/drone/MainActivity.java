@@ -229,9 +229,6 @@ public class MainActivity extends LandscapeFragmentActivity implements AdapterVi
                 fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
-                if (connectedDroneDevice.getDroneType() != DroneDevice.DRONE_TYPE_CORETRONIC) {
-                    return;
-                }
                 fragment = new WaypointEditorFragment();
                 break;
             case R.id.ll_album:
@@ -413,7 +410,6 @@ public class MainActivity extends LandscapeFragmentActivity implements AdapterVi
                         }
                         addDevice(deviceIp);
                     }
-
                 });
 
         alertDialog.setNegativeButton("Cancel",
@@ -422,7 +418,6 @@ public class MainActivity extends LandscapeFragmentActivity implements AdapterVi
                         dialog.cancel();
                     }
                 });
-
         alertDialog.show();
     }
 }

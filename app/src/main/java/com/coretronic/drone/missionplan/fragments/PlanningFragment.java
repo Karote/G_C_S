@@ -220,18 +220,24 @@ public class PlanningFragment extends MavInfoFragment {
     // Public Method
     @Override
     public void setMavInfoAltitude(float altitude) {
-        String tx_alt = String.format("%d", (int) altitude);
-        tv_droneAltitude.setText(tx_alt + "m");
+        if (tv_droneAltitude != null) {
+            String tx_alt = String.format("%d", (int) altitude);
+            tv_droneAltitude.setText(tx_alt + "m");
+        }
     }
 
     @Override
     public void setMavInfoSpeed(float groundSpeed) {
-        tv_droneSpeed.setText(groundSpeed + " km/h");
+        if (tv_droneSpeed != null) {
+            tv_droneSpeed.setText(groundSpeed + " km/h");
+        }
     }
 
     @Override
     public void setMavInfoLocation(double droneLat, double droneLng) {
-        tv_droneLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
+        if (tv_droneLatLng != null) {
+            tv_droneLatLng.setText(String.valueOf(droneLat) + ", " + String.valueOf(droneLng));
+        }
     }
 
     public List<Mission> missionAdapterGetList() {
