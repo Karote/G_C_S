@@ -68,7 +68,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         // version setting
         TextView tvAppVersion = (TextView) view.findViewById(R.id.tv_app_version);
-        tvAppVersion.setText(BuildConfig.VERSION_NAME);
+        tvAppVersion.setText("v " + BuildConfig.VERSION_NAME);
 
         statusView = (StatusView) view.findViewById(R.id.status);
 
