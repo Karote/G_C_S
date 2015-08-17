@@ -28,7 +28,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     private static final String SETTING_NAME_G2 = "setting_g2";
     private static final String SETTINGS_VALUE = "settings_value";
 
-    private static Setting[] settings = new Setting[Setting.SettingType.LENGTH.ordinal()];
+    private static Setting[] settings = new Setting[Setting.SettingType.values().length];
 
     private DroneDevice connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
     private DroneDevice.OnDeviceChangedListener deviceChangedListener;
@@ -72,13 +72,16 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-        deviceChangedListener.onDeviceAdded(droneDevice);
+        if (deviceChangedListener != null) {
+            deviceChangedListener.onDeviceAdded(droneDevice);
+        }
     }
 
     @Override
     public void onDeviceRemoved(final DroneDevice droneDevice) {
-        deviceChangedListener.onDeviceRemoved(droneDevice);
-
+        if (deviceChangedListener != null) {
+            deviceChangedListener.onDeviceRemoved(droneDevice);
+        }
         if (droneDevice.getName().equals(connectedDroneDevice.getName())) {
             Toast.makeText(this, connectedDroneDevice.getName() + " Disconnected", Toast.LENGTH_LONG).show();
             connectedDroneDevice = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
@@ -116,24 +119,29 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     @Override
     public void onParameterLoaded(Parameter.Type type, Parameter parameter) {
+
         for (Setting setting : settings) {
+            if(setting == null){
+                continue;
+            }
             if (type == setting.getParameterType()) {
                 Log.d(TAG, "onParameterLoaded: " + type + "," + parameter.getValue());
                 setting.setValue(parameter);
                 Log.d(TAG, "onParameterLoaded setting: " + setting.getValue());
+                break;
             }
         }
     }
 
     public boolean hasGPSSignal(int eph) {
-        if(eph > 0){
+        if (eph > 0) {
             return true;
         }
         return false;
     }
 
     public void readParameter() {
-        getDroneController().readParameters(MainActivity.this, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
+        getDroneController().readParameters(MainActivity.this, Parameter.Type.DRONE_SETTING, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
     }
 
     public void initialSetting() {
@@ -145,6 +153,9 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
                 settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 0, 500, 300, "cm/s");
             case DroneDevice.DRONE_TYPE_CORETRONIC_G2:
                 loadSettingsValue();
+                break;
+            default:
+                defaultSettings();
                 break;
         }
     }
@@ -162,10 +173,22 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
         String tempStr = String.valueOf(DEGREE_SYMBOL) + "/s";
 
+        // Basic Setting
+        settings[Setting.SettingType.ALTITUDE_LIMIT.ordinal()] = new Setting(Parameter.Type.ALTITUDE_LIMIT, 10, 500, 500, "m");
         settings[Setting.SettingType.ROTATION_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.ROTATION_SPEED_MAX, 40, 120, 120, tempStr);
-        settings[Setting.SettingType.ALTITUDE_LIMIT.ordinal()] = new Setting(Parameter.Type.ALTITUDE_LIMIT, 2, 100, 3, "m");
-        settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 500, 6000, 2000, "mm/s");
+        settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 2000, 6000, 6000, "mm/s");
         settings[Setting.SettingType.TILT_ANGLE_MAX.ordinal()] = new Setting(Parameter.Type.ANGLE_MAX, 10, 30, 30, String.valueOf(DEGREE_SYMBOL));
+        settings[Setting.SettingType.LOW_BATTERY_PROTECTION.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION, 10, 30, 30, String.valueOf(DEGREE_SYMBOL));
+
+        // Gain & Expo Setting
+        settings[Setting.SettingType.BASIC_AILERON_GAIN.ordinal()] = new Setting(Parameter.Type.BASIC_AILERON_GAIN, 50, 300, 100, "%");
+        settings[Setting.SettingType.BASIC_ELEVATOR_GAIN.ordinal()] = new Setting(Parameter.Type.BASIC_ELEVATOR_GAIN, 50, 300, 100, "%");
+        settings[Setting.SettingType.BASIC_RUDDER_GAIN.ordinal()] = new Setting(Parameter.Type.BASIC_RUDDER_GAIN, 50, 300, 100, "%");
+        settings[Setting.SettingType.ATTITUDE_AILERON_GAIN.ordinal()] = new Setting(Parameter.Type.ATTITUDE_AILERON_GAIN, 50, 300, 100, "%");
+        settings[Setting.SettingType.ATTITUDE_ELEVATOR_GAIN.ordinal()] = new Setting(Parameter.Type.ATTITUDE_ELEVATOR_GAIN, 50, 300, 100, "%");
+        settings[Setting.SettingType.ATTITUDE_RUDDER_GAIN.ordinal()] = new Setting(Parameter.Type.ATTITUDE_RUDDER_GAIN, 50, 300, 100, "%");
+        settings[Setting.SettingType.ATTITUDE_GAIN.ordinal()] = new Setting(Parameter.Type.ATTITUDE_GAIN, 50, 300, 100, "%");
+
     }
 
     public void resetSettings() {

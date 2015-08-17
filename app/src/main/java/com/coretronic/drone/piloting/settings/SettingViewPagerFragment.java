@@ -73,7 +73,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        ((MainActivity) getActivity()).saveSettingsValue();
+//        ((MainActivity) getActivity()).saveSettingsValue();
     }
 
     @Override

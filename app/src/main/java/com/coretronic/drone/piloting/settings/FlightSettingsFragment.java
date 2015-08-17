@@ -31,7 +31,7 @@ public class FlightSettingsFragment extends UnBindDrawablesFragment {
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_rotation_max, Setting.SettingType.ROTATION_SPEED_MAX);
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_tilt_angle_max, Setting.SettingType.TILT_ANGLE_MAX);
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_vertical_speed_max, Setting.SettingType.VERTICAL_SPEED_MAX);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_altitude_limit, Setting.SettingType.ALTITUDE_LIMIT);
+        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_altitude_max, Setting.SettingType.ALTITUDE_LIMIT);
 
         Button btnFlatTrim = (Button) fragmentView.findViewById(R.id.btn_flat_trim);
         btnFlatTrim.setOnClickListener(new View.OnClickListener() {

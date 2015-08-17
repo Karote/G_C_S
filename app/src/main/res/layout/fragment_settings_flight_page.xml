@@ -17,11 +17,7 @@
 
             <TextView
                 style="@style/settings_title"
-                android:text="ROTATION SPEED MAX" />
-
-            <TextView
-                style="@style/settings_title"
-                android:text="TILT ANGLE MAX" />
+                android:text="ALTITUDE MAX" />
 
             <TextView
                 style="@style/settings_title"
@@ -29,21 +25,24 @@
 
             <TextView
                 style="@style/settings_title"
-                android:text="AUTO OBSTANCLE AVOIDANCE"
-                android:visibility="gone" />
+                android:text="ROTATION SPEED MAX" />
 
             <TextView
                 style="@style/settings_title"
-                android:text="ALTITUDE LOCK"
-                android:visibility="gone" />
+                android:text="TILT ANGLE MAX" />
+
 
             <TextView
                 style="@style/settings_title"
-                android:text="ALTITUDE LIMIT" />
+                android:text="Low Power Protection" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
+            <TextView
+                style="@style/settings_title"
+                android:text="Flash Light" />
+
+            <TextView
+                style="@style/settings_title"
+                android:text="RTL" />
 
             <TextView
                 style="@style/settings_title"
@@ -56,6 +55,11 @@
             android:layout_marginRight="68dp"
             android:layout_weight="1"
             android:orientation="vertical">
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_altitude_max"
+                android:layout_width="match_parent"
+                android:layout_height="38dp" />
 
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_rotation_max"
@@ -72,33 +76,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="38dp" />
 
-            <FrameLayout
+            <TextView
+                style="@style/settings_title"
+                android:layout_height="38dp" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <include
                     android:id="@+id/switch_avoidance"
                     layout="@layout/switch_module" />
-            </FrameLayout>
+
+                <com.coretronic.drone.ui.SeekBarTextView
+                    android:id="@+id/setting_bar_low_power_flash"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp" />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
-                android:orientation="vertical">
+                android:layout_height="38dp"
+                android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:visibility="gone">
-
-                    <include
-                        android:id="@+id/switch_altitude_lock"
-                        layout="@layout/switch_module" />
-                </FrameLayout>
+                <include
+                    android:id="@+id/switch_altitude_lock"
+                    layout="@layout/switch_module" />
 
                 <com.coretronic.drone.ui.SeekBarTextView
-                    android:id="@+id/setting_bar_altitude_limit"
+                    android:id="@+id/setting_bar_low_power_rtl"
                     android:layout_width="match_parent"
                     android:layout_height="38dp" />
             </LinearLayout>
@@ -110,8 +119,8 @@
                 android:layout_gravity="left|center"
                 android:background="@drawable/btn_setting_bg"
                 android:gravity="center"
-                android:textColor="#ffffff"
                 android:text="Trim"
+                android:textColor="#ffffff"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
