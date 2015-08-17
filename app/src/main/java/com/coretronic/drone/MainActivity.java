@@ -72,12 +72,16 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-        deviceChangedListener.onDeviceAdded(droneDevice);
+        if (deviceChangedListener != null) {
+            deviceChangedListener.onDeviceAdded(droneDevice);
+        }
     }
 
     @Override
     public void onDeviceRemoved(final DroneDevice droneDevice) {
-        deviceChangedListener.onDeviceRemoved(droneDevice);
+        if (deviceChangedListener != null) {
+            deviceChangedListener.onDeviceRemoved(droneDevice);
+        }
 
         if (droneDevice.getName().equals(connectedDroneDevice.getName())) {
             Toast.makeText(this, connectedDroneDevice.getName() + " Disconnected", Toast.LENGTH_LONG).show();
@@ -94,6 +98,9 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     public void registerDeviceChangedListener(DroneDevice.OnDeviceChangedListener deviceChangedListener) {
         this.deviceChangedListener = deviceChangedListener;
+        for(DroneDevice device : getDroneDevices()){
+            deviceChangedListener.onDeviceAdded(device);
+        }
     }
 
     public void unregisterDeviceChangedListener(DroneDevice.OnDeviceChangedListener deviceChangedListener) {
@@ -126,7 +133,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     }
 
     public boolean hasGPSSignal(int eph) {
-        if(eph > 0){
+        if (eph > 0) {
             return true;
         }
         return false;
