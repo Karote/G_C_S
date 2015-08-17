@@ -200,6 +200,23 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     public void resetSettings() {
         defaultSettings();
+        for (Setting setting : settings) {
+            if (setting == null) {
+                continue;
+            }
+            try {
+                if (getDroneController() != null && setting.getParameterType() != null) {
+                    Log.d(TAG, "setting type: " + setting.getParameterType());
+                    Log.d(TAG, "setting type value: " + setting.getParameter().getValue());
+                    if(getDroneController().setParameters(setting.getParameterType(), setting.getParameter())) {
+                        Thread.sleep(100);
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 0, 500, 300, "cm/s");
         }

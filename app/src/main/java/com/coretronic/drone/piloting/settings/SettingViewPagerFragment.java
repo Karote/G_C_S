@@ -1,8 +1,11 @@
 package com.coretronic.drone.piloting.settings;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +27,18 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     private PageIndicator pageIndicator;
     private LinearLayout defaultSetting;
     private SettingsPagerAdapter settingsPagerAdapter;
+    private ProgressDialog progressDialog;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        progressDialog = new ProgressDialog(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_settings_view_pager, container, false);
-
         settingsPagerAdapter = new SettingsPagerAdapter(getChildFragmentManager());
         ViewPager viewPager = (ViewPager) fragmentView.findViewById(R.id.pager);
         viewPager.addOnPageChangeListener(this);
@@ -58,8 +68,10 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                progressDialog.show();
                                 ((MainActivity) getActivity()).resetSettings();
-                                getFragmentManager().popBackStack();
+                                progressDialog.dismiss();
+                                reflashFragment();
                             }
                         })
                         .setNegativeButton("No", null)
@@ -96,5 +108,13 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    private void reflashFragment(){
+        Fragment frg = getFragmentManager().findFragmentByTag("SettingViewPagerFragment");
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
     }
 }
