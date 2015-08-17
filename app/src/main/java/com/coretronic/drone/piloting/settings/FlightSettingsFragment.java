@@ -1,10 +1,12 @@
 package com.coretronic.drone.piloting.settings;
 
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
@@ -38,12 +40,21 @@ public class FlightSettingsFragment extends UnBindDrawablesFragment {
         ViewManager.assignSwitchView(activity, fragmentView, R.id.switch_low_power_level_2, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE);
         SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_low_power_rtl, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE);
 
+        final TextView flatTrimExtTime = (TextView) fragmentView.findViewById(R.id.tv_flat_trim_exe_time);
+        final Time time = new Time();
         Button btnFlatTrim = (Button) fragmentView.findViewById(R.id.btn_flat_trim);
         btnFlatTrim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (activity.getDroneController() != null) {
                     activity.getDroneController().flatTrim();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            time.set(System.currentTimeMillis());
+                            flatTrimExtTime.setText("Last Excuteion: " + time.format("%d/%m/%Y"));
+                        }
+                    });
                 }
             }
         });
