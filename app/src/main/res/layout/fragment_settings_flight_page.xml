@@ -100,9 +100,22 @@
                         android:text="Level 1" />
 
 
-                    <include
+                    <!--<include-->
+                        <!--android:id="@+id/switch_low_power_level_1"-->
+                        <!--layout="@layout/switch_module" />-->
+                    <Switch
                         android:id="@+id/switch_low_power_level_1"
-                        layout="@layout/switch_module" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_gravity="left|center"
+                        android:switchMinWidth="24dp"
+                        android:thumb="@drawable/custome_switch_selector"
+                        android:track="@drawable/custom_switch_track"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textOn="ON"
+                        android:textOff="OFF" />
 
                     <com.coretronic.drone.ui.SeekBarTextView
                         android:id="@+id/setting_bar_low_power_flash"
@@ -121,9 +134,22 @@
                         android:layout_marginRight="5dp"
                         android:text="Level 2" />
 
-                    <include
+                    <!--<include-->
+                        <!--android:id="@+id/switch_low_power_level_2"-->
+                        <!--layout="@layout/switch_module" />-->
+                    <Switch
                         android:id="@+id/switch_low_power_level_2"
-                        layout="@layout/switch_module" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_gravity="left|center"
+                        android:switchMinWidth="24dp"
+                        android:thumb="@drawable/custome_switch_selector"
+                        android:track="@drawable/custom_switch_track"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textOn="ON"
+                        android:textOff="OFF" />
 
                     <com.coretronic.drone.ui.SeekBarTextView
                         android:id="@+id/setting_bar_low_power_rtl"
