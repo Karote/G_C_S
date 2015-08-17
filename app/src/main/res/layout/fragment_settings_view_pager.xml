@@ -2,15 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:clickable="true"
-    android:orientation="vertical"
-    android:background="@android:color/black">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:background="@color/blue_sky"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/btn_action_back" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -21,13 +29,31 @@
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/btn_back"
-            android:layout_width="32dp"
+        <LinearLayout
+            android:id="@+id/default_set"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/btn_setting_close" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="36dp"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ico_setup_reset" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="12dp"
+                android:text="RESET"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -46,34 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/default_set"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="36dp"
-            android:background="@drawable/btn_setting_default"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="12dp"
-                android:background="@drawable/ico_setup_reset" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="12dp"
-                android:text="DEFAULT SETTING"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
-        </LinearLayout>
 
         <com.coretronic.drone.ui.PageIndicator
             android:id="@+id/page_indicator"
