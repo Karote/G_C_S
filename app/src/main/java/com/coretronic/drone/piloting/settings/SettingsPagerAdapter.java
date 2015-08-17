@@ -8,14 +8,12 @@ import android.support.v4.app.FragmentPagerAdapter;
  * Created by jiaLian on 15/7/14.
  */
 public class SettingsPagerAdapter extends FragmentPagerAdapter {
-    private static final int PAGE_COUNT = 4;
-    private static final int STATUS_PAGE = 3;
+    private static final int PAGE_COUNT = 2;
+    private static final int STATUS_PAGE = 2;
 
     private String[] titles = {
-            "PERSONAL SETTINGS",
             "FLIGHT SETTINGS",
-            "PILOTING MODE",
-            "STATUS"
+            "Gain & Expo Setting"
     };
 
     public SettingsPagerAdapter(FragmentManager fm) {
@@ -27,16 +25,12 @@ public class SettingsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new PersonalSettingsFragment();
-                break;
-            case 1:
                 fragment = new FlightSettingsFragment();
                 break;
-            case 2:
-                fragment = new PilotingSettingsFragment();
+            case 1:
+                fragment = new GainExpoSettingFragment();
                 break;
-            case 3:
-                fragment = new StatusSettingsFragment();
+            default:
                 break;
         }
         return fragment;

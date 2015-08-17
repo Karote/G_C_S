@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -61,10 +62,13 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         // 20150814 add flight history and flight setting button
         Button btnFlightHistory = (Button) view.findViewById(R.id.btn_flight_history);
-        Button btnFlightSetting = (Button) view.findViewById(R.id.btn_flight_setting);
+        ImageButton btnFlightSetting = (ImageButton) view.findViewById(R.id.btn_flight_setting);
         btnFlightHistory.setOnClickListener(this);
         btnFlightSetting.setOnClickListener(this);
 
+        // version setting
+        TextView tvAppVersion = (TextView) view.findViewById(R.id.tv_app_version);
+        tvAppVersion.setText("v " + BuildConfig.VERSION_NAME);
 
         statusView = (StatusView) view.findViewById(R.id.status);
 
