@@ -224,32 +224,33 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 break;
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
-                backStackName = WaypointEditorFragment.class.getSimpleName();
                 bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
                 fragment.setArguments(bundle);
                 break;
             case R.id.ll_album:
                 fragment = new AlbumFragment();
-                backStackName = AlbumFragment.class.getSimpleName();
                 break;
             case R.id.ll_updates:
                 break;
             case R.id.btn_flight_history:
                 fragment = new WaypointEditorFragment();
-                backStackName = WaypointEditorFragment.class.getSimpleName();
                 bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 1);
                 fragment.setArguments(bundle);
                 break;
             case R.id.btn_flight_setting:
                 fragment = new SettingViewPagerFragment();
-                backStackName = SettingViewPagerFragment.class.getSimpleName();
                 break;
         }
         if (fragment != null) {
-            transaction.replace(R.id.frame_view, fragment, backStackName);
-            transaction.addToBackStack(backStackName);
+            transaction.add(R.id.frame_view, fragment, backStackName);
+            transaction.addToBackStack(MainFragment.class.getSimpleName());
+            transaction.hide(MainFragment.this);
             transaction.commit();
         }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
     }
 
     private void checkTTS(){
