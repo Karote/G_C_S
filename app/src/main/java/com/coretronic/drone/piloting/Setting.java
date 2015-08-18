@@ -117,10 +117,10 @@ public class Setting {
             case ATTITUDE_GAIN:
             case LOW_BATTERY_PROTECTION_WARN_VALUE:
             case LOW_BATTERY_PROTECTION_CRITICAL_VALUE:
-                value = (short) parameter.getValue();
+                value = ((short) parameter.getValue());
                 break;
             case ALTITUDE_LIMIT:
-                value = (int) ((short) parameter.getValue() / 100f);
+                value = (((short) parameter.getValue()) & 0xFFFF) / 100;
                 break;
 
         }

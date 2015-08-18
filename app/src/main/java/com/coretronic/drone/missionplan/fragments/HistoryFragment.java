@@ -46,7 +46,8 @@ public class HistoryFragment extends MavInfoFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCallback = (HistoryAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
+//        mCallback = (HistoryAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment");
+        mCallback = (HistoryAdapterListener) getParentFragment();
     }
 
     @Override
@@ -137,8 +138,8 @@ public class HistoryFragment extends MavInfoFragment {
                         drone_log_info.setVisibility(View.GONE);
                         btn_activate_plan.setVisibility(View.GONE);
                     }
-                }catch (Exception e){
-                    Toast.makeText(getActivity(),"History content was wrong",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "History content was wrong", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }

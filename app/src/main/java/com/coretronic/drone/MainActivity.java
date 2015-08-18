@@ -98,7 +98,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     public void registerDeviceChangedListener(DroneDevice.OnDeviceChangedListener deviceChangedListener) {
         this.deviceChangedListener = deviceChangedListener;
-        for(DroneDevice device : getDroneDevices()){
+        for (DroneDevice device : getDroneDevices()) {
             deviceChangedListener.onDeviceAdded(device);
         }
     }
@@ -125,7 +125,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     public void onParameterLoaded(Parameter.Type type, Parameter parameter) {
 
         for (Setting setting : settings) {
-            if(setting == null){
+            if (setting == null) {
                 continue;
             }
             if (type == setting.getParameterType()) {
@@ -179,10 +179,10 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
         // Basic Setting
         settings[Setting.SettingType.ALTITUDE_LIMIT.ordinal()] = new Setting(Parameter.Type.ALTITUDE_LIMIT, 10, 500, 500, "m");
-        settings[Setting.SettingType.ROTATION_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.ROTATION_SPEED_MAX, 40, 120, 120, tempStr);
+        settings[Setting.SettingType.ROTATION_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.ROTATION_SPEED_MAX, 60, 115, 115, tempStr);
         settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 2000, 6000, 6000, "mm/s");
         settings[Setting.SettingType.TILT_ANGLE_MAX.ordinal()] = new Setting(Parameter.Type.ANGLE_MAX, 10, 30, 30, String.valueOf(DEGREE_SYMBOL));
-        settings[Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_ENABLE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_WARN_ENABLE,Setting.OFF);
+        settings[Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_ENABLE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_WARN_ENABLE, Setting.OFF);
         settings[Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_VALUE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_WARN_VALUE, 10, 40, 30, "%");
         settings[Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE, Setting.OFF);
         settings[Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_CRITICAL_VALUE, 10, 40, 25, "%");
@@ -200,6 +200,23 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     public void resetSettings() {
         defaultSettings();
+        for (Setting setting : settings) {
+            if (setting == null) {
+                continue;
+            }
+            try {
+                if (getDroneController() != null && setting.getParameterType() != null) {
+                    Log.d(TAG, "setting type: " + setting.getParameterType());
+                    Log.d(TAG, "setting type value: " + setting.getParameter().getValue());
+                    if(getDroneController().setParameters(setting.getParameterType(), setting.getParameter())) {
+                        Thread.sleep(100);
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
         if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 0, 500, 300, "cm/s");
         }
