@@ -223,14 +223,16 @@
                         offset : '0%'
                     }]
                 });
+            }
 
             function changeMapType() {
                 if (map.getMapTypeId() == google.maps.MapTypeId.ROADMAP) {
                     map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+                } else if(map.getMapTypeId() == google.maps.MapTypeId.SATELLITE){
+                	map.setMapTypeId(google.maps.MapTypeId.HYBRID);
                 } else {
                     map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
                 }
-            }
             }
 
             function setMapClickable(isClickable) {
