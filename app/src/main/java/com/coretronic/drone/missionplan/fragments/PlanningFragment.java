@@ -47,7 +47,6 @@ public class PlanningFragment extends MavInfoFragment {
     private TextView tv_droneLng = null;
     private TextView tv_droneFlightTime = null;
 
-
     private FragmentActivity fragmentActivity = null;
     private FragmentManager fragmentChildManager = null;
     private WaypointDetailFragment detailFragment = null;
@@ -81,8 +80,8 @@ public class PlanningFragment extends MavInfoFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
-
+//        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment");
+        mCallback = (MissionAdapterListener) getParentFragment();
         Bundle arguments = getArguments();
         String filePath = arguments.getString("filePath");
         File file = new File(filePath);

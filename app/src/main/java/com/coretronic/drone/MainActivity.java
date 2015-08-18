@@ -98,7 +98,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     public void registerDeviceChangedListener(DroneDevice.OnDeviceChangedListener deviceChangedListener) {
         this.deviceChangedListener = deviceChangedListener;
-        for(DroneDevice device : getDroneDevices()){
+        for (DroneDevice device : getDroneDevices()) {
             deviceChangedListener.onDeviceAdded(device);
         }
     }
@@ -125,7 +125,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     public void onParameterLoaded(Parameter.Type type, Parameter parameter) {
 
         for (Setting setting : settings) {
-            if(setting == null){
+            if (setting == null) {
                 continue;
             }
             if (type == setting.getParameterType()) {
