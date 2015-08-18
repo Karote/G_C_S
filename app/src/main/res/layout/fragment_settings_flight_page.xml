@@ -186,6 +186,12 @@
                 android:textStyle="bold" />
 
             <TextView
+                style="@style/settings_title"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:text="Last Excuteion: " />
+
+            <TextView
                 android:id="@+id/tv_flat_trim_exe_time"
                 style="@style/settings_title"
                 android:layout_marginLeft="10dp"
