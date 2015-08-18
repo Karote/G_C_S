@@ -111,7 +111,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
     }
 
     private void reflashFragment() {
-        Fragment frg = getFragmentManager().findFragmentByTag("SettingViewPagerFragment");
+        Fragment frg = this;
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);
