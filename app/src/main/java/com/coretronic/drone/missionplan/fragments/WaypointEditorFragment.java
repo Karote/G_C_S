@@ -25,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -74,6 +76,15 @@ public class WaypointEditorFragment extends Fragment
     private LinearLayout layout_deleteIcon = null;
     private LinearLayout layout_deleteOption = null;
 
+    private Button b_action_plan_undo = null;
+    private RadioGroup rgroup = null;
+    private RadioButton btn_action_multi_point = null;
+    private RadioButton btn_action_plan_point = null;
+
+    private Spinner spinnerView = null;
+    private String planningMissionListFile = "";
+    private int spinnerIndex = 0;
+
     private GoogleApiClient mGoogleApiClient = null;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequestHighAccuracy = null;
@@ -87,7 +98,7 @@ public class WaypointEditorFragment extends Fragment
     private long droneLat = 0, droneLng = 0;
     private int droneHeading = 0;
 
-    public boolean canMapAddMarker, isShowMarker;
+    public boolean canMapAddMarker, isShowMarker, isTapAndGo, isSwitchFromHistoryFile;
 
     private ProgressDialog progressDialog = null;
     private FragmentActivity fragmentActivity = null;
@@ -118,6 +129,11 @@ public class WaypointEditorFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpLocationService();
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            spinnerIndex = bundle.getInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
+        }
 
         fragmentActivity = getActivity();
         fragmentChildManager = getChildFragmentManager();
@@ -269,6 +285,11 @@ public class WaypointEditorFragment extends Fragment
         webview_Map.loadUrl("file:///android_asset/GoogleMap.html");
         canMapAddMarker = true;
         isShowMarker = true;
+        isTapAndGo = false;
+        webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
+        webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
+
+        isSwitchFromHistoryFile = false;
     }
 
 
@@ -417,8 +438,36 @@ public class WaypointEditorFragment extends Fragment
         Log.d(TAG, "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
         if (currentDroneMode != droneMode) {
             currentDroneMode = droneMode;
+            String ttsStr = null;
             if (ttsSpeaker != null) {
-                ttsSpeaker.speak(currentDroneMode.toString() + " Mode");
+                switch (currentDroneMode) {
+                    case MANUAL:
+                        ttsStr = "MANUAL";
+                        break;
+                    case ATTITUDE:
+                        ttsStr = "ATTITUDE";
+                        break;
+                    case GPS:
+                        ttsStr = "GPS";
+                        break;
+                    case IOC:
+                        ttsStr = "IOC";
+                        break;
+                    case LAND:
+                        ttsStr = "LAND";
+                        break;
+                    case RTL:
+                        ttsStr = "RTL";
+                        break;
+                    case POI:
+                        ttsStr = "POI";
+                        break;
+                    case HEADING_LOCK:
+                        ttsStr = "HEADING LOCK";
+                        break;
+                }
+                if (ttsStr != null)
+                    ttsSpeaker.speak(ttsStr + " Mode");
             }
         }
         Log.d(TAG, "Flight Time:" + duration);
@@ -447,21 +496,31 @@ public class WaypointEditorFragment extends Fragment
         }
 
         @JavascriptInterface
-        public void addWaypointToList(final float lat, final float lng) {
-            if (!canMapAddMarker) {
-                return;
-            }
-
-            ((Activity) mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    float altitude = 8;
-                    ((PlanningFragment) currentFragment).missionAdapterAddData(lat, lng, altitude, 0, true, 0, Type.WAY_POINT);
-                    writeMissionsToMap(
-                            ((PlanningFragment) currentFragment).missionAdapterGetList()
-                    );
+        public void mapPointToAndroid(final float lat, final float lng) {
+            if (isTapAndGo) {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int tapGo_Altitude = 8;
+                        ((PlanningFragment) currentFragment).showTapAndGoDialogFragment(tapGo_Altitude, lat, lng);
+                    }
+                });
+            } else {
+                if (!canMapAddMarker) {
+                    return;
                 }
-            });
+
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        float altitude = 8;
+                        ((PlanningFragment) currentFragment).missionAdapterAddData(lat, lng, altitude, 0, true, 0, Type.WAY_POINT);
+                        writeMissionsToMap(
+                                ((PlanningFragment) currentFragment).missionAdapterGetList()
+                        );
+                    }
+                });
+            }
         }
 
         @JavascriptInterface
@@ -480,24 +539,30 @@ public class WaypointEditorFragment extends Fragment
         final Button backToMainButton = (Button) view.findViewById(R.id.button_back_to_main);
         backToMainButton.setOnClickListener(this);
 
-        Spinner spinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
+        spinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
         spinnerView.setAdapter(spinnerAdapter);
+        spinnerView.setSelection(spinnerIndex);
         spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 fragmentTransaction = fragmentChildManager.beginTransaction();
+                Log.d(TAG, "position:" + position);
+                rgroup.check(R.id.btn_action_multi_point);
                 switch (position) {
                     case 0: // PLANNING
                         canMapAddMarker = true;
                         isShowMarker = true;
+                        isTapAndGo = false;
                         layout_editMarker.setVisibility(View.VISIBLE);
-                        currentFragment = new PlanningFragment();
+                        currentFragment = PlanningFragment.newInstance(planningMissionListFile);
+                        planningMissionListFile = "";
                         break;
                     case 1: // FLIGHT HISTORY
                         canMapAddMarker = false;
                         isShowMarker = false;
+                        isTapAndGo = false;
                         layout_editMarker.setVisibility(View.GONE);
                         currentFragment = new HistoryFragment();
                         break;
@@ -507,7 +572,10 @@ public class WaypointEditorFragment extends Fragment
                 fragmentTransaction.replace(R.id.mission_plan_container, currentFragment, null).commit();
                 setDeleteOptionShow(false);
                 webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
+                webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
                 webview_Map.loadUrl("javascript:clearMarkers()");
+                webview_Map.loadUrl("javascript:clearDroneTargetMarker()");
+                webview_Map.loadUrl("javascript:clearTapMarker()");
                 ClearPath();
             }
 
@@ -526,7 +594,7 @@ public class WaypointEditorFragment extends Fragment
         layout_deleteOption = (LinearLayout) view.findViewById(R.id.layout_delete_option);
         layout_deleteOption.setVisibility(LinearLayout.INVISIBLE);
 
-        final Button b_action_plan_undo = (Button) view.findViewById(R.id.btn_action_plan_undo);
+        b_action_plan_undo = (Button) view.findViewById(R.id.btn_action_plan_undo);
         b_action_plan_undo.setOnClickListener(this);
 
         final Button b_action_plan_delete = (Button) view.findViewById(R.id.btn_action_plan_delete);
@@ -537,6 +605,47 @@ public class WaypointEditorFragment extends Fragment
 
         final Button b_delete_all = (Button) view.findViewById(R.id.btn_delete_all);
         b_delete_all.setOnClickListener(this);
+
+        rgroup = (RadioGroup) view.findViewById(R.id.rgroup);
+        btn_action_multi_point = (RadioButton) view.findViewById(R.id.btn_action_multi_point);
+        btn_action_plan_point = (RadioButton) view.findViewById(R.id.btn_action_tap_and_go);
+        rgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Log.d(TAG, "checkedId:" + checkedId);
+                switch (checkedId) {
+                    case R.id.btn_action_multi_point:
+                        isTapAndGo = false;
+                        webview_Map.loadUrl("javascript:clearDroneTargetMarker()");
+                        if (getDroneController() != null) {
+                            getDroneController().stopTapAndGo();
+                        }
+                        ((PlanningFragment) currentFragment).showGoAndStopLayout(true);
+                        break;
+                    case R.id.btn_action_tap_and_go: // Tap & GO
+                        isTapAndGo = true;
+                        if (getDroneController() != null) {
+                            getDroneController().startTapAndGo();
+                        }
+                        ((PlanningFragment) currentFragment).showGoAndStopLayout(false);
+                        break;
+                }
+                webview_Map.loadUrl("javascript:clearMarkers()");
+                ((PlanningFragment) currentFragment).missionAdapterClearData();
+                ((PlanningFragment) currentFragment).missionAdapterShowDelete(false);
+                ((PlanningFragment) currentFragment).hideTapAndGoDialogFragment(false, 0, 0, 0);
+                canMapAddMarker = true;
+                webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
+                webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
+                isSwitchFromHistoryFile = false;
+            }
+        });
+
+        if (spinnerIndex == 0) {
+            layout_editMarker.setVisibility(View.VISIBLE);
+        } else if (spinnerIndex == 1) {
+            layout_editMarker.setVisibility(View.GONE);
+        }
     }
 
     private void setUpLocationService() {
@@ -647,9 +756,11 @@ public class WaypointEditorFragment extends Fragment
         if (isShow) {
             layout_deleteOption.setVisibility(View.VISIBLE);
             layout_deleteIcon.setVisibility(View.INVISIBLE);
+            b_action_plan_undo.setVisibility(View.GONE);
         } else {
             layout_deleteOption.setVisibility(View.INVISIBLE);
             layout_deleteIcon.setVisibility(View.VISIBLE);
+            b_action_plan_undo.setVisibility(View.VISIBLE);
         }
     }
 
@@ -684,18 +795,39 @@ public class WaypointEditorFragment extends Fragment
     }
     // End FollowMeFragment.OnFollowMeClickListener
 
+    @Override
+    public void changeMapType() {
+        webview_Map.loadUrl("javascript:changeMapType()");
+    }
+
+    @Override
+    public void tapAndGoShowPath() {
+        webview_Map.loadUrl("javascript:showTapGoFlightPath()");
+    }
+
+    @Override
+    public void clearTapMarker() {
+        webview_Map.loadUrl("javascript:clearTapMarker()");
+    }
 
     // Implement HistoryFragment.HistoryAdapterListener
     @Override
     public void LoadPathLog(List<Float> markers, List<Long> path) {
         JSONArray markerJSON = new JSONArray(markers);
         JSONArray pathJson = new JSONArray(path);
-         webview_Map.loadUrl("javascript:LoadPathLog(" + markerJSON + "," + pathJson + ")");
+        webview_Map.loadUrl("javascript:LoadPathLog(" + markerJSON + "," + pathJson + ")");
     }
 
     @Override
     public void ClearPath() {
         webview_Map.loadUrl("javascript:ClearPath()");
+    }
+
+    @Override
+    public void SpinnerSetToPlanning(String filePath, boolean isHistory) {
+        planningMissionListFile = filePath;
+        isSwitchFromHistoryFile = isHistory;
+        spinnerView.setSelection(0);
     }
     // End HistoryFragment.HistoryAdapterListener
 }

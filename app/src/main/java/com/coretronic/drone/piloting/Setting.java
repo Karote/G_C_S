@@ -30,7 +30,10 @@ public class Setting {
     public enum SettingType {
         INTERFACE_OPACITY, SD_RECORD, FLIP_ENABLE, FLIP_ORIENTATION,
         ALTITUDE_LIMIT, VERTICAL_SPEED_MAX, ROTATION_SPEED_MAX, TILT_ANGLE_MAX,
-        JOYPAD_MODE, ABSOLUTE_CONTROL, LEFT_HANDED, PHONE_TILT, LENGTH
+        JOYPAD_MODE, ABSOLUTE_CONTROL, LEFT_HANDED, PHONE_TILT, LENGTH,
+        LOW_BATTERY_PROTECTION_WARN_ENABLE, LOW_BATTERY_PROTECTION_WARN_VALUE, LOW_BATTERY_PROTECTION_CRITICAL_ENABLE, LOW_BATTERY_PROTECTION_CRITICAL_VALUE,
+        BASIC_AILERON_GAIN, BASIC_ELEVATOR_GAIN, BASIC_RUDDER_GAIN,
+        ATTITUDE_AILERON_GAIN, ATTITUDE_ELEVATOR_GAIN, ATTITUDE_RUDDER_GAIN, ATTITUDE_GAIN
     }
 
     public Setting(int value) {
@@ -87,6 +90,8 @@ public class Setting {
         switch (parameterType) {
             case FLIP:
             case ABSOLUTE_CONTROL:
+            case LOW_BATTERY_PROTECTION_WARN_ENABLE:
+            case LOW_BATTERY_PROTECTION_CRITICAL_ENABLE:
                 value = parameter == Parameter.Control.ENABLE ? Setting.ON : Setting.OFF;
                 break;
             case FLIP_ORIENTATION:
@@ -103,11 +108,21 @@ public class Setting {
             case ROTATION_SPEED_MAX:
             case VERTICAL_SPEED_MAX:
             case ANGLE_MAX:
-                value = (short) parameter.getValue();
+            case BASIC_AILERON_GAIN:
+            case BASIC_ELEVATOR_GAIN:
+            case BASIC_RUDDER_GAIN:
+            case ATTITUDE_AILERON_GAIN:
+            case ATTITUDE_ELEVATOR_GAIN:
+            case ATTITUDE_RUDDER_GAIN:
+            case ATTITUDE_GAIN:
+            case LOW_BATTERY_PROTECTION_WARN_VALUE:
+            case LOW_BATTERY_PROTECTION_CRITICAL_VALUE:
+                value = ((short) parameter.getValue());
                 break;
             case ALTITUDE_LIMIT:
-                value = (int) ((short) parameter.getValue() / 100f);
+                value = (((short) parameter.getValue()) & 0xFFFF) / 100;
                 break;
+
         }
 
     }
@@ -138,10 +153,33 @@ public class Setting {
             case ROTATION_SPEED_MAX:
             case VERTICAL_SPEED_MAX:
             case ANGLE_MAX:
+            case BASIC_AILERON_GAIN:
+            case BASIC_ELEVATOR_GAIN:
+            case BASIC_RUDDER_GAIN:
+            case ATTITUDE_AILERON_GAIN:
+            case ATTITUDE_ELEVATOR_GAIN:
+            case ATTITUDE_RUDDER_GAIN:
+            case ATTITUDE_GAIN:
                 parameter = Parameter.Number.getInstance().setValue((short) value);
                 break;
             case ALTITUDE_LIMIT:
                 parameter = Parameter.Number.getInstance().setValue((short) (value * 100));
+                break;
+
+            case LOW_BATTERY_PROTECTION_WARN_ENABLE:
+                parameter = Parameter.PowerProtection.getInstance().setWarningLevelEnabled(value == Setting.ON ? true : false);
+                break;
+
+            case LOW_BATTERY_PROTECTION_WARN_VALUE:
+                parameter = Parameter.PowerProtection.getInstance().setWarningLevelValue((short) value);
+                break;
+
+            case LOW_BATTERY_PROTECTION_CRITICAL_ENABLE:
+                parameter = Parameter.PowerProtection.getInstance().setCriticalLevelEnabled(value == Setting.ON ? true : false);
+                break;
+
+            case LOW_BATTERY_PROTECTION_CRITICAL_VALUE:
+                parameter = Parameter.PowerProtection.getInstance().setCriticalLevelVale((short) value);
                 break;
         }
         return parameter;

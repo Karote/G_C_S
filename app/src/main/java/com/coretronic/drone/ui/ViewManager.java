@@ -9,7 +9,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.coretronic.drone.MainActivity;
-import com.coretronic.drone.R;
 import com.coretronic.drone.piloting.Setting;
 
 /**
@@ -57,10 +56,16 @@ public class ViewManager {
     }
 
     public static void assignSwitchView(final MainActivity activity, View view, int id, final Setting.SettingType settingType) {
-        Switch sw = (Switch) view.findViewById(id).findViewById(R.id.switch_btn);
+        final Switch sw = (Switch) view.findViewById(id);
         final Setting setting = activity.getSetting(settingType);
         final int type = settingType.ordinal();
-        sw.setChecked(setting.getValue() == Setting.ON ? true : false);
+//        sw.setChecked(setting.getValue() == Setting.ON);
+        sw.post(new Runnable() {
+            @Override
+            public void run() {
+                sw.setChecked(setting.getValue() == Setting.ON);
+            }
+        });
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
