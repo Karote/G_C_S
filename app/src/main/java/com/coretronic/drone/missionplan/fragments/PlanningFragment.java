@@ -71,6 +71,8 @@ public class PlanningFragment extends MavInfoFragment {
         void setMapToDrone();
 
         void fitMapShowAllMission();
+
+        void changeMapType();
     }
 
     // Drone info
@@ -90,7 +92,8 @@ public class PlanningFragment extends MavInfoFragment {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String bufferStr = bufferedReader.readLine();
             if (bufferStr != null) {
-                List<Mission> missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {}.getType());
+                List<Mission> missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {
+                }.getType());
                 mMissionItemAdapter.update(missionList);
                 mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
                 mCallback.fitMapShowAllMission();
@@ -137,7 +140,7 @@ public class PlanningFragment extends MavInfoFragment {
         recyclerView.setLayoutManager(recyclerLayoutMgr);
 
         mMissionItemAdapter = new MissionItemListAdapter();
-        mMissionItemAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+        mMissionItemAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
@@ -196,15 +199,18 @@ public class PlanningFragment extends MavInfoFragment {
         final Button fitMapButton = (Button) view.findViewById(R.id.button_fit_map);
         fitMapButton.setOnClickListener(onPlanningBtnClickListener);
 
+        final Button mapTypeButton = (Button) view.findViewById(R.id.btn_map_type);
+        mapTypeButton.setOnClickListener(onPlanningBtnClickListener);
+
         // MAV Info
         tv_droneAltitude = (TextView) view.findViewById(R.id.altitude_text);
         tv_droneAltitude.setText("0m");
         tv_droneSpeed = (TextView) view.findViewById(R.id.speed_text);
         tv_droneSpeed.setText("0 km/h");
         tv_droneLat = (TextView) view.findViewById(R.id.location_lat_text);
-        tv_droneLat.setText("0.000000,");
+        tv_droneLat.setText("0.0000000,");
         tv_droneLng = (TextView) view.findViewById(R.id.location_lng_text);
-        tv_droneLng.setText("0.000000");
+        tv_droneLng.setText("0.0000000");
         tv_droneFlightTime = (TextView) view.findViewById(R.id.flight_time_text);
         tv_droneFlightTime.setText("00:00");
     }
@@ -220,7 +226,7 @@ public class PlanningFragment extends MavInfoFragment {
                 case R.id.btn_plan_go:
                     drone.clearMission();
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
-                    if(droneMissionList == null || droneMissionList.size() == 0){
+                    if (droneMissionList == null || droneMissionList.size() == 0) {
                         Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
                         return;
                     }
@@ -267,6 +273,9 @@ public class PlanningFragment extends MavInfoFragment {
                         mCallback.fitMapShowAllMission();
                     }
                     break;
+                case R.id.btn_map_type:
+                    mCallback.changeMapType();
+                    break;
             }
         }
     };
@@ -305,7 +314,7 @@ public class PlanningFragment extends MavInfoFragment {
         return builder.create();
     }
 
-    private void checkAdapterIsEmpty () {
+    private void checkAdapterIsEmpty() {
         if (mMissionItemAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -362,20 +371,20 @@ public class PlanningFragment extends MavInfoFragment {
         if (tv_droneFlightTime == null || flightTime < 1)
             return;
         String showTime = "";
-        if(flightTime >= 6000){
+        if (flightTime >= 6000) {
             showTime = "99:99";
             tv_droneFlightTime.setText(showTime);
             return;
         }
         int min = flightTime / 60;
-        if(min < 10){
+        if (min < 10) {
             showTime += "0";
         }
         showTime += min;
         showTime += ":";
 
         int sec = flightTime % 60;
-        if(sec < 10){
+        if (sec < 10) {
             showTime += "0";
         }
         showTime += sec;

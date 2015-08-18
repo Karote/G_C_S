@@ -85,12 +85,12 @@
                 var mapOptions = {
                     center : initial_location,
                     zoom : 15,
-                    mapTypeId : google.maps.MapTypeId.ROAD,
+                    mapTypeId : google.maps.MapTypeId.ROADMAP,
                     disableDefaultUI : true,
-                    mapTypeControl : true,
-                    mapTypeControlOptions : {
-                        position : google.maps.ControlPosition.LEFT_CENTER
-                    },
+                    // mapTypeControl : true,
+                    // mapTypeControlOptions : {
+                    // position : google.maps.ControlPosition.LEFT_CENTER
+                    // },
                     // zoomControl : true,
                     // zoomControlOptions : {
                     // style : google.maps.ZoomControlStyle.SMALL,
@@ -223,6 +223,14 @@
                         offset : '0%'
                     }]
                 });
+
+            function changeMapType() {
+                if (map.getMapTypeId() == google.maps.MapTypeId.ROADMAP) {
+                    map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+                } else {
+                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+                }
+            }
             }
 
             function setMapClickable(isClickable) {

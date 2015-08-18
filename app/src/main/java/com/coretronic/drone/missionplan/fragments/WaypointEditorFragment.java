@@ -731,6 +731,11 @@ public class WaypointEditorFragment extends Fragment
     }
     // End FollowMeFragment.OnFollowMeClickListener
 
+    @Override
+    public void changeMapType(){
+        webview_Map.loadUrl("javascript:changeMapType()");
+    }
+
 
     // Implement HistoryFragment.HistoryAdapterListener
     @Override
