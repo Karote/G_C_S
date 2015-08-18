@@ -18,12 +18,12 @@
 				font-weight: bold;
 				color: #FFFFFF;
 			}
-			.startMarkerLabel {
+			.greenMarkerLabel {
 				font-size: 14px;
 				font-weight: bold;
 				color: #00FF00;
 			}
-			.endMarkerLabel {
+			.redMarkerLabel {
 				font-size: 14px;
 				font-weight: bold;
 				color: #FF0000;
@@ -59,7 +59,11 @@
             var historyMarkers = [];
             var droneLat_old = -1;
             var droneLng_old = -1;
+            var dronePos_old = null;
             var droneHeading_old = 0;
+            var targetTapMarker,
+                targetSetMarker;
+            var isTapAndGoMode;
 
             function initialize() {
                 var initial_location;
@@ -67,6 +71,7 @@
                 // 中強光電竹南廠
 
                 mapClickable = true;
+                isTapAndGoMode = false;
 
                 var styleArray = [{
                     featureType : "poi",
@@ -223,27 +228,101 @@
                         offset : '0%'
                     }]
                 });
+
+                tapGoFlightPath = new google.maps.Polyline({
+                    geodesic : true,
+                    strokeColor : '#4EC3F5',
+                    strokeOpacity : 1.0,
+                    strokeWeight : 3
+                });
             }
 
             function changeMapType() {
-                if (map.getMapTypeId() == google.maps.MapTypeId.ROADMAP) {
+            	if (map.getMapTypeId() == google.maps.MapTypeId.ROADMAP) {
                     map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
                 } else if(map.getMapTypeId() == google.maps.MapTypeId.SATELLITE){
-                	map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+                    map.setMapTypeId(google.maps.MapTypeId.HYBRID);
                 } else {
                     map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
                 }
+
+            }
+
+            function transLatLngToPosition(lat, lng) {
+                var nlat = lat / Math.pow(10, 7);
+                var nlng = lng / Math.pow(10, 7);
+                var pos = new google.maps.LatLng(nlat, nlng);
+                return pos;
             }
 
             function setMapClickable(isClickable) {
                 mapClickable = isClickable;
             }
 
+            function setTapGoMode(isTapGo) {
+                isTapAndGoMode = isTapGo;
+            }
+
             function addLatLng(event) {
                 if (mapClickable) {
-                    AndroidFunction.addWaypointToList(event.latLng.lat(), event.latLng.lng());
+                    AndroidFunction.mapPointToAndroid(event.latLng.lat(), event.latLng.lng());
 
                     // addMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
+                }
+                if (isTapAndGoMode) {
+                    addDroneTargetMarker(event.latLng);
+                }
+            }
+
+            function addDroneTargetMarker(position) {
+                if (targetTapMarker) {
+                    targetTapMarker.setMap(null);
+                }
+
+                targetTapMarker = new MarkerWithLabel({
+                    position : position,
+                    icon : {
+                        url : 'ico_indicator_waypoint_tap.png',
+                        size : new google.maps.Size(40, 40),
+                        origin : new google.maps.Point(0, 0),
+                        anchor : new google.maps.Point(20, 20)
+                    },
+                    map : map
+                });
+            }
+
+            function showTapGoFlightPath() {
+                if (targetSetMarker) {
+                    targetSetMarker.setMap(null);
+                }
+                targetSetMarker = new MarkerWithLabel({
+                    position : targetTapMarker.position,
+                    icon : {
+                        url : 'ico_indicator_waypoint_set.png',
+                        size : new google.maps.Size(40, 40),
+                        origin : new google.maps.Point(0, 0),
+                        anchor : new google.maps.Point(20, 20)
+                    },
+                    map : map
+                });
+                targetTapMarker.setMap(null);
+
+                if (dronePos_old != null) {
+                    tapGoFlightPath.getPath().setAt(0, dronePos_old);
+                    tapGoFlightPath.getPath().setAt(1, targetTapMarker.position);
+                    tapGoFlightPath.setMap(map);
+                }
+            }
+            
+            function clearTapMarker () {
+                targetTapMarker.setMap(null);
+            }
+
+            function clearDroneTargetMarker() {
+                targetSetMarker.setMap(null);
+                if (dronePos_old != null) {
+                    tapGoFlightPath.setMap(null);
+                    tapGoFlightPath.path = [];
                 }
             }
 
@@ -288,10 +367,9 @@
                 }
             }
 
-            function setMapTo(nowLatget, nowLngget) {
-                var nlat = nowLatget / Math.pow(10, 7);
-                var nlng = nowLngget / Math.pow(10, 7);
-                map.setCenter(new google.maps.LatLng(nlat, nlng));
+            function setMapTo(setToLat, setToLng) {
+                var setToPos = transLatLngToPosition(setToLat, setToLng);
+                map.setCenter(setToPos);
             }
 
             function clearMarkers() {
@@ -317,24 +395,25 @@
             }
 
             function updateDroneLocation(droneLat, droneLng, heading) {
-                if (droneLat_old != droneLat || droneLng_old != droneLng || droneHeading_old != heading) {
-                    droneLat_old = droneLat;
-                    droneLng_old = droneLng;
+                var dronePos = transLatLngToPosition(droneLat, droneLng);
+
+                if (dronePos_old != dronePos || droneHeading_old != heading) {
+                    dronePos_old = dronePos;
                     droneHeading_old = heading;
 
-                    var lat = droneLat / Math.pow(10, 7);
-                    var lng = droneLng / Math.pow(10, 7);
                     droneMarkerOuter.setMap(null);
                     droneMarkerInner.setMap(null);
                     droneMarkerArrow.setMap(null);
                     droneMarkerArrow.icon.rotation = heading;
-                    droneMarkerOuter.setPosition(new google.maps.LatLng(droneLat, droneLng));
-                    droneMarkerInner.setPosition(new google.maps.LatLng(droneLat, droneLng));
-                    droneMarkerArrow.setPosition(new google.maps.LatLng(droneLat, droneLng));
+                    droneMarkerOuter.setPosition(dronePos);
+                    droneMarkerInner.setPosition(dronePos);
+                    droneMarkerArrow.setPosition(dronePos);
                     droneMarkerOuter.setMap(map);
                     droneMarkerInner.setMap(map);
                     droneMarkerArrow.setMap(map);
                 }
+
+                tapGoFlightPath.getPath().setAt(0, dronePos);
             }
 
             function fitMapShowAll() {
@@ -394,9 +473,7 @@
 
             function LoadPathLog(markerJson, pathJson) {
                 var i,
-                    j,
-                    lat,
-                    lng;
+                    j;
 
                 var pathData = JSON.parse("[" + pathJson + "]");
                 var markerData = JSON.parse("[" + markerJson + "]");
@@ -412,9 +489,7 @@
 
                 for ( i = 0,
                 j = pathData.length; i < j; i += 2) {
-                    lat = pathData[i] / Math.pow(10, 7);
-                    lng = pathData[i + 1] / Math.pow(10, 7);
-                    flightPlanCoordinates.push(new google.maps.LatLng(lat, lng));
+                    flightPlanCoordinates.push(transLatLngToPosition(pathData[i], pathData[i + 1]));
                 }
 
                 if (flightPlanCoordinates.length > 1) {
@@ -429,7 +504,7 @@
                         },
                         labelAnchor : new google.maps.Point(4, 8),
                         labelContent : 'S',
-                        labelClass : "startMarkerLabel",
+                        labelClass : "greenMarkerLabel",
                         labelInBackground : false,
                         map : map
                     });
@@ -446,7 +521,7 @@
                         },
                         labelAnchor : new google.maps.Point(4, 8),
                         labelContent : 'E',
-                        labelClass : "endMarkerLabel",
+                        labelClass : "redMarkerLabel",
                         labelInBackground : false,
                         map : map
                     });
