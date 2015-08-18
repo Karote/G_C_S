@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -75,6 +76,7 @@ public class WaypointEditorFragment extends Fragment
     private LinearLayout layout_deleteOption = null;
 
     private Button b_action_plan_undo = null;
+    private RadioGroup rgroup = null;
 
     private Spinner spinnerView = null;
     private String planningMissionListFile = "";
@@ -93,7 +95,7 @@ public class WaypointEditorFragment extends Fragment
     private long droneLat = 0, droneLng = 0;
     private int droneHeading = 0;
 
-    public boolean canMapAddMarker, isShowMarker;
+    public boolean canMapAddMarker, isShowMarker, isTapAndGo;
 
     private ProgressDialog progressDialog = null;
     private FragmentActivity fragmentActivity = null;
@@ -126,7 +128,9 @@ public class WaypointEditorFragment extends Fragment
         setUpLocationService();
 
         Bundle bundle = this.getArguments();
-        spinnerIndex = bundle.getInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
+        if (bundle != null) {
+            spinnerIndex = bundle.getInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
+        }
 
         fragmentActivity = getActivity();
         fragmentChildManager = getChildFragmentManager();
@@ -278,6 +282,7 @@ public class WaypointEditorFragment extends Fragment
         webview_Map.loadUrl("file:///android_asset/GoogleMap.html");
         canMapAddMarker = true;
         isShowMarker = true;
+        isTapAndGo = false;
     }
 
 
@@ -577,9 +582,16 @@ public class WaypointEditorFragment extends Fragment
         final Button b_delete_all = (Button) view.findViewById(R.id.btn_delete_all);
         b_delete_all.setOnClickListener(this);
 
-        if(spinnerIndex == 0){
+        rgroup = (RadioGroup) view.findViewById(R.id.rgroup);
+        rgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+            }
+        });
+
+        if (spinnerIndex == 0) {
             layout_editMarker.setVisibility(View.VISIBLE);
-        }else if(spinnerIndex == 1){
+        } else if (spinnerIndex == 1) {
             layout_editMarker.setVisibility(View.GONE);
         }
     }
