@@ -208,11 +208,11 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
                 if (getDroneController() != null && setting.getParameterType() != null) {
                     Log.d(TAG, "setting type: " + setting.getParameterType());
                     Log.d(TAG, "setting type value: " + setting.getParameter().getValue());
-                    if(getDroneController().setParameters(setting.getParameterType(), setting.getParameter())) {
+                    if (getDroneController().setParameters(setting.getParameterType(), setting.getParameter())) {
                         Thread.sleep(100);
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
