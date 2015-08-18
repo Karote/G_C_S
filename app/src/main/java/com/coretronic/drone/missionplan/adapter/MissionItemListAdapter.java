@@ -115,7 +115,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
                 mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
             } else if (mItemClickListener != null) {
 
-                if(isDeleteLayoutVisible)
+                if (isDeleteLayoutVisible)
                     return;
 
                 mItemClickListener.onItemPlanClick(v, getAdapterPosition());
@@ -162,7 +162,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return focusIndex;
     }
 
-    public void clearFocusIndex(){
+    public void clearFocusIndex() {
         focusIndex = -1;
     }
 
