@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
-import com.coretronic.ibs.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +115,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
                 mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
             } else if (mItemClickListener != null) {
 
-                if (isDeleteLayoutVisible)
+                if(isDeleteLayoutVisible)
                     return;
 
                 mItemClickListener.onItemPlanClick(v, getAdapterPosition());
@@ -163,14 +162,17 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return focusIndex;
     }
 
-    public void clearFocusIndex() {
+    public void clearFocusIndex(){
         focusIndex = -1;
     }
 
     public void setDeleteLayoutVisible(boolean isVisible) {
         isDeleteLayoutVisible = isVisible;
-        focusIndex = -1;
-        notifyDataSetChanged();
+
+        if (isVisible) {
+            focusIndex = -1;
+            notifyDataSetChanged();
+        }
     }
 
 }

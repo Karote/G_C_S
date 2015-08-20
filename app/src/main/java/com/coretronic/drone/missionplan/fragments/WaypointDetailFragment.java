@@ -2,7 +2,6 @@ package com.coretronic.drone.missionplan.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +35,10 @@ public class WaypointDetailFragment extends Fragment {
     private static final String TXT_WAYPOINT = "Waypoint";
     private static final String TXT_TAKEOFF = "Take Off";
     private static final String TXT_LAND = "Land";
-    private static final String TXT_RTL = "RTL";
+    private static final String TXT_SPLINE_WAYPOINT = "Spline waypoint";
+    private static final String TXT_CIRCLE = "Circle";
 
-    private static final String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL};
+    private static final String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_SPLINE_WAYPOINT, TXT_CIRCLE};
 
     private TextView tx_name, tx_lat, tx_lng;
     private Spinner spinner_type;
@@ -95,7 +95,6 @@ public class WaypointDetailFragment extends Fragment {
         spinner_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("MissionType", "position:" + position);
                 switch (position) {
                     case 0: // Waypoint
                         PlanningFragment.setItemMissionType(Mission.Type.WAY_POINT);
@@ -109,8 +108,12 @@ public class WaypointDetailFragment extends Fragment {
                         PlanningFragment.setItemMissionType(Mission.Type.LAND);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
                         break;
-                    case 3: // RTL
-                        PlanningFragment.setItemMissionType(Mission.Type.RTL);
+                    case 3: // Spline waypoint
+                        PlanningFragment.setItemMissionType(Mission.Type.SPLINE_WAY_POINT);
+                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
+                        break;
+                    case 4: // Circle
+                        PlanningFragment.setItemMissionType(Mission.Type.CIRCLE);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
                     default:
@@ -181,8 +184,10 @@ public class WaypointDetailFragment extends Fragment {
                 return Arrays.asList(POINT_TYPE).indexOf(TXT_TAKEOFF);
             case MAV_CMD.MAV_CMD_NAV_LAND:
                 return Arrays.asList(POINT_TYPE).indexOf(TXT_LAND);
-            case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
-                return Arrays.asList(POINT_TYPE).indexOf(TXT_RTL);
+            case MAV_CMD.MAV_CMD_NAV_SPLINE_WAYPOINT:
+                return Arrays.asList(POINT_TYPE).indexOf(TXT_SPLINE_WAYPOINT);
+            case MAV_CMD.MAV_CMD_NAV_LOITER_TIME:
+                return Arrays.asList(POINT_TYPE).indexOf(TXT_CIRCLE);
             case MAV_CMD.MAV_CMD_NAV_WAYPOINT:
             default:
                 return Arrays.asList(POINT_TYPE).indexOf(TXT_WAYPOINT);
