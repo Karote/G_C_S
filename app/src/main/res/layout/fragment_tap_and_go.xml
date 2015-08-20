@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="228dp"
+    android:layout_height="180dp"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/btn_tap_and_go_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Cancel" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#e5e5e5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+                android:text="Flight Altitude" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="m"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#e5e5e5" />
+
+        <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+            android:id="@+id/tap_and_go_altitude_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            app:isAllVisible="false"
+            app:isCyclic="false"
+            app:visibleItems="5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+                android:text="Latitude" />
+
+            <TextView
+                android:id="@+id/text_tap_and_go_lat"
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="2dp"
+                android:background="#c9c9c9"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="38.8530172"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+                android:text="Longitude" />
+
+            <TextView
+                android:id="@+id/text_tap_and_go_lng"
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="2dp"
+                android:background="#c9c9c9"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="38.8530172"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_tap_and_go_go"
+        android:layout_width="204dp"
+        android:layout_height="28dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/btn_follow_me"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="GO"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+</LinearLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import java.util.List;
 public class PlanningFragment extends MavInfoFragment {
     private static final String TAG = PlanningFragment.class.getSimpleName();
 
+    private int planningMode = 0;
     private RecyclerView recyclerView = null;
     private static MissionItemListAdapter mMissionItemAdapter = null;
     private static FrameLayout layout_waypointDetail = null;
@@ -47,15 +49,20 @@ public class PlanningFragment extends MavInfoFragment {
     private TextView tv_droneLng = null;
     private TextView tv_droneFlightTime = null;
 
+    private LinearLayout layout_GoAndStop = null;
+
     private FragmentActivity fragmentActivity = null;
     private FragmentManager fragmentChildManager = null;
     private WaypointDetailFragment detailFragment = null;
-    private DroneController drone = null;
+    private static DroneController drone = null;
     private ProgressDialog progressDialog = null;
+
+    private static FrameLayout layout_tapAndGoDialog = null;
 
     public static PlanningFragment newInstance(String filePath) {
         PlanningFragment f = new PlanningFragment();
         Bundle args = new Bundle();
+//        args.putInt("planningMode", planningMode);
         args.putString("filePath", filePath);
         f.setArguments(args);
         return f;
@@ -72,6 +79,10 @@ public class PlanningFragment extends MavInfoFragment {
 
         void fitMapShowAllMission();
 
+        void tapAndGoShowPath();
+
+        void clearTapMarker();
+
         void changeMapType();
     }
 
@@ -84,9 +95,13 @@ public class PlanningFragment extends MavInfoFragment {
         super.onActivityCreated(savedInstanceState);
 //        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment");
         mCallback = (MissionAdapterListener) getParentFragment();
+//        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
+
         Bundle arguments = getArguments();
         String filePath = arguments.getString("filePath");
         File file = new File(filePath);
+        if (file == null)
+            return;
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -178,6 +193,8 @@ public class PlanningFragment extends MavInfoFragment {
         });
 
         // Go & Stop & Location Button Panel
+        layout_GoAndStop = (LinearLayout) view.findViewById(R.id.layout_go_and_stop);
+
         final Button goButton = (Button) view.findViewById(R.id.btn_plan_go);
         goButton.setOnClickListener(onPlanningBtnClickListener);
 
@@ -213,6 +230,10 @@ public class PlanningFragment extends MavInfoFragment {
         tv_droneLng.setText("0.0000000");
         tv_droneFlightTime = (TextView) view.findViewById(R.id.flight_time_text);
         tv_droneFlightTime.setText("00:00");
+
+        // Tap and Go
+        layout_tapAndGoDialog = (FrameLayout) view.findViewById(R.id.tap_and_go_container);
+        layout_tapAndGoDialog.setVisibility(View.GONE);
     }
 
     View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -299,7 +320,7 @@ public class PlanningFragment extends MavInfoFragment {
         }
     };
 
-    private Mission createNewMission(float latitude, float longitude, float altitude,
+    private static Mission createNewMission(float latitude, float longitude, float altitude,
                                      int waitSeconds, boolean autoContinue, int radius, Mission.Type type) {
         Mission.Builder builder = new Mission.Builder();
 
@@ -423,9 +444,39 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
+    public void showGoAndStopLayout(boolean isShow){
+        if(isShow) {
+            layout_GoAndStop.setVisibility(View.VISIBLE);
+        }else{
+            layout_GoAndStop.setVisibility(View.GONE);
+        }
+    }
+
+    public void showTapAndGoDialogFragment(int altitude, float latitude, float longitude) {
+        FragmentTransaction fragmentTransaction = fragmentChildManager.beginTransaction();
+        TapAndGoDialogFragment tapAndGoDialogFragment = TapAndGoDialogFragment.newInstance(altitude, latitude, longitude);
+        fragmentTransaction
+                .replace(R.id.tap_and_go_container, tapAndGoDialogFragment, "TapAndGoFragment")
+                .commit();
+        layout_tapAndGoDialog.setVisibility(View.VISIBLE);
+    }
+
+    public static void hideTapAndGoDialogFragment(boolean isGo, int alt, float lat, float lng) {
+        layout_tapAndGoDialog.setVisibility(View.GONE);
+        if (!isGo) {
+            mCallback.clearTapMarker();
+            return;
+        }
+        if(drone == null)
+            return;
+        drone.moveToLocation(createNewMission(lat, lng, alt, 0, false, 0, Mission.Type.WAY_POINT));
+        mCallback.tapAndGoShowPath();
+    }
+
 
     // static methods for DetailFragment
     public static void setItemMissionType(Mission.Type missionType) {
+        Log.d("MissionType", "missionType:" + missionType);
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setType(missionType);
     }
 
