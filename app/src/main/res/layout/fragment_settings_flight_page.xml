@@ -23,19 +23,19 @@
 
                 <TextView
                     style="@style/settings_title"
-                    android:text="ALTITUDE MAX" />
+                    android:text="Altitude Max" />
 
                 <TextView
                     style="@style/settings_title"
-                    android:text="VERTICAL SPEED MAX" />
+                    android:text="Vertical Speed Max" />
 
                 <TextView
                     style="@style/settings_title"
-                    android:text="ROTATION SPEED MAX" />
+                    android:text="Rotation Speed Max" />
 
                 <TextView
                     style="@style/settings_title"
-                    android:text="TILT ANGLE MAX" />
+                    android:text="Tilt Angle Max" />
 
             </LinearLayout>
 
@@ -171,7 +171,7 @@
                 style="@style/settings_title"
                 android:layout_width="226dp"
                 android:gravity="center_vertical"
-                android:text="FLAT TRIM" />
+                android:text="Flat Trim" />
 
             <Button
                 android:id="@+id/btn_flat_trim"
@@ -189,7 +189,7 @@
                 style="@style/settings_title"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
-                android:text="Last Excuteion: " />
+                android:text="Last Excution: " />
 
             <TextView
                 android:id="@+id/tv_flat_trim_exe_time"
