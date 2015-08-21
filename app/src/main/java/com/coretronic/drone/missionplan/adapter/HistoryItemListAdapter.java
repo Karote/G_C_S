@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
 import com.coretronic.drone.missionplan.model.FlightLogItem;
+import com.coretronic.drone.model.Mission;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.utility.AppConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

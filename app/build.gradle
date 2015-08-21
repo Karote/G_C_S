@@ -11,6 +11,12 @@ android {
         versionCode 910
         versionName "0.9.10"
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
