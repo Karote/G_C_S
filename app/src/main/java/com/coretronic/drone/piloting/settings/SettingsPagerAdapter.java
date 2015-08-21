@@ -12,8 +12,8 @@ public class SettingsPagerAdapter extends FragmentPagerAdapter {
     private static final int STATUS_PAGE = 2;
 
     private String[] titles = {
-            "FLIGHT SETTINGS",
-            "Gain & Expo Setting"
+            "Basic Settings",
+            "Gain & Expo Settings"
     };
 
     public SettingsPagerAdapter(FragmentManager fm) {
