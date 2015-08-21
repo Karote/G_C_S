@@ -12,11 +12,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
+import com.coretronic.drone.model.Mission;
 
 import org.mavlink.messages.MAV_CMD;
 

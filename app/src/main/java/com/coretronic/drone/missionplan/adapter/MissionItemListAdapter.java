@@ -9,9 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
-import com.coretronic.ibs.log.Logger;
+import com.coretronic.drone.model.Mission;
 
 import java.util.ArrayList;
 import java.util.List;

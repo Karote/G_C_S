@@ -1,7 +1,7 @@
 package com.coretronic.drone.missionplan.model;
 
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
+import com.coretronic.drone.model.Mission;
 
 import java.util.List;
 
