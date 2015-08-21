@@ -39,6 +39,9 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         setContentView(R.layout.main);
         replaceFragment();
         initialSetting();
+
+        // login the couchbase
+        login("testdb");
     }
 
     @Override
