@@ -83,7 +83,7 @@ public class WaypointEditorFragment extends Fragment
     private RadioButton btn_action_plan_point = null;
 
     private Spinner spinnerView = null;
-    private String planningMissionListFile = "";
+    private List<Mission> currentMissionList;
     private int spinnerIndex = 0;
 
     private GoogleApiClient mGoogleApiClient = null;
@@ -583,14 +583,15 @@ public class WaypointEditorFragment extends Fragment
                         isShowMarker = true;
                         isTapAndGo = false;
                         layout_editMarker.setVisibility(View.VISIBLE);
-                        currentFragment = PlanningFragment.newInstance(planningMissionListFile);
-                        planningMissionListFile = "";
+                        currentFragment = PlanningFragment.newInstance(isSwitchFromHistoryFile);
                         break;
                     case 1: // FLIGHT HISTORY
                         canMapAddMarker = false;
                         isShowMarker = false;
                         isTapAndGo = false;
+                        isSwitchFromHistoryFile = false;
                         layout_editMarker.setVisibility(View.GONE);
+                        currentMissionList = null;
                         currentFragment = new HistoryFragment();
                         break;
                     default:
@@ -855,10 +856,11 @@ public class WaypointEditorFragment extends Fragment
     }
 
     @Override
-    public void SpinnerSetToPlanning(String filePath, boolean isHistory) {
-        planningMissionListFile = filePath;
+    public void SpinnerSetToPlanning(List<Mission> missionList, boolean isHistory) {
+        currentMissionList = missionList;
         isSwitchFromHistoryFile = isHistory;
         spinnerView.setSelection(0);
     }
     // End HistoryFragment.HistoryAdapterListener
+
 }

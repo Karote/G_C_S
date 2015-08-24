@@ -25,11 +25,7 @@ import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.utility.AppConfig;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.List;
 
 /**
@@ -56,14 +52,15 @@ public class PlanningFragment extends MavInfoFragment {
     private WaypointDetailFragment detailFragment = null;
     private static DroneController drone = null;
     private ProgressDialog progressDialog = null;
+    private final static String ARG_From_History = "argFromHistory";
 
     private static FrameLayout layout_tapAndGoDialog = null;
 
-    public static PlanningFragment newInstance(String filePath) {
+    public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment f = new PlanningFragment();
         Bundle args = new Bundle();
 //        args.putInt("planningMode", planningMode);
-        args.putString("filePath", filePath);
+        args.putBoolean(ARG_From_History, isFromHistory);
         f.setArguments(args);
         return f;
     }
@@ -98,24 +95,26 @@ public class PlanningFragment extends MavInfoFragment {
 //        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
 
         Bundle arguments = getArguments();
-        String filePath = arguments.getString("filePath");
-        File file = new File(filePath);
-        if (file == null)
+        if(arguments ==null){
             return;
+        }
+        boolean isFromHistory = arguments.getBoolean(ARG_From_History);
+        if (!isFromHistory) {
+            return;
+        }
         try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String bufferStr = bufferedReader.readLine();
-            if (bufferStr != null) {
-                List<Mission> missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {
-                }.getType());
+                List<Mission> missionList = ((WaypointEditorFragment)getParentFragment()).getMissionList();
+                if(missionList == null){
+                    return;
+                }
                 mMissionItemAdapter.update(missionList);
                 mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
                 mCallback.fitMapShowAllMission();
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override

@@ -95,7 +95,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFilePath(mHistoryItemAdapter.getFocusIndex()), true);
+                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
             }
         });
 
