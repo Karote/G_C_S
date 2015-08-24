@@ -35,7 +35,7 @@ public class HistoryFragment extends MavInfoFragment {
 
     private static HistoryAdapterListener mCallback = null;
 
-    public interface HistoryAdapterListener {
+    public interface HistoryAdapterListener extends PlanningFragment.MissionAdapterListener{
         void LoadPathLog(List<Float> markers, List<Long> path);
 
         void ClearPath();
@@ -142,6 +142,14 @@ public class HistoryFragment extends MavInfoFragment {
                     Toast.makeText(getActivity(), "History content was wrong", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
+            }
+        });
+
+        final Button btn_map_type = (Button) view.findViewById(R.id.btn_map_type);
+        btn_map_type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.changeMapType();
             }
         });
     }
