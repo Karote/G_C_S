@@ -63,7 +63,7 @@ public class TapAndGoDialogFragment extends Fragment {
         altitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-
+                tapGo_altitude = newValue;
             }
         });
 
