@@ -362,6 +362,12 @@
                     map : map
                 });
                 markers.push(marker);
+                google.maps.event.addListener(marker, 'click', function(e) {
+                    if (mapClickable) {
+                        // addMarker(marker.getPosition().lat(), marker.getPosition().lng(), poly.getPath().getLength() + 1);
+                        AndroidFunction.mapPointToAndroid(marker.getPosition().lat(), marker.getPosition().lng());
+                    }
+                });
                 google.maps.event.addListener(marker, 'mousedown', function(e) {
                     var target = e.target || e.srcElement;
                     if (target && target.className == 'mapIconLabel') {
@@ -371,8 +377,14 @@
                         draggable : false
                     });
                 });
+                google.maps.event.addListener(marker, 'dragstart', function(e) {
+                    AndroidFunction.hideDetailFragment();
+                });
                 google.maps.event.addListener(marker, 'drag', function(e) {
                     poly.getPath().setAt(marker.labelContent - 1, marker.getPosition());
+                });
+                google.maps.event.addListener(marker, 'dragend', function(e) {
+                    AndroidFunction.markerUpdateLocation(marker.labelContent - 1, marker.getPosition().lat(), marker.getPosition().lng());
                 });
 
                 var path = poly.getPath();

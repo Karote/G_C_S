@@ -532,6 +532,26 @@ public class WaypointEditorFragment extends Fragment
                 }
             });
         }
+
+        @JavascriptInterface
+        public void markerUpdateLocation(final int index, final float lat, final float lng) {
+            ((Activity) mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    PlanningFragment.setItemMissionLocation(index, lat, lng);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void hideDetailFragment(){
+            ((Activity) mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((PlanningFragment) currentFragment).missionAdapterUnselect();
+                }
+            });
+        }
     }
 
     private void setUpTopBarButton(View view) {
