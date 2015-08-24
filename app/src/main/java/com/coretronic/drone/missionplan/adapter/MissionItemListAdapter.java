@@ -151,6 +151,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void update(List<Mission> missions) {
         mMissionList = missions;
+        notifyDataSetChanged();
     }
 
     public List<Mission> cloneMissionList() {

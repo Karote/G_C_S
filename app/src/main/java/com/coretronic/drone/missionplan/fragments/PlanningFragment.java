@@ -417,7 +417,6 @@ public class PlanningFragment extends MavInfoFragment {
 
     public void missionAdapterSetData(List<Mission> missions) {
         mMissionItemAdapter.update(missions);
-        mMissionItemAdapter.notifyDataSetChanged();
     }
 
     public void missionAdapterAddData(float latitude, float longitude, float altitude,
