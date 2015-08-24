@@ -172,6 +172,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void setDeleteLayoutVisible(boolean isVisible) {
         isDeleteLayoutVisible = isVisible;
+        unselectAdapter();
+    }
+
+    public void unselectAdapter(){
         focusIndex = -1;
         notifyDataSetChanged();
     }

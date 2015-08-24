@@ -93,9 +93,7 @@ public class PlanningFragment extends MavInfoFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment");
         mCallback = (MissionAdapterListener) getParentFragment();
-//        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
 
         Bundle arguments = getArguments();
         String filePath = arguments.getString("filePath");
@@ -444,6 +442,12 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
+    public void missionAdapterUnselect(){
+        mMissionItemAdapter.unselectAdapter();
+        layout_waypointDetail.setVisibility(View.GONE);
+        mMissionItemAdapter.notifyDataSetChanged();
+    }
+
     public void showGoAndStopLayout(boolean isShow){
         if(isShow) {
             layout_GoAndStop.setVisibility(View.VISIBLE);
@@ -486,6 +490,11 @@ public class PlanningFragment extends MavInfoFragment {
 
     public static void setItemMissionDelay(int missionDelay) {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setWaitSeconds(missionDelay);
+    }
+
+    public static void setItemMissionLocation(int index, float missionLat, float missionLng){
+        mMissionItemAdapter.getMission(index).setLatitude(missionLat);
+        mMissionItemAdapter.getMission(index).setLongitude(missionLng);
     }
 
     public static void deleteItemMission() {
