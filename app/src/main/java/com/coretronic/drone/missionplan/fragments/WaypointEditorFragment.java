@@ -34,12 +34,12 @@ import com.coretronic.drone.Drone;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
-import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
+import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
+import com.coretronic.drone.model.RecordItem;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
-import com.coretronic.drone.utility.FileHelper;
 import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,6 +54,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 
@@ -108,16 +109,17 @@ public class WaypointEditorFragment extends Fragment
     private MavInfoFragment currentFragment = null;
 
     // Save Drone Info
-    private DroneInfo currentDroneInfo;
-    private DroneInfo tmpDroneInfo;
+//    private DroneInfo currentDroneInfo;
+//    private DroneInfo tmpDroneInfo;
+    private FlightHistory flightHistory;
+    private RecordItem.Builder recordItemBuilder;
+
     // File Helper
-    private FileHelper fileHelper;
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private Handler handler;
     private boolean saveFlag = false;
     private int saveDelayTime = 1000;
-    private String saveFileName;
     private DroneController.MissionStatus droneMissionState = DroneController.MissionStatus.FINISHED;
     private DroneController.DroneMode currentDroneMode = null;
 
@@ -138,19 +140,19 @@ public class WaypointEditorFragment extends Fragment
         fragmentActivity = getActivity();
         fragmentChildManager = getChildFragmentManager();
 
-        // Drone info init
-        currentDroneInfo = new DroneInfo();
-        tmpDroneInfo = new DroneInfo();
-
-        // File Helper init
-        fileHelper = new FileHelper(getActivity());
+        // flight history init
         sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, 0);
         gson = new Gson();
         handler = new Handler();
         // tts init
         ttsSpeaker = new Speaker(getActivity());
 
+        // Drone status change
         ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
+
+        // record builder
+        recordItemBuilder = new RecordItem.Builder();
+
     }
 
     @Override
@@ -192,6 +194,12 @@ public class WaypointEditorFragment extends Fragment
         mGoogleApiClient.disconnect();
         saveFlag = false;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
 
     @Override
     public void onDestroy() {
@@ -304,7 +312,7 @@ public class WaypointEditorFragment extends Fragment
         });
 
         // save info
-        currentDroneInfo.setBatter(battery);
+        recordItemBuilder.setBattery(battery);
     }
 
     @Override
@@ -319,13 +327,12 @@ public class WaypointEditorFragment extends Fragment
             }
         });
         // save info
-        currentDroneInfo.setAltitude(altitude);
+        recordItemBuilder.setAltitude(altitude);
     }
 
     @Override
     public void onRadioSignalUpdate(int rssi) {
         // save info
-        currentDroneInfo.setRssi(rssi);
     }
 
     @Override
@@ -340,7 +347,7 @@ public class WaypointEditorFragment extends Fragment
             }
         });
         // save info
-        currentDroneInfo.setGroundSpeed(groundSpeed);
+        recordItemBuilder.setSpeed(groundSpeed);
     }
 
     @Override
@@ -364,9 +371,9 @@ public class WaypointEditorFragment extends Fragment
             }
         });
         // save info
-        currentDroneInfo.setLat(lat);
-        currentDroneInfo.setLon(lon);
-        currentDroneInfo.setEph(eph);
+        recordItemBuilder.setLatitude(lat);
+        recordItemBuilder.setLongitude(lon);
+        recordItemBuilder.setSatellites(eph);
     }
 
     @Override
@@ -379,41 +386,38 @@ public class WaypointEditorFragment extends Fragment
             }
         });
         // save info
-        currentDroneInfo.setHeading(heading);
+        recordItemBuilder.setHeading(heading);
     }
+
+    // log test
+    private boolean logFlag = false;
 
     @Override
     public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
-        Log.d(TAG, "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionStatus);
+        Log.d(TAG, "Current Mission State:" + droneMissionState + "/" + "New Mission State:" + missionStatus);
+        if(logFlag) {
+            missionStatus = DroneController.MissionStatus.START;
+            logFlag = false;
+        }
+
+        if (spinnerIndex == 1) {
+            return;
+        }
+
         if (droneMissionState != missionStatus) {
             droneMissionState = missionStatus;
             switch (droneMissionState) {
                 case START:
                     saveFlag = true;
+                    if (saveFileRunnable != null) {
+                        return;
+                    }
                     // tts to start
                     if (ttsSpeaker != null) {
                         ttsSpeaker.speak("Mission Plan Start!");
                     }
-                    if (saveFileRunnable != null) {
-                        return;
-                    }
-                    saveFileName = String.valueOf(System.currentTimeMillis());
-                    fileHelper.writeToFile(gson.toJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null)), saveFileName);
-                    saveFileRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            if (saveFlag) {
-                                if (saveFileName != null) {
-                                    tmpDroneInfo = currentDroneInfo;
-                                    tmpDroneInfo.setTimeStamp(System.currentTimeMillis());
-                                    Log.d(TAG, "tmpDroneInfo: " + gson.toJson(tmpDroneInfo));
-                                    fileHelper.writeToFile(gson.toJson(tmpDroneInfo), saveFileName);
-                                }
-                            }
-                            handler.postDelayed(saveFileRunnable, saveDelayTime);
-                        }
-                    };
-                    handler.post(saveFileRunnable);
+                    // save flight history log
+                    createHistory();
                     break;
                 case PAUSE:
                     saveFlag = false;
@@ -481,6 +485,29 @@ public class WaypointEditorFragment extends Fragment
         }
     }
 
+    private void createHistory() {
+
+        // save flight history log
+        List<Mission> missionList = gson.fromJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null), new TypeToken<List<Mission>>() {
+        }.getType());
+
+        flightHistory = ((MainActivity) getActivity()).createFlightHistory(missionList);
+        saveFileRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (saveFlag) {
+                    recordItemBuilder.setCurrentTimeStamp(System.currentTimeMillis());
+                    flightHistory.addRecord(recordItemBuilder.create());
+                }
+                handler.postDelayed(saveFileRunnable, saveDelayTime);
+            }
+        };
+        handler.post(saveFileRunnable);
+    }
+
+    public List<Mission> getMissionList() {
+        return currentMissionList;
+    }
     // End Drone.StatusChangedListener
 
     public class javascriptInterface {
