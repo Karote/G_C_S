@@ -21,6 +21,7 @@
     <string name="btn_ok">ok</string>
     <string name="delete_files">Delte files</string>
     <string name="album_no_files_insmartphone">No Photos or Videos in the folder</string>
-    <string name="database_url">http://10.100.1.182:4984/grocery-sync</string>
+    <!--<string name="database_url">http://10.100.1.183:4984/grocery-sync</string>-->
+    <string name="database_url">http://10.1.6.66:4984/sync_gateway</string>
 
 </resources>

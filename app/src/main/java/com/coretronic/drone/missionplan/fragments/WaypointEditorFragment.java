@@ -147,10 +147,12 @@ public class WaypointEditorFragment extends Fragment
         // tts init
         ttsSpeaker = new Speaker(getActivity());
 
+        // Drone status change
         ((MainActivity) fragmentActivity).registerDroneStatusChangedListener(this);
 
         // record builder
         recordItemBuilder = new RecordItem.Builder();
+
     }
 
     @Override
@@ -192,6 +194,12 @@ public class WaypointEditorFragment extends Fragment
         mGoogleApiClient.disconnect();
         saveFlag = false;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
 
     @Override
     public void onDestroy() {
@@ -381,9 +389,21 @@ public class WaypointEditorFragment extends Fragment
         recordItemBuilder.setHeading(heading);
     }
 
+    // log test
+    private boolean logFlag = false;
+
     @Override
     public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
-        Log.d(TAG, "droneMissionState:" + droneMissionState + "/" + "missionState:" + missionStatus);
+        Log.d(TAG, "Current Mission State:" + droneMissionState + "/" + "New Mission State:" + missionStatus);
+        if(logFlag) {
+            missionStatus = DroneController.MissionStatus.START;
+            logFlag = false;
+        }
+
+        if (spinnerIndex == 1) {
+            return;
+        }
+
         if (droneMissionState != missionStatus) {
             droneMissionState = missionStatus;
             switch (droneMissionState) {
@@ -397,20 +417,7 @@ public class WaypointEditorFragment extends Fragment
                         ttsSpeaker.speak("Mission Plan Start!");
                     }
                     // save flight history log
-                    List<Mission> missionList = gson.fromJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null), new TypeToken<List<Mission>>() {
-                    }.getType());
-                    flightHistory = ((MainActivity) getActivity()).createFlightHistory(missionList);
-                    saveFileRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            if (saveFlag) {
-                                recordItemBuilder.setCurrentTimeStamp(System.currentTimeMillis());
-                                flightHistory.addRecord(recordItemBuilder.create());
-                            }
-                            handler.postDelayed(saveFileRunnable, saveDelayTime);
-                        }
-                    };
-                    handler.post(saveFileRunnable);
+                    createHistory();
                     break;
                 case PAUSE:
                     saveFlag = false;
@@ -478,6 +485,29 @@ public class WaypointEditorFragment extends Fragment
         }
     }
 
+    private void createHistory() {
+
+        // save flight history log
+        List<Mission> missionList = gson.fromJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null), new TypeToken<List<Mission>>() {
+        }.getType());
+
+        flightHistory = ((MainActivity) getActivity()).createFlightHistory(missionList);
+        saveFileRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (saveFlag) {
+                    recordItemBuilder.setCurrentTimeStamp(System.currentTimeMillis());
+                    flightHistory.addRecord(recordItemBuilder.create());
+                }
+                handler.postDelayed(saveFileRunnable, saveDelayTime);
+            }
+        };
+        handler.post(saveFileRunnable);
+    }
+
+    public List<Mission> getMissionList() {
+        return currentMissionList;
+    }
     // End Drone.StatusChangedListener
 
     public class javascriptInterface {
