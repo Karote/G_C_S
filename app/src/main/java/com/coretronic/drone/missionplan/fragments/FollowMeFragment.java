@@ -123,8 +123,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         if (tvAltitude == null)
             return;
 
-        String tx_alt = String.format("%d", (int) altitude);
-        tvAltitude.setText(tx_alt + "m");
+        tvAltitude.setText(String.format("%.1f", altitude) + "m");
     }
 
     @Override
@@ -132,7 +131,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         if (tvSpeed == null)
             return;
 
-        tvSpeed.setText(groundSpeed + " km/h");
+        tvSpeed.setText(String.format("%.1f", groundSpeed) + " km/h");
     }
 
     @Override

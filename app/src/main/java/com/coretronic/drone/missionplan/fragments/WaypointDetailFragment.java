@@ -111,7 +111,7 @@ public class WaypointDetailFragment extends Fragment {
                         break;
                     case 3: // RTL
                         PlanningFragment.setItemMissionType(Mission.Type.RTL);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
+                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
                         break;
                     default:
                         break;
@@ -165,6 +165,9 @@ public class WaypointDetailFragment extends Fragment {
                     break;
                 case MAV_CMD.MAV_CMD_NAV_LAND:
                     icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
+                    break;
+                case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
+                    icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
                     break;
                 default:
                     icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);

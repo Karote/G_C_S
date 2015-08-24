@@ -143,7 +143,8 @@
                         anchor : new google.maps.Point(21, 21),
                         scale : 1
                     },
-                    zIndex : 97,
+                    zIndex : google.maps.Marker.MAX_ZINDEX + 1,
+                    clickable : false,
                     map : map
                 };
 
@@ -156,7 +157,8 @@
                         anchor : new google.maps.Point(21, 21),
                         scale : 1
                     },
-                    zIndex : 98,
+                    zIndex : google.maps.Marker.MAX_ZINDEX + 2,
+                    clickable : false,
                     map : map
                 };
 
@@ -170,7 +172,8 @@
                         rotation : 0,
                         scale : 1
                     },
-                    zIndex : 99,
+                    zIndex : google.maps.Marker.MAX_ZINDEX + 3,
+                    clickable : false,
                     map : map
                 };
 

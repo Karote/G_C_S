@@ -621,6 +621,8 @@ public class WaypointEditorFragment extends Fragment
                             getDroneController().stopTapAndGo();
                         }
                         ((PlanningFragment) currentFragment).showGoAndStopLayout(true);
+                        b_action_plan_undo.setVisibility(View.VISIBLE);
+                        b_action_plan_delete.setVisibility(View.VISIBLE);
                         break;
                     case R.id.btn_action_tap_and_go: // Tap & GO
                         isTapAndGo = true;
@@ -628,6 +630,8 @@ public class WaypointEditorFragment extends Fragment
                             getDroneController().startTapAndGo();
                         }
                         ((PlanningFragment) currentFragment).showGoAndStopLayout(false);
+                        b_action_plan_undo.setVisibility(View.INVISIBLE);
+                        b_action_plan_delete.setVisibility(View.INVISIBLE);
                         break;
                 }
                 webview_Map.loadUrl("javascript:clearMarkers()");

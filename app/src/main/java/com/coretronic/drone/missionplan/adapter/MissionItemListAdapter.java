@@ -57,6 +57,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             case LAND:
                 viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_land);
                 break;
+            case RTL:
+                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_home);
+                break;
             case WAY_POINT:
             default:
                 viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
@@ -148,6 +151,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void update(List<Mission> missions) {
         mMissionList = missions;
+        notifyDataSetChanged();
     }
 
     public List<Mission> cloneMissionList() {

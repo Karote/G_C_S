@@ -349,8 +349,7 @@ public class PlanningFragment extends MavInfoFragment {
         if (tv_droneAltitude == null)
             return;
 
-        String tx_alt = String.format("%d", (int) altitude);
-        tv_droneAltitude.setText(tx_alt + "m");
+        tv_droneAltitude.setText(String.format("%.1f", altitude) + "m");
     }
 
     @Override
@@ -358,7 +357,7 @@ public class PlanningFragment extends MavInfoFragment {
         if (tv_droneSpeed == null)
             return;
 
-        tv_droneSpeed.setText(groundSpeed + " km/h");
+        tv_droneSpeed.setText(String.format("%.1f", groundSpeed) + " km/h");
     }
 
     @Override
@@ -418,7 +417,6 @@ public class PlanningFragment extends MavInfoFragment {
 
     public void missionAdapterSetData(List<Mission> missions) {
         mMissionItemAdapter.update(missions);
-        mMissionItemAdapter.notifyDataSetChanged();
     }
 
     public void missionAdapterAddData(float latitude, float longitude, float altitude,
