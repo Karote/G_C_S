@@ -39,9 +39,6 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         setContentView(R.layout.main);
         replaceFragment();
         initialSetting();
-
-        // login the couchbase
-        login("testdb");
     }
 
     @Override
@@ -95,7 +92,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     private void replaceFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_view, new MainFragment(), "fragment");
+        transaction.replace(R.id.frame_view, new LoginFragment(), MainActivity.class.getSimpleName());
         transaction.commit();
     }
 

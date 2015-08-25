@@ -24,4 +24,12 @@
     <!--<string name="database_url">http://10.100.1.183:4984/grocery-sync</string>-->
     <string name="database_url">http://10.1.6.66:4984/sync_gateway</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tv_txt_email">Email</string>
+    <string name="tv_txt_welcome">Welcome</string>
+    <string name="tv_txt_passwd">Password</string>
+    <string name="chk_txt_loging">Stay logged in</string>
+    <string name="btn_txt_loging">Log in</string>
+
 </resources>

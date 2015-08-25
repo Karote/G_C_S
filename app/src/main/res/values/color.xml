@@ -5,4 +5,7 @@
     <color name="blue_sky_light">#59c3f6</color>
     <color name="gray">#c6c9cd</color>
     <color name="gray_half_translucent">#7fc6c9cd</color>
+    <color name="btn_login_press">#94d5f4</color>
+
+
 </resources>
