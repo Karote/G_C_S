@@ -8,8 +8,8 @@ android {
         applicationId "com.contronic.drones"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 920
-        versionName "0.9.20"
+        versionCode 921
+        versionName "0.9.21"
     }
 
     packagingOptions {
