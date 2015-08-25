@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.Mission.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,23 +49,12 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     @Override
     public void onBindViewHolder(MissionItemListViewHolder viewHolder, int i) {
+
+        Mission mission = mMissionList.get(i);
+
         viewHolder.nameView.setText(String.format("%2d", i + 1));
-        viewHolder.altitudeView.setText(String.format("%d", (int) mMissionList.get(i).getAltitude()));
-        switch (mMissionList.get(i).getType()) {
-            case TAKEOFF:
-                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
-                break;
-            case LAND:
-                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_land);
-                break;
-            case RTL:
-                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_home);
-                break;
-            case WAY_POINT:
-            default:
-                viewHolder.typeView.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
-                break;
-        }
+        viewHolder.altitudeView.setText(String.format("%d", (int) mission.getAltitude()));
+        viewHolder.typeView.setBackgroundResource(getTypeResource(mission.getType()));
 
         if (i == focusIndex) {
             viewHolder.focusBarView.setVisibility(View.VISIBLE);
@@ -76,6 +66,25 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             viewHolder.deleteLayout.setVisibility(View.VISIBLE);
         } else {
             viewHolder.deleteLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private int getTypeResource(Type type) {
+
+        if (type == null) {
+            return R.drawable.ico_indicator_plan_waypoint;
+        }
+
+        switch (type) {
+            case TAKEOFF:
+                return R.drawable.ico_indicator_plan_takeoff;
+            case LAND:
+                return R.drawable.ico_indicator_plan_land;
+            case RTL:
+                return R.drawable.ico_indicator_plan_home;
+            case WAY_POINT:
+            default:
+                return R.drawable.ico_indicator_plan_waypoint;
         }
     }
 

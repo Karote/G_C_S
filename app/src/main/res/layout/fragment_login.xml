@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:alpha="0.5"
+        android:background="@color/blue_sky"
+        android:orientation="horizontal">
+
+        <DigitalClock
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|top"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="216dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="@string/tv_txt_welcome"
+            android:textColor="#59C3F6"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/ed_user_id"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:hint="abc@coretronic.com"
+            android:textColorHint="#cdcdcd"
+            android:textColor="#727272"
+            android:inputType="textEmailAddress"/>
+
+        <EditText
+            android:id="@+id/ed_user_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:hint="Password"
+            android:textColorHint="#cdcdcd"
+            android:textColor="#727272"
+            android:layout_marginTop="1dp"
+            android:inputType="textPassword" />
+
+        <CheckBox
+            android:id="@+id/chk_stay_logged"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/login_editview_height"
+            android:layout_marginTop="8dp"
+            android:text="@string/chk_txt_loging" />
+
+        <Button
+            android:id="@+id/btn_login_ok"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_editview_height"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_login"
+            android:text="@string/btn_txt_loging" />
+
+    </LinearLayout>
+
+</RelativeLayout>

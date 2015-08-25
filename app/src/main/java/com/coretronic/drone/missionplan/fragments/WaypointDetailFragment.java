@@ -17,6 +17,7 @@ import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.Mission.Type;
 
 import org.mavlink.messages.MAV_CMD;
 
@@ -52,7 +53,7 @@ public class WaypointDetailFragment extends Fragment {
         WaypointDetailFragment f = new WaypointDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_INDEX, index);
-        args.putInt(ARGUMENT_TYPE, mission.getType().getId());
+        args.putInt(ARGUMENT_TYPE, mission.getType() == null ? Type.WAY_POINT.getId() : mission.getType().getId());
         args.putFloat(ARGUMENT_ALTITUDE, mission.getAltitude());
         args.putInt(ARGUMENT_DELAY, mission.getWaitSeconds());
         args.putFloat(ARGUMENT_LATITUDE, mission.getLatitude());
