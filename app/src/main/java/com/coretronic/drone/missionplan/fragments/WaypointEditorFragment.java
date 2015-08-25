@@ -389,18 +389,11 @@ public class WaypointEditorFragment extends Fragment
         recordItemBuilder.setHeading(heading);
     }
 
-    // log test
-    private boolean logFlag = false;
-
     @Override
     public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
         Log.d(TAG, "Current Mission State:" + droneMissionState + "/" + "New Mission State:" + missionStatus);
-        if(logFlag) {
-            missionStatus = DroneController.MissionStatus.START;
-            logFlag = false;
-        }
 
-        if (spinnerIndex == 1) {
+        if (spinnerIndex != 0) {
             return;
         }
 
@@ -408,7 +401,6 @@ public class WaypointEditorFragment extends Fragment
             droneMissionState = missionStatus;
             switch (droneMissionState) {
                 case START:
-                    saveFlag = true;
                     if (saveFileRunnable != null) {
                         return;
                     }
@@ -417,7 +409,10 @@ public class WaypointEditorFragment extends Fragment
                         ttsSpeaker.speak("Mission Plan Start!");
                     }
                     // save flight history log
-                    createHistory();
+                    if (!isTapAndGo) {
+                        saveFlag = true;
+                        createHistory();
+                    }
                     break;
                 case PAUSE:
                     saveFlag = false;
@@ -571,7 +566,7 @@ public class WaypointEditorFragment extends Fragment
         }
 
         @JavascriptInterface
-        public void hideDetailFragment(){
+        public void hideDetailFragment() {
             ((Activity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
