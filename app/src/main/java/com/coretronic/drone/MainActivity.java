@@ -92,7 +92,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     private void replaceFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_view, new MainFragment(), "fragment");
+        transaction.replace(R.id.frame_view, new LoginFragment(), MainActivity.class.getSimpleName());
         transaction.commit();
     }
 

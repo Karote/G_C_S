@@ -1,8 +1,11 @@
 package com.coretronic.drone;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
@@ -44,17 +47,23 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
     private MainActivity activity;
+    private SharedPreferences sharedPreferences;
 
     // TTS
     private final int CHECK_CODE = 0x1;
-
+    private String mUserId;
+    private String mUserPw;
+    private boolean isStayLogged;
 
     private void assignViews(View view) {
         Button btnPiloting = (Button) view.findViewById(R.id.btn_piloting);
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
         LinearLayout llAlbum = (LinearLayout) view.findViewById(R.id.ll_album);
         LinearLayout llUpdate = (LinearLayout) view.findViewById(R.id.ll_updates);
+        Button btnLogout = (Button) view.findViewById(R.id.btn_logout);
+        btnLogout.setText(mUserId);
 
+        btnLogout.setOnClickListener(this);
         btnPiloting.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
         llAlbum.setOnClickListener(this);
@@ -82,10 +91,21 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         spinnerDroneDevice.setOnItemSelectedListener(this);
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
         activity = (MainActivity) getActivity();
+        mUserId = sharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
+        String dbName = mUserId.replace("@","_").replace(".","_").toLowerCase();
+        Log.d("morris", "db name:" +dbName);
+        // login the couchbase
+        if(mUserId.length() == 0){
+            Toast.makeText(getActivity(),"Couchbase login error.",Toast.LENGTH_SHORT).show();
+        }else {
+            activity.login(dbName);
+        }
         checkTTS();
     }
 
@@ -213,11 +233,36 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Fragment fragment = null;
         String backStackName = null;
         Bundle bundle = new Bundle();
         switch (v.getId()) {
+            case R.id.btn_logout:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                Dialog dialog = builder.setTitle("Log Out")
+                        .setMessage("Do you want to log out?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sharedPreferences.edit()
+                                        .putString(LoginFragment.ARG_USER_ID, "")
+                                        .putString(LoginFragment.ARG_USER_PW, "")
+                                        .putBoolean(LoginFragment.ARG_STAY_LOGGED, false)
+                                        .apply();
+                                transaction.replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+                dialog.show();
+
+                break;
             case R.id.btn_piloting:
                 // 20150805 : disable pilotion function
                 //fragment = new PilotingFragment();
@@ -253,7 +298,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     public void onHiddenChanged(boolean hidden) {
     }
 
-    private void checkTTS(){
+    private void checkTTS() {
         Intent check = new Intent();
         check.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(check, CHECK_CODE);
@@ -261,8 +306,8 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == CHECK_CODE){
-            if(resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS){
+        if (requestCode == CHECK_CODE) {
+            if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 Intent install = new Intent();
                 install.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
                 startActivity(install);

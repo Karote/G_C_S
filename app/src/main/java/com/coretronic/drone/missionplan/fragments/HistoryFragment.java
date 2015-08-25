@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
+import com.coretronic.drone.model.FlightHistory;
+import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.OnFlightHistoryUpdateListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,19 +40,20 @@ public class HistoryFragment extends MavInfoFragment {
 
     private static HistoryAdapterListener mCallback = null;
 
-    public interface HistoryAdapterListener {
+    public interface HistoryAdapterListener extends PlanningFragment.MissionAdapterListener{
         void LoadPathLog(List<Float> markers, List<Long> path);
 
         void ClearPath();
 
-        void SpinnerSetToPlanning(String filePath, boolean isSwitchFromHistoryFile);
+        void SpinnerSetToPlanning(List<Mission> missionList, boolean isSwitchFromHistoryFile);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mCallback = (HistoryAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment");
         mCallback = (HistoryAdapterListener) getParentFragment();
+        ((MainActivity) getActivity()).registerOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
+
     }
 
     @Override
@@ -89,7 +95,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFilePath(mHistoryItemAdapter.getFocusIndex()), true);
+                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
             }
         });
 
@@ -110,24 +116,24 @@ public class HistoryFragment extends MavInfoFragment {
                     if (mHistoryItemAdapter.getFocusIndex() < 0 || position != mHistoryItemAdapter.getFocusIndex()) {
                         List<Float> markerList = new ArrayList<Float>();
                         List<Long> flightPath = new ArrayList<Long>();
-                        int j = mHistoryItemAdapter.getFlightLog(position).getMissionList().size();
+                        int j = mHistoryItemAdapter.getFlightLog(position).getMissions().size();
                         for (int i = 0; i < j; i++) {
-                            markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLatitude());
-                            markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissionList().get(i).getLongitude());
+                            markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissions().get(i).getLatitude());
+                            markerList.add(mHistoryItemAdapter.getFlightLog(position).getMissions().get(i).getLongitude());
                         }
 
-                        j = mHistoryItemAdapter.getFlightLog(position).getPathList().size();
+                        j = mHistoryItemAdapter.getFlightLog(position).getRecordItems().size();
                         for (int i = 0; i < j; i++) {
-                            flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLat());
-                            flightPath.add(mHistoryItemAdapter.getFlightLog(position).getPathList().get(i).getLon());
+                            flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLatitude());
+                            flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLongitude());
                         }
                         mCallback.LoadPathLog(markerList, flightPath);
 
 
                         long durationTime = 0;
                         if (j > 2) {
-                            durationTime = mHistoryItemAdapter.getFlightLog(position).getPathList().get(j - 1).getTimeStamp() -
-                                    mHistoryItemAdapter.getFlightLog(position).getPathList().get(0).getTimeStamp();
+                            durationTime = mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(j - 1).getCurrentTimeStamp() -
+                                    mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(0).getCurrentTimeStamp();
                         }
                         SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
                         tv_flightTime.setText(timeFormat.format(durationTime));
@@ -144,9 +150,46 @@ public class HistoryFragment extends MavInfoFragment {
                 }
             }
         });
+
+        final Button btn_map_type = (Button) view.findViewById(R.id.btn_map_type);
+        btn_map_type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.changeMapType();
+            }
+        });
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((MainActivity) getActivity()).unregisterOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
+    }
+
+    OnFlightHistoryUpdateListener onFlightHistoryUpdateListener = new OnFlightHistoryUpdateListener() {
+        @Override
+        public void OnFlightHistoryUpdated(final FlightHistory flightHistory) {
+            Log.d("morris", flightHistory.getId());
+
+            if (flightHistory == null) {
+                return;
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mHistoryItemAdapter.add(flightHistory);
+                }
+            });
+        }
+    };
 
     public void setFlightDistance(int lengthInMeters) {
         tv_flightDistance.setText(String.valueOf(lengthInMeters) + " m");
     }
+
 }

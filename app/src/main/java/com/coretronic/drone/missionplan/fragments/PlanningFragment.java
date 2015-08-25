@@ -20,16 +20,12 @@ import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.MainActivity;
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
+import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.utility.AppConfig;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.List;
 
 /**
@@ -56,14 +52,15 @@ public class PlanningFragment extends MavInfoFragment {
     private WaypointDetailFragment detailFragment = null;
     private static DroneController drone = null;
     private ProgressDialog progressDialog = null;
+    private final static String ARG_From_History = "argFromHistory";
 
     private static FrameLayout layout_tapAndGoDialog = null;
 
-    public static PlanningFragment newInstance(String filePath) {
+    public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment f = new PlanningFragment();
         Bundle args = new Bundle();
 //        args.putInt("planningMode", planningMode);
-        args.putString("filePath", filePath);
+        args.putBoolean(ARG_From_History, isFromHistory);
         f.setArguments(args);
         return f;
     }
@@ -93,29 +90,29 @@ public class PlanningFragment extends MavInfoFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment");
         mCallback = (MissionAdapterListener) getParentFragment();
-//        mCallback = (MissionAdapterListener) fragmentActivity.getSupportFragmentManager().findFragmentByTag("fragment");
 
         Bundle arguments = getArguments();
-        String filePath = arguments.getString("filePath");
-        File file = new File(filePath);
-        if (file == null)
+        if(arguments ==null){
             return;
+        }
+        boolean isFromHistory = arguments.getBoolean(ARG_From_History);
+        if (!isFromHistory) {
+            return;
+        }
         try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String bufferStr = bufferedReader.readLine();
-            if (bufferStr != null) {
-                List<Mission> missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {
-                }.getType());
+                List<Mission> missionList = ((WaypointEditorFragment)getParentFragment()).getMissionList();
+                if(missionList == null){
+                    return;
+                }
                 mMissionItemAdapter.update(missionList);
                 mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
                 mCallback.fitMapShowAllMission();
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -245,7 +242,9 @@ public class PlanningFragment extends MavInfoFragment {
 //            }
             switch (v.getId()) {
                 case R.id.btn_plan_go:
-                    drone.clearMission();
+                    if(drone != null) {
+                        drone.clearMission();
+                    }
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     if (droneMissionList == null || droneMissionList.size() == 0) {
                         Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
@@ -349,8 +348,7 @@ public class PlanningFragment extends MavInfoFragment {
         if (tv_droneAltitude == null)
             return;
 
-        String tx_alt = String.format("%d", (int) altitude);
-        tv_droneAltitude.setText(tx_alt + "m");
+        tv_droneAltitude.setText(String.format("%.1f", altitude) + "m");
     }
 
     @Override
@@ -358,7 +356,7 @@ public class PlanningFragment extends MavInfoFragment {
         if (tv_droneSpeed == null)
             return;
 
-        tv_droneSpeed.setText(groundSpeed + " km/h");
+        tv_droneSpeed.setText(String.format("%.1f", groundSpeed) + " km/h");
     }
 
     @Override
@@ -418,7 +416,6 @@ public class PlanningFragment extends MavInfoFragment {
 
     public void missionAdapterSetData(List<Mission> missions) {
         mMissionItemAdapter.update(missions);
-        mMissionItemAdapter.notifyDataSetChanged();
     }
 
     public void missionAdapterAddData(float latitude, float longitude, float altitude,
@@ -440,6 +437,12 @@ public class PlanningFragment extends MavInfoFragment {
             recyclerView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.recyclerview_item_width);
             mMissionItemAdapter.setDeleteLayoutVisible(false);
         }
+        layout_waypointDetail.setVisibility(View.GONE);
+        mMissionItemAdapter.notifyDataSetChanged();
+    }
+
+    public void missionAdapterUnselect(){
+        mMissionItemAdapter.unselectAdapter();
         layout_waypointDetail.setVisibility(View.GONE);
         mMissionItemAdapter.notifyDataSetChanged();
     }
@@ -486,6 +489,11 @@ public class PlanningFragment extends MavInfoFragment {
 
     public static void setItemMissionDelay(int missionDelay) {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setWaitSeconds(missionDelay);
+    }
+
+    public static void setItemMissionLocation(int index, float missionLat, float missionLng){
+        mMissionItemAdapter.getMission(index).setLatitude(missionLat);
+        mMissionItemAdapter.getMission(index).setLongitude(missionLng);
     }
 
     public static void deleteItemMission() {

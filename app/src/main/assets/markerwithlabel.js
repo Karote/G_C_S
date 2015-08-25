@@ -138,7 +138,7 @@ MarkerLabel_.prototype.onAdd = function () {
     me.marker_.setAnimation(null);
   };
 
-  this.getPanes().overlayImage.appendChild(this.labelDiv_);
+  this.getPanes().markerLayer.appendChild(this.labelDiv_);
   this.getPanes().overlayMouseTarget.appendChild(this.eventDiv_);
   // One cross is shared with all markers, so only add it once:
   if (typeof MarkerLabel_.getSharedCross.processed === "undefined") {

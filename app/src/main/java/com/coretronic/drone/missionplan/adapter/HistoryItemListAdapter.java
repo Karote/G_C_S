@@ -8,18 +8,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
-import com.coretronic.drone.missionplan.fragments.module.DroneInfo;
-import com.coretronic.drone.missionplan.model.FlightLogItem;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.coretronic.drone.model.FlightHistory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -30,52 +25,16 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
     private static final String TAG = HistoryItemListAdapter.class.getSimpleName();
 
     private static Context context;
-    private List<FlightLogItem> mFlightLogItems = null;
+    private List<FlightHistory> flightHistoryList = null;
 
     private int focusIndex = -1;
-    private String filePath;
-    private File files[] = null;
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     public HistoryItemListAdapter(Context context) {
         this.context = context;
-        this.mFlightLogItems = new ArrayList<FlightLogItem>();
-
-        filePath = this.context.getExternalFilesDir(null).getAbsolutePath();
-        File f = new File(filePath);
-        files = f.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            String filename = files[i].getName();
-            this.mFlightLogItems.add(readFile(filename));
-        }
-    }
-
-    private FlightLogItem readFile(String filename) {
-        File file = new File(filePath + "/" + filename);
-        Gson gson = new Gson();
-        List<Mission> missionList = null;
-        List<DroneInfo> pathList = new ArrayList<DroneInfo>();
-        try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String bufferStr = bufferedReader.readLine();
-            if (bufferStr != null) {
-                missionList = gson.fromJson(bufferStr, new TypeToken<List<Mission>>() {}.getType());
-
-                bufferStr = bufferedReader.readLine();
-                while (bufferStr != null) {
-                    DroneInfo droneInfoObj = gson.fromJson(bufferStr, DroneInfo.class);
-                    pathList.add(droneInfoObj);
-                    bufferStr = bufferedReader.readLine();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new FlightLogItem(missionList, pathList);
+        this.flightHistoryList = new ArrayList<>();
     }
 
     public interface OnItemClickListener {
@@ -96,8 +55,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
 
     @Override
     public void onBindViewHolder(HistoryItemListViewHolder viewHolder, int i) {
-        String filename = files[i].getName();
-        Date resultdate = new Date(Long.parseLong(filename));
+        Date resultdate = new Date(flightHistoryList.get(i).getCreatedTime());
         viewHolder.tvLogDate.setText(dateFormat.format(resultdate));
         viewHolder.tvLogTime.setText(timeFormat.format(resultdate));
 
@@ -110,7 +68,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
 
     @Override
     public int getItemCount() {
-        return mFlightLogItems.size();
+        return flightHistoryList.size();
     }
 
     @Override
@@ -150,15 +108,43 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
         }
     }
 
-    public FlightLogItem getFlightLog(int position) {
-        return mFlightLogItems.get(position);
+    public FlightHistory getFlightLog(int position) {
+        return flightHistoryList.get(position);
     }
 
     public int getFocusIndex() {
         return focusIndex;
     }
 
-    public String getFilePath(int position) {
-        return filePath + "/" + files[position].getName();
+    public FlightHistory getFocusHistory() {
+        return flightHistoryList.get(getFocusIndex());
+    }
+
+    public synchronized void add(FlightHistory flightHistory) {
+
+        boolean historyExisted = false;
+        for (FlightHistory history : flightHistoryList) {
+            if (history.getId().equals(flightHistory.getId())) {
+                history.replace(flightHistory);
+                historyExisted = true;
+                break;
+            }
+        }
+        if (!historyExisted) {
+            flightHistoryList.add(flightHistory);
+        }
+
+        Collections.sort(flightHistoryList, new Comparator<FlightHistory>() {
+            @Override
+            public int compare(FlightHistory lhs, FlightHistory rhs) {
+                return Long.valueOf(rhs.getCreatedTime()).compareTo(lhs.getCreatedTime());
+            }
+        });
+
+        notifyDataSetChanged();
+    }
+
+    public void clearList() {
+        flightHistoryList.clear();
     }
 }

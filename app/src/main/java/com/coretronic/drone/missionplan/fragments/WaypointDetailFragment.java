@@ -12,11 +12,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.coretronic.drone.Mission;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
+import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.Mission.Type;
 
 import org.mavlink.messages.MAV_CMD;
 
@@ -52,7 +53,7 @@ public class WaypointDetailFragment extends Fragment {
         WaypointDetailFragment f = new WaypointDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_INDEX, index);
-        args.putInt(ARGUMENT_TYPE, mission.getType().getId());
+        args.putInt(ARGUMENT_TYPE, mission.getType() == null ? Type.WAY_POINT.getId() : mission.getType().getId());
         args.putFloat(ARGUMENT_ALTITUDE, mission.getAltitude());
         args.putInt(ARGUMENT_DELAY, mission.getWaitSeconds());
         args.putFloat(ARGUMENT_LATITUDE, mission.getLatitude());
@@ -111,7 +112,7 @@ public class WaypointDetailFragment extends Fragment {
                         break;
                     case 3: // RTL
                         PlanningFragment.setItemMissionType(Mission.Type.RTL);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
+                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
                         break;
                     default:
                         break;
@@ -165,6 +166,9 @@ public class WaypointDetailFragment extends Fragment {
                     break;
                 case MAV_CMD.MAV_CMD_NAV_LAND:
                     icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
+                    break;
+                case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
+                    icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
                     break;
                 default:
                     icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
