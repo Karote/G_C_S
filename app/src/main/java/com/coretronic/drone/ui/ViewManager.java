@@ -59,23 +59,20 @@ public class ViewManager {
         final Switch sw = (Switch) view.findViewById(id);
         final Setting setting = activity.getSetting(settingType);
         final int type = settingType.ordinal();
-//        sw.setChecked(setting.getValue() == Setting.ON);
         sw.post(new Runnable() {
             @Override
             public void run() {
                 sw.setChecked(setting.getValue() == Setting.ON);
-            }
-        });
-        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isPressed()) {
-                    activity.setSettingValue(settingType, isChecked == true ? Setting.ON : Setting.OFF);
-                    Log.d(TAG, "isSetting[" + type + "]: " + setting.getValue());
-                    if (setting.getParameterType() != null && activity.getDroneController() != null) {
-                        activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
+                sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        activity.setSettingValue(settingType, isChecked == true ? Setting.ON : Setting.OFF);
+                        Log.d(TAG, "isSetting[" + type + "]: " + setting.getValue());
+                        if (setting.getParameterType() != null && activity.getDroneController() != null) {
+                            activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
+                        }
                     }
-                }
+                });
             }
         });
     }
