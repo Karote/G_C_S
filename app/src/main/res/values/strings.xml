@@ -21,8 +21,7 @@
     <string name="btn_ok">ok</string>
     <string name="delete_files">Delte files</string>
     <string name="album_no_files_insmartphone">No Photos or Videos in the folder</string>
-    <!--<string name="database_url">http://10.100.1.183:4984/grocery-sync</string>-->
-    <string name="database_url">http://10.1.6.66:4984/sync_gateway</string>
+    <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
