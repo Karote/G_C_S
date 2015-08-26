@@ -183,9 +183,9 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         settings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 2000, 6000, 6000, "mm/s");
         settings[Setting.SettingType.TILT_ANGLE_MAX.ordinal()] = new Setting(Parameter.Type.ANGLE_MAX, 10, 30, 30, String.valueOf(DEGREE_SYMBOL));
         settings[Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_ENABLE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_WARN_ENABLE, Setting.OFF);
-        settings[Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_VALUE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_WARN_VALUE, 10, 40, 30, "%");
+        settings[Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_VALUE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_WARN_VALUE, 10, 40, 30, "");
         settings[Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE, Setting.OFF);
-        settings[Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_CRITICAL_VALUE, 10, 40, 25, "%");
+        settings[Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE.ordinal()] = new Setting(Parameter.Type.LOW_BATTERY_PROTECTION_CRITICAL_VALUE, 10, 40, 25, "");
 
         // Gain & Expo Setting
         settings[Setting.SettingType.BASIC_AILERON_GAIN.ordinal()] = new Setting(Parameter.Type.BASIC_AILERON_GAIN, 50, 300, 100, "%");

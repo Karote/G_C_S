@@ -148,32 +148,31 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="44dp"
+                android:layout_width="115dp"
                 android:layout_height="44dp"
                 android:background="@drawable/btn_plan_white"
+                android:orientation="horizontal"
                 android:padding="3dp">
 
                 <Button
                     android:id="@+id/btn_plan_land"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:background="@drawable/btn_plan_land" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/btn_plan_white"
-                android:padding="3dp">
-
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="34dp"
+                    android:background="#d1d1d1"
+                    android:layout_gravity="center_vertical" />
                 <Button
                     android:id="@+id/btn_plan_rtl"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
-                    android:layout_gravity="center"
                     android:background="@drawable/btn_plan_rtl" />
             </LinearLayout>
+
         </LinearLayout>
 
         <include

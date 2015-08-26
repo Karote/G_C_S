@@ -3,9 +3,11 @@ package com.coretronic.drone.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -52,6 +54,12 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
                 }
             }
         });
+        switch (id) {
+            case R.id.setting_bar_low_power_flash:
+            case R.id.setting_bar_low_power_rtl:
+                seekBarTextView.setTvWidth(28);
+                break;
+        }
     }
 
     private void initView() {
@@ -81,6 +89,22 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
             }
         });
         seekBar.setOnSeekBarChangeListener(this);
+    }
+
+    public void setTvWidth(int width) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
+        tvValue.setLayoutParams(params);
+    }
+
+    public void setViewEnabled(boolean flag) {
+        tvValue.setEnabled(flag);
+        seekBar.setEnabled(flag);
+        if (flag) {
+            tvValue.setTextColor(getResources().getColor(R.color.blue_sky));
+        } else {
+            tvValue.setTextColor(getResources().getColor(R.color.seekbar_off_tv_color));
+        }
     }
 
     @Override

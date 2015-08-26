@@ -10,6 +10,9 @@ import android.widget.Switch;
 
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.piloting.Setting;
+import com.coretronic.drone.piloting.settings.module.SwitchEvent;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by jiaLian on 15/3/11.
@@ -55,11 +58,12 @@ public class ViewManager {
 
     }
 
-    public static void assignSwitchView(final MainActivity activity, View view, int id, final Setting.SettingType settingType) {
+    public static void assignSwitchView(final MainActivity activity, View view, final int id, final Setting.SettingType settingType) {
         final Switch sw = (Switch) view.findViewById(id);
         final Setting setting = activity.getSetting(settingType);
         final int type = settingType.ordinal();
-        sw.post(new Runnable() {
+        final EventBus mEventBus = EventBus.getDefault();
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 sw.setChecked(setting.getValue() == Setting.ON);
@@ -71,6 +75,10 @@ public class ViewManager {
                         if (setting.getParameterType() != null && activity.getDroneController() != null) {
                             activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
                         }
+                        SwitchEvent switchEvent = new SwitchEvent();
+                        switchEvent.setId(id);
+                        switchEvent.setIsChecked(isChecked);
+                        mEventBus.post(switchEvent);
                     }
                 });
             }

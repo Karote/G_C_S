@@ -41,18 +41,19 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="12dp"
                 android:background="@drawable/ico_setup_reset" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginRight="12dp"
+                android:textStyle="bold"
+                android:fontFamily="@string/font_roboto_condensed"
                 android:text="RESET"
                 android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
