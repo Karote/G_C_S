@@ -11,9 +11,10 @@
         android:layout_gravity="center|right"
         android:layout_marginRight="8dp"
         android:gravity="center"
+        android:fontFamily="@string/font_roboto_condensed"
         android:textColor="@color/blue_sky"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <SeekBar
         android:id="@+id/seek_bar"

@@ -6,6 +6,9 @@
     <color name="gray">#c6c9cd</color>
     <color name="gray_half_translucent">#7fc6c9cd</color>
     <color name="btn_login_press">#94d5f4</color>
-
+    <color name="btn_sign_up_normal">#ebebeb</color>
+    <color name="btn_sign_up_text">#9a9a9a</color>
+    <color name="ed_login_bg_normal">#f0f0f0</color>
+    <color name="seekbar_off_tv_color">#383838</color>
 
 </resources>
