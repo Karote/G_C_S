@@ -237,9 +237,9 @@ public class PlanningFragment extends MavInfoFragment {
         @Override
         public void onClick(View v) {
             drone = ((MainActivity) getActivity()).getDroneController();
-//            if (drone == null) {
-//                return;
-//            }
+            if (drone == null) {
+                return;
+            }
             switch (v.getId()) {
                 case R.id.btn_plan_go:
                     if(drone != null) {
@@ -264,21 +264,17 @@ public class PlanningFragment extends MavInfoFragment {
 
                     break;
                 case R.id.btn_plan_land:
-                    Log.d("morris", "btn_plan_land");
                     if (drone != null) {
                         drone.land();
                     }
                     break;
                 case R.id.btn_plan_rtl:
-                    Log.d("morris", "btn_plan_rtl");
                     if (drone != null) {
                         drone.returnToLaunch();
                     }
                     break;
                 case R.id.btn_plan_stop:
-                    Log.d("morris", "btn_plan_stop");
                     if (drone != null) {
-                        Log.d("morris", "pauseMission");
                         drone.pauseMission();
                     }
                     break;
