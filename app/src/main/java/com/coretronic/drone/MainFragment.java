@@ -1,5 +1,6 @@
 package com.coretronic.drone;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -15,13 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +85,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Select Device", 77));
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
 
-        mDeviceAdapter = new DeviceAdapter();
+        DeviceAdapter mDeviceAdapter = new DeviceAdapter(getActivity(), R.layout.spinner_item, mDroneDevices);
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
         spinnerDroneDevice.setOnItemSelectedListener(this);
     }
@@ -314,28 +314,40 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         }
     }
 
-    public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
 
-        @Override
-        public int getCount() {
-            return mDroneDevices.size();
-        }
+    public class DeviceAdapter extends ArrayAdapter<DroneDevice> {
 
-        @Override
-        public DroneDevice getItem(int position) {
-            return mDroneDevices.get(position);
-        }
+        private Activity context;
+        List<DroneDevice> deer;
 
-        @Override
-        public long getItemId(int position) {
-            return position;
+        public DeviceAdapter(Activity context, int resource, List<DroneDevice> deer) {
+
+            super(context, resource, deer);
+            this.context = context;
+            this.deer = deer;
+
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.spinner_item, null);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.spinner_style_main, parent, false);
+                holder = new ViewHolder();
+                holder.textView = (TextView) convertView.findViewById(R.id.spinner_title_tv);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.textView.setText(getItem(position).getName());
+            return convertView;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false);
                 holder = new ViewHolder();
                 holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
                 convertView.setTag(holder);
