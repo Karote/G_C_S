@@ -76,7 +76,7 @@ public class PlanningFragment extends MavInfoFragment {
 
         void fitMapShowAllMission();
 
-        void tapAndGoShowPath();
+        void setTapGoPath();
 
         void clearTapMarker();
 
@@ -469,7 +469,7 @@ public class PlanningFragment extends MavInfoFragment {
         if(drone == null)
             return;
         drone.moveToLocation(createNewMission(lat, lng, alt, 0, false, 0, Mission.Type.WAY_POINT));
-        mCallback.tapAndGoShowPath();
+        mCallback.setTapGoPath();
     }
 
 

@@ -616,10 +616,10 @@ public class WaypointEditorFragment extends Fragment
                 setDeleteOptionShow(false);
                 webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
                 webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
-                webview_Map.loadUrl("javascript:clearMarkers()");
-                webview_Map.loadUrl("javascript:clearDroneTargetMarker()");
+                webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
+                webview_Map.loadUrl("javascript:clearTapGoSetMarker()");
                 webview_Map.loadUrl("javascript:clearTapMarker()");
-                ClearPath();
+                ClearHistoryMarkerPath();
             }
 
             @Override
@@ -659,7 +659,7 @@ public class WaypointEditorFragment extends Fragment
                 switch (checkedId) {
                     case R.id.btn_action_multi_point:
                         isTapAndGo = false;
-                        webview_Map.loadUrl("javascript:clearDroneTargetMarker()");
+                        webview_Map.loadUrl("javascript:clearTapGoSetMarker()");
                         if (getDroneController() != null) {
                             getDroneController().stopTapAndGo();
                         }
@@ -677,7 +677,7 @@ public class WaypointEditorFragment extends Fragment
                         b_action_plan_delete.setVisibility(View.INVISIBLE);
                         break;
                 }
-                webview_Map.loadUrl("javascript:clearMarkers()");
+                webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
                 ((PlanningFragment) currentFragment).missionAdapterClearData();
                 ((PlanningFragment) currentFragment).missionAdapterShowDelete(false);
                 ((PlanningFragment) currentFragment).hideTapAndGoDialogFragment(false, 0, 0, 0);
@@ -779,7 +779,7 @@ public class WaypointEditorFragment extends Fragment
                 }
                 break;
             case R.id.btn_delete_all:
-                webview_Map.loadUrl("javascript:clearMarkers()");
+                webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
                 ((PlanningFragment) currentFragment).missionAdapterClearData();
                 break;
             case R.id.btn_action_plan_delete:
@@ -814,10 +814,10 @@ public class WaypointEditorFragment extends Fragment
     // Implement FollowMeFragment.OnFollowMeClickListener
     @Override
     public void writeMissionsToMap(List<Mission> missions) {
-        webview_Map.loadUrl("javascript:clearMarkers()");
+        webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
         for (Mission mission : missions) {
             int sn = missions.indexOf(mission) + 1;
-            webview_Map.loadUrl("javascript:addMarker(" + mission.getLatitude() + "," + mission.getLongitude() + "," + sn + ")");
+            webview_Map.loadUrl("javascript:addMissionMarker(" + mission.getLatitude() + "," + mission.getLongitude() + "," + sn + ")");
         }
     }
 
@@ -833,7 +833,7 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void fitMapShowAllMission() {
-        webview_Map.loadUrl("javascript:fitMapShowAll()");
+        webview_Map.loadUrl("javascript:fitMapShowAllMissionPlanning()");
     }
 
     @Override
@@ -848,8 +848,8 @@ public class WaypointEditorFragment extends Fragment
     }
 
     @Override
-    public void tapAndGoShowPath() {
-        webview_Map.loadUrl("javascript:showTapGoFlightPath()");
+    public void setTapGoPath() {
+        webview_Map.loadUrl("javascript:setTapGoPath()");
     }
 
     @Override
@@ -859,15 +859,15 @@ public class WaypointEditorFragment extends Fragment
 
     // Implement HistoryFragment.HistoryAdapterListener
     @Override
-    public void LoadPathLog(List<Float> markers, List<Long> path) {
+    public void loadHistory(List<Float> markers, List<Long> path) {
         JSONArray markerJSON = new JSONArray(markers);
         JSONArray pathJson = new JSONArray(path);
-        webview_Map.loadUrl("javascript:LoadPathLog(" + markerJSON + "," + pathJson + ")");
+        webview_Map.loadUrl("javascript:loadHistory(" + markerJSON + "," + pathJson + ")");
     }
 
     @Override
-    public void ClearPath() {
-        webview_Map.loadUrl("javascript:ClearPath()");
+    public void ClearHistoryMarkerPath() {
+        webview_Map.loadUrl("javascript:ClearHistoryMarkerPath()");
     }
 
     @Override
