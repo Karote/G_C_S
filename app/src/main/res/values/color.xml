@@ -10,5 +10,5 @@
     <color name="btn_sign_up_text">#9a9a9a</color>
     <color name="ed_login_bg_normal">#f0f0f0</color>
     <color name="seekbar_off_tv_color">#383838</color>
-
+    <color name="font_color_afafaf">#afafaf</color>
 </resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/spinner_item_tv"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:fontFamily="@string/font_roboto_medium"
+    android:gravity="center_vertical"
+    android:paddingLeft="12dp"
+    android:textColor="@color/font_color_afafaf"
+    android:textSize="14sp" />

@@ -46,9 +46,10 @@
 
         <Spinner
             android:id="@+id/spinner_drone_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|top" />
+            android:layout_width="160dp"
+            android:layout_height="36dp"
+            android:layout_gravity="left|top"
+            android:background="@color/ed_login_bg_normal"/>
 
         <TextView
             android:id="@+id/tv_app_version"
