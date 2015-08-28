@@ -92,7 +92,7 @@ public class WaypointEditorFragment extends Fragment
     private Location nowlocation = null;
 
     final static long LOCATION_UPDATE_MIN_TIME = 1000;
-    final static int REQUEST_CHECK_SETTINGS = 1000;
+    public final static int REQUEST_LOCATION = 1000;
 
     private double nowLatget, nowLngget;
 
@@ -191,7 +191,11 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient.isConnected()) {
+            fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+        webview_Map.loadUrl("about:blank");
         saveFlag = false;
     }
 
@@ -221,19 +225,12 @@ public class WaypointEditorFragment extends Fragment
     public void onConnected(Bundle bundle) {
         Location location = fusedLocationProviderApi.getLastLocation(mGoogleApiClient);
 
-        if (location != null && location.getTime() > 20000) {
+        if (location != null) {
             nowlocation = location;
             nowLatget = nowlocation.getLatitude();
             nowLngget = nowlocation.getLongitude();
         } else {
             fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequestHighAccuracy, this);
-            // Schedule a Thread to unregister location listeners
-            Executors.newScheduledThreadPool(1).schedule(new Runnable() {
-                @Override
-                public void run() {
-                    fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, WaypointEditorFragment.this);
-                }
-            }, 60000, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -723,13 +720,14 @@ public class WaypointEditorFragment extends Fragment
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location requests here.
+                        fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequestHighAccuracy, WaypointEditorFragment.this);
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied. But could be fixed by showing the user a dialog.
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                            status.startResolutionForResult(getActivity(), REQUEST_LOCATION);
                         } catch (IntentSender.SendIntentException e) {
                             // Ignore the error.
                         }
@@ -749,10 +747,11 @@ public class WaypointEditorFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
         switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
+            case REQUEST_LOCATION:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
+                        fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequestHighAccuracy, this);
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to

@@ -1,5 +1,6 @@
 package com.coretronic.drone;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.controller.DroneDevice;
+import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.ViewManager;
@@ -271,5 +273,15 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == WaypointEditorFragment.REQUEST_LOCATION){
+            getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment").onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

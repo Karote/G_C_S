@@ -269,6 +269,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
                 bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
+                backStackName = "WaypointEditorFragment";
                 fragment.setArguments(bundle);
                 break;
             case R.id.ll_album:
@@ -279,6 +280,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             case R.id.btn_flight_history:
                 fragment = new WaypointEditorFragment();
                 bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 1);
+                backStackName = "WaypointEditorFragment";
                 fragment.setArguments(bundle);
                 break;
             case R.id.btn_flight_setting:
