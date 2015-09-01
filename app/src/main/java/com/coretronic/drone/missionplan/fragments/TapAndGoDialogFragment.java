@@ -71,7 +71,7 @@ public class TapAndGoDialogFragment extends Fragment {
         btn_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlanningFragment.hideTapAndGoDialogFragment(true, tapGo_altitude, tapGo_lat, tapGo_lng);
+                TapAndGoFragment.hideTapAndGoDialogFragment(true, tapGo_altitude, tapGo_lat, tapGo_lng);
             }
         });
 
@@ -79,7 +79,7 @@ public class TapAndGoDialogFragment extends Fragment {
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlanningFragment.hideTapAndGoDialogFragment(false, 0, 0, 0);
+                TapAndGoFragment.hideTapAndGoDialogFragment(false, 0, 0, 0);
             }
         });
     }

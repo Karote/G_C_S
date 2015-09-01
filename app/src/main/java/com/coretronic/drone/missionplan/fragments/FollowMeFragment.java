@@ -35,21 +35,21 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     private TextView tv_droneFlightTime = null;
 
 
-    OnFollowMeClickListener mCallback;
+    FollowMeInterface callMainFragmentInterface;
 
     private AbstractWheel altitudeWheel = null;
     private NumericWheelAdapter altitudeAdapter = null;
     private RelativeLayout startFollowMe = null;
     private Button stopFollowMe = null;
 
-    public interface OnFollowMeClickListener extends PlanningFragment.MissionAdapterListener {
+    public interface FollowMeInterface extends PlanningFragment.PlanningInterface {
         void fitMapShowDroneAndMe();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCallback = (OnFollowMeClickListener) getActivity().getSupportFragmentManager().findFragmentByTag("fragment");
+        callMainFragmentInterface = (FollowMeInterface) getActivity().getSupportFragmentManager().findFragmentByTag("fragment");
     }
 
     @Override
@@ -205,13 +205,13 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
                     stopFollowMe.setVisibility(View.GONE);
                     break;
                 case R.id.button_my_location:
-                    mCallback.setMapToMyLocation();
+                    callMainFragmentInterface.setMapToMyLocation();
                     break;
                 case R.id.button_drone_location:
-                    mCallback.setMapToDrone();
+                    callMainFragmentInterface.setMapToDrone();
                     break;
                 case R.id.button_fit_map:
-                    mCallback.fitMapShowDroneAndMe();
+                    callMainFragmentInterface.fitMapShowDroneAndMe();
                     break;
             }
         }

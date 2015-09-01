@@ -34,7 +34,6 @@ import java.util.List;
 public class PlanningFragment extends MavInfoFragment {
     private static final String TAG = PlanningFragment.class.getSimpleName();
 
-    private int planningMode = 0;
     private RecyclerView recyclerView = null;
     private static MissionItemListAdapter mMissionItemAdapter = null;
     private static FrameLayout layout_waypointDetail = null;
@@ -45,8 +44,6 @@ public class PlanningFragment extends MavInfoFragment {
     private TextView tv_droneLng = null;
     private TextView tv_droneFlightTime = null;
 
-    private LinearLayout layout_GoAndStop = null;
-
     private FragmentActivity fragmentActivity = null;
     private FragmentManager fragmentChildManager = null;
     private WaypointDetailFragment detailFragment = null;
@@ -54,20 +51,17 @@ public class PlanningFragment extends MavInfoFragment {
     private ProgressDialog progressDialog = null;
     private final static String ARG_From_History = "argFromHistory";
 
-    private static FrameLayout layout_tapAndGoDialog = null;
-
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment f = new PlanningFragment();
         Bundle args = new Bundle();
-//        args.putInt("planningMode", planningMode);
         args.putBoolean(ARG_From_History, isFromHistory);
         f.setArguments(args);
         return f;
     }
 
-    private static MissionAdapterListener mCallback = null;
+    private static PlanningInterface callMainFragmentInterface = null;
 
-    public interface MissionAdapterListener {
+    public interface PlanningInterface {
         void writeMissionsToMap(List<Mission> missions);
 
         void setMapToMyLocation();
@@ -75,10 +69,6 @@ public class PlanningFragment extends MavInfoFragment {
         void setMapToDrone();
 
         void fitMapShowAllMission();
-
-        void setTapGoPath();
-
-        void clearTapMarker();
 
         void changeMapType();
     }
@@ -90,10 +80,10 @@ public class PlanningFragment extends MavInfoFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCallback = (MissionAdapterListener) getParentFragment();
+        callMainFragmentInterface = (PlanningInterface) getParentFragment();
 
         Bundle arguments = getArguments();
-        if(arguments ==null){
+        if (arguments == null) {
             return;
         }
         boolean isFromHistory = arguments.getBoolean(ARG_From_History);
@@ -101,13 +91,13 @@ public class PlanningFragment extends MavInfoFragment {
             return;
         }
         try {
-                List<Mission> missionList = ((WaypointEditorFragment)getParentFragment()).getMissionList();
-                if(missionList == null){
-                    return;
-                }
-                mMissionItemAdapter.update(missionList);
-                mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
-                mCallback.fitMapShowAllMission();
+            List<Mission> missionList = ((WaypointEditorFragment) getParentFragment()).getMissionList();
+            if (missionList == null) {
+                return;
+            }
+            mMissionItemAdapter.update(missionList);
+            callMainFragmentInterface.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
+            callMainFragmentInterface.fitMapShowAllMission();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,7 +160,7 @@ public class PlanningFragment extends MavInfoFragment {
             public void onItemDeleteClick(View v, int position) {
                 mMissionItemAdapter.remove(position);
                 mMissionItemAdapter.notifyDataSetChanged();
-                mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
+                callMainFragmentInterface.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
             }
 
             @Override
@@ -190,8 +180,6 @@ public class PlanningFragment extends MavInfoFragment {
         });
 
         // Go & Stop & Location Button Panel
-        layout_GoAndStop = (LinearLayout) view.findViewById(R.id.layout_go_and_stop);
-
         final Button goButton = (Button) view.findViewById(R.id.btn_plan_go);
         goButton.setOnClickListener(onPlanningBtnClickListener);
 
@@ -227,22 +215,15 @@ public class PlanningFragment extends MavInfoFragment {
         tv_droneLng.setText("0.0000000");
         tv_droneFlightTime = (TextView) view.findViewById(R.id.flight_time_text);
         tv_droneFlightTime.setText("00:00");
-
-        // Tap and Go
-        layout_tapAndGoDialog = (FrameLayout) view.findViewById(R.id.tap_and_go_container);
-        layout_tapAndGoDialog.setVisibility(View.GONE);
     }
 
     View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             drone = ((MainActivity) getActivity()).getDroneController();
-            if (drone == null) {
-                return;
-            }
             switch (v.getId()) {
                 case R.id.btn_plan_go:
-                    if(drone != null) {
+                    if (drone != null) {
                         drone.clearMission();
                     }
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
@@ -279,18 +260,18 @@ public class PlanningFragment extends MavInfoFragment {
                     }
                     break;
                 case R.id.button_my_location:
-                    mCallback.setMapToMyLocation();
+                    callMainFragmentInterface.setMapToMyLocation();
                     break;
                 case R.id.button_drone_location:
-                    mCallback.setMapToDrone();
+                    callMainFragmentInterface.setMapToDrone();
                     break;
                 case R.id.button_fit_map:
                     if (mMissionItemAdapter.getItemCount() > 0) {
-                        mCallback.fitMapShowAllMission();
+                        callMainFragmentInterface.fitMapShowAllMission();
                     }
                     break;
                 case R.id.btn_map_type:
-                    mCallback.changeMapType();
+                    callMainFragmentInterface.changeMapType();
                     break;
             }
         }
@@ -316,7 +297,7 @@ public class PlanningFragment extends MavInfoFragment {
     };
 
     private static Mission createNewMission(float latitude, float longitude, float altitude,
-                                     int waitSeconds, boolean autoContinue, int radius, Mission.Type type) {
+                                            int waitSeconds, boolean autoContinue, int radius, Mission.Type type) {
         Mission.Builder builder = new Mission.Builder();
 
         builder.setLatitude(latitude);
@@ -437,45 +418,14 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
-    public void missionAdapterUnselect(){
+    public void missionAdapterUnselect() {
         mMissionItemAdapter.unselectAdapter();
         layout_waypointDetail.setVisibility(View.GONE);
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
-    public void showGoAndStopLayout(boolean isShow){
-        if(isShow) {
-            layout_GoAndStop.setVisibility(View.VISIBLE);
-        }else{
-            layout_GoAndStop.setVisibility(View.GONE);
-        }
-    }
-
-    public void showTapAndGoDialogFragment(int altitude, float latitude, float longitude) {
-        FragmentTransaction fragmentTransaction = fragmentChildManager.beginTransaction();
-        TapAndGoDialogFragment tapAndGoDialogFragment = TapAndGoDialogFragment.newInstance(altitude, latitude, longitude);
-        fragmentTransaction
-                .replace(R.id.tap_and_go_container, tapAndGoDialogFragment, "TapAndGoFragment")
-                .commit();
-        layout_tapAndGoDialog.setVisibility(View.VISIBLE);
-    }
-
-    public static void hideTapAndGoDialogFragment(boolean isGo, int alt, float lat, float lng) {
-        layout_tapAndGoDialog.setVisibility(View.GONE);
-        if (!isGo) {
-            mCallback.clearTapMarker();
-            return;
-        }
-        if(drone == null)
-            return;
-        drone.moveToLocation(createNewMission(lat, lng, alt, 0, false, 0, Mission.Type.WAY_POINT));
-        mCallback.setTapGoPath();
-    }
-
-
     // static methods for DetailFragment
     public static void setItemMissionType(Mission.Type missionType) {
-        Log.d("MissionType", "missionType:" + missionType);
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setType(missionType);
     }
 
@@ -487,7 +437,7 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.getMission(mMissionItemAdapter.getFocusIndex()).setWaitSeconds(missionDelay);
     }
 
-    public static void setItemMissionLocation(int index, float missionLat, float missionLng){
+    public static void setItemMissionLocation(int index, float missionLat, float missionLng) {
         mMissionItemAdapter.getMission(index).setLatitude(missionLat);
         mMissionItemAdapter.getMission(index).setLongitude(missionLng);
     }
@@ -496,7 +446,7 @@ public class PlanningFragment extends MavInfoFragment {
         mMissionItemAdapter.remove(mMissionItemAdapter.getFocusIndex());
         mMissionItemAdapter.clearFocusIndex();
         mMissionItemAdapter.notifyDataSetChanged();
-        mCallback.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
+        callMainFragmentInterface.writeMissionsToMap(mMissionItemAdapter.cloneMissionList());
         layout_waypointDetail.setVisibility(View.GONE);
     }
 }

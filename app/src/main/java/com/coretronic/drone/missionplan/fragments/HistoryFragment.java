@@ -38,9 +38,9 @@ public class HistoryFragment extends MavInfoFragment {
     private static HistoryItemListAdapter mHistoryItemAdapter = null;
     private Button btn_activate_plan = null;
 
-    private static HistoryAdapterListener mCallback = null;
+    private static HistoryInterface callMainFragmentInterface = null;
 
-    public interface HistoryAdapterListener extends PlanningFragment.MissionAdapterListener{
+    public interface HistoryInterface extends PlanningFragment.PlanningInterface{
         void loadHistory(List<Float> markers, List<Long> path);
 
         void ClearHistoryMarkerPath();
@@ -51,7 +51,7 @@ public class HistoryFragment extends MavInfoFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCallback = (HistoryAdapterListener) getParentFragment();
+        callMainFragmentInterface = (HistoryInterface) getParentFragment();
         ((MainActivity) getActivity()).registerOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
 
     }
@@ -95,7 +95,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
+                callMainFragmentInterface.SpinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
             }
         });
 
@@ -127,7 +127,7 @@ public class HistoryFragment extends MavInfoFragment {
                             flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLatitude());
                             flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLongitude());
                         }
-                        mCallback.loadHistory(markerList, flightPath);
+                        callMainFragmentInterface.loadHistory(markerList, flightPath);
 
 
                         long durationTime = 0;
@@ -140,7 +140,7 @@ public class HistoryFragment extends MavInfoFragment {
                         drone_log_info.setVisibility(View.VISIBLE);
                         btn_activate_plan.setVisibility(View.VISIBLE);
                     } else {
-                        mCallback.ClearHistoryMarkerPath();
+                        callMainFragmentInterface.ClearHistoryMarkerPath();
                         drone_log_info.setVisibility(View.GONE);
                         btn_activate_plan.setVisibility(View.GONE);
                     }
@@ -155,7 +155,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_map_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.changeMapType();
+                callMainFragmentInterface.changeMapType();
             }
         });
     }
