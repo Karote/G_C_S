@@ -66,7 +66,7 @@ function loadHistory(markerJson, pathJson) {
         anchor : new google.maps.Point(20, 20)
     };
 
-    ClearHistoryMarkerPath();
+    clearHistoryMarkerPath();
 
     for ( i = 0,
     j = history_flight_path_data.length; i < j; i += 2) {
@@ -160,7 +160,7 @@ function animateDrone() {
     }, 20);
 }
 
-function ClearHistoryMarkerPath() {
+function clearHistoryMarkerPath() {
     window.clearInterval(start_animate);
 
     history_flight_path_polyline.setMap(null);
@@ -175,3 +175,4 @@ function ClearHistoryMarkerPath() {
     }
     history_mission_markers_array = [];
 }
+

@@ -18,7 +18,7 @@ function initialize() {
     initTapGoMarkerPolyline();
 
     mapClickable = true;
-    isTapAndGoMode = false;
+    isTapAndGoMode = true;
 
     var GeoMarkerOption = {
         icon : {
@@ -216,5 +216,6 @@ function mapClean() {
     clearMissionPlanningMarkers();
     clearTapMarker();
     clearTapGoSetMarker();
-    ClearHistoryMarkerPath();
+    clearHistoryMarkerPath();
 }
+

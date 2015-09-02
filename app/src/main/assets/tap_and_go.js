@@ -60,13 +60,18 @@ function setTapGoPath() {
 }
 
 function clearTapMarker() {
-    tapgo_tap_marker.setMap(null);
+    if (tapgo_tap_marker) {
+        tapgo_tap_marker.setMap(null);
+    }
 }
 
 function clearTapGoSetMarker() {
-    tapgo_set_marker.setMap(null);
-    if (planning_drone_marker_arrow.position) {
-        tapgo_path_polyline.setMap(null);
-        tapgo_path_polyline.path = [];
+    if (tapgo_set_marker) {
+        tapgo_set_marker.setMap(null);
+        if (planning_drone_marker_arrow.position) {
+            tapgo_path_polyline.setMap(null);
+            tapgo_path_polyline.path = [];
+        }
     }
 }
+

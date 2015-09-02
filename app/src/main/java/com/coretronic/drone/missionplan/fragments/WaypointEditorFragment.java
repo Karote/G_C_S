@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -69,7 +67,16 @@ public class WaypointEditorFragment extends Fragment
         FollowMeFragment.FollowMeInterface, HistoryFragment.HistoryInterface,
         TapAndGoFragment.TapAndGoInterface {
 
-    private static final String TAG = WaypointEditorFragment.class.getSimpleName();
+    public static final int FRAGMENTTYPE_PLANNING = 0;
+    public static final int FRAGMENTTYPE_HISTORY = 1;
+    public static final int FRAGMENTTYPE_ACTIVATE = 2;
+    public static final int FRAGMENTTYPE_TAPANDGO = 3;
+
+    private boolean canMapAddMarker = true;
+    private boolean isTapAndGo = true;
+    private boolean isSwitchFromHistoryFile = false;
+
+    private int pre_fragmentType;
 
     private StatusView statusView = null;
     private WebView webview_Map = null;
@@ -81,8 +88,6 @@ public class WaypointEditorFragment extends Fragment
     private Button b_action_plan_undo = null;
     private Button b_action_plan_delete = null;
     private RadioGroup radioGroup_multi_or_single = null;
-    private RadioButton btn_action_multi_point = null;
-    private RadioButton btn_action_plan_point = null;
 
     private Spinner spinnerView = null;
     private List<Mission> currentMissionList;
@@ -101,12 +106,9 @@ public class WaypointEditorFragment extends Fragment
     private long droneLat = 0, droneLng = 0;
     private int droneHeading = 0;
 
-    public boolean canMapAddMarker, isTapAndGo, isSwitchFromHistoryFile;
-
     private ProgressDialog progressDialog = null;
     private FragmentActivity fragmentActivity = null;
     private FragmentManager fragmentChildManager = null;
-    private FragmentTransaction fragmentTransaction = null;
 
     private MavInfoFragment currentFragment = null;
 
@@ -293,12 +295,6 @@ public class WaypointEditorFragment extends Fragment
         });
         webview_Map.getSettings().setGeolocationEnabled(true);
         webview_Map.loadUrl("file:///android_asset/GoogleMap.html");
-        canMapAddMarker = true;
-        isTapAndGo = false;
-        webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
-        webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
-
-        isSwitchFromHistoryFile = false;
     }
 
 
@@ -392,8 +388,6 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
-        Log.d(TAG, "Current Mission State:" + droneMissionState + "/" + "New Mission State:" + missionStatus);
-
         if (spinnerIndex != 0) {
             return;
         }
@@ -435,7 +429,6 @@ public class WaypointEditorFragment extends Fragment
         }
 
         // Drone Mode
-        Log.d(TAG, "currentMode:" + currentDroneMode + "/" + "droneMode:" + droneMode);
         if (currentDroneMode != droneMode) {
             currentDroneMode = droneMode;
             String ttsStr = null;
@@ -470,7 +463,6 @@ public class WaypointEditorFragment extends Fragment
                     ttsSpeaker.speak(ttsStr + " Mode");
             }
         }
-        Log.d(TAG, "Flight Time:" + duration);
         if (currentFragment != null) {
             fragmentActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -590,35 +582,22 @@ public class WaypointEditorFragment extends Fragment
         spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                fragmentTransaction = fragmentChildManager.beginTransaction();
                 switch (position) {
-                    case 0: // PLANNING
-                        canMapAddMarker = true;
-                        isTapAndGo = false;
-                        layout_editMarker.setVisibility(View.VISIBLE);
-                        currentFragment = PlanningFragment.newInstance(isSwitchFromHistoryFile);
-                        fragmentTransaction.replace(R.id.mission_plan_container, currentFragment, null).commit();
-                        radioGroup_multi_or_single.check(R.id.btn_action_multi_point);
+                    case FRAGMENTTYPE_PLANNING:
+                        if (isSwitchFromHistoryFile) {
+                            radioGroup_multi_or_single.check(R.id.btn_action_multi_point);
+                            setFragmentTransaction(FRAGMENTTYPE_ACTIVATE);
+                        } else {
+                            radioGroup_multi_or_single.check(R.id.btn_action_tap_and_go);
+                            setFragmentTransaction(FRAGMENTTYPE_TAPANDGO);
+                        }
                         break;
-                    case 1: // FLIGHT HISTORY
-                        canMapAddMarker = false;
-                        isTapAndGo = false;
-                        isSwitchFromHistoryFile = false;
-                        layout_editMarker.setVisibility(View.GONE);
-                        currentMissionList = null;
-                        currentFragment = new HistoryFragment();
-                        fragmentTransaction.replace(R.id.mission_plan_container, currentFragment, null).commit();
+                    case FRAGMENTTYPE_HISTORY:
+                        setFragmentTransaction(FRAGMENTTYPE_HISTORY);
                         break;
                     default:
                         break;
                 }
-                setDeleteOptionShow(false);
-                webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
-                webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
-                webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
-                webview_Map.loadUrl("javascript:clearTapGoSetMarker()");
-                webview_Map.loadUrl("javascript:clearTapMarker()");
-                ClearHistoryMarkerPath();
             }
 
             @Override
@@ -649,48 +628,86 @@ public class WaypointEditorFragment extends Fragment
         b_delete_all.setOnClickListener(this);
 
         radioGroup_multi_or_single = (RadioGroup) view.findViewById(R.id.radiogroup_multi_or_single);
-        btn_action_multi_point = (RadioButton) view.findViewById(R.id.btn_action_multi_point);
-        btn_action_plan_point = (RadioButton) view.findViewById(R.id.btn_action_tap_and_go);
         radioGroup_multi_or_single.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.btn_action_multi_point:
-                        isTapAndGo = false;
-                        webview_Map.loadUrl("javascript:clearTapGoSetMarker()");
-                        if (getDroneController() != null) {
-                            getDroneController().stopTapAndGo();
+                        if (isSwitchFromHistoryFile) {
+                            setFragmentTransaction(FRAGMENTTYPE_ACTIVATE);
+                        } else {
+                            setFragmentTransaction(FRAGMENTTYPE_PLANNING);
                         }
-                        b_action_plan_undo.setVisibility(View.VISIBLE);
-                        b_action_plan_delete.setVisibility(View.VISIBLE);
-                        isSwitchFromHistoryFile = false;
-                        currentFragment = PlanningFragment.newInstance(isSwitchFromHistoryFile);
                         break;
                     case R.id.btn_action_tap_and_go: // Tap & GO
-                        isTapAndGo = true;
-                        if (getDroneController() != null) {
-                            getDroneController().startTapAndGo();
-                        }
-                        b_action_plan_undo.setVisibility(View.INVISIBLE);
-                        b_action_plan_delete.setVisibility(View.INVISIBLE);
-                        currentFragment = new TapAndGoFragment();
+                        setFragmentTransaction(FRAGMENTTYPE_TAPANDGO);
                         break;
                 }
-                fragmentTransaction = fragmentChildManager.beginTransaction();
-                fragmentTransaction.replace(R.id.mission_plan_container, currentFragment, null).commit();
-                webview_Map.loadUrl("javascript:mapClean()");
-                canMapAddMarker = true;
-                webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
-                webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
-                isSwitchFromHistoryFile = false;
             }
         });
+    }
 
-        if (spinnerIndex == 0) {
-            layout_editMarker.setVisibility(View.VISIBLE);
-        } else if (spinnerIndex == 1) {
-            layout_editMarker.setVisibility(View.GONE);
+    private void setFragmentTransaction(int fragmentType) {
+        if (pre_fragmentType == fragmentType) {
+            return;
         }
+        pre_fragmentType = fragmentType;
+        switch (fragmentType) {
+            case FRAGMENTTYPE_ACTIVATE:
+                canMapAddMarker = true;
+                isTapAndGo = false;
+                isSwitchFromHistoryFile = true;
+                if (getDroneController() != null) {
+                    getDroneController().stopTapAndGo();
+                }
+                currentFragment = PlanningFragment.newInstance(isSwitchFromHistoryFile);
+                layout_editMarker.setVisibility(View.VISIBLE);
+                b_action_plan_undo.setVisibility(View.VISIBLE);
+                b_action_plan_delete.setVisibility(View.VISIBLE);
+                break;
+            case FRAGMENTTYPE_PLANNING:
+                canMapAddMarker = true;
+                isTapAndGo = false;
+                isSwitchFromHistoryFile = false;
+                if (getDroneController() != null) {
+                    getDroneController().stopTapAndGo();
+                }
+                currentFragment = PlanningFragment.newInstance(isSwitchFromHistoryFile);
+                layout_editMarker.setVisibility(View.VISIBLE);
+                b_action_plan_undo.setVisibility(View.VISIBLE);
+                b_action_plan_delete.setVisibility(View.VISIBLE);
+                break;
+            case FRAGMENTTYPE_HISTORY:
+                canMapAddMarker = false;
+                isTapAndGo = false;
+                isSwitchFromHistoryFile = false;
+                if (getDroneController() != null) {
+                    getDroneController().stopTapAndGo();
+                }
+                currentFragment = new HistoryFragment();
+                layout_editMarker.setVisibility(View.GONE);
+                setDeleteOptionShow(false);
+                break;
+            case FRAGMENTTYPE_TAPANDGO:
+                canMapAddMarker = true;
+                isTapAndGo = true;
+                isSwitchFromHistoryFile = false;
+                if (getDroneController() != null) {
+                    getDroneController().startTapAndGo();
+                }
+                currentFragment = new TapAndGoFragment();
+                layout_editMarker.setVisibility(View.VISIBLE);
+                b_action_plan_undo.setVisibility(View.INVISIBLE);
+                b_action_plan_delete.setVisibility(View.INVISIBLE);
+                break;
+        }
+
+        FragmentTransaction fragmentTransaction = fragmentChildManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mission_plan_container, currentFragment, null).commit();
+
+        webview_Map.loadUrl("javascript:mapClean()");
+        webview_Map.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
+        webview_Map.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
     }
 
     private void setUpLocationService() {
@@ -865,14 +882,14 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void ClearHistoryMarkerPath() {
-        webview_Map.loadUrl("javascript:ClearHistoryMarkerPath()");
+        webview_Map.loadUrl("javascript:clearHistoryMarkerPath()");
     }
 
     @Override
     public void SpinnerSetToPlanning(List<Mission> missionList, boolean isHistory) {
         currentMissionList = missionList;
         isSwitchFromHistoryFile = isHistory;
-        spinnerView.setSelection(0);
+        spinnerView.setSelection(FRAGMENTTYPE_PLANNING);
     }
     // End HistoryFragment.HistoryAdapterListener
 
