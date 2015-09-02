@@ -85,7 +85,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Select Device", 77));
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
 
-        DeviceAdapter mDeviceAdapter = new DeviceAdapter(getActivity(), R.layout.spinner_item, mDroneDevices);
+        mDeviceAdapter = new DeviceAdapter(getActivity(), R.layout.spinner_item, mDroneDevices);
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
         spinnerDroneDevice.setOnItemSelectedListener(this);
     }
