@@ -1,92 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:layout_width="226dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="36dp"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="226dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="36dp"
-            android:orientation="vertical">
+        <TextView
+            style="@style/settings_title"
+            android:text="Basic Aileron Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Basic Aileron Gain" />
+        <TextView
+            style="@style/settings_title"
+            android:text="Basic Elevator Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Basic Elevator Gain" />
+        <TextView
+            style="@style/settings_title"
+            android:text="Basic Rudder Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Basic Rudder Gain" />
+        <TextView
+            style="@style/settings_title"
+            android:text="Attitude/GPS Aileron Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Attitude/GPS Aileron Gain" />
+        <TextView
+            style="@style/settings_title"
+            android:text="Attitude/GPS Elevator Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Attitude/GPS Elevator Gain" />
+        <TextView
+            style="@style/settings_title"
+            android:text="Attitude/GPS Rudder Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Attitude/GPS Rudder Gain" />
+        <TextView
+            style="@style/settings_title"
+            android:text="Altitude Gain"/>
 
-            <TextView
-                style="@style/settings_title"
-                android:text="Altitude Gain" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="68dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_basic_aileron_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_basic_elevator_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_basic_rudder_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_attitude_aileron_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_attitude_elevator_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_attitude_rudder_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-            <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_attitude_gain"
-                android:layout_width="match_parent"
-                android:layout_height="38dp" />
-
-        </LinearLayout>
     </LinearLayout>
-</FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="68dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_basic_aileron_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_basic_elevator_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_basic_rudder_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_attitude_aileron_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_attitude_elevator_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_attitude_rudder_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+        <com.coretronic.drone.ui.SeekBarTextView
+            android:id="@+id/setting_bar_attitude_gain"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"/>
+
+    </LinearLayout>
+</LinearLayout>
