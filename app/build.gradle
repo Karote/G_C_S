@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
 
+    lintOptions {
+        disable 'DefaultLocale', 'SimpleDateFormat', 'UnusedAttribute', 'InflateParams', 'RtlHardcoded',
+                'ContentDescription', 'RtlSymmetry', 'ButtonStyle'
+    }
+
     signingConfigs {
         release {
             keyAlias CORETRONIC_RELEASE_KEY_ALIAS
@@ -11,7 +16,7 @@ android {
         }
     }
 
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
@@ -38,7 +43,7 @@ android {
                 variant.outputs.each { output ->
                     output.outputFile = new File(output.outputFile.parent,
                             String.format("%s_%s_%s.apk",
-                                    defaultConfig.applicationId, defaultConfig.versionName , new Date().format('yyyyMMddHHmm')));
+                                    defaultConfig.applicationId, defaultConfig.versionName, new Date().format('yyyyMMddHH')));
                 }
             }
         }

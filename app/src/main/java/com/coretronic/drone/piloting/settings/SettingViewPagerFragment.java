@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.MainActivity;
@@ -25,10 +24,9 @@ import com.coretronic.drone.ui.PageIndicator;
 public class SettingViewPagerFragment extends UnBindDrawablesFragment implements ViewPager.OnPageChangeListener {
     private TextView tvTitle;
     private PageIndicator pageIndicator;
-    private LinearLayout defaultSetting;
+    private TextView defaultSetting;
     private SettingsPagerAdapter settingsPagerAdapter;
     private ProgressDialog progressDialog;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,7 @@ public class SettingViewPagerFragment extends UnBindDrawablesFragment implements
         tvTitle = (TextView) fragmentView.findViewById(R.id.tv_title);
         tvTitle.setText(settingsPagerAdapter.getTitle(viewPager.getCurrentItem()));
 
-        defaultSetting = (LinearLayout) fragmentView.findViewById(R.id.default_set);
+        defaultSetting = (TextView) fragmentView.findViewById(R.id.default_set);
         defaultSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

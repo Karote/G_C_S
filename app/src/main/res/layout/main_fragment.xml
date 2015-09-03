@@ -96,20 +96,6 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_piloting"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/main_btn_larg"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="Piloting"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
-                    android:visibility="gone" />
-
-                <Button
                     android:id="@+id/btn_mission_plan"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -145,32 +131,6 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:visibility="gone">
-
-                    <LinearLayout
-                        android:id="@+id/ll_album"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/main_btn_sml"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="2dp"
-                            android:background="@drawable/ico_main_photo" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:text="Photos/ Video"
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_updates"
