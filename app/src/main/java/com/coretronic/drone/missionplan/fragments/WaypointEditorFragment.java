@@ -57,8 +57,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class WaypointEditorFragment extends Fragment
         implements View.OnClickListener, LocationListener,
@@ -71,12 +69,21 @@ public class WaypointEditorFragment extends Fragment
     public static final int FRAGMENTTYPE_HISTORY = 1;
     public static final int FRAGMENTTYPE_ACTIVATE = 2;
     public static final int FRAGMENTTYPE_TAPANDGO = 3;
+    public static final int REQUEST_LOCATION = 1000;
+
+    private static final long LOCATION_UPDATE_MIN_TIME = 1000;
 
     private boolean canMapAddMarker = true;
     private boolean isTapAndGo = true;
     private boolean isSwitchFromHistoryFile = false;
 
-    private int pre_fragmentType;
+    private int pre_fragmentType = 0;
+    private int spinnerIndex = FRAGMENTTYPE_PLANNING;
+    private int droneHeading = 0;
+    private double nowLatget = 0;
+    private double nowLngget = 0;
+    private long droneLat = 0;
+    private long droneLng = 0;
 
     private StatusView statusView = null;
     private WebView webview_Map = null;
@@ -91,20 +98,11 @@ public class WaypointEditorFragment extends Fragment
 
     private Spinner spinnerView = null;
     private List<Mission> currentMissionList;
-    private int spinnerIndex = 0;
 
     private GoogleApiClient mGoogleApiClient = null;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequestHighAccuracy = null;
     private Location nowlocation = null;
-
-    final static long LOCATION_UPDATE_MIN_TIME = 1000;
-    final static int REQUEST_CHECK_SETTINGS = 1000;
-
-    private double nowLatget, nowLngget;
-
-    private long droneLat = 0, droneLng = 0;
-    private int droneHeading = 0;
 
     private ProgressDialog progressDialog = null;
     private FragmentActivity fragmentActivity = null;
@@ -181,11 +179,6 @@ public class WaypointEditorFragment extends Fragment
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
@@ -195,15 +188,13 @@ public class WaypointEditorFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient.isConnected()) {
+            fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+        webview_Map.loadUrl("about:blank");
         saveFlag = false;
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
 
     @Override
     public void onDestroy() {
@@ -225,19 +216,12 @@ public class WaypointEditorFragment extends Fragment
     public void onConnected(Bundle bundle) {
         Location location = fusedLocationProviderApi.getLastLocation(mGoogleApiClient);
 
-        if (location != null && location.getTime() > 20000) {
+        if (location != null) {
             nowlocation = location;
             nowLatget = nowlocation.getLatitude();
             nowLngget = nowlocation.getLongitude();
         } else {
             fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequestHighAccuracy, this);
-            // Schedule a Thread to unregister location listeners
-            Executors.newScheduledThreadPool(1).schedule(new Runnable() {
-                @Override
-                public void run() {
-                    fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, WaypointEditorFragment.this);
-                }
-            }, 60000, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -314,13 +298,12 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onAltitudeUpdate(final float altitude) {
-        if (currentFragment == null)
-            return;
-
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                currentFragment.setMavInfoAltitude(altitude);
+                if (currentFragment != null) {
+                    currentFragment.setMavInfoAltitude(altitude);
+                }
             }
         });
         // save info
@@ -334,13 +317,12 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onSpeedUpdate(final float groundSpeed) {
-        if (currentFragment == null)
-            return;
-
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                currentFragment.setMavInfoSpeed(groundSpeed);
+                if (currentFragment != null) {
+                    currentFragment.setMavInfoSpeed(groundSpeed);
+                }
             }
         });
         // save info
@@ -349,16 +331,15 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onLocationUpdate(final long lat, final long lon, final int eph) {
-        if (currentFragment == null)
-            return;
-
         droneLat = lat;
         droneLng = lon;
         fragmentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    currentFragment.setMavInfoLocation(droneLat, droneLng);
+                    if (currentFragment != null) {
+                        currentFragment.setMavInfoLocation(droneLat, droneLng);
+                    }
                     webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
                     // GPS status
                     statusView.setGpsVisibility(((MainActivity) getActivity()).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
@@ -388,7 +369,7 @@ public class WaypointEditorFragment extends Fragment
 
     @Override
     public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
-        if (spinnerIndex != 0) {
+        if (spinnerIndex != FRAGMENTTYPE_PLANNING) {
             return;
         }
 
@@ -459,8 +440,9 @@ public class WaypointEditorFragment extends Fragment
                         ttsStr = "HEADING LOCK";
                         break;
                 }
-                if (ttsStr != null)
+                if (ttsStr != null) {
                     ttsSpeaker.speak(ttsStr + " Mode");
+                }
             }
         }
         if (currentFragment != null) {
@@ -474,7 +456,6 @@ public class WaypointEditorFragment extends Fragment
     }
 
     private void createHistory() {
-
         // save flight history log
         List<Mission> missionList = gson.fromJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null), new TypeToken<List<Mission>>() {
         }.getType());
@@ -553,7 +534,7 @@ public class WaypointEditorFragment extends Fragment
             ((Activity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    PlanningFragment.setItemMissionLocation(index, lat, lng);
+                    ((PlanningFragment) currentFragment).setItemMissionLocation(index, lat, lng);
                 }
             });
         }
@@ -605,8 +586,6 @@ public class WaypointEditorFragment extends Fragment
 
             }
         });
-
-
     }
 
     private void setUpEditMarkerLayout(View view) {
@@ -738,13 +717,14 @@ public class WaypointEditorFragment extends Fragment
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location requests here.
+                        fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequestHighAccuracy, WaypointEditorFragment.this);
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied. But could be fixed by showing the user a dialog.
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                            status.startResolutionForResult(getActivity(), REQUEST_LOCATION);
                         } catch (IntentSender.SendIntentException e) {
                             // Ignore the error.
                         }
@@ -764,10 +744,11 @@ public class WaypointEditorFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
         switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
+            case REQUEST_LOCATION:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
+                        fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequestHighAccuracy, this);
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
@@ -826,7 +807,7 @@ public class WaypointEditorFragment extends Fragment
         }
     }
 
-    // Implement FollowMeFragment.OnFollowMeClickListener
+    // Implement FollowMeFragment.FollowMeInterface
     @Override
     public void writeMissionsToMap(List<Mission> missions) {
         webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
@@ -855,7 +836,7 @@ public class WaypointEditorFragment extends Fragment
     public void fitMapShowDroneAndMe() {
         webview_Map.loadUrl("javascript:fitMapShowDroneAndMe()");
     }
-    // End FollowMeFragment.OnFollowMeClickListener
+    // End FollowMeFragment.FollowMeInterface
 
     @Override
     public void changeMapType() {
@@ -872,7 +853,7 @@ public class WaypointEditorFragment extends Fragment
         webview_Map.loadUrl("javascript:clearTapMarker()");
     }
 
-    // Implement HistoryFragment.HistoryAdapterListener
+    // Implement HistoryFragment.HistoryInterface
     @Override
     public void loadHistory(List<Float> markers, List<Long> path) {
         JSONArray markerJSON = new JSONArray(markers);
@@ -881,16 +862,16 @@ public class WaypointEditorFragment extends Fragment
     }
 
     @Override
-    public void ClearHistoryMarkerPath() {
+    public void clearHistoryMarkerPath() {
         webview_Map.loadUrl("javascript:clearHistoryMarkerPath()");
     }
 
     @Override
-    public void SpinnerSetToPlanning(List<Mission> missionList, boolean isHistory) {
+    public void spinnerSetToPlanning(List<Mission> missionList, boolean isHistory) {
         currentMissionList = missionList;
         isSwitchFromHistoryFile = isHistory;
         spinnerView.setSelection(FRAGMENTTYPE_PLANNING);
     }
-    // End HistoryFragment.HistoryAdapterListener
+    // End HistoryFragment.HistoryInterface
 
 }

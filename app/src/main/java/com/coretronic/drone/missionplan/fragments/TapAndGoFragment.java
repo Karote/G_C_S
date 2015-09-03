@@ -3,7 +3,6 @@ package com.coretronic.drone.missionplan.fragments;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import com.coretronic.drone.model.Mission;
  * Created by karot.chuang on 2015/7/21.
  */
 public class TapAndGoFragment extends MavInfoFragment {
-    private static final String TAG = TapAndGoFragment.class.getSimpleName();
-
     private TextView tv_droneAltitude = null;
     private TextView tv_droneSpeed = null;
     private TextView tv_droneLat = null;
@@ -29,13 +26,11 @@ public class TapAndGoFragment extends MavInfoFragment {
     private TextView tv_droneFlightTime = null;
 
     private FragmentManager fragmentChildManager = null;
-    private static DroneController drone = null;
+    private DroneController drone = null;
 
-    private static FrameLayout layout_tapAndGoDialog = null;
+    private FrameLayout layout_tapAndGoDialog = null;
 
-    private static TapAndGoInterface callMainFragmentInterface = null;
-
-    public interface TapAndGoInterface extends PlanningFragment.PlanningInterface{
+    public interface TapAndGoInterface extends PlanningFragment.PlanningInterface {
         void setTapGoPath();
 
         void clearTapMarker();
@@ -43,10 +38,14 @@ public class TapAndGoFragment extends MavInfoFragment {
         void changeMapType();
     }
 
+    private TapAndGoInterface callMainFragmentInterface = null;
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         callMainFragmentInterface = (TapAndGoInterface) getParentFragment();
+        drone = ((MainActivity) getActivity()).getDroneController();
     }
 
     @Override
@@ -96,19 +95,16 @@ public class TapAndGoFragment extends MavInfoFragment {
         layout_tapAndGoDialog.setVisibility(View.GONE);
     }
 
-    View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
+    private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            drone = ((MainActivity) getActivity()).getDroneController();
             switch (v.getId()) {
                 case R.id.btn_plan_land:
-                    Log.d("morris", "btn_plan_land");
                     if (drone != null) {
                         drone.land();
                     }
                     break;
                 case R.id.btn_plan_rtl:
-                    Log.d("morris", "btn_plan_rtl");
                     if (drone != null) {
                         drone.returnToLaunch();
                     }
@@ -130,7 +126,7 @@ public class TapAndGoFragment extends MavInfoFragment {
     };
 
 
-    private static Mission createNewMission(float latitude, float longitude, float altitude,
+    private Mission createNewMission(float latitude, float longitude, float altitude,
                                      int waitSeconds, boolean autoContinue, int radius, Mission.Type type) {
         Mission.Builder builder = new Mission.Builder();
 
@@ -159,7 +155,7 @@ public class TapAndGoFragment extends MavInfoFragment {
         if (tv_droneSpeed == null)
             return;
 
-        tv_droneSpeed.setText(String.format("%.1f", groundSpeed) + " km/h");
+        tv_droneSpeed.setText(String.format("%.1f", groundSpeed / 10) + " km/h");
     }
 
     @Override
@@ -222,15 +218,16 @@ public class TapAndGoFragment extends MavInfoFragment {
         layout_tapAndGoDialog.setVisibility(View.VISIBLE);
     }
 
-    public static void hideTapAndGoDialogFragment(boolean isGo, int alt, float lat, float lng) {
+    public void hideTapAndGoDialogFragment(boolean isGo, int alt, float lat, float lng) {
         layout_tapAndGoDialog.setVisibility(View.GONE);
         if (!isGo) {
             callMainFragmentInterface.clearTapMarker();
             return;
         }
-        if(drone == null)
-            return;
-        drone.moveToLocation(createNewMission(lat, lng, alt, 0, false, 0, Mission.Type.WAY_POINT));
-        callMainFragmentInterface.setTapGoPath();
+
+        if (drone != null) {
+            drone.moveToLocation(createNewMission(lat, lng, alt, 0, false, 0, Mission.Type.WAY_POINT));
+            callMainFragmentInterface.setTapGoPath();
+        }
     }
 }

@@ -1,11 +1,8 @@
 package com.coretronic.drone.missionplan.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,24 +26,22 @@ import java.util.List;
  * Created by karot.chuang on 2015/7/22.
  */
 public class HistoryFragment extends MavInfoFragment {
+    private final static SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
 
-    private static final String TAG = HistoryFragment.class.getSimpleName();
-
-    private FragmentActivity fragmentActivity = null;
     private LinearLayout drone_log_info = null;
     private TextView tv_flightDistance = null;
-    private static HistoryItemListAdapter mHistoryItemAdapter = null;
+    private HistoryItemListAdapter mHistoryItemAdapter = null;
     private Button btn_activate_plan = null;
 
-    private static HistoryInterface callMainFragmentInterface = null;
-
-    public interface HistoryInterface extends PlanningFragment.PlanningInterface{
+    public interface HistoryInterface extends PlanningFragment.PlanningInterface {
         void loadHistory(List<Float> markers, List<Long> path);
 
-        void ClearHistoryMarkerPath();
+        void clearHistoryMarkerPath();
 
-        void SpinnerSetToPlanning(List<Mission> missionList, boolean isSwitchFromHistoryFile);
+        void spinnerSetToPlanning(List<Mission> missionList, boolean isSwitchFromHistoryFile);
     }
+
+    private HistoryInterface callMainFragmentInterface = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -57,25 +52,8 @@ public class HistoryFragment extends MavInfoFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        fragmentActivity = getActivity();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mission_plan_history, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_mission_plan_history, container, false);
     }
 
     @Override
@@ -95,7 +73,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callMainFragmentInterface.SpinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
+                callMainFragmentInterface.spinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
             }
         });
 
@@ -105,7 +83,7 @@ public class HistoryFragment extends MavInfoFragment {
                 .getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(recyclerLayoutMgr);
 
-        mHistoryItemAdapter = new HistoryItemListAdapter(view.getContext());
+        mHistoryItemAdapter = new HistoryItemListAdapter();
         recyclerView.setAdapter(mHistoryItemAdapter);
 
         mHistoryItemAdapter.SetOnItemClickListener(new HistoryItemListAdapter.OnItemClickListener() {
@@ -135,12 +113,12 @@ public class HistoryFragment extends MavInfoFragment {
                             durationTime = mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(j - 1).getCurrentTimeStamp() -
                                     mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(0).getCurrentTimeStamp();
                         }
-                        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+
                         tv_flightTime.setText(timeFormat.format(durationTime));
                         drone_log_info.setVisibility(View.VISIBLE);
                         btn_activate_plan.setVisibility(View.VISIBLE);
                     } else {
-                        callMainFragmentInterface.ClearHistoryMarkerPath();
+                        callMainFragmentInterface.clearHistoryMarkerPath();
                         drone_log_info.setVisibility(View.GONE);
                         btn_activate_plan.setVisibility(View.GONE);
                     }
@@ -161,30 +139,22 @@ public class HistoryFragment extends MavInfoFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ((MainActivity) getActivity()).unregisterOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
     }
 
-    OnFlightHistoryUpdateListener onFlightHistoryUpdateListener = new OnFlightHistoryUpdateListener() {
+    private OnFlightHistoryUpdateListener onFlightHistoryUpdateListener = new OnFlightHistoryUpdateListener() {
         @Override
         public void OnFlightHistoryUpdated(final FlightHistory flightHistory) {
-            Log.d("morris", flightHistory.getId());
-
-            if (flightHistory == null) {
-                return;
+            if (flightHistory != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mHistoryItemAdapter.add(flightHistory);
+                    }
+                });
             }
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mHistoryItemAdapter.add(flightHistory);
-                }
-            });
         }
     };
 

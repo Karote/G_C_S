@@ -20,7 +20,7 @@ import java.util.List;
  * Created by karot.chuang on 2015/5/15.
  */
 public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
-    private List<Mission> mMissionList;
+    private List<Mission> mMissionList = null;
     private Boolean isDeleteLayoutVisible = false;
     private int focusIndex = -1;
 
@@ -34,7 +34,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         void onItemPlanClick(View view, int position);
     }
 
-    public static OnItemClickListener mItemClickListener = null;
+    private OnItemClickListener mItemClickListener = null;
 
     public void SetOnItemClickListener(final OnItemClickListener listener) {
         mItemClickListener = listener;
@@ -184,7 +184,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         unselectAdapter();
     }
 
-    public void unselectAdapter(){
+    public void unselectAdapter() {
         focusIndex = -1;
         notifyDataSetChanged();
     }
