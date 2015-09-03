@@ -32,7 +32,6 @@
         </activity>
 
         <service android:name="com.coretronic.drone.service.DroneConnectionService" />
-        <service android:name="com.parrot.arsdk.ardiscovery.ARDiscoveryService" />
 
     </application>
 </manifest>
