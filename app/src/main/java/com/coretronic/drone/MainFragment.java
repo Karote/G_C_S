@@ -55,7 +55,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private boolean isStayLogged;
 
     private void assignViews(View view) {
-        Button btnPiloting = (Button) view.findViewById(R.id.btn_piloting);
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
         LinearLayout llAlbum = (LinearLayout) view.findViewById(R.id.ll_album);
         LinearLayout llUpdate = (LinearLayout) view.findViewById(R.id.ll_updates);
@@ -63,7 +62,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         btnLogout.setText(mUserId);
 
         btnLogout.setOnClickListener(this);
-        btnPiloting.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
         llAlbum.setOnClickListener(this);
         llUpdate.setOnClickListener(this);
@@ -261,10 +259,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                         .create();
                 dialog.show();
 
-                break;
-            case R.id.btn_piloting:
-                // 20150805 : disable pilotion function
-                //fragment = new PilotingFragment();
                 break;
             case R.id.btn_mission_plan:
                 fragment = new WaypointEditorFragment();
