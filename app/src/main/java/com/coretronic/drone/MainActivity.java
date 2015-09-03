@@ -237,21 +237,6 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         return settings;
     }
 
-    public boolean saveSettingsValue() {
-        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
-            return false;
-        }
-        String name = connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
-        SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
-        JSONArray jsonArray = new JSONArray();
-        for (Setting setting : settings) {
-            jsonArray.put(setting.getValue());
-        }
-        Log.d(TAG, jsonArray.toString());
-        prefs.edit().putString(SETTINGS_VALUE, jsonArray.toString()).commit();
-        return true;
-    }
-
     public boolean loadSettingsValue() {
         String name = connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
         SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
