@@ -15,16 +15,11 @@
     </string-array>
     <string name="delete_all">Delete\nAll</string>
     <string name="delete_done">Done</string>
-    <string name="album_toggle_drone">Drone</string>
-    <string name="album_toggle_smartphone">Phone</string>
-    <string name="btn_cancel">cancel</string>
-    <string name="btn_ok">ok</string>
-    <string name="delete_files">Delte files</string>
-    <string name="album_no_files_insmartphone">No Photos or Videos in the folder</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_ok">OK</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tv_txt_email">Email</string>
     <string name="tv_txt_welcome">Welcome</string>
     <string name="tv_txt_passwd">Password</string>
