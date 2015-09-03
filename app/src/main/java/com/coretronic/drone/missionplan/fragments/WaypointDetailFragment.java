@@ -74,7 +74,7 @@ public class WaypointDetailFragment extends Fragment {
         tx_lat = (TextView) fragmentView.findViewById(R.id.text_waypoint_lat);
         tx_lng = (TextView) fragmentView.findViewById(R.id.text_waypoint_lng);
         spinner_type = (Spinner) fragmentView.findViewById(R.id.spinner_detail_waypoint_type);
-        icon_type = (View) fragmentView.findViewById(R.id.icon_detail_waypoint_type);
+        icon_type = fragmentView.findViewById(R.id.icon_detail_waypoint_type);
         final Button bt_delete = (Button) fragmentView.findViewById(R.id.btn_detail_delete);
         bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
