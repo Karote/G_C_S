@@ -140,10 +140,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     }
 
     public boolean hasGPSSignal(int eph) {
-        if (eph > 0) {
-            return true;
-        }
-        return false;
+        return eph > 0;
     }
 
     public void readParameter() {

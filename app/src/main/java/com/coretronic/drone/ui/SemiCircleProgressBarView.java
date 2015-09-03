@@ -22,7 +22,6 @@ public class SemiCircleProgressBarView extends View {
     private RectF mOvalInner;
     private Paint mPaintProgress;
     private Paint mPaintBase;
-    private Paint mPaintClip;
     private float ovalsDiff;
     private Path clipPath;
 
@@ -61,13 +60,6 @@ public class SemiCircleProgressBarView extends View {
 //        mPaintProgress.setStrokeWidth(10);
         mPaintProgress.setColor(Color.GREEN);
         mPaintProgress.setAntiAlias(true);
-
-        mPaintClip = new Paint();
-//        mPaintClip.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        mPaintClip.setColor(Color.TRANSPARENT);
-        mPaintClip.setAlpha(0);
-        mPaintClip.setAntiAlias(true);
-
 
     }
 
