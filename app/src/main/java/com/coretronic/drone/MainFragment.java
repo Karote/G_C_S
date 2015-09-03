@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
-import com.coretronic.drone.album.AlbumFragment;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
@@ -56,14 +55,12 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     private void assignViews(View view) {
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
-        LinearLayout llAlbum = (LinearLayout) view.findViewById(R.id.ll_album);
         LinearLayout llUpdate = (LinearLayout) view.findViewById(R.id.ll_updates);
         Button btnLogout = (Button) view.findViewById(R.id.btn_logout);
         btnLogout.setText(mUserId);
 
         btnLogout.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
-        llAlbum.setOnClickListener(this);
         llUpdate.setOnClickListener(this);
 
         // 20150814 add flight history and flight setting button
@@ -265,9 +262,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
                 backStackName = "WaypointEditorFragment";
                 fragment.setArguments(bundle);
-                break;
-            case R.id.ll_album:
-                fragment = new AlbumFragment();
                 break;
             case R.id.ll_updates:
                 break;
