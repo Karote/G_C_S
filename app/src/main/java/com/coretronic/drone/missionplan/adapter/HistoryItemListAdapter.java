@@ -80,7 +80,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
             super(itemView);
             tvLogDate = (TextView) itemView.findViewById(R.id.tv_log_date);
             tvLogTime = (TextView) itemView.findViewById(R.id.tv_log_time);
-            focusBarView = (View) itemView.findViewById(R.id.view_focusbar);
+            focusBarView = itemView.findViewById(R.id.view_focusbar);
             rowItemLayoutView = (RelativeLayout) itemView.findViewById(R.id.rowItemLayoutView);
 
             rowItemLayoutView.setOnClickListener(this);

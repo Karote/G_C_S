@@ -55,13 +55,11 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     private void assignViews(View view) {
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
-        LinearLayout llUpdate = (LinearLayout) view.findViewById(R.id.ll_updates);
         Button btnLogout = (Button) view.findViewById(R.id.btn_logout);
         btnLogout.setText(mUserId);
 
         btnLogout.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
-        llUpdate.setOnClickListener(this);
 
         // 20150814 add flight history and flight setting button
         Button btnFlightHistory = (Button) view.findViewById(R.id.btn_flight_history);
@@ -262,8 +260,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
                 backStackName = "WaypointEditorFragment";
                 fragment.setArguments(bundle);
-                break;
-            case R.id.ll_updates:
                 break;
             case R.id.btn_flight_history:
                 fragment = new WaypointEditorFragment();

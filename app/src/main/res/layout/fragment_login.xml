@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,8 +14,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
             android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
 
     </FrameLayout>
 
@@ -29,70 +29,70 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="@string/font_roboto_condensed"
             android:gravity="center"
             android:text="@string/tv_txt_welcome"
             android:textColor="#59C3F6"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/ed_user_id"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:fontFamily="sans-serif-condensed"
-            android:hint="abc@coretronic.com"
             android:layout_marginTop="20dp"
-            android:textColorHint="#cdcdcd"
-            android:textColor="#727272"
             android:background="@drawable/style_edit_login"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress"
             android:padding="5dp"
-            android:inputType="textEmailAddress"/>
+            android:textColor="@color/input_field_text"
+            android:textColorHint="@color/input_field_hint"/>
 
         <EditText
             android:id="@+id/ed_user_pwd"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:hint="Password"
-            android:textColorHint="#cdcdcd"
-            android:textColor="#727272"
             android:layout_marginTop="1dp"
-            android:padding="5dp"
             android:background="@drawable/style_edit_login"
-            android:inputType="textPassword" />
+            android:hint="@string/tv_txt_passwd"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:textColor="@color/input_field_text"
+            android:textColorHint="@color/input_field_hint"/>
 
         <CheckBox
             android:id="@+id/chk_stay_logged"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/login_editview_height"
             android:layout_marginTop="8dp"
-            android:text="@string/chk_txt_loging" />
+            android:text="@string/chk_txt_login"/>
 
         <Button
             android:id="@+id/btn_login_ok"
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             android:background="@drawable/btn_login"
-            android:text="@string/btn_txt_loging" />
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="@string/btn_txt_login"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
 
         <!--<Button-->
-            <!--android:id="@+id/btn_sign_up"-->
-            <!--android:layout_width="104dp"-->
-            <!--android:layout_height="32dp"-->
-            <!--android:fontFamily="sans-serif-condensed"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textStyle="bold"-->
-            <!--android:textSize="16sp"-->
-            <!--android:layout_marginTop="32dp"-->
-            <!--android:textColor="@color/btn_sign_up_text"-->
-            <!--android:background="@drawable/btn_sign_up"-->
-            <!--android:text="@string/btn_txt_sign_up" />-->
+        <!--android:id="@+id/btn_sign_up"-->
+        <!--android:layout_width="104dp"-->
+        <!--android:layout_height="32dp"-->
+        <!--android:fontFamily="sans-serif-condensed"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:textStyle="bold"-->
+        <!--android:textSize="16sp"-->
+        <!--android:layout_marginTop="32dp"-->
+        <!--android:textColor="@color/btn_sign_up_text"-->
+        <!--android:background="@drawable/btn_sign_up"-->
+        <!--android:text="@string/btn_txt_sign_up" />-->
     </LinearLayout>
 
 </RelativeLayout>

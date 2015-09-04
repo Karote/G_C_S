@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="45dp"
-    android:layout_alignParentRight="true">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true">
 
     <LinearLayout
         android:id="@+id/rowDeleteLayout"
         android:layout_width="28dp"
         android:layout_height="44dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:background="@drawable/btn_plan_waypoint_bg">
 
         <ImageButton
@@ -18,7 +18,7 @@
             android:layout_width="28dp"
             android:layout_height="44dp"
             android:background="@drawable/btn_plan_waypoint_bg"
-            android:src="@drawable/ico_plan_waypoint_delete" />
+            android:src="@drawable/ico_plan_waypoint_delete"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -32,56 +32,56 @@
             android:id="@+id/view_focusbar"
             android:layout_width="4dp"
             android:layout_height="44dp"
-            android:background="#34a7ff"
-            android:visibility="gone" />
+            android:background="@color/blue_sky"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/rowNameView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
             android:layout_marginLeft="8dp"
-            android:fontFamily="sans-serif-black"
-            android:textColor="#FFFFFF"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@string/font_roboto_regular"
+            android:textColor="@color/white"
             android:textSize="14sp"
-            tools:text="44" />
+            tools:text="44"/>
 
         <View
             android:id="@+id/icon_waypoint_type"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:background="@drawable/ico_indicator_plan_waypoint"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginBottom="4dp" />
+            android:background="@drawable/ico_indicator_plan_waypoint"/>
 
         <TextView
             android:id="@+id/m_text"
-            android:text="m"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="4dp"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="4dp"
-            android:fontFamily="sans-serif"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:layout_marginRight="4dp"
+            android:fontFamily="@string/font_roboto_regular"
+            android:text="@string/unit_in_meter"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/rowAltitudeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/m_text"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
-            android:fontFamily="sans-serif"
-            android:textColor="#FFFFFF"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@id/m_text"
+            android:fontFamily="@string/font_roboto_regular"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            tools:text="200" />
+            tools:text="200"/>
     </RelativeLayout>
 
 </RelativeLayout>
