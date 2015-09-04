@@ -90,14 +90,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
         activity = (MainActivity) getActivity();
         mUserId = sharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
-        String dbName = mUserId.replace("@", "_").replace(".", "_").toLowerCase();
-        Log.d("morris", "db name:" + dbName);
-        // login the couchbase
-        if (mUserId.length() == 0) {
-            Toast.makeText(getActivity(), "Couchbase login error.", Toast.LENGTH_SHORT).show();
-        } else {
-            activity.login(dbName);
-        }
         checkTTS();
     }
 
@@ -113,6 +105,16 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         super.onActivityCreated(savedInstanceState);
         activity.registerDeviceChangedListener(this);
         activity.registerDroneStatusChangedListener(this);
+
+        String dbName = mUserId.replace("@", "_").replace(".", "_").toLowerCase();
+        Log.d("morris", "db name:" + dbName);
+        // login the couchbase
+        if (mUserId.length() == 0) {
+            Toast.makeText(getActivity(), "Couchbase login error.", Toast.LENGTH_SHORT).show();
+        } else {
+            activity.login(dbName);
+        }
+
     }
 
     @Override
