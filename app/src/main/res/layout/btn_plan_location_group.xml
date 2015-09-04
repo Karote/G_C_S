@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="122dp"
-    android:layout_height="44dp"
-    android:padding="3dp"
-    android:background="@drawable/btn_plan_white">
+              android:layout_width="122dp"
+              android:layout_height="44dp"
+              android:background="@drawable/btn_plan_white"
+              android:orientation="horizontal"
+              android:padding="3dp">
 
     <Button
         android:id="@+id/button_drone_location"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:background="@drawable/btn_plan_drone" />
+        android:background="@drawable/btn_plan_drone"/>
 
     <View
         android:layout_width="1dp"
         android:layout_height="34dp"
-        android:background="#d1d1d1"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:background="@color/locate_group_bg"/>
 
     <Button
         android:id="@+id/button_my_location"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:background="@drawable/btn_plan_location" />
+        android:background="@drawable/btn_plan_location"/>
 
     <View
         android:layout_width="1dp"
         android:layout_height="34dp"
-        android:background="#d1d1d1"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:background="@color/locate_group_bg"/>
 
     <Button
         android:id="@+id/button_fit_map"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:background="@drawable/btn_plan_showall" />
+        android:background="@drawable/btn_plan_showall"/>
 
 </LinearLayout>

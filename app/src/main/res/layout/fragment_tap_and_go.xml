@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="228dp"
-    android:layout_height="180dp"
-    android:background="@android:color/white"
-    android:clickable="true"
-    android:orientation="vertical"
-    android:paddingBottom="8dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="228dp"
+              android:layout_height="180dp"
+              android:background="@color/white"
+              android:clickable="true"
+              android:orientation="vertical"
+              android:paddingBottom="8dp"
+              android:paddingLeft="12dp"
+              android:paddingRight="12dp">
 
 
     <LinearLayout
@@ -21,12 +21,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="Cancel" />
+            android:text="@string/btn_cancel"/>
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="#e5e5e5" />
+            android:background="@color/dialog_divider"/>
     </LinearLayout>
 
     <LinearLayout
@@ -40,26 +40,30 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/flight_altitude_textview"
                 style="@style/mission_plan_detail_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                android:text="Flight Altitude" />
+                android:text="@string/flight_altitude"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="m"
-                android:textSize="12sp" />
+                android:layout_toRightOf="@+id/flight_altitude_textview"
+                android:fontFamily="@string/font_roboto_medium"
+                android:gravity="right"
+                android:text="@string/unit_in_meter"
+                android:textSize="12sp"/>
 
         </RelativeLayout>
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="#e5e5e5" />
+            android:background="@color/dialog_divider"/>
 
         <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
             android:id="@+id/tap_and_go_altitude_wheel"
@@ -67,7 +71,7 @@
             android:layout_height="28dp"
             app:isAllVisible="false"
             app:isCyclic="false"
-            app:visibleItems="5" />
+            app:visibleItems="5"/>
     </LinearLayout>
 
     <LinearLayout
@@ -84,18 +88,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                android:text="Latitude" />
+                android:text="@string/latitude"/>
 
             <TextView
                 android:id="@+id/text_tap_and_go_lat"
                 android:layout_width="100dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:background="#c9c9c9"
-                android:fontFamily="sans-serif"
+                android:background="@color/mission_item_location_field_bg"
+                android:fontFamily="@string/font_roboto_regular"
                 android:gravity="center"
-                android:text="38.8530172"
-                android:textSize="14sp" />
+                android:text="@string/location_format"
+                android:textSize="14sp"/>
 
         </LinearLayout>
 
@@ -110,18 +114,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                android:text="Longitude" />
+                android:text="@string/longitude"/>
 
             <TextView
                 android:id="@+id/text_tap_and_go_lng"
                 android:layout_width="100dp"
                 android:layout_height="28dp"
                 android:layout_marginTop="2dp"
-                android:background="#c9c9c9"
-                android:fontFamily="sans-serif"
+                android:background="@color/mission_item_location_field_bg"
+                android:fontFamily="@string/font_roboto_regular"
                 android:gravity="center"
-                android:text="38.8530172"
-                android:textSize="14sp" />
+                android:text="@string/location_format"
+                android:textSize="14sp"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -133,10 +137,10 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="8dp"
         android:background="@drawable/btn_follow_me"
-        android:fontFamily="sans-serif"
+        android:fontFamily="@string/font_roboto_regular"
         android:gravity="center"
-        android:text="GO"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:text="@string/btn_go"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
 
 </LinearLayout>

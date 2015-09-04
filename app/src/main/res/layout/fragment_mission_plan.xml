@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:keepScreenOn="true">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:keepScreenOn="true">
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
 
-        <WebView
-            android:id="@+id/waypoint_webview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-    </FrameLayout>
+    <WebView
+        android:id="@+id/waypoint_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:layout_alignParentTop="true"
-        android:background="#bf000000"
+        android:background="@color/black_transparent_70"
         android:clickable="true"
         android:orientation="horizontal">
 
@@ -29,13 +25,13 @@
             android:layout_height="25dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp" />
+            android:layout_marginStart="4dp"/>
 
         <include
             layout="@layout/custom_layout_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"/>
 
         <include
             android:id="@+id/custom_layout_edit_marker"
@@ -44,12 +40,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/mission_plan_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/top_layout" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_layout"/>
 </RelativeLayout>

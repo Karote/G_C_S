@@ -19,27 +19,86 @@
     <string name="btn_ok">OK</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Login in fragment-->
     <string name="tv_txt_email">Email</string>
     <string name="tv_txt_welcome">Welcome</string>
     <string name="tv_txt_passwd">Password</string>
-    <string name="chk_txt_loging">Stay logged in</string>
-    <string name="btn_txt_loging">Log in</string>
+    <string name="chk_txt_login">Stay logged in</string>
+    <string name="btn_txt_login">Log in</string>
     <string name="btn_txt_sign_up">Sign Up</string>
+    <string name="email_hint">abc@coretronic.com</string>
 
-
-    <!--
-    android:fontFamily="sans-serif"           // roboto regular
-    android:fontFamily="sans-serif-light"     // roboto light
-    android:fontFamily="sans-serif-condensed" // roboto condensed
-    android:fontFamily="sans-serif-thin"      // roboto thin (android 4.2)
-    android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)
-    -->
+    <!-- API 16-->
     <string name="font_roboto_regular">sans-serif</string>
     <string name="font_roboto_light">sans-serif-light</string>
     <string name="font_roboto_condensed">sans-serif-condensed</string>
+    <!--API 17-->
     <string name="font_roboto_thin">sans-serif-thin</string>
+    <!-- API 21-->
     <string name="font_roboto_medium">sans-serif-medium</string>
+    <string name="font_roboto_black">sans-serif-black</string>
+    <string name="font_roboto_condensed_light">sans-serif-condensed-light</string>
+
+    <!-- mission common-->
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="btn_go">GO</string>
+    <string name="unit_in_meter">m</string>
+    <string name="flight_altitude">Flight Altitude</string>
+    <string name="flight_distance">FLIGHT DISTANCE</string>
+    <string name="location_format">0.0000000</string>
+    <string name="altitude">ALTITUDE</string>
+
+    <!-- mission plan-->
+    <string name="delay">Delay</string>
+    <string name="second">sec</string>
+    <string name="delete">Delete</string>
+
+    <!-- follow me-->
+    <string name="follow_me_start">START FOLLOW</string>
+    <string name="follow_me_stop">STOP FOLLOW</string>
+
+    <!-- History-->
+    <string name="flight_duration">FLIGHT TIME</string>
+    <string name="duration_hint">00:00</string>
+    <string name="activate_plan">ACTIVATE PLAN</string>
+    <string name="date_hint">2015/08/03</string>
+    <string name="time_hint">09:26</string>
+
+    <!-- Setting-->
+    <string name="altitude_max">Altitude Max</string>
+    <string name="vertical_speed_max">Vertical Speed Max</string>
+    <string name="rotation_speed_max">Rotation Speed Max</string>
+    <string name="tilt_angle_max">Tilt Angle Max</string>
+    <string name="low_power_protection">Low Power Protection</string>
+    <string name="level_one">Level 1</string>
+    <string name="level_two">Level 2</string>
+    <string name="flat_trim">Flat Trim</string>
+    <string name="execute">EXECUTE</string>
+    <string name="last_execution">Last Execution:</string>
+    <string name="basic_aileron_gain">Basic Aileron Gain</string>
+    <string name="basic_elevator_gain">Basic Elevator Gain</string>
+    <string name="basic_rudder_gain">Basic Rudder Gain</string>
+    <string name="attitude_gps_aileron_gain">Attitude/GPS Aileron Gain</string>
+    <string name="attitude_gps_elevator_gain">Attitude/GPS Elevator Gain</string>
+    <string name="attitude_gps_rudder_gain">Attitude/GPS Rudder Gain</string>
+    <string name="attitude_gain">Attitude Gain</string>
+
+    <!-- main -->
+    <string name="version">version</string>
+    <string name="mission_plan">MISSION PLAN</string>
+    <string name="flight_history">FLIGHT HISTORY</string>
+    <string name="zero_percent">0%</string>
+    <string name="switch_btn_off">OFF</string>
+    <string name="switch_btn_on">ON</string>
+    <string name="reset">RESET</string>
+    <string name="altitude_hint">5m</string>
+    <string name="speed">SPEED</string>
+    <string name="speed_hint">300.3km/h</string>
+    <string name="latitude_hint">-90.0000000,</string>
+    <string name="longitude_hint">-180.0000000</string>
+    <string name="mission_id_hint">44</string>
+    <string name="wheel_text_hint">22</string>
 
 
 </resources>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/black"
+              android:background="@color/black"
               android:clickable="true"
               android:orientation="vertical">
 
@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="20sp"/>
 
         <TextView
@@ -38,8 +38,8 @@
             android:layout_marginRight="12dp"
             android:drawableLeft="@drawable/ico_setup_reset"
             android:fontFamily="@string/font_roboto_condensed"
-            android:text="RESET"
-            android:textColor="#ffffff"
+            android:text="@string/reset"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"/>
 
@@ -54,7 +54,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/lightgray"/>
+        android:background="@color/light_gray"/>
 
     <FrameLayout
         android:layout_width="match_parent"
