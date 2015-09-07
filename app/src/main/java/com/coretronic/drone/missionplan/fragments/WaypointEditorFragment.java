@@ -776,7 +776,10 @@ public class WaypointEditorFragment extends Fragment
                 break;
             case R.id.btn_delete_all:
                 webview_Map.loadUrl("javascript:clearMissionPlanningMarkers()");
+                ((PlanningFragment) currentFragment).missionAdapterShowDelete(false);
                 ((PlanningFragment) currentFragment).missionAdapterClearData();
+                setDeleteOptionShow(false);
+                canMapAddMarker = true;
                 break;
             case R.id.btn_action_plan_delete:
                 setDeleteOptionShow(true);
