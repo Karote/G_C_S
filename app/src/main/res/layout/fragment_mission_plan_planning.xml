@@ -3,104 +3,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/instrument"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:background="@drawable/instrument_compass_circle" />
+
     <include
         layout="@layout/text_mav_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/instrument" />
 
 
     <LinearLayout
-        android:id="@+id/bottom_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/layout_plan_control"
+            android:id="@+id/layout_go_and_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/layout_go_and_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/btn_plan_go"
-                    android:layout_width="72dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/btn_plan_go" />
-
-                <LinearLayout
-                    android:id="@+id/layout_plan_stop"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/btn_plan_white"
-                    android:padding="3dp">
-
-                    <Button
-                        android:id="@+id/btn_plan_stop"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/btn_plan_stop" />
-                </LinearLayout>
-            </LinearLayout>
+            <Button
+                android:id="@+id/btn_plan_go"
+                android:layout_width="72dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_plan_go" />
 
             <LinearLayout
-                android:layout_width="115dp"
+                android:id="@+id/layout_plan_stop"
+                android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="@drawable/btn_plan_white"
-                android:orientation="horizontal"
                 android:padding="3dp">
 
                 <Button
-                    android:id="@+id/btn_plan_land"
+                    android:id="@+id/btn_plan_stop"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/btn_plan_land" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="34dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="#d1d1d1" />
-
-                <Button
-                    android:id="@+id/btn_plan_rtl"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:background="@drawable/btn_plan_rtl" />
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_plan_stop" />
             </LinearLayout>
-
         </LinearLayout>
 
         <include
             layout="@layout/btn_plan_location_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
-        <LinearLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/btn_plan_white"
-            android:padding="3dp">
-
-            <Button
-                android:id="@+id/btn_map_type"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center"
-                android:background="@drawable/btn_map_type" />
-        </LinearLayout>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
