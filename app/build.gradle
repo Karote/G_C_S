@@ -32,10 +32,6 @@ android {
         exclude 'META-INF/NOTICE'
     }
 
-    project.ext {
-        appReleaseSuffix = "_release"
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -45,10 +41,11 @@ android {
             signingConfig signingConfigs.release
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
+                    def date = new Date();
+                    def formattedDate = date.format('yyyyMMddHHmm')
                     output.outputFile = new File(output.outputFile.parent,
-                            String.format("%s_%s_%s.apk",
-                                    defaultConfig.applicationId, project.appReleaseSuffix, new Date().format('yyyyMMddHHmm')));
-
+                            output.outputFile.name.replace("app", "Drone").replace("-release", "_release_" + defaultConfig.versionName + "_" + formattedDate)
+                    )
                 }
             }
         }
