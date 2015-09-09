@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+if(file('local.gradle').exists()){
+    apply from: 'local.gradle'
+}
+
 android {
 
     compileSdkVersion 22
