@@ -155,7 +155,7 @@ public class TapAndGoFragment extends MavInfoFragment {
         if (tv_droneSpeed == null)
             return;
 
-        tv_droneSpeed.setText(String.format("%.1f", groundSpeed / 10) + " km/h");
+        tv_droneSpeed.setText(String.format("%.1f", groundSpeed) + " km/h");
     }
 
     @Override
