@@ -2,20 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
 
-    lintOptions {
-        disable 'DefaultLocale', 'SimpleDateFormat', 'UnusedAttribute', 'InflateParams', 'RtlHardcoded',
-                'ContentDescription', 'RtlSymmetry', 'ButtonStyle'
-    }
-
-    signingConfigs {
-        release {
-            keyAlias CORETRONIC_RELEASE_KEY_ALIAS
-            keyPassword CORETRONIC_RELEASE_KEY_PASSWORD
-            storeFile file(CORETRONIC_RELEASE_KEY_STORE_PATH)
-            storePassword CORETRONIC_RELEASE_KEY_STORE_PASSWORD
-        }
-    }
-
     compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
@@ -36,20 +22,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
-            zipAlignEnabled true
-            signingConfig signingConfigs.release
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent,
-                            String.format("%s_%s_%s.apk",
-                                    defaultConfig.applicationId, defaultConfig.versionName, new Date().format('yyyyMMddHH')));
-                }
-            }
-        }
-        debug {
-            minifyEnabled false
-            debuggable true
         }
     }
 }
