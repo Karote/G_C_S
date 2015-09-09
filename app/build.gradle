@@ -32,6 +32,10 @@ android {
         exclude 'META-INF/NOTICE'
     }
 
+    project.ext {
+        appReleaseSuffix = "_release"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -43,7 +47,8 @@ android {
                 variant.outputs.each { output ->
                     output.outputFile = new File(output.outputFile.parent,
                             String.format("%s_%s_%s.apk",
-                                    defaultConfig.applicationId, defaultConfig.versionName , new Date().format('yyyyMMddHHmm')));
+                                    defaultConfig.applicationId, project.appReleaseSuffix, new Date().format('yyyyMMddHHmm')));
+
                 }
             }
         }
