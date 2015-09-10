@@ -25,7 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.DroneController.DroneStatus;
 import com.coretronic.drone.activity.MiniDronesActivity;
+import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
@@ -82,7 +84,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         spinnerDroneDevice.setAdapter(mDeviceAdapter);
         spinnerDroneDevice.setOnItemSelectedListener(this);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,47 +149,15 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     }
 
     @Override
-    public void onBatteryUpdate(final int battery) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusView.setBatteryStatus(battery);
-            }
-        });
-    }
-
-    @Override
-    public void onAltitudeUpdate(float altitude) {
-
-    }
-
-    @Override
-    public void onRadioSignalUpdate(int rssi) {
-    }
-
-    @Override
-    public void onSpeedUpdate(float groundSpeed) {
-
-    }
-
-    @Override
-    public void onLocationUpdate(final long lat, final long lon, final int eph) {
-        activity.runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       statusView.setGpsVisibility(activity.hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
-                                   }
-                               }
-        );
-    }
-
-    @Override
-    public void onHeadingUpdate(int heading) {
-    }
-
-    @Override
-    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
-
+    public void onStatusUpdate(Event event, DroneStatus droneStatus) {
+        switch (event) {
+            case ON_BATTERY_UPDATE:
+                statusView.setBatteryStatus(droneStatus.getBattery());
+                break;
+            case ON_SATELLITE_UPDATE:
+                statusView.setGpsVisibility(MainActivity.hasGPSSignal(droneStatus.getSatellites()) ? View.VISIBLE : View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -301,7 +270,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             }
         }
     }
-
 
     public class DeviceAdapter extends ArrayAdapter<DroneDevice> {
 

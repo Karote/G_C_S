@@ -30,14 +30,19 @@ import android.widget.Toast;
 
 import com.coretronic.drone.Drone;
 import com.coretronic.drone.DroneController;
+import com.coretronic.drone.DroneController.DroneMode;
+import com.coretronic.drone.DroneController.DroneStatus;
+import com.coretronic.drone.DroneController.MissionStatus;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
+import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
 import com.coretronic.drone.model.RecordItem;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.ibs.log.Logger;
 import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -79,7 +84,6 @@ public class WaypointEditorFragment extends Fragment
 
     private int pre_fragmentType = 0;
     private int spinnerIndex = FRAGMENTTYPE_PLANNING;
-    private int droneHeading = 0;
     private double nowLatget = 0;
     private double nowLngget = 0;
     private long droneLat = 0;
@@ -122,8 +126,6 @@ public class WaypointEditorFragment extends Fragment
     private Handler handler;
     private boolean saveFlag = false;
     private int saveDelayTime = 1000;
-    private DroneController.MissionStatus droneMissionState = DroneController.MissionStatus.FINISHED;
-    private DroneController.DroneMode currentDroneMode = null;
 
     // TTS
     private Speaker ttsSpeaker;
@@ -230,13 +232,11 @@ public class WaypointEditorFragment extends Fragment
     }
     // End GoogleApiClient.ConnectionCallbacks
 
-
     // Implement GoogleApiClient.OnConnectionFailedListener
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
     // End GoogleApiClient.OnConnectionFailedListener
-
 
     // Implement LocationListener
     @Override
@@ -246,7 +246,6 @@ public class WaypointEditorFragment extends Fragment
         nowLngget = nowlocation.getLongitude();
     }
     // End LocationListener
-
 
     // Implement MissionLoaderListener
     @Override
@@ -281,186 +280,170 @@ public class WaypointEditorFragment extends Fragment
         webview_Map.loadUrl("file:///android_asset/GoogleMap.html");
     }
 
-
-    // Implement Drone.StatusChangedListener
     @Override
-    public void onBatteryUpdate(final int battery) {
-        fragmentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusView.setBatteryStatus(battery);
-            }
-        });
+    public void onStatusUpdate(Event event, DroneStatus droneStatus) {
 
-        // save info
-        recordItemBuilder.setBattery(battery);
-    }
-
-    @Override
-    public void onAltitudeUpdate(final float altitude) {
-        fragmentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        switch (event) {
+            case ON_BATTERY_UPDATE:
+                statusView.setBatteryStatus(droneStatus.getBattery());
+                recordItemBuilder.setBattery(droneStatus.getBattery());
+                break;
+            case ON_ALTITUDE_UPDATE:
                 if (currentFragment != null) {
-                    currentFragment.setMavInfoAltitude(altitude);
+                    currentFragment.setMavInfoAltitude(droneStatus.getAltitude());
                 }
-            }
-        });
-        // save info
-        recordItemBuilder.setAltitude(altitude);
-    }
-
-    @Override
-    public void onRadioSignalUpdate(int rssi) {
-        // save info
-    }
-
-    @Override
-    public void onSpeedUpdate(final float groundSpeed) {
-        fragmentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+                recordItemBuilder.setAltitude(droneStatus.getAltitude());
+                break;
+            case ON_LOCATION_UPDATE:
                 if (currentFragment != null) {
-                    currentFragment.setMavInfoSpeed(groundSpeed);
+                    currentFragment.setMavInfoLocation(droneLat, droneLng);
                 }
-            }
-        });
-        // save info
-        recordItemBuilder.setSpeed(groundSpeed);
-    }
-
-    @Override
-    public void onLocationUpdate(final long lat, final long lon, final int eph) {
-        droneLat = lat;
-        droneLng = lon;
-        fragmentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (currentFragment != null) {
-                        currentFragment.setMavInfoLocation(droneLat, droneLng);
-                    }
-                    webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
-                    // GPS status
-                    statusView.setGpsVisibility(((MainActivity) getActivity()).hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                updateMap(droneStatus);
+                recordItemBuilder.setLatitude(droneStatus.getLatitude());
+                recordItemBuilder.setLongitude(droneStatus.getLongitude());
+                break;
+            case ON_SATELLITE_UPDATE:
+                statusView.setGpsVisibility(MainActivity.hasGPSSignal(droneStatus.getSatellites()) ? View.VISIBLE : View.GONE);
+                recordItemBuilder.setSatellites(droneStatus.getSatellites());
+                break;
+            case ON_ATTITUDE_UPDATE:
+                updateMap(droneStatus);
+                recordItemBuilder.setHeading((int) droneStatus.getYaw());
+                break;
+            case ON_SPEED_UPDATE:
+                if (currentFragment != null) {
+                    currentFragment.setMavInfoSpeed(droneStatus.getSpeed());
                 }
-            }
-        });
-        // save info
-        recordItemBuilder.setLatitude(lat);
-        recordItemBuilder.setLongitude(lon);
-        recordItemBuilder.setSatellites(eph);
+                recordItemBuilder.setSpeed(droneStatus.getSpeed());
+                break;
+            case ON_FLIGHT_DURATION_UPDATE:
+                break;
+            case ON_RADIO_SIGNAL_UPDATE:
+                break;
+            case ON_MODE_UPDATE:
+                if (spinnerIndex != FRAGMENTTYPE_PLANNING) {
+                    return;
+                }
+                notificationWithTTS(droneStatus.getMissionPlanState());
+                triggerMissionRecord(droneStatus.getMissionPlanState());
+                break;
+            case ON_MISSION_STATE_UPDATE:
+                if (spinnerIndex != FRAGMENTTYPE_PLANNING) {
+                    return;
+                }
+                notificationWithTTS(droneStatus.getMode());
+                break;
+        }
+
     }
 
-    @Override
-    public void onHeadingUpdate(final int heading) {
-        droneHeading = heading;
-        fragmentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                webview_Map.loadUrl("javascript:updateDroneLocation(" + droneLat + "," + droneLng + "," + droneHeading + ")");
-            }
-        });
-        // save info
-        recordItemBuilder.setHeading(heading);
-    }
-
-    @Override
-    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, final int duration) {
-        if (spinnerIndex != FRAGMENTTYPE_PLANNING) {
+    private void notificationWithTTS(DroneMode droneMode) {
+        if (ttsSpeaker != null) {
             return;
         }
+        String ttsStr = null;
 
-        if (droneMissionState != missionStatus) {
-            droneMissionState = missionStatus;
-            switch (droneMissionState) {
-                case START:
-                    if (saveFileRunnable != null) {
-                        return;
-                    }
-                    // tts to start
-                    if (ttsSpeaker != null) {
-                        ttsSpeaker.speak("Mission Plan Start!");
-                    }
-                    // save flight history log
-                    if (!isTapAndGo) {
-                        saveFlag = true;
-                        createHistory();
-                    }
-                    break;
-                case PAUSE:
-                    saveFlag = false;
-                    if (ttsSpeaker != null) {
-                        ttsSpeaker.speak("Mission Plan Pause!");
-                    }
-                    break;
-                case FINISHED:
-                    saveFlag = false;
-                    if (ttsSpeaker != null) {
-                        ttsSpeaker.speak("Mission Plan finish!");
-                    }
-                    if (saveFileRunnable != null) {
-                        handler.removeCallbacks(saveFileRunnable);
-                        saveFileRunnable = null;
-                    }
-                    break;
-            }
+        switch (droneMode) {
+            case MANUAL:
+                ttsStr = "MANUAL";
+                break;
+            case ATTITUDE:
+                ttsStr = "ATTITUDE";
+                break;
+            case GPS:
+                ttsStr = "GPS";
+                break;
+            case IOC:
+                ttsStr = "IOC";
+                break;
+            case LAND:
+                ttsStr = "LAND";
+                break;
+            case RTL:
+                ttsStr = "RTL";
+                break;
+            case POI:
+                ttsStr = "POI";
+                break;
+            case HEADING_LOCK:
+                ttsStr = "HEADING LOCK";
+                break;
         }
+        ttsSpeaker.speak(ttsStr + " Mode");
 
-        // Drone Mode
-        if (currentDroneMode != droneMode) {
-            currentDroneMode = droneMode;
-            String ttsStr = null;
-            if (ttsSpeaker != null) {
-                switch (currentDroneMode) {
-                    case MANUAL:
-                        ttsStr = "MANUAL";
-                        break;
-                    case ATTITUDE:
-                        ttsStr = "ATTITUDE";
-                        break;
-                    case GPS:
-                        ttsStr = "GPS";
-                        break;
-                    case IOC:
-                        ttsStr = "IOC";
-                        break;
-                    case LAND:
-                        ttsStr = "LAND";
-                        break;
-                    case RTL:
-                        ttsStr = "RTL";
-                        break;
-                    case POI:
-                        ttsStr = "POI";
-                        break;
-                    case HEADING_LOCK:
-                        ttsStr = "HEADING LOCK";
-                        break;
-                }
-                if (ttsStr != null) {
-                    ttsSpeaker.speak(ttsStr + " Mode");
-                }
-            }
+    }
+
+    private void notificationWithTTS(MissionStatus missionPlanState) {
+        if (ttsSpeaker == null) {
+            return;
         }
-        if (currentFragment != null) {
-            fragmentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    currentFragment.setMavInfoFlightTime(duration);
+        switch (missionPlanState) {
+
+            case START:
+                if (saveFileRunnable != null) {
+                    return;
                 }
-            });
+                ttsSpeaker.speak("Mission Plan Start!");
+                break;
+            case PAUSE:
+                ttsSpeaker.speak("Mission Plan Pause!");
+                break;
+            case FINISHED:
+                ttsSpeaker.speak("Mission Plan finish!");
+                break;
         }
     }
 
-    private void createHistory() {
+    private void triggerMissionRecord(MissionStatus missionStatus) {
+
+        switch (missionStatus) {
+            case START:
+                if (isTapAndGo) {
+                    return;
+                }
+                // save flight history log
+                startRecord();
+                break;
+            case PAUSE:
+                pauseRecord();
+                break;
+            case FINISHED:
+                finishRecord();
+                break;
+        }
+    }
+
+    private void finishRecord() {
+        pauseRecord();
+        if (saveFileRunnable != null) {
+            handler.removeCallbacks(saveFileRunnable);
+            saveFileRunnable = null;
+        }
+    }
+
+    private void pauseRecord() {
+        saveFlag = false;
+    }
+
+    private void updateMap(DroneStatus droneStatus) {
+        try {
+            webview_Map.loadUrl("javascript:updateDroneLocation(" + droneStatus.getLatitude() + "," + droneStatus.getLongitude() + "," +
+                    droneStatus.getYaw() + ")");
+        } catch (Exception e) {
+            Logger.exception(e);
+        }
+    }
+
+    private void startRecord() {
+        if (saveFileRunnable != null) {
+            return;
+        }
         // save flight history log
         List<Mission> missionList = gson.fromJson(sharedPreferences.getString(AppConfig.PREF_MISSION_LIST, null), new TypeToken<List<Mission>>() {
         }.getType());
 
         flightHistory = ((MainActivity) getActivity()).createFlightHistory(missionList);
+        saveFlag = true;
         saveFileRunnable = new Runnable() {
             @Override
             public void run() {
