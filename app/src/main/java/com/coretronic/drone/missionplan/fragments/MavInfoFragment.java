@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 
+import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.map.OnMapEventCallback;
+import com.coretronic.drone.ui.AircraftCompassWrapView;
 
 /**
  * Created by karot.chuang on 2015/7/23.
@@ -21,6 +23,7 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
     private TextView tv_droneSpeed;
     private TextView tv_droneFlightTime;
     private TextView tv_droneLng;
+    private AircraftCompassWrapView mAircraftCompassWrapView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -35,6 +38,8 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
         tv_droneLat = (TextView) view.findViewById(flightTimeViewId);
         tv_droneLng = (TextView) view.findViewById(latitudeViewId);
         tv_droneFlightTime = (TextView) view.findViewById(longitudeViewId);
+        mAircraftCompassWrapView = new AircraftCompassWrapView(view, R.id.compass_circle, R.id.compass_level, R.id.compass_ruler, R.id
+                .compass_direction);
 
     }
 
@@ -77,6 +82,15 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
         int minutes = Math.min(flightTime / 60, 99);
         int seconds = flightTime % 60;
         tv_droneFlightTime.setText(String.format("%02d:%02d", minutes, seconds));
+    }
+
+    final public void onAttitudeUpdate(float yaw, float roll, float pitch) {
+        if (mAircraftCompassWrapView == null) {
+            return;
+        }
+        mAircraftCompassWrapView.setDroneYaw(yaw);
+        mAircraftCompassWrapView.setDronePitch(pitch);
+        mAircraftCompassWrapView.setDroneRoll(roll);
     }
 
     public void onClick(View v) {

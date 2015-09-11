@@ -220,6 +220,9 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 mRecordItemBuilder.setSatellites(droneStatus.getSatellites());
                 break;
             case ON_ATTITUDE_UPDATE:
+                if (mCurrentFragment != null) {
+                    mCurrentFragment.onAttitudeUpdate(droneStatus.getYaw(), droneStatus.getRoll(), droneStatus.getPitch());
+                }
                 updateOnMapDrone(droneStatus);
                 mRecordItemBuilder.setHeading((int) droneStatus.getYaw());
                 break;
