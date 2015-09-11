@@ -43,34 +43,34 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
         super.onViewCreated(view, savedInstanceState);
 
         // MAV Info
-        setMavInfoAltitude(0);
-        setMavInfoSpeed(0);
-        setMavInfoLocation(0, 0);
-        setMavInfoFlightTime(0);
+        onAltitdueUpdate(0);
+        onSpeedUpdate(0);
+        onLocationUpdate(0, 0);
+        onFlightTimeUpdate(0);
 
     }
 
-    final public void setMavInfoAltitude(float altitude) {
+    final public void onAltitdueUpdate(float altitude) {
         if (tv_droneAltitude == null)
             return;
 
         tv_droneAltitude.setText(String.format("%.1f m", altitude));
     }
 
-    final public void setMavInfoSpeed(float groundSpeed) {
+    final public void onSpeedUpdate(float groundSpeed) {
         if (tv_droneSpeed == null)
             return;
         tv_droneSpeed.setText(String.format("%.1f km/h", groundSpeed));
     }
 
-    final public void setMavInfoLocation(long droneLat, long droneLng) {
+    final public void onLocationUpdate(long droneLat, long droneLng) {
         if (tv_droneLat == null || tv_droneLng == null)
             return;
         tv_droneLat.setText(String.format("%d.%07d,", droneLat / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
         tv_droneLng.setText(String.format("%d.%07d", droneLng / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
     }
 
-    final public void setMavInfoFlightTime(int flightTime) {
+    final public void onFlightTimeUpdate(int flightTime) {
         if (tv_droneFlightTime == null || flightTime < 0)
             return;
 
