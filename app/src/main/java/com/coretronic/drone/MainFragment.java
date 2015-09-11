@@ -229,7 +229,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 break;
         }
         if (fragment != null) {
-            getFragmentManager().beginTransaction().replace(R.id.frame_view, fragment, fragment.getClass().getSimpleName())
+            getFragmentManager().beginTransaction().add(R.id.frame_view, fragment, fragment.getClass().getSimpleName())
                     .addToBackStack(fragment.getClass().getSimpleName()).commit();
         }
     }
