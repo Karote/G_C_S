@@ -216,7 +216,7 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 mRecordItemBuilder.setLongitude(droneStatus.getLongitude());
                 break;
             case ON_SATELLITE_UPDATE:
-                mStatusView.setGpsVisibility(MainActivity.hasGPSSignal(droneStatus.getSatellites()) ? View.VISIBLE : View.GONE);
+                mStatusView.setGpsStatus(droneStatus.getSatellites());
                 mRecordItemBuilder.setSatellites(droneStatus.getSatellites());
                 break;
             case ON_ATTITUDE_UPDATE:
@@ -238,6 +238,7 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 }
                 break;
             case ON_RADIO_SIGNAL_UPDATE:
+                mStatusView.setGpsStatus(droneStatus.getRadioSignal());
                 break;
             case ON_MISSION_STATE_UPDATE:
                 notificationWithTTS(droneStatus.getMissionPlanState());

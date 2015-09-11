@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/iv_communication_light"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:background="@drawable/icon_indicator_light_green" />
+        android:background="@drawable/icon_indicator_light_green"/>
 
     <FrameLayout
         android:layout_width="22dp"
@@ -19,7 +19,7 @@
             android:id="@+id/iv_gps"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:background="@drawable/icon_indicator_status_gps_05" />
+            android:src="@drawable/gps_status_level"/>
 
         <TextView
             android:id="@+id/tv_gps"
@@ -29,7 +29,8 @@
             android:fontFamily="@string/font_roboto_medium"
             android:text="5"
             android:textColor="@color/white"
-            android:textSize="9sp" />
+            android:textSize="9sp"
+            android:visibility="gone"/>
     </FrameLayout>
 
     <ImageView
@@ -37,7 +38,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginLeft="6dp"
-        android:background="@drawable/icon_indicator_status_rf_05" />
+        android:src="@drawable/rf_status_level"/>
 
     <ProgressBar
         android:id="@+id/progress_battery"
@@ -46,7 +47,7 @@
         android:layout_height="8dp"
         android:layout_gravity="center"
         android:layout_marginLeft="12dp"
-        android:progressDrawable="@drawable/progress_drawable_battery" />
+        android:progressDrawable="@drawable/progress_drawable_battery"/>
 
     <TextView
         android:id="@+id/tv_battery"
@@ -57,5 +58,5 @@
         android:fontFamily="@string/font_roboto_condensed"
         android:text="@string/zero_percent"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 </LinearLayout>

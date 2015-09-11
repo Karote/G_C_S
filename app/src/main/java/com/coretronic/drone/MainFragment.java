@@ -138,7 +138,8 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 @Override
                 public void run() {
                     statusView.setBatteryStatus(0);
-                    statusView.setGpsVisibility(View.GONE);
+                    statusView.setGpsStatus(-1);
+                    statusView.setRFStatus(-100);
                 }
             });
         }
@@ -151,8 +152,12 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 statusView.setBatteryStatus(droneStatus.getBattery());
                 break;
             case ON_SATELLITE_UPDATE:
-                statusView.setGpsVisibility(MainActivity.hasGPSSignal(droneStatus.getSatellites()) ? View.VISIBLE : View.GONE);
+                statusView.setGpsStatus(droneStatus.getSatellites());
                 break;
+            case ON_RADIO_SIGNAL_UPDATE:
+                statusView.setRFStatus(droneStatus.getRadioSignal());
+                break;
+
         }
     }
 

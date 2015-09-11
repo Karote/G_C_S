@@ -1,6 +1,7 @@
 package com.coretronic.drone.ui;
 
 import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,27 +11,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
+import com.coretronic.ibs.log.Logger;
 
 /**
  * Created by jiaLian on 15/6/9.
  */
 public class StatusView extends LinearLayout {
-    private static final int[] GPS_RESOURCE_ID = {
-            R.drawable.icon_indicator_status_gps_00,
-            R.drawable.icon_indicator_status_gps_01,
-            R.drawable.icon_indicator_status_gps_02,
-            R.drawable.icon_indicator_status_gps_03,
-            R.drawable.icon_indicator_status_gps_04,
-            R.drawable.icon_indicator_status_gps_05
-    };
-    private static final int[] RF_RESOURCE_ID = {
-            R.drawable.icon_indicator_status_rf_00,
-            R.drawable.icon_indicator_status_rf_01,
-            R.drawable.icon_indicator_status_rf_02,
-            R.drawable.icon_indicator_status_rf_03,
-            R.drawable.icon_indicator_status_rf_04,
-            R.drawable.icon_indicator_status_rf_05
-    };
+
+    private final static int GPS_LEVEL_0_SATELLITE_COUNT = 0;
+    private final static int GPS_LEVEL_1_SATELLITE_COUNT = 4;
+    private final static int GPS_LEVEL_2_SATELLITE_COUNT = 6;
+    private final static int GPS_LEVEL_3_SATELLITE_COUNT = 8;
+    private final static int GPS_LEVEL_4_SATELLITE_COUNT = 10;
+
     private ImageView gpsStatus;
     private ImageView rfStatus;
     private ProgressBar batteryProgress;
@@ -48,6 +41,7 @@ public class StatusView extends LinearLayout {
 
     public StatusView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView();
     }
 
     private void initView() {
@@ -60,21 +54,19 @@ public class StatusView extends LinearLayout {
         addView(view);
     }
 
-    public void setRFStatus(int resid) {
-        rfStatus.setBackgroundResource(RF_RESOURCE_ID[resid]);
+    public void setRFStatus(int rssi) {
+        rfStatus.setImageLevel(WifiManager.calculateSignalLevel(rssi, 5));
     }
 
-    public void setGpsStatus(int resid){
-        gpsStatus.setBackgroundResource(GPS_RESOURCE_ID[resid]);
-        gpsNumber.setText(String.valueOf(resid));
-    }
-
-    public void setGpsVisibility(int visibility) {
-        gpsStatus.setVisibility(visibility);
-    }
-
-    private void setMaxProgress(int maxProgress) {
-        batteryProgress.setMax(maxProgress);
+    public void setGpsStatus(int satellites) {
+        Logger.debug(satellites);
+        gpsStatus.setImageLevel(calculateGpsLevel(satellites));
+        if (calculateGpsLevel(satellites) > 0) {
+            gpsNumber.setText(satellites + "");
+            gpsNumber.setVisibility(View.VISIBLE);
+        } else {
+            gpsNumber.setVisibility(View.GONE);
+        }
     }
 
     public void setBatteryStatus(final int progress) {
@@ -85,5 +77,23 @@ public class StatusView extends LinearLayout {
                 batteryProgress.setProgress(progress);
             }
         });
+    }
+
+    private int calculateGpsLevel(int satellites) {
+
+        if (satellites < GPS_LEVEL_1_SATELLITE_COUNT) {
+            return 0;
+        }
+
+        if (satellites < GPS_LEVEL_2_SATELLITE_COUNT) {
+            return 1;
+        }
+        if (satellites < GPS_LEVEL_3_SATELLITE_COUNT) {
+            return 2;
+        }
+        if (satellites < GPS_LEVEL_4_SATELLITE_COUNT) {
+            return 3;
+        }
+        return 4;
     }
 }
