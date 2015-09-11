@@ -1,33 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/instrument"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:background="@drawable/instrument_compass_circle" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <include
         layout="@layout/text_mav_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="6dp"
-        android:layout_toRightOf="@id/instrument" />
+        android:layout_alignParentLeft="true"/>
 
     <include
         layout="@layout/btn_plan_location_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp" />
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"/>
 
     <FrameLayout
         android:id="@+id/tap_and_go_container"
@@ -36,5 +25,5 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:clickable="true" />
+        android:clickable="true"/>
 </RelativeLayout>
