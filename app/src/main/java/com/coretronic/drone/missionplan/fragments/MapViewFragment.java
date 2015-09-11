@@ -201,13 +201,13 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 break;
             case ON_ALTITUDE_UPDATE:
                 if (mCurrentFragment != null) {
-                    mCurrentFragment.setMavInfoAltitude(droneStatus.getAltitude());
+                    mCurrentFragment.onAltitdueUpdate(droneStatus.getAltitude());
                 }
                 mRecordItemBuilder.setAltitude(droneStatus.getAltitude());
                 break;
             case ON_LOCATION_UPDATE:
                 if (mCurrentFragment != null) {
-                    mCurrentFragment.setMavInfoLocation(droneStatus.getLatitude(), droneStatus.getLongitude());
+                    mCurrentFragment.onLocationUpdate(droneStatus.getLatitude(), droneStatus.getLongitude());
                 }
                 mDroneLat = droneStatus.getLatitude();
                 mDroneLon = droneStatus.getLongitude();
@@ -220,18 +220,21 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 mRecordItemBuilder.setSatellites(droneStatus.getSatellites());
                 break;
             case ON_ATTITUDE_UPDATE:
+                if (mCurrentFragment != null) {
+                    mCurrentFragment.onAttitudeUpdate(droneStatus.getYaw(), droneStatus.getRoll(), droneStatus.getPitch());
+                }
                 updateOnMapDrone(droneStatus);
                 mRecordItemBuilder.setHeading((int) droneStatus.getYaw());
                 break;
             case ON_SPEED_UPDATE:
                 if (mCurrentFragment != null) {
-                    mCurrentFragment.setMavInfoSpeed(droneStatus.getSpeed());
+                    mCurrentFragment.onSpeedUpdate(droneStatus.getSpeed());
                 }
                 mRecordItemBuilder.setSpeed(droneStatus.getSpeed());
                 break;
             case ON_FLIGHT_DURATION_UPDATE:
                 if (mCurrentFragment != null) {
-                    mCurrentFragment.setMavInfoFlightTime(droneStatus.getDuration());
+                    mCurrentFragment.onFlightTimeUpdate(droneStatus.getDuration());
                 }
                 break;
             case ON_RADIO_SIGNAL_UPDATE:

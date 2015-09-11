@@ -3,23 +3,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/instrument"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:background="@drawable/instrument_compass_circle"/>
-
     <include
         layout="@layout/text_mav_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="6dp"
-        android:layout_toRightOf="@id/instrument"/>
+        android:layout_alignParentLeft="true"/>
 
 
     <LinearLayout

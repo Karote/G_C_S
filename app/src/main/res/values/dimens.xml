@@ -10,4 +10,7 @@
     <dimen name="recyclerview_deleteitem_width">107dp</dimen>
     <dimen name="login_editview_height">40dp</dimen>
     <dimen name="setting_low_power_tv_width">28dp</dimen>
+
+    <dimen name="compass_ruler_height">1.2dp</dimen>
+
 </resources>
