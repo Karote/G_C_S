@@ -6,15 +6,10 @@ import android.os.Environment;
  * Created by james on 15/6/23.
  */
 public class AppConfig {
+
     public static String ALBUM_PATH = "/CoretronicDrone/";
     public static String SHAREDPREFERENCE_ID = "coretronic_drone";
-    public static String PREF_LOGIN_INFO = "login_info";
-    public static String PREF_MISSION_LIST = "mission_list";
     public static String PREF_FLAT_TRIM_LAST_TIME = "flat_trim_time";
-
-    public static String MISSION_LOG_START = "missionLogStart";
-    public static String MISSION_LOG_STOP = "missionLogStop";
-    public static String MAIN_FRAG_ARGUMENT = "mainFragArg";
 
     public static String getMediaFolderPosition() {
         return Environment.getExternalStoragePublicDirectory(

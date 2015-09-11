@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,7 @@ import com.coretronic.drone.DroneController.DroneStatus;
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.controller.DroneDevice;
-import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
+import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
@@ -49,11 +48,8 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private MainActivity activity;
     private SharedPreferences sharedPreferences;
 
-    // TTS
-    private final int CHECK_CODE = 0x1;
+    private final int TTS_RESULT_CODE = 0x1;
     private String mUserId;
-    private String mUserPw;
-    private boolean isStayLogged;
 
     private void assignViews(View view) {
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
@@ -196,10 +192,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onClick(View v) {
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Fragment fragment = null;
-        String backStackName = null;
-        Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.btn_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -213,7 +206,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                                         .putString(LoginFragment.ARG_USER_PW, "")
                                         .putBoolean(LoginFragment.ARG_STAY_LOGGED, false)
                                         .apply();
-                                transaction.replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+                                getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -224,29 +217,20 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                         })
                         .create();
                 dialog.show();
-
-                break;
+                return;
             case R.id.btn_mission_plan:
-                fragment = new WaypointEditorFragment();
-                bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
-                backStackName = "WaypointEditorFragment";
-                fragment.setArguments(bundle);
+                fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_PLANNING);
                 break;
             case R.id.btn_flight_history:
-                fragment = new WaypointEditorFragment();
-                bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 1);
-                backStackName = "WaypointEditorFragment";
-                fragment.setArguments(bundle);
+                fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_HISTORY);
                 break;
             case R.id.btn_flight_setting:
                 fragment = new SettingViewPagerFragment();
                 break;
         }
         if (fragment != null) {
-            transaction.add(R.id.frame_view, fragment, backStackName);
-            transaction.addToBackStack(MainFragment.class.getSimpleName());
-            transaction.hide(MainFragment.this);
-            transaction.commit();
+            getFragmentManager().beginTransaction().replace(R.id.frame_view, fragment, fragment.getClass().getSimpleName())
+                    .addToBackStack(fragment.getClass().getSimpleName()).commit();
         }
     }
 
@@ -255,19 +239,17 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     }
 
     private void checkTTS() {
-        Intent check = new Intent();
-        check.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        startActivityForResult(check, CHECK_CODE);
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, TTS_RESULT_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CHECK_CODE) {
-            if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                Intent install = new Intent();
-                install.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                startActivity(install);
-            }
+        if (requestCode == TTS_RESULT_CODE && resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+            Intent installIntent = new Intent();
+            installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+            startActivity(installIntent);
         }
     }
 
@@ -286,7 +268,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
+            ViewHolder holder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.spinner_style_main, parent, false);
                 holder = new ViewHolder();

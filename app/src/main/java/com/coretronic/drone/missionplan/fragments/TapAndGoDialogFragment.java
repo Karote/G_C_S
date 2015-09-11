@@ -28,25 +28,24 @@ public class TapAndGoDialogFragment extends Fragment {
     private float tapGo_lat, tapGo_lng;
 
     public static TapAndGoDialogFragment newInstance(int altitude, float latitude, float longitude) {
-        TapAndGoDialogFragment fragmet = new TapAndGoDialogFragment();
+        TapAndGoDialogFragment fragment = new TapAndGoDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_ALTITUDE, altitude);
         args.putFloat(ARGUMENT_LATITUDE, latitude);
         args.putFloat(ARGUMENT_LONGITUDE, longitude);
-        fragmet.setArguments(args);
+        fragment.setArguments(args);
 
-        return fragmet;
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_tap_and_go, container, false);
-        findviews(fragmentView);
-
+        findViews(fragmentView);
         return fragmentView;
     }
 
-    private void findviews(View fragmentView) {
+    private void findViews(View fragmentView) {
         tx_lat = (TextView) fragmentView.findViewById(R.id.text_tap_and_go_lat);
         tx_lng = (TextView) fragmentView.findViewById(R.id.text_tap_and_go_lng);
 
@@ -80,10 +79,10 @@ public class TapAndGoDialogFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setviews();
+        setViews();
     }
 
-    private void setviews() {
+    private void setViews() {
         Bundle arguments = getArguments();
 
         if (arguments != null) {

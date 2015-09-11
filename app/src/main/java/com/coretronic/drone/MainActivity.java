@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.controller.DroneDevice;
-import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
+import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.ViewManager;
@@ -259,10 +259,9 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == WaypointEditorFragment.REQUEST_LOCATION){
-            getSupportFragmentManager().findFragmentByTag("WaypointEditorFragment").onActivityResult(requestCode, resultCode, data);
-        }
-        else {
+        if (requestCode == MapViewFragment.GOOGLE_LOCATION_REQUEST_CODE) {
+            getSupportFragmentManager().findFragmentByTag(MapViewFragment.class.getSimpleName()).onActivityResult(requestCode, resultCode, data);
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }

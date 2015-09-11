@@ -38,7 +38,7 @@ function addMissionMarker(lat, lng, serial_number) {
     google.maps.event.addListener(planning_mission_marker, 'click', function(e) {
         if (mapClickable) {
             // addMissionMarker(marker.getPosition().lat(), marker.getPosition().lng(), poly.getPath().getLength() + 1);
-            AndroidFunction.mapPointToAndroid(planning_mission_marker.getPosition().lat(), planning_mission_marker.getPosition().lng());
+            AndroidFunction.onClick(planning_mission_marker.getPosition().lat(), planning_mission_marker.getPosition().lng());
         }
     });
     google.maps.event.addListener(planning_mission_marker, 'mousedown', function(e) {
@@ -51,13 +51,13 @@ function addMissionMarker(lat, lng, serial_number) {
         });
     });
     google.maps.event.addListener(planning_mission_marker, 'dragstart', function(e) {
-        AndroidFunction.hideDetailFragment();
+        AndroidFunction.onDragStart();
     });
     google.maps.event.addListener(planning_mission_marker, 'drag', function(e) {
         mission_plan_polyline.getPath().setAt(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition());
     });
     google.maps.event.addListener(planning_mission_marker, 'dragend', function(e) {
-        AndroidFunction.markerUpdateLocation(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition().lat(), planning_mission_marker.getPosition().lng());
+        AndroidFunction.onDragEnd(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition().lat(), planning_mission_marker.getPosition().lng());
     });
 
     var path = mission_plan_polyline.getPath();

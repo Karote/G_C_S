@@ -145,7 +145,7 @@ function mapClickListener(event) {
         return;
     }
     if (mapClickable) {
-        AndroidFunction.mapPointToAndroid(event.latLng.lat(), event.latLng.lng());
+        AndroidFunction.onClick(event.latLng.lat(), event.latLng.lng());
         // addMissionMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
     }
     if (isTapAndGoMode) {
@@ -175,7 +175,7 @@ function setMapToMyLocation() {
     if (currPosition != null) {
         map.setCenter(currPosition);
     } else {
-        AndroidFunction.showToast("無法取得現在位置");
+        AndroidFunction.onWarningMessage("無法取得現在位置");
     }
     if (map.getZoom() < 15) {
         map.setZoom(15);

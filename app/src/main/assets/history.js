@@ -141,7 +141,7 @@ function loadHistory(markerJson, pathJson) {
     map.fitBounds(flightbounds);
 
     var lengthInMeters = google.maps.geometry.spherical.computeLength(history_flight_path_polyline.getPath());
-    AndroidFunction.setPolylineLengthText(lengthInMeters);
+    AndroidFunction.onPolylineLengthCalculated(lengthInMeters);
 
     animateDrone();
 }

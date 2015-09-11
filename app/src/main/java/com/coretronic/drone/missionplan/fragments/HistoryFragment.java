@@ -15,7 +15,6 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
 import com.coretronic.drone.model.FlightHistory;
-import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.OnFlightHistoryUpdateListener;
 
 import java.text.SimpleDateFormat;
@@ -33,22 +32,13 @@ public class HistoryFragment extends MavInfoFragment {
     private HistoryItemListAdapter mHistoryItemAdapter = null;
     private Button btn_activate_plan = null;
 
-    public interface HistoryInterface extends PlanningFragment.PlanningInterface {
-        void loadHistory(List<Float> markers, List<Long> path);
-
-        void clearHistoryMarkerPath();
-
-        void spinnerSetToPlanning(List<Mission> missionList, boolean isSwitchFromHistoryFile);
-    }
-
-    private HistoryInterface callMainFragmentInterface = null;
+    private MapViewFragment mMapViewFragment = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        callMainFragmentInterface = (HistoryInterface) getParentFragment();
+        mMapViewFragment = (MapViewFragment) getParentFragment();
         ((MainActivity) getActivity()).registerOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
-
     }
 
     @Override
@@ -73,7 +63,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callMainFragmentInterface.spinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
+                mMapViewFragment.activateWithMission(mHistoryItemAdapter.getFocusHistory().getMissions());
             }
         });
 
@@ -105,8 +95,7 @@ public class HistoryFragment extends MavInfoFragment {
                             flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLatitude());
                             flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLongitude());
                         }
-                        callMainFragmentInterface.loadHistory(markerList, flightPath);
-
+                        mMapViewFragment.loadHistory(markerList, flightPath);
 
                         long durationTime = 0;
                         if (j > 2) {
@@ -118,7 +107,7 @@ public class HistoryFragment extends MavInfoFragment {
                         drone_log_info.setVisibility(View.VISIBLE);
                         btn_activate_plan.setVisibility(View.VISIBLE);
                     } else {
-                        callMainFragmentInterface.clearHistoryMarkerPath();
+                        mMapViewFragment.clearHistoryMarkerPath();
                         drone_log_info.setVisibility(View.GONE);
                         btn_activate_plan.setVisibility(View.GONE);
                     }
@@ -133,7 +122,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_map_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callMainFragmentInterface.changeMapType();
+                mMapViewFragment.changeMapType();
             }
         });
     }
@@ -158,7 +147,8 @@ public class HistoryFragment extends MavInfoFragment {
         }
     };
 
-    public void setFlightDistance(int lengthInMeters) {
+    @Override
+    public void onPolylineLengthCalculated(int lengthInMeters) {
         tv_flightDistance.setText(String.valueOf(lengthInMeters) + " m");
     }
 

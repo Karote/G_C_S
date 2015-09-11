@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
@@ -25,31 +24,21 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 20;
 
-    private TextView tvAltitude = null;
-    private TextView tvSpeed = null;
-    private TextView tvLat = null;
-    private TextView tvLng = null;
-    private TextView tv_droneFlightTime = null;
-
     private AbstractWheel altitudeWheel = null;
     private RelativeLayout startFollowMe = null;
-    private Button stopFollowMe = null;
-
-    public interface FollowMeInterface extends PlanningFragment.PlanningInterface {
-        void fitMapShowDroneAndMe();
-    }
-
-    private FollowMeInterface callMainFragmentInterface = null;
+    private Button mStopFollowMeButton = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        callMainFragmentInterface = (FollowMeInterface) getParentFragment();
+        mMapViewFragment = (MapViewFragment) getParentFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mission_plan_follow_me, container, false);
+        View view = inflater.inflate(R.layout.fragment_follow_me, container, false);
+        initMavInfoView(view, R.id.altitude_text, R.id.speed_text, R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
+        return view;
     }
 
     @Override
@@ -60,9 +49,9 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         startFollowMe = (RelativeLayout) view.findViewById(R.id.rl_start_follow);
         startFollowMe.setOnClickListener(onFollowBtnClickListener);
 
-        stopFollowMe = (Button) view.findViewById(R.id.btn_stop_follow);
-        stopFollowMe.setOnClickListener(onFollowBtnClickListener);
-        stopFollowMe.setVisibility(View.GONE);
+        mStopFollowMeButton = (Button) view.findViewById(R.id.btn_stop_follow);
+        mStopFollowMeButton.setOnClickListener(onFollowBtnClickListener);
+        mStopFollowMeButton.setVisibility(View.GONE);
 
         altitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
         final NumericWheelAdapter altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), MIN_VALUE, MAX_VALUE, "%01d");
@@ -93,86 +82,6 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
         final Button fitMapButton = (Button) view.findViewById(R.id.button_fit_map);
         fitMapButton.setOnClickListener(onFollowBtnClickListener);
-
-        // MAV Info
-        tvAltitude = (TextView) view.findViewById(R.id.altitude_text);
-        tvAltitude.setText("0m");
-        tvSpeed = (TextView) view.findViewById(R.id.speed_text);
-        tvSpeed.setText("0 km/h");
-        tvLat = (TextView) view.findViewById(R.id.location_lat_text);
-        tvLat.setText("0.000000,");
-        tvLng = (TextView) view.findViewById(R.id.location_lng_text);
-        tvLng.setText("0.000000");
-        tv_droneFlightTime = (TextView) view.findViewById(R.id.flight_time_text);
-        tv_droneFlightTime.setText("00:00");
-    }
-
-    @Override
-    public void setMavInfoAltitude(float altitude) {
-        if (tvAltitude == null)
-            return;
-
-        tvAltitude.setText(String.format("%.1f", altitude) + "m");
-    }
-
-    @Override
-    public void setMavInfoSpeed(float groundSpeed) {
-        if (tvSpeed == null)
-            return;
-
-        tvSpeed.setText(String.format("%.1f", groundSpeed) + " km/h");
-    }
-
-    @Override
-    public void setMavInfoLocation(long droneLat, long droneLng) {
-        if (tvLat == null)
-            return;
-        String latLongStr = String.valueOf(droneLat);
-        String lngLongStr = String.valueOf(droneLng);
-        int latDecimalPos = latLongStr.length() - 7;
-        int lngDecimalPos = lngLongStr.length() - 7;
-
-        String lat_output, lng_output;
-        if (latDecimalPos <= 0) {
-            lat_output = String.format("0.%07d", droneLat);
-        } else {
-            lat_output = latLongStr.substring(0, latDecimalPos) + "." + latLongStr.substring(latDecimalPos);
-        }
-
-        if (lngDecimalPos <= 0) {
-            lng_output = String.format("0.%07d", droneLng);
-        } else {
-            lng_output = lngLongStr.substring(0, lngDecimalPos) + "." + lngLongStr.substring(lngDecimalPos);
-        }
-
-        tvLat.setText(lat_output + ",");
-        tvLng.setText(lng_output);
-    }
-
-    @Override
-    public void setMavInfoFlightTime(int flightTime) {
-        if (tv_droneFlightTime == null || flightTime < 1)
-            return;
-
-        String showTime = "";
-        if (flightTime >= 6000) {
-            showTime = "99:99";
-            tv_droneFlightTime.setText(showTime);
-            return;
-        }
-        int min = flightTime / 60;
-        if (min < 10) {
-            showTime += "0";
-        }
-        showTime += min;
-        showTime += ":";
-
-        int sec = flightTime % 60;
-        if (sec < 10) {
-            showTime += "0";
-        }
-        showTime += sec;
-        tv_droneFlightTime.setText(showTime);
     }
 
     private View.OnClickListener onFollowBtnClickListener = new View.OnClickListener() {
@@ -185,23 +94,23 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
                         drone.startFollowMe(altitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
                     }
                     startFollowMe.setVisibility(View.GONE);
-                    stopFollowMe.setVisibility(View.VISIBLE);
+                    mStopFollowMeButton.setVisibility(View.VISIBLE);
                     break;
                 case R.id.btn_stop_follow:
                     if (drone != null) {
                         drone.startFollowMe(0, FollowMeFragment.this);
                     }
                     startFollowMe.setVisibility(View.VISIBLE);
-                    stopFollowMe.setVisibility(View.GONE);
+                    mStopFollowMeButton.setVisibility(View.GONE);
                     break;
                 case R.id.button_my_location:
-                    callMainFragmentInterface.setMapToMyLocation();
+                    mMapViewFragment.setMapToMyLocation();
                     break;
                 case R.id.button_drone_location:
-                    callMainFragmentInterface.setMapToDrone();
+                    mMapViewFragment.setMapToDrone();
                     break;
                 case R.id.button_fit_map:
-                    callMainFragmentInterface.fitMapShowDroneAndMe();
+                    mMapViewFragment.fitMapShowDroneAndMe();
                     break;
             }
         }
