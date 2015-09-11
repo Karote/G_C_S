@@ -159,7 +159,6 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
             altitudeView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
             deleteLayout = (LinearLayout) itemView.findViewById(R.id.rowDeleteLayout);
-            deleteLayout.setVisibility(LinearLayout.GONE);
             deleteButton = (ImageButton) itemView.findViewById(R.id.btn_plan_waypoint_delet);
             rowItemLayoutView = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
             focusBarView = itemView.findViewById(R.id.view_focusbar);

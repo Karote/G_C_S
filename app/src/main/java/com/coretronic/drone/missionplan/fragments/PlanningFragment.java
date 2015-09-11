@@ -365,8 +365,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 case View.MeasureSpec.AT_MOST:
                 case View.MeasureSpec.UNSPECIFIED:
             }
-
-            setMeasuredDimension(width, height);
+            setMeasuredDimension(width, Math.min(height, heightSize));
         }
 
         private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
@@ -378,8 +377,21 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                         getPaddingLeft() + getPaddingRight(), p.width);
                 int childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec,
                         getPaddingTop() + getPaddingBottom(), p.height);
+
                 view.measure(childWidthSpec, childHeightSpec);
-                measuredDimension[0] = view.getMeasuredWidth() + p.leftMargin + p.rightMargin;
+                int width = view.getMeasuredWidth();
+                if (view instanceof ViewGroup) {
+                    int childTotalWidth = 0;
+                    for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                        View childView = ((ViewGroup) view).getChildAt(i);
+                        if (childView.getVisibility() == View.VISIBLE) {
+                            childTotalWidth += childView.getMeasuredWidth();
+                        }
+                    }
+                    width = childTotalWidth;
+                }
+
+                measuredDimension[0] = width + p.leftMargin + p.rightMargin;
                 measuredDimension[1] = view.getMeasuredHeight() + p.bottomMargin + p.topMargin;
                 recycler.recycleView(view);
             }
