@@ -377,7 +377,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void setUpTopBarButton(View view) {
-        view.findViewById(R.id.button_back_to_main).setOnClickListener(this);
+        view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
 
         mSpinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
@@ -579,7 +579,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.button_back_to_main:
+            case R.id.back_to_main_button:
                 getActivity().onBackPressed();
                 return;
             case R.id.btn_delete_all:

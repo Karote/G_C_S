@@ -18,7 +18,7 @@
             android:layout_height="32dp"
             android:layout_gravity="bottom"
             android:layout_marginLeft="4dp"
-            android:background="@drawable/btn_action_back"/>
+            android:background="@drawable/back_to_main_button_transparent_icon"/>
 
         <TextView
             android:id="@+id/tv_title"

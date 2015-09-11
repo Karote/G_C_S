@@ -17,12 +17,12 @@
         android:background="@color/black_transparent_70"
         android:clickable="true">
 
-        <Button
-            android:id="@+id/button_back_to_main"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+        <ImageView
+            android:id="@+id/back_to_main_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/btn_action_back" />
+            android:background="@drawable/back_to_main_button_black_icon" />
 
         <com.coretronic.drone.ui.StatusView
             android:id="@+id/status"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@id/button_back_to_main" />
+            android:layout_toRightOf="@id/back_to_main_button" />
 
         <Spinner
             android:id="@+id/mission_plan_spinner"
