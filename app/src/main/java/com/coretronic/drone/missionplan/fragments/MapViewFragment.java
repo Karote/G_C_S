@@ -427,23 +427,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mUndoButton.setOnClickListener(this);
         mDeleteButton = view.findViewById(R.id.btn_action_plan_delete);
         mDeleteButton.setOnClickListener(this);
-        view.findViewById(R.id.btn_delete_done).setOnClickListener(this);
-        view.findViewById(R.id.btn_delete_all).setOnClickListener(this);
 
         mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.radiogroup_multi_or_single);
-        mMissionPlanTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.btn_action_multi_point:
-                        setFragmentTransaction(FRAGMENT_TYPE_PLANNING);
-                        break;
-                    case R.id.btn_action_tap_and_go: // Tap & GO
-                        setFragmentTransaction(FRAGMENT_TYPE_TAP_AND_GO);
-                        break;
-                }
-            }
-        });
+
+        view.findViewById(R.id.btn_delete_done).setOnClickListener(this);
+        view.findViewById(R.id.btn_delete_all).setOnClickListener(this);
+        view.findViewById(R.id.btn_action_multi_point).setOnClickListener(this);
+        view.findViewById(R.id.btn_action_tap_and_go).setOnClickListener(this);
+
     }
 
     private void setFragmentTransaction(int fragmentType) {
@@ -595,6 +586,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 setDeleteOptionShow(false);
                 mDroneMap.setAddMarkerEnable(true);
                 break;
+            case R.id.btn_action_multi_point:
+                setFragmentTransaction(FRAGMENT_TYPE_PLANNING);
+                return;
+            case R.id.btn_action_tap_and_go:
+                setFragmentTransaction(FRAGMENT_TYPE_TAP_AND_GO);
+                return;
         }
 
         if (mCurrentFragment == null) {

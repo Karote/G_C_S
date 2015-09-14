@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="158dp"
-    android:layout_height="36dp"
-    android:gravity="right|center_vertical"
-    android:orientation="horizontal"
-    android:visibility="gone">
+              android:layout_width="158dp"
+              android:layout_height="36dp"
+              android:gravity="right|center_vertical"
+              android:orientation="horizontal"
+              android:visibility="gone">
 
     <Button
         android:id="@+id/btn_action_plan_undo"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginRight="4dp"
-        android:background="@drawable/btn_action_plan_undo" />
+        android:background="@drawable/btn_action_plan_undo"/>
 
     <FrameLayout
         android:layout_width="116dp"
@@ -29,7 +29,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginRight="8dp"
-                android:background="@drawable/btn_action_plan_delete" />
+                android:background="@drawable/btn_action_plan_delete"/>
 
             <LinearLayout
                 android:layout_width="72dp"
@@ -51,7 +51,7 @@
                         android:layout_height="36dp"
                         android:background="@drawable/btn_action_multi_point"
                         android:button="@android:color/transparent"
-                        android:checked="true" />
+                        />
 
                     <RadioButton
                         android:id="@+id/btn_action_tap_and_go"
@@ -59,7 +59,8 @@
                         android:layout_height="36dp"
                         android:layout_marginLeft="4dp"
                         android:background="@drawable/btn_action_plan_point"
-                        android:button="@color/transparent" />
+                        android:button="@color/transparent"
+                        android:checked="true"/>
                 </RadioGroup>
 
             </LinearLayout>
@@ -84,7 +85,7 @@
                 android:background="@drawable/btn_delete_bg"
                 android:text="@string/delete_done"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/btn_delete_all"
@@ -96,7 +97,7 @@
                 android:gravity="center"
                 android:text="@string/delete_all"
                 android:textColor="@color/red"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
         </LinearLayout>
 
     </FrameLayout>
