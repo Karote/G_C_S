@@ -13,5 +13,7 @@
 
     <dimen name="compass_ruler_height">1.2dp</dimen>
     <dimen name="mission_plan_spinner_width">184dp</dimen>
+    <dimen name="action_bar_height">36dp</dimen>
+    <dimen name="delete_option_button_width">52dp</dimen>
 
 </resources>

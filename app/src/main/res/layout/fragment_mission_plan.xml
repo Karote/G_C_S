@@ -10,9 +10,9 @@
         android:layout_height="match_parent" />
 
     <RelativeLayout
-        android:id="@+id/top_layout"
+        android:id="@+id/action_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="@dimen/action_bar_height"
         android:layout_alignParentTop="true"
         android:background="@color/black_transparent_70"
         android:clickable="true">
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/back_to_main_button_black_icon" />
+            android:src="@drawable/back_to_main_button_black_icon" />
 
         <com.coretronic.drone.ui.StatusView
             android:id="@+id/status"
@@ -41,11 +41,10 @@
             android:gravity="center" />
 
         <include
-            android:id="@+id/custom_layout_edit_marker"
-            layout="@layout/custom_layout_edit_marker"
+            android:id="@+id/marker_editor_control_panel"
+            layout="@layout/marker_editor_control_panel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
@@ -54,5 +53,5 @@
         android:id="@+id/mission_plan_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/top_layout" />
+        android:layout_below="@id/action_bar_layout" />
 </RelativeLayout>

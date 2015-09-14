@@ -236,18 +236,18 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_action_plan_undo:
+            case R.id.undo_button:
                 loadMissionFromDrone();
                 break;
-            case R.id.btn_delete_all:
+            case R.id.delete_all_button:
                 missionAdapterClearData();
                 missionAdapterShowDelete(false);
                 updateMissionToMap();
                 break;
-            case R.id.btn_delete_done:
+            case R.id.delete_done_button:
                 missionAdapterShowDelete(false);
                 break;
-            case R.id.btn_action_plan_delete:
+            case R.id.delete_button:
                 missionAdapterShowDelete(true);
                 break;
         }
