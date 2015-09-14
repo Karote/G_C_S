@@ -579,6 +579,7 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 break;
             case R.id.btn_action_plan_delete:
                 setDeleteOptionShow(true);
+                mDroneMap.setAddMarkerEnable(false);
                 break;
             case R.id.btn_delete_done:
                 setDeleteOptionShow(false);
