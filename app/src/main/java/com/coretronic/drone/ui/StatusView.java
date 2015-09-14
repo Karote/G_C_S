@@ -134,6 +134,7 @@ public class StatusView extends LinearLayout {
             mCommunicateLightImageView.setImageLevel(LEVEL_NO_CONNECT);
             if (mTranslateRunnable != null) {
                 mTranslateHandler.removeCallbacks(mTranslateRunnable);
+                mTranslateRunnable = null;
             }
             mCommunicateLightImageView.clearAnimation();
         }
