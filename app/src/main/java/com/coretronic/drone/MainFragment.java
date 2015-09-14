@@ -52,13 +52,11 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private SharedPreferences mSharedPreferences;
 
     private final int TTS_RESULT_CODE = 0x1;
-    private String mUserId;
+    private Button btnLogout;
 
     private void assignViews(View view) {
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
-        Button btnLogout = (Button) view.findViewById(R.id.btn_logout);
-        btnLogout.setText(mUserId);
-
+        btnLogout = (Button) view.findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
 
@@ -87,9 +85,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
-        mMainActivity = (MainActivity) getActivity();
-        mUserId = mSharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
         checkTTS();
     }
 
@@ -103,17 +98,21 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mMainActivity = (MainActivity) getActivity();
+        mSharedPreferences = mMainActivity.getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
+        String userId = mSharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
+        Log.d("morris", "db name:" + userId);
+        // login the couchbase
+        if (userId.length() == 0) {
+            Toast.makeText(getActivity(), "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
+            getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+            return;
+        } else {
+            mMainActivity.login(userId.replace("@", "_").replace(".", "_").toLowerCase());
+            btnLogout.setText(userId);
+        }
         mMainActivity.registerDeviceChangedListener(this);
         mMainActivity.registerDroneStatusChangedListener(this);
-
-        String dbName = mUserId.replace("@", "_").replace(".", "_").toLowerCase();
-        Log.d("morris", "db name:" + dbName);
-        // login the couchbase
-        if (mUserId.length() == 0) {
-            Toast.makeText(getActivity(), "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
-        } else {
-            mMainActivity.login(dbName);
-        }
 
     }
 
@@ -127,6 +126,9 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
+        if (mDroneDevices.contains(droneDevice)) {
+            return;
+        }
         mDroneDevices.add(droneDevice);
         mDeviceAdapter.notifyDataSetChanged();
     }
@@ -164,30 +166,34 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
         final DroneDevice droneDevice = mDroneDevices.get(position);
         Log.d(TAG, "onItemSelected: " + droneDevice.getName());
+
+        if (droneDevice == mMainActivity.getConnectedDroneDevice()) {
+            return;
+        }
+
         if (droneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
             if (ADD_NEW_DEVICE_TITLE.equals(droneDevice.getName())) {
                 showAddNewDroneDialog();
                 mDroneDeviceSpinner.setSelection(0);
             }
-            return;
-        } else {
-            mMainActivity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
-                @Override
-                public void onConnected() {
-                    Toast.makeText(getActivity().getApplicationContext(), "Init controller" + droneDevice.getName(),
-                            Toast.LENGTH_LONG).show();
-                    mMainActivity.setConnectedDroneDevice(droneDevice);
-                    mMainActivity.initialSetting();
-                    mMainActivity.readParameter();
-                }
-
-                @Override
-                public void onConnectFail() {
-                    mDroneDeviceSpinner.setSelection(0);
-                    Toast.makeText(getActivity().getApplicationContext(), "Init controller error", Toast.LENGTH_LONG).show();
-                }
-            });
         }
+        mMainActivity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
+            @Override
+            public void onConnected() {
+                Toast.makeText(getActivity().getApplicationContext(), "Init controller" + droneDevice.getName(),
+                        Toast.LENGTH_LONG).show();
+                mMainActivity.setConnectedDroneDevice(droneDevice);
+                mMainActivity.initialSetting();
+                mMainActivity.readParameter();
+            }
+
+            @Override
+            public void onConnectFail() {
+                mDroneDeviceSpinner.setSelection(0);
+                Toast.makeText(getActivity().getApplicationContext(), "Init controller error", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     @Override
