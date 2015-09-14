@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,14 +19,16 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.coretronic.drone.Drone;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneController.DroneMode;
 import com.coretronic.drone.DroneController.DroneStatus;
 import com.coretronic.drone.DroneController.MissionStatus;
+import com.coretronic.drone.DroneController.StatusChangedListener;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
+import com.coretronic.drone.controller.DroneDevice;
+import com.coretronic.drone.controller.DroneDevice.OnDeviceChangedListener;
 import com.coretronic.drone.missionplan.map.DroneMap;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
@@ -34,6 +37,8 @@ import com.coretronic.drone.ui.StatusView;
 import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -47,8 +52,8 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import java.util.List;
 
-public class MapViewFragment extends Fragment implements View.OnClickListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, Drone.StatusChangedListener {
+public class MapViewFragment extends Fragment implements OnClickListener, LocationListener, ConnectionCallbacks,
+        OnConnectionFailedListener, StatusChangedListener, OnDeviceChangedListener {
 
     private static final String ARGUMENT_INDEX_KEY = "fragment_index_index";
 
@@ -107,7 +112,6 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
         super.onCreate(savedInstanceState);
         setUpLocationService();
         mTtsSpeaker = new Speaker(getActivity());
-
         mHandler = new Handler();
         mRecordItemBuilder = new RecordItem.Builder();
     }
@@ -122,6 +126,8 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
     public void onDestroyView() {
         super.onDestroyView();
         ((MainActivity) getActivity()).unregisterDroneStatusChangedListener(this);
+        ((MainActivity) getActivity()).unregisterDeviceChangedListener(this);
+        mStatusView.onDisconnect();
     }
 
     @Override
@@ -136,6 +142,7 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
         setUpTopBarButton(view);
         mDroneMap = new DroneMap(getActivity(), view, mHandler);
         mStatusView = (StatusView) view.findViewById(R.id.status);
+        ((MainActivity) getActivity()).registerDeviceChangedListener(this);
     }
 
     @Override
@@ -249,6 +256,9 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
                 break;
             case ON_MODE_UPDATE:
                 notificationWithTTS(droneStatus.getMode());
+                break;
+            case ON_HEARTBEAT:
+                mStatusView.updateCommunicateLight();
                 break;
         }
 
@@ -678,4 +688,15 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, L
         return builder.create();
     }
 
+    @Override
+    public void onDeviceAdded(DroneDevice droneDevice) {
+
+    }
+
+    @Override
+    public void onDeviceRemoved(DroneDevice droneDevice) {
+        if (droneDevice.equals(((MainActivity) getActivity()).getConnectedDroneDevice())) {
+            mStatusView.onDisconnect();
+        }
+    }
 }

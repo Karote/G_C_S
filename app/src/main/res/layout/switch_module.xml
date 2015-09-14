@@ -15,6 +15,6 @@
         android:textOn="@string/switch_btn_on"
         android:textSize="12sp"
         android:textStyle="bold"
-        android:thumb="@drawable/custome_switch_selector"
-        android:track="@drawable/custom_switch_track"/>
+        android:thumb="@drawable/switch_selector_custom"
+        android:track="@drawable/switch_track_custom"/>
 </LinearLayout>

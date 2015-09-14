@@ -8,7 +8,7 @@
         android:id="@+id/iv_communication_light"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:background="@drawable/icon_indicator_light_green"/>
+        android:src="@drawable/level_list_communicate_light"/>
 
     <FrameLayout
         android:layout_width="22dp"
@@ -19,7 +19,7 @@
             android:id="@+id/iv_gps"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@drawable/gps_status_level"/>
+            android:src="@drawable/level_list_gps_status"/>
 
         <TextView
             android:id="@+id/tv_gps"
@@ -38,7 +38,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginLeft="6dp"
-        android:src="@drawable/rf_status_level"/>
+        android:src="@drawable/level_list_rf_status"/>
 
     <ProgressBar
         android:id="@+id/progress_battery"
