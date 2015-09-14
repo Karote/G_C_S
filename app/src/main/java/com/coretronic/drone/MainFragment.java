@@ -122,6 +122,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         super.onDestroyView();
         mMainActivity.unregisterDeviceChangedListener(this);
         mMainActivity.unregisterDroneStatusChangedListener(this);
+        mStatusView.onDisconnect();
     }
 
     @Override
@@ -136,6 +137,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         mDeviceAdapter.notifyDataSetChanged();
         if (droneDevice.equals(mMainActivity.getConnectedDroneDevice())) {
             mDroneDeviceSpinner.setSelection(0);
+            mStatusView.onDisconnect();
         }
     }
 
@@ -150,6 +152,9 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 break;
             case ON_RADIO_SIGNAL_UPDATE:
                 mStatusView.setRFStatus(droneStatus.getRadioSignal());
+                break;
+            case ON_HEARTBEAT:
+                mStatusView.updateCommunicateLight();
                 break;
 
         }

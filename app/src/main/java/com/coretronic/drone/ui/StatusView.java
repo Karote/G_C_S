@@ -2,16 +2,17 @@ package com.coretronic.drone.ui;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
-import com.coretronic.ibs.log.Logger;
 
 /**
  * Created by jiaLian on 15/6/9.
@@ -24,11 +25,17 @@ public class StatusView extends LinearLayout {
     private final static int GPS_LEVEL_3_SATELLITE_COUNT = 8;
     private final static int GPS_LEVEL_4_SATELLITE_COUNT = 10;
 
-    private ImageView gpsStatus;
-    private ImageView rfStatus;
-    private ProgressBar batteryProgress;
-    private TextView tvBattery;
-    private TextView gpsNumber;
+    private final static int MAX_LEVEL_RF_STATUS = 5;
+    private final static int MIN_VALUE_RF = -100;
+
+    private ImageView mGpsStatus;
+    private ImageView mRfStatusImageView;
+    private ProgressBar mBatteryProgressBar;
+    private TextView mBatteryTextView;
+    private TextView mGpsCountTextView;
+    private Handler mTranslateHandler;
+    private Runnable mTranslateRunnable;
+    private CommunicateLightState mCommunicateLightState;
 
     public StatusView(Context context) {
         super(context);
@@ -46,37 +53,43 @@ public class StatusView extends LinearLayout {
 
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.status_view, null);
-        gpsStatus = (ImageView) view.findViewById(R.id.iv_gps);
-        gpsNumber = (TextView) view.findViewById(R.id.tv_gps);
-        rfStatus = (ImageView) view.findViewById(R.id.iv_rf);
-        batteryProgress = (ProgressBar) view.findViewById(R.id.progress_battery);
-        tvBattery = (TextView) view.findViewById(R.id.tv_battery);
+        mGpsStatus = (ImageView) view.findViewById(R.id.iv_gps);
+        mGpsCountTextView = (TextView) view.findViewById(R.id.tv_gps);
+        mRfStatusImageView = (ImageView) view.findViewById(R.id.iv_rf);
+        mBatteryProgressBar = (ProgressBar) view.findViewById(R.id.progress_battery);
+        mBatteryTextView = (TextView) view.findViewById(R.id.tv_battery);
+        mCommunicateLightState = new CommunicateLightState((ImageView) view.findViewById(R.id.iv_communication_light));
         addView(view);
     }
 
     public void setRFStatus(int rssi) {
-        rfStatus.setImageLevel(WifiManager.calculateSignalLevel(rssi, 5));
+        mRfStatusImageView.setImageLevel(WifiManager.calculateSignalLevel(rssi, MAX_LEVEL_RF_STATUS));
     }
 
     public void setGpsStatus(int satellites) {
-        Logger.debug(satellites);
-        gpsStatus.setImageLevel(calculateGpsLevel(satellites));
+        mGpsStatus.setImageLevel(calculateGpsLevel(satellites));
         if (calculateGpsLevel(satellites) > 0) {
-            gpsNumber.setText(satellites + "");
-            gpsNumber.setVisibility(View.VISIBLE);
+            mGpsCountTextView.setText(satellites + "");
+            mGpsCountTextView.setVisibility(View.VISIBLE);
         } else {
-            gpsNumber.setVisibility(View.GONE);
+            mGpsCountTextView.setVisibility(View.GONE);
         }
     }
 
     public void setBatteryStatus(final int progress) {
-        tvBattery.setText(progress + "%");
-        batteryProgress.post(new Runnable() {
-            @Override
-            public void run() {
-                batteryProgress.setProgress(progress);
-            }
-        });
+        mBatteryTextView.setText(progress + "%");
+        mBatteryProgressBar.setProgress(progress);
+    }
+
+    public void updateCommunicateLight() {
+        mCommunicateLightState.flash();
+    }
+
+    public void onDisconnect() {
+        setBatteryStatus(0);
+        setGpsStatus(-1);
+        setRFStatus(MIN_VALUE_RF);
+        mCommunicateLightState.onDisconnect();
     }
 
     private int calculateGpsLevel(int satellites) {
@@ -95,5 +108,61 @@ public class StatusView extends LinearLayout {
             return 3;
         }
         return 4;
+    }
+
+    private class CommunicateLightState {
+
+        private final static int LEVEL_NO_CONNECT = 0;
+        private final static int LEVEL_WEAK = 1;
+        private final static int LEVEL_NORMAL = 2;
+
+        private final static int UPDATE_GAP_NO_SIGNAL = 5 * 1000;
+        private final static int UPDATE_GAP_WEAK = 3 * 1000;
+        private final static int UPDATE_PERIOD = 1 * 1000;
+
+        private ImageView mCommunicateLightImageView;
+        private long mLastUpdateTime;
+        private int mCurrentLevel = LEVEL_NO_CONNECT;
+
+        public CommunicateLightState(ImageView communicateLightImageView) {
+            mCommunicateLightImageView = communicateLightImageView;
+            mLastUpdateTime = System.currentTimeMillis();
+            mTranslateHandler = new Handler();
+        }
+
+        private void onDisconnect() {
+            mCommunicateLightImageView.setImageLevel(LEVEL_NO_CONNECT);
+            if (mTranslateRunnable != null) {
+                mTranslateHandler.removeCallbacks(mTranslateRunnable);
+            }
+            mCommunicateLightImageView.clearAnimation();
+        }
+
+        private void update() {
+            long gap = System.currentTimeMillis() - mLastUpdateTime;
+            int newLevel = gap > UPDATE_GAP_NO_SIGNAL ? LEVEL_NO_CONNECT : gap > UPDATE_GAP_WEAK ? LEVEL_WEAK : LEVEL_NORMAL;
+            if (newLevel != mCurrentLevel) {
+                mCommunicateLightImageView.setImageLevel(newLevel);
+                mCurrentLevel = newLevel;
+            }
+        }
+
+        private void flash() {
+            mLastUpdateTime = System.currentTimeMillis();
+            update();
+            if (mTranslateRunnable != null) {
+                return;
+            }
+            mTranslateRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    update();
+                    mTranslateHandler.postDelayed(this, UPDATE_PERIOD);
+                }
+            };
+            mTranslateHandler.postDelayed(mTranslateRunnable, UPDATE_PERIOD);
+            mCommunicateLightImageView.startAnimation(AnimationUtils.loadAnimation(mCommunicateLightImageView.getContext(), R.anim.fade_communicate_light));
+        }
+
     }
 }
