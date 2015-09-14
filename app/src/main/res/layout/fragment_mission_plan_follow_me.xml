@@ -9,7 +9,7 @@
         android:layout_height="wrap_content" />
 
     <include
-        layout="@layout/btn_plan_location_group"
+        layout="@layout/control_button_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

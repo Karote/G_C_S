@@ -74,14 +74,11 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         });
 
         // Location Button Panel
-        final Button myLocationButton = (Button) view.findViewById(R.id.button_my_location);
-        myLocationButton.setOnClickListener(onFollowBtnClickListener);
+        view.findViewById(R.id.my_location_button).setOnClickListener(onFollowBtnClickListener);
 
-        final Button droneLocationButton = (Button) view.findViewById(R.id.button_drone_location);
-        droneLocationButton.setOnClickListener(onFollowBtnClickListener);
+        view.findViewById(R.id.drone_location_button).setOnClickListener(onFollowBtnClickListener);
 
-        final Button fitMapButton = (Button) view.findViewById(R.id.button_fit_map);
-        fitMapButton.setOnClickListener(onFollowBtnClickListener);
+        view.findViewById(R.id.fit_map_button).setOnClickListener(onFollowBtnClickListener);
     }
 
     private View.OnClickListener onFollowBtnClickListener = new View.OnClickListener() {
@@ -103,13 +100,13 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
                     startFollowMe.setVisibility(View.VISIBLE);
                     mStopFollowMeButton.setVisibility(View.GONE);
                     break;
-                case R.id.button_my_location:
+                case R.id.my_location_button:
                     mMapViewFragment.setMapToMyLocation();
                     break;
-                case R.id.button_drone_location:
+                case R.id.drone_location_button:
                     mMapViewFragment.setMapToDrone();
                     break;
-                case R.id.button_fit_map:
+                case R.id.fit_map_button:
                     mMapViewFragment.fitMapShowDroneAndMe();
                     break;
             }

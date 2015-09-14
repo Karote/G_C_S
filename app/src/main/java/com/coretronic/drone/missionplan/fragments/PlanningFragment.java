@@ -107,15 +107,15 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         });
 
         // Go & Stop & Location Button Panel
-        view.findViewById(R.id.btn_plan_go).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_land).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_rtl).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_stop).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.plan_go_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_landing_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.plan_stop_button).setOnClickListener(onPlanningBtnClickListener);
 
-        view.findViewById(R.id.button_my_location).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_drone_location).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_fit_map).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_map_type).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.my_location_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_location_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.fit_map_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.map_type_button).setOnClickListener(onPlanningBtnClickListener);
     }
 
     private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -124,7 +124,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
             DroneController droneController = mMapViewFragment.getDroneController();
             switch (v.getId()) {
-                case R.id.btn_plan_go:
+                case R.id.plan_go_button:
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     if (droneMissionList == null || droneMissionList.size() == 0) {
                         Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
@@ -136,33 +136,33 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                     droneController.writeMissions(droneMissionList, missionLoaderListener);
                     showProgressDialog("Loading", "Please wait...");
                     break;
-                case R.id.btn_plan_land:
+                case R.id.drone_landing_button:
                     if (droneController != null) {
                         droneController.land();
                     }
                     break;
-                case R.id.btn_plan_rtl:
+                case R.id.drone_rtl_button:
                     if (droneController != null) {
                         droneController.returnToLaunch();
                     }
                     break;
-                case R.id.btn_plan_stop:
+                case R.id.plan_stop_button:
                     if (droneController != null) {
                         droneController.pauseMission();
                     }
                     break;
-                case R.id.button_my_location:
+                case R.id.my_location_button:
                     mMapViewFragment.setMapToMyLocation();
                     break;
-                case R.id.button_drone_location:
+                case R.id.drone_location_button:
                     mMapViewFragment.setMapToDrone();
                     break;
-                case R.id.button_fit_map:
+                case R.id.fit_map_button:
                     if (mMissionItemAdapter.getItemCount() > 0) {
                         mMapViewFragment.fitMapShowAllMission();
                     }
                     break;
-                case R.id.btn_map_type:
+                case R.id.map_type_button:
                     mMapViewFragment.changeMapType();
                     break;
             }

@@ -66,6 +66,22 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="drone_landing_text_style">
+        <item name="android:fontFamily">@string/font_roboto_regular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#36A8FF</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <style name="control_button_group_divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@color/control_button_group_divider_background</item>
+    </style>
+
     <style name="Theme.Default" parent="@android:style/Theme.Holo.Light"></style>
 
     <style name="Theme.NoTitle" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>

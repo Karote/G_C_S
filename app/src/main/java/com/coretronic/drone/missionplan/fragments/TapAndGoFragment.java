@@ -31,12 +31,12 @@ public class TapAndGoFragment extends MavInfoFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Go & Stop & Location Button Panel
-        view.findViewById(R.id.btn_plan_land).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_rtl).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_my_location).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_drone_location).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_fit_map).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_map_type).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_landing_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.my_location_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_location_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.fit_map_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.map_type_button).setOnClickListener(onPlanningBtnClickListener);
         // Tap and Go
         layout_tapAndGoDialog = (FrameLayout) view.findViewById(R.id.tap_and_go_container);
          layout_tapAndGoDialog.setVisibility(View.GONE);
@@ -47,26 +47,26 @@ public class TapAndGoFragment extends MavInfoFragment {
         public void onClick(View v) {
             DroneController droneController = mMapViewFragment.getDroneController();
             switch (v.getId()) {
-                case R.id.btn_plan_land:
+                case R.id.drone_landing_button:
                     if (droneController != null) {
                         droneController.land();
                     }
                     break;
-                case R.id.btn_plan_rtl:
+                case R.id.drone_rtl_button:
                     if (droneController != null) {
                         droneController.returnToLaunch();
                     }
                     break;
-                case R.id.button_my_location:
+                case R.id.my_location_button:
                     mMapViewFragment.setMapToMyLocation();
                     break;
-                case R.id.button_drone_location:
+                case R.id.drone_location_button:
                     mMapViewFragment.setMapToDrone();
                     break;
-                case R.id.button_fit_map:
+                case R.id.fit_map_button:
                     // TO-DO: fit map to target and drone
                     break;
-                case R.id.btn_map_type:
+                case R.id.map_type_button:
                     mMapViewFragment.changeMapType();
                     break;
             }
