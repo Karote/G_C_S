@@ -234,6 +234,14 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.undo_button:
@@ -263,6 +271,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     @Override
     public void onLoadCompleted(final List<Mission> missions) {
+        if (getActivity() == null) {
+            return;
+        }
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
