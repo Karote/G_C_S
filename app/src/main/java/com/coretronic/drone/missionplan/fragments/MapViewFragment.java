@@ -119,6 +119,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity) getActivity()).registerDeviceChangedListener(this);
         ((MainActivity) getActivity()).registerDroneStatusChangedListener(this);
     }
 
@@ -142,7 +143,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         setUpTopBarButton(view);
         mDroneMap = new DroneMap(getActivity(), view, mHandler);
         mStatusView = (StatusView) view.findViewById(R.id.status);
-        ((MainActivity) getActivity()).registerDeviceChangedListener(this);
     }
 
     @Override
