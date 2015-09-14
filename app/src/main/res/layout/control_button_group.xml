@@ -25,7 +25,7 @@
             android:id="@+id/drone_rtl_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/drone_rtl_button_icon" />
+            android:src="@drawable/icon_drone_rtl_button" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,7 +39,7 @@
             android:id="@+id/drone_location_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/drone_location_button_icon" />
+            android:src="@drawable/icon_drone_location_button" />
 
         <View style="@style/control_button_group_divider" />
 
@@ -47,7 +47,7 @@
             android:id="@+id/my_location_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/my_location_button_icon" />
+            android:src="@drawable/icon_my_location_button" />
 
         <View style="@style/control_button_group_divider" />
 
@@ -55,7 +55,7 @@
             android:id="@+id/fit_map_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/fit_map_button_icon" />
+            android:src="@drawable/icon_fit_map_button" />
 
     </LinearLayout>
 
@@ -66,6 +66,6 @@
         android:layout_gravity="center"
         android:background="@drawable/btn_plan_white"
         android:padding="3dp"
-        android:src="@drawable/map_type_button_icon" />
+        android:src="@drawable/icon_map_type_button" />
 
 </LinearLayout>

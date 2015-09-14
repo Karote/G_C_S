@@ -58,7 +58,7 @@ public class LoginFragment extends Fragment {
         edUserId.setText(sharedPreferences.getString(ARG_USER_ID,""));
         edUserPw = (EditText) v.findViewById(R.id.ed_user_pwd);
         stayLogged = (CheckBox) v.findViewById(R.id.chk_stay_logged);
-        Button btnOk = (Button) v.findViewById(R.id.btn_login_ok);
+        Button btnOk = (Button) v.findViewById(R.id.login_ok_button);
         btnOk.setOnClickListener(btnListener);
     }
 

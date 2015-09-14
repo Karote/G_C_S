@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/text_mav_info"
+        layout="@layout/mav_info_panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -19,7 +19,7 @@
 
     <include
         android:id="@+id/layout_follow_me"
-        layout="@layout/fragment_follow_me"
+        layout="@layout/fragment_follow_me_dialog"
         android:layout_width="228dp"
         android:layout_height="110dp"
         android:layout_alignParentBottom="true"

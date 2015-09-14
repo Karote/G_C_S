@@ -35,7 +35,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
 
     private MissionItemListAdapter mMissionItemAdapter = null;
-    private FrameLayout layout_waypointDetail = null;
+    private FrameLayout wayPointDetail_layout = null;
 
     private WaypointDetailFragment detailFragment = null;
     private ProgressDialog progressDialog = null;
@@ -83,8 +83,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mMissionItemAdapter = new MissionItemListAdapter();
         recyclerView.setAdapter(mMissionItemAdapter);
 
-        layout_waypointDetail = (FrameLayout) view.findViewById(R.id.waypoint_detail_container);
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
+        wayPointDetail_layout.setVisibility(View.GONE);
 
         mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
             @Override
@@ -96,13 +96,13 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             public void onItemSelected(Mission mission, int currentIndex) {
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
                 detailFragment = WaypointDetailFragment.newInstance(currentIndex + 1, mission);
-                fragmentTransaction.replace(R.id.waypoint_detail_container, detailFragment, "DetailFragment").commit();
-                layout_waypointDetail.setVisibility(View.VISIBLE);
+                fragmentTransaction.replace(R.id.way_point_detail_container, detailFragment, "DetailFragment").commit();
+                wayPointDetail_layout.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onNothingSelected() {
-                layout_waypointDetail.setVisibility(View.GONE);
+                wayPointDetail_layout.setVisibility(View.GONE);
             }
         });
 
@@ -204,7 +204,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         } else {
             mMissionItemAdapter.setDeleteLayoutVisible(false);
         }
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout.setVisibility(View.GONE);
     }
 
     // methods for DetailFragment
@@ -225,7 +225,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     public void deleteItemMission() {
         mMissionItemAdapter.removeSelected();
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout.setVisibility(View.GONE);
         updateMissionToMap();
     }
 
@@ -314,7 +314,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onDragStart() {
         mMissionItemAdapter.onNothingSelected();
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout.setVisibility(View.GONE);
     }
 
     private class FixedLinearLayoutManager extends LinearLayoutManager {

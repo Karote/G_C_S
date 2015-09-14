@@ -36,7 +36,7 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_follow_me, container, false);
+        View view = inflater.inflate(R.layout.fragment_follow_me_dialog, container, false);
         initMavInfoView(view, R.id.altitude_text, R.id.speed_text, R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
         return view;
     }

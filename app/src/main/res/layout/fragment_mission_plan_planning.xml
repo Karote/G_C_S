@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/text_mav_info"
+        layout="@layout/mav_info_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/plan_go_button_icon" />
+            android:src="@drawable/icon_plan_go_button" />
 
         <ImageView
             android:id="@+id/plan_stop_button"
@@ -33,7 +33,7 @@
             android:layout_gravity="center"
             android:background="@drawable/btn_plan_white"
             android:padding="3dp"
-            android:src="@drawable/plan_stop_button_icon" />
+            android:src="@drawable/icon_plan_stop_button" />
 
         <include
             layout="@layout/control_button_group"
@@ -52,7 +52,7 @@
         android:scrollbars="vertical" />
 
     <FrameLayout
-        android:id="@+id/waypoint_detail_container"
+        android:id="@+id/way_point_detail_container"
         android:layout_width="240dp"
         android:layout_height="258dp"
         android:layout_toLeftOf="@id/mission_item_recycler_view"

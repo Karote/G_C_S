@@ -18,7 +18,7 @@
             android:layout_width="@dimen/delete_option_button_width"
             android:layout_height="match_parent"
             android:layout_marginRight="4dp"
-            android:background="@drawable/delete_option_button_background"
+            android:background="@drawable/bg_delete_option_button"
             android:gravity="center"
             android:text="@string/delete_all"
             android:textColor="@color/red"
@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:background="@drawable/delete_option_button_background"
+            android:background="@drawable/bg_delete_option_button"
             android:text="@string/delete_done"
             android:textColor="@color/white"
             android:textSize="12sp" />
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
-            android:background="@drawable/tap_and_go_button_icon"
+            android:background="@drawable/icon_tap_and_go_button"
             android:button="@color/transparent" />
 
         <RadioButton
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:background="@drawable/multi_way_point_button_icon"
+            android:background="@drawable/icon_multi_way_point_button"
             android:button="@android:color/transparent"
             android:checked="true" />
     </RadioGroup>
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="8dp"
-        android:src="@drawable/delete_button_icon" />
+        android:src="@drawable/icon_delete_button" />
 
     <ImageView
         android:id="@+id/undo_button"
@@ -76,6 +76,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="4dp"
-        android:src="@drawable/undo_button_icon" />
+        android:src="@drawable/icon_undo_button" />
 
 </LinearLayout>
