@@ -17,9 +17,6 @@ function initialize() {
     initHistoryMarkerPolyline();
     initTapGoMarkerPolyline();
 
-    mapClickable = true;
-    isTapAndGoMode = true;
-
     var GeoMarkerOption = {
         icon : {
             path : google.maps.SymbolPath.CIRCLE,
@@ -38,6 +35,8 @@ function initialize() {
         strokeOpacity : 1,
         strokeWeight : 2
     });
+
+    AndroidFunction.onMapLoaded();
 
     // updateDroneLocation(247122990, 1209164080, 0);
 }

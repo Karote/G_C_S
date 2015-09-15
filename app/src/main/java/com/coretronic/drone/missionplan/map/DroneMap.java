@@ -26,6 +26,9 @@ public class DroneMap implements OnMapEventCallback {
     private final WebView mMapWebView;
     private OnMapEventCallback mOnMapEventCallback;
 
+    private boolean mIsTapAndGoMode = true;
+    private boolean mCanAddMarket = true;
+
     @Override
     @JavascriptInterface
     public void onClick(final float lat, final float lon) {
@@ -88,6 +91,17 @@ public class DroneMap implements OnMapEventCallback {
             @Override
             public void run() {
                 Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void onMapLoaded() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mMapWebView.loadUrl("javascript:setMapClickable(" + mCanAddMarket + ")");
+                mMapWebView.loadUrl("javascript:setTapGoMode(" + mIsTapAndGoMode + ")");
             }
         });
     }
@@ -164,6 +178,8 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:mapClean()");
         mMapWebView.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
         mMapWebView.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
+        mIsTapAndGoMode = isTapAndGo;
+        mCanAddMarket = canMapAddMarker;
     }
 
     public DroneMap setOnMapEventListener(OnMapEventCallback onMapEventCallback) {
@@ -180,6 +196,7 @@ public class DroneMap implements OnMapEventCallback {
     }
 
     public void setAddMarkerEnable(boolean isAddMarkerEnable) {
+        mCanAddMarket = isAddMarkerEnable;
         mMapWebView.loadUrl("javascript:setMapClickable(" + isAddMarkerEnable + ")");
     }
 
