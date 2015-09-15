@@ -118,8 +118,7 @@ public class HistoryFragment extends MavInfoFragment {
             }
         });
 
-        final Button btn_map_type = (Button) view.findViewById(R.id.btn_map_type);
-        btn_map_type.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.map_type_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMapViewFragment.changeMapType();

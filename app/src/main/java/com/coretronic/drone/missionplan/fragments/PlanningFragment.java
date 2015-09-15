@@ -35,7 +35,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
 
     private MissionItemListAdapter mMissionItemAdapter = null;
-    private FrameLayout layout_waypointDetail = null;
+    private FrameLayout wayPointDetail_layout = null;
 
     private WaypointDetailFragment detailFragment = null;
     private ProgressDialog progressDialog = null;
@@ -83,8 +83,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mMissionItemAdapter = new MissionItemListAdapter();
         recyclerView.setAdapter(mMissionItemAdapter);
 
-        layout_waypointDetail = (FrameLayout) view.findViewById(R.id.waypoint_detail_container);
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
+        wayPointDetail_layout.setVisibility(View.GONE);
 
         mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
             @Override
@@ -96,26 +96,26 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             public void onItemSelected(Mission mission, int currentIndex) {
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
                 detailFragment = WaypointDetailFragment.newInstance(currentIndex + 1, mission);
-                fragmentTransaction.replace(R.id.waypoint_detail_container, detailFragment, "DetailFragment").commit();
-                layout_waypointDetail.setVisibility(View.VISIBLE);
+                fragmentTransaction.replace(R.id.way_point_detail_container, detailFragment, "DetailFragment").commit();
+                wayPointDetail_layout.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onNothingSelected() {
-                layout_waypointDetail.setVisibility(View.GONE);
+                wayPointDetail_layout.setVisibility(View.GONE);
             }
         });
 
         // Go & Stop & Location Button Panel
-        view.findViewById(R.id.btn_plan_go).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_land).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_rtl).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_plan_stop).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.plan_go_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_landing_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.plan_stop_button).setOnClickListener(onPlanningBtnClickListener);
 
-        view.findViewById(R.id.button_my_location).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_drone_location).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.button_fit_map).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.btn_map_type).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.my_location_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.drone_location_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.fit_map_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.map_type_button).setOnClickListener(onPlanningBtnClickListener);
     }
 
     private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -124,7 +124,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
             DroneController droneController = mMapViewFragment.getDroneController();
             switch (v.getId()) {
-                case R.id.btn_plan_go:
+                case R.id.plan_go_button:
                     List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
                     if (droneMissionList == null || droneMissionList.size() == 0) {
                         Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
@@ -136,33 +136,33 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                     droneController.writeMissions(droneMissionList, missionLoaderListener);
                     showProgressDialog("Loading", "Please wait...");
                     break;
-                case R.id.btn_plan_land:
+                case R.id.drone_landing_button:
                     if (droneController != null) {
                         droneController.land();
                     }
                     break;
-                case R.id.btn_plan_rtl:
+                case R.id.drone_rtl_button:
                     if (droneController != null) {
                         droneController.returnToLaunch();
                     }
                     break;
-                case R.id.btn_plan_stop:
+                case R.id.plan_stop_button:
                     if (droneController != null) {
                         droneController.pauseMission();
                     }
                     break;
-                case R.id.button_my_location:
+                case R.id.my_location_button:
                     mMapViewFragment.setMapToMyLocation();
                     break;
-                case R.id.button_drone_location:
+                case R.id.drone_location_button:
                     mMapViewFragment.setMapToDrone();
                     break;
-                case R.id.button_fit_map:
+                case R.id.fit_map_button:
                     if (mMissionItemAdapter.getItemCount() > 0) {
                         mMapViewFragment.fitMapShowAllMission();
                     }
                     break;
-                case R.id.btn_map_type:
+                case R.id.map_type_button:
                     mMapViewFragment.changeMapType();
                     break;
             }
@@ -204,7 +204,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         } else {
             mMissionItemAdapter.setDeleteLayoutVisible(false);
         }
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout.setVisibility(View.GONE);
     }
 
     // methods for DetailFragment
@@ -225,7 +225,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     public void deleteItemMission() {
         mMissionItemAdapter.removeSelected();
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout.setVisibility(View.GONE);
         updateMissionToMap();
     }
 
@@ -236,18 +236,18 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_action_plan_undo:
+            case R.id.undo_button:
                 loadMissionFromDrone();
                 break;
-            case R.id.btn_delete_all:
+            case R.id.delete_all_button:
                 missionAdapterClearData();
                 missionAdapterShowDelete(false);
                 updateMissionToMap();
                 break;
-            case R.id.btn_delete_done:
+            case R.id.delete_done_button:
                 missionAdapterShowDelete(false);
                 break;
-            case R.id.btn_action_plan_delete:
+            case R.id.delete_button:
                 missionAdapterShowDelete(true);
                 break;
         }
@@ -314,7 +314,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onDragStart() {
         mMissionItemAdapter.onNothingSelected();
-        layout_waypointDetail.setVisibility(View.GONE);
+        wayPointDetail_layout.setVisibility(View.GONE);
     }
 
     private class FixedLinearLayoutManager extends LinearLayoutManager {

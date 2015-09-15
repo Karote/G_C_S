@@ -200,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/btn_detail_delete_bg"
+                android:background="@drawable/bg_way_point_detail_delete_button"
                 android:text="@string/delete"
                 android:textColor="@color/red"
                 android:textSize="14sp"/>

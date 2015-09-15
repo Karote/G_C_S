@@ -69,11 +69,11 @@
             android:text="@string/chk_txt_login"/>
 
         <Button
-            android:id="@+id/btn_login_ok"
+            android:id="@+id/login_ok_button"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/btn_login"
+            android:background="@drawable/bg_login_button"
             android:fontFamily="@string/font_roboto_medium"
             android:text="@string/btn_txt_login"
             android:textColor="@color/white"

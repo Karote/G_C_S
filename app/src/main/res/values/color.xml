@@ -40,7 +40,7 @@
     <color name="mission_item_bg">#E6000000</color>
     <color name="mission_item_bg_p">#5C5C5C</color>
     <color name="aircraft_arrow">#FF8800</color>
-    <color name="locate_group_bg">#D1D1D1</color>
+    <color name="control_button_group_divider_background">#D1D1D1</color>
     <color name="location_info_field">#C9C9C9</color>
     <color name="delete_btn_bg_n">#757575</color>
     <color name="drone_info_text">#D2D2D2</color>

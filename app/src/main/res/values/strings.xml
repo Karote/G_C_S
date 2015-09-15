@@ -15,7 +15,7 @@
     </string-array>
     <string name="delete_all">Delete\nAll</string>
     <string name="delete_done">Done</string>
-    <string name="btn_cancel">Cancel</string>
+    <string name="btn_cancel">CANCEL</string>
     <string name="btn_ok">OK</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
 
@@ -103,6 +103,7 @@
     <string name="longitude_hint">-180.0000000</string>
     <string name="mission_id_hint">44</string>
     <string name="wheel_text_hint">22</string>
+    <string name="drone_landing_button_text">LANDING</string>
 
 
 </resources>

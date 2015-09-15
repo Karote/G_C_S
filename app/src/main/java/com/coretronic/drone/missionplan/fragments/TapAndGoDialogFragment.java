@@ -40,7 +40,7 @@ public class TapAndGoDialogFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_tap_and_go, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_tap_and_go_dialog, container, false);
         findViews(fragmentView);
         return fragmentView;
     }
@@ -67,7 +67,7 @@ public class TapAndGoDialogFragment extends Fragment {
             }
         });
 
-        final TextView btn_cancel = (TextView) fragmentView.findViewById(R.id.btn_tap_and_go_cancel);
+        final TextView btn_cancel = (TextView) fragmentView.findViewById(R.id.tap_and_go_cancel_button);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
