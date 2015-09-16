@@ -18,7 +18,7 @@ function addMissionMarker(lat, lng, serial_number) {
     }
     var planning_mission_marker_image = {
         url : 'ico_indicator_waypoint_circle.png',
-        size : new google.maps.Size(40, 40),
+        scaledSize : new google.maps.Size(40, 40),
         origin : new google.maps.Point(0, 0),
         anchor : new google.maps.Point(20, 20)
     };

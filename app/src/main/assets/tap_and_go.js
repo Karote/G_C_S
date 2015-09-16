@@ -25,7 +25,7 @@ function setTapGoMarker(position) {
             position : position,
             icon : {
                 url : 'ico_indicator_waypoint_tap.png',
-                size : new google.maps.Size(40, 40),
+                scaledSize : new google.maps.Size(40, 40),
                 origin : new google.maps.Point(0, 0),
                 anchor : new google.maps.Point(20, 20)
             },
@@ -43,7 +43,7 @@ function setTapGoPath() {
             position : tapgo_tap_marker.position,
             icon : {
                 url : 'ico_indicator_waypoint_set.png',
-                size : new google.maps.Size(40, 40),
+                scaledSize : new google.maps.Size(40, 40),
                 origin : new google.maps.Point(0, 0),
                 anchor : new google.maps.Point(20, 20)
             },

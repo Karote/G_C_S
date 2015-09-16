@@ -61,7 +61,7 @@ function loadHistory(markerJson, pathJson) {
 
     var history_mission_markerImage = {
         url : 'ico_indicator_waypoint_circle.png',
-        size : new google.maps.Size(40, 40),
+        scaledSize : new google.maps.Size(40, 40),
         origin : new google.maps.Point(0, 0),
         anchor : new google.maps.Point(20, 20)
     };
