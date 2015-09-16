@@ -16,4 +16,9 @@
     <dimen name="action_bar_height">36dp</dimen>
     <dimen name="delete_option_button_width">52dp</dimen>
 
+    <dimen name="control_button_group_divider_height">34dp</dimen>
+    <dimen name="control_button_group_background_padding">3dp</dimen>
+    <dimen name="control_button_group_landing_button_text_size">18sp</dimen>
+    <dimen name="control_button_group_landing_button_width">132dp</dimen>
+
 </resources>

@@ -9,12 +9,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_plan_white"
         android:orientation="horizontal"
-        android:padding="3dp">
+        android:padding="@dimen/control_button_group_background_padding">
 
         <Button
             android:id="@+id/drone_landing_button"
             style="@style/drone_landing_text_style"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/control_button_group_landing_button_width"
             android:layout_height="match_parent"
             android:background="@color/transparent"
             android:text="@string/drone_landing_button_text" />
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_plan_white"
         android:orientation="horizontal"
-        android:padding="3dp">
+        android:padding="@dimen/control_button_group_background_padding">
 
         <ImageView
             android:id="@+id/drone_location_button"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/btn_plan_white"
-        android:padding="3dp"
+        android:padding="@dimen/control_button_group_background_padding"
         android:src="@drawable/icon_map_type_button" />
 
 </LinearLayout>
