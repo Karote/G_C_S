@@ -14,9 +14,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/control_button_group_left_margin"
+        android:layout_marginStart="@dimen/control_button_group_left_margin"
+        android:layout_marginTop="@dimen/control_button_group_top_margin"
         android:orientation="horizontal">
 
         <ImageView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/btn_plan_white"
-            android:padding="3dp"
+            android:padding="@dimen/control_button_group_background_padding"
             android:src="@drawable/icon_plan_stop_button" />
 
         <include
