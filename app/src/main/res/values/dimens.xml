@@ -36,4 +36,9 @@
 
     <dimen name="instrument_compass_ruler_height">145dp</dimen>
     <dimen name="aircraft_compass_size">76dp</dimen>
+
+    <dimen name="mav_info_background_height">20dp</dimen>
+    <dimen name="mav_info_location_text_width">80dp</dimen>
+    <dimen name="mav_info_title_text_size">10sp</dimen>
+    <dimen name="mav_info_content_text_size">14sp</dimen>
 </resources>

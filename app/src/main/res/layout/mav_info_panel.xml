@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    android:orientation="horizontal">
 
     <include
         layout="@layout/aircraft_compass"
@@ -12,8 +13,7 @@
         android:layout_marginLeft="4dp" />
 
     <LinearLayout
-        android:id="@+id/mav_info"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="6dp"
@@ -26,7 +26,7 @@
             <TextView
                 android:id="@+id/location_lat_text"
                 style="@style/mav_info_content_text_style"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/mav_info_location_text_width"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="@string/latitude_hint" />
@@ -34,7 +34,7 @@
             <TextView
                 android:id="@+id/location_lng_text"
                 style="@style/mav_info_content_text_style"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/mav_info_location_text_width"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="@string/longitude_hint" />
@@ -42,60 +42,48 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/mav_info_background_style"
             android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
-            <LinearLayout style="@style/mav_info_background_style">
+            <TextView
+                style="@style/mav_info_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/flight_duration" />
 
-                <TextView
-                    style="@style/mav_info_title_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/flight_duration" />
+            <TextView
+                android:id="@+id/flight_time_text"
+                style="@style/mav_info_content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration_hint" />
 
-                <TextView
-                    android:id="@+id/flight_time_text"
-                    style="@style/mav_info_content_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/duration_hint" />
-            </LinearLayout>
+            <TextView
+                style="@style/mav_info_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/altitude" />
 
-            <LinearLayout style="@style/mav_info_background_style">
+            <TextView
+                android:id="@+id/altitude_text"
+                style="@style/mav_info_content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/altitude_hint" />
 
-                <TextView
-                    style="@style/mav_info_title_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/altitude" />
+            <TextView
+                style="@style/mav_info_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/speed" />
 
-                <TextView
-                    android:id="@+id/altitude_text"
-                    style="@style/mav_info_content_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/altitude_hint" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/mav_info_background_style">
-
-                <TextView
-                    style="@style/mav_info_title_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speed" />
-
-                <TextView
-                    android:id="@+id/speed_text"
-                    style="@style/mav_info_content_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speed_hint" />
-            </LinearLayout>
-
-            <!--<LinearLayout style="@style/mav_info_background_style">-->
+            <TextView
+                android:id="@+id/speed_text"
+                style="@style/mav_info_content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/speed_hint" />
 
             <!--<TextView-->
             <!--style="@style/mav_info_title_text_style"-->
@@ -109,25 +97,21 @@
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:text="@string/target_hint" />-->
-            <!--</LinearLayout>-->
 
-            <LinearLayout
-                style="@style/mav_info_background_style"
-                android:visibility="gone">
+            <TextView
+                style="@style/mav_info_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/from_me"
+                android:visibility="gone" />
 
-                <TextView
-                    style="@style/mav_info_title_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/from_me" />
-
-                <TextView
-                    android:id="@+id/from_me_distance_text"
-                    style="@style/mav_info_content_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/from_me_hint" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/from_me_distance_text"
+                style="@style/mav_info_content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/from_me_hint"
+                android:visibility="gone" />
 
         </LinearLayout>
 
