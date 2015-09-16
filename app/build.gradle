@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.contronic.drones"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 940
         versionName "0.9.40"
