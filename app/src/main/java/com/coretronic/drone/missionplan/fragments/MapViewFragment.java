@@ -118,6 +118,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity) getActivity()).registerDeviceChangedListener(this);
         ((MainActivity) getActivity()).registerDroneStatusChangedListener(this);
     }
 
@@ -141,7 +142,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         setUpTopBarButton(view);
         mDroneMap = new DroneMap(getActivity(), view, mHandler);
         mStatusView = (StatusView) view.findViewById(R.id.status);
-        ((MainActivity) getActivity()).registerDeviceChangedListener(this);
     }
 
     @Override
@@ -425,23 +425,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mUndoButton.setOnClickListener(this);
         mDeleteButton = view.findViewById(R.id.delete_button);
         mDeleteButton.setOnClickListener(this);
-        view.findViewById(R.id.delete_done_button).setOnClickListener(this);
-        view.findViewById(R.id.delete_all_button).setOnClickListener(this);
 
         mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);
-        mMissionPlanTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.multi_way_point_button:
-                        setFragmentTransaction(FRAGMENT_TYPE_PLANNING);
-                        break;
-                    case R.id.tap_and_go_button:
-                        setFragmentTransaction(FRAGMENT_TYPE_TAP_AND_GO);
-                        break;
-                }
-            }
-        });
+
+        view.findViewById(R.id.delete_done_button).setOnClickListener(this);
+        view.findViewById(R.id.delete_all_button).setOnClickListener(this);
+        view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
+        view.findViewById(R.id.tap_and_go_button).setOnClickListener(this);
     }
 
     private void setFragmentTransaction(int fragmentType) {
@@ -589,6 +579,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 setDeleteOptionShow(false);
                 mDroneMap.setAddMarkerEnable(true);
                 break;
+            case R.id.multi_way_point_button:
+                setFragmentTransaction(FRAGMENT_TYPE_PLANNING);
+                return;
+            case R.id.tap_and_go_button:
+                setFragmentTransaction(FRAGMENT_TYPE_TAP_AND_GO);
+                return;
         }
 
         if (mCurrentFragment == null) {
