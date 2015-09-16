@@ -1,5 +1,6 @@
 package com.coretronic.drone;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,27 +10,25 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.DroneController.DroneStatus;
 import com.coretronic.drone.activity.MiniDronesActivity;
-import com.coretronic.drone.album.AlbumFragment;
+import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.controller.DroneDevice;
-import com.coretronic.drone.missionplan.fragments.WaypointEditorFragment;
+import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
@@ -38,36 +37,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends UnBindDrawablesFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneDevice.OnDeviceChangedListener, DroneController.StatusChangedListener {
+
+    private static final String ADD_NEW_DEVICE_TITLE = "Add New Device";
+
     private static final String TAG = MainFragment.class.getSimpleName();
     private static final String G2_IP = "192.168.42.1";
 
-    private StatusView statusView;
-    private Spinner spinnerDroneDevice;
+    private StatusView mStatusView;
+    private Spinner mDroneDeviceSpinner;
 
     private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
-    private MainActivity activity;
-    private SharedPreferences sharedPreferences;
+    private MainActivity mMainActivity;
+    private SharedPreferences mSharedPreferences;
 
-    // TTS
-    private final int CHECK_CODE = 0x1;
-    private String mUserId;
-    private String mUserPw;
-    private boolean isStayLogged;
+    private final int TTS_RESULT_CODE = 0x1;
+    private Button btnLogout;
 
     private void assignViews(View view) {
-        Button btnPiloting = (Button) view.findViewById(R.id.btn_piloting);
         Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
-        LinearLayout llAlbum = (LinearLayout) view.findViewById(R.id.ll_album);
-        LinearLayout llUpdate = (LinearLayout) view.findViewById(R.id.ll_updates);
-        Button btnLogout = (Button) view.findViewById(R.id.btn_logout);
-        btnLogout.setText(mUserId);
-
+        btnLogout = (Button) view.findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(this);
-        btnPiloting.setOnClickListener(this);
         btnMissionPlan.setOnClickListener(this);
-        llAlbum.setOnClickListener(this);
-        llUpdate.setOnClickListener(this);
 
         // 20150814 add flight history and flight setting button
         Button btnFlightHistory = (Button) view.findViewById(R.id.btn_flight_history);
@@ -79,33 +70,21 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         TextView tvAppVersion = (TextView) view.findViewById(R.id.tv_app_version);
         tvAppVersion.setText("v " + BuildConfig.VERSION_NAME);
 
-        statusView = (StatusView) view.findViewById(R.id.status);
+        mStatusView = (StatusView) view.findViewById(R.id.status);
 
-        spinnerDroneDevice = (Spinner) view.findViewById(R.id.spinner_drone_device);
+        mDroneDeviceSpinner = (Spinner) view.findViewById(R.id.spinner_drone_device);
         mDroneDevices = new ArrayList<>();
         mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Select Device", 77));
-        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Add New Device", 88));
+        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, ADD_NEW_DEVICE_TITLE, 88));
 
-        mDeviceAdapter = new DeviceAdapter();
-        spinnerDroneDevice.setAdapter(mDeviceAdapter);
-        spinnerDroneDevice.setOnItemSelectedListener(this);
+        mDeviceAdapter = new DeviceAdapter(getActivity(), R.layout.spinner_item, mDroneDevices);
+        mDroneDeviceSpinner.setAdapter(mDeviceAdapter);
+        mDroneDeviceSpinner.setOnItemSelectedListener(this);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
-        activity = (MainActivity) getActivity();
-        mUserId = sharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
-        String dbName = mUserId.replace("@","_").replace(".","_").toLowerCase();
-        Log.d("morris", "db name:" +dbName);
-        // login the couchbase
-        if(mUserId.length() == 0){
-            Toast.makeText(getActivity(),"Couchbase login error.",Toast.LENGTH_SHORT).show();
-        }else {
-            activity.login(dbName);
-        }
         checkTTS();
     }
 
@@ -119,19 +98,37 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.registerDeviceChangedListener(this);
-        activity.registerDroneStatusChangedListener(this);
+        mMainActivity = (MainActivity) getActivity();
+        mSharedPreferences = mMainActivity.getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
+        String userId = mSharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
+        Log.d("morris", "db name:" + userId);
+        // login the couchbase
+        if (userId.length() == 0) {
+            Toast.makeText(getActivity(), "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
+            getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+            return;
+        } else {
+            mMainActivity.login(userId.replace("@", "_").replace(".", "_").toLowerCase());
+            btnLogout.setText(userId);
+        }
+        mMainActivity.registerDeviceChangedListener(this);
+        mMainActivity.registerDroneStatusChangedListener(this);
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        activity.unregisterDeviceChangedListener(this);
-        activity.unregisterDroneStatusChangedListener(this);
+        mMainActivity.unregisterDeviceChangedListener(this);
+        mMainActivity.unregisterDroneStatusChangedListener(this);
+        mStatusView.onDisconnect();
     }
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
+        if (mDroneDevices.contains(droneDevice)) {
+            return;
+        }
         mDroneDevices.add(droneDevice);
         mDeviceAdapter.notifyDataSetChanged();
     }
@@ -140,90 +137,63 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     public void onDeviceRemoved(final DroneDevice droneDevice) {
         mDroneDevices.remove(droneDevice);
         mDeviceAdapter.notifyDataSetChanged();
-        spinnerDroneDevice.setSelection(0);
-
-        if (droneDevice.getName().equals(activity.getConnectedDroneDevice().getName())) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    statusView.setBatteryStatus(0);
-                    statusView.setGpsVisibility(View.GONE);
-                }
-            });
+        if (droneDevice.equals(mMainActivity.getConnectedDroneDevice())) {
+            mDroneDeviceSpinner.setSelection(0);
+            mStatusView.onDisconnect();
         }
     }
 
     @Override
-    public void onBatteryUpdate(final int battery) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusView.setBatteryStatus(battery);
-            }
-        });
-    }
+    public void onStatusUpdate(Event event, DroneStatus droneStatus) {
+        switch (event) {
+            case ON_BATTERY_UPDATE:
+                mStatusView.setBatteryStatus(droneStatus.getBattery());
+                break;
+            case ON_SATELLITE_UPDATE:
+                mStatusView.setGpsStatus(droneStatus.getSatellites());
+                break;
+            case ON_RADIO_SIGNAL_UPDATE:
+                mStatusView.setRFStatus(droneStatus.getRadioSignal());
+                break;
+            case ON_HEARTBEAT:
+                mStatusView.updateCommunicateLight();
+                break;
 
-    @Override
-    public void onAltitudeUpdate(float altitude) {
-
-    }
-
-    @Override
-    public void onRadioSignalUpdate(int rssi) {
-    }
-
-    @Override
-    public void onSpeedUpdate(float groundSpeed) {
-
-    }
-
-    @Override
-    public void onLocationUpdate(final long lat, final long lon, final int eph) {
-        activity.runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       statusView.setGpsVisibility(activity.hasGPSSignal(eph) ? View.VISIBLE : View.GONE);
-                                   }
-                               }
-        );
-    }
-
-    @Override
-    public void onHeadingUpdate(int heading) {
-    }
-
-    @Override
-    public void onDroneStateUpdate(DroneController.DroneMode droneMode, DroneController.MissionStatus missionStatus, int duration) {
-
+        }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
         final DroneDevice droneDevice = mDroneDevices.get(position);
         Log.d(TAG, "onItemSelected: " + droneDevice.getName());
-        if (droneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
-            if (droneDevice.getName().equals("Add New Device")) {
-                showAddNewDroneDialog();
-                spinnerDroneDevice.setSelection(0);
-            }
-        } else {
-            activity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
-                @Override
-                public void onConnected() {
-                    Toast.makeText(getActivity().getApplicationContext(), "Init controller" + droneDevice.getName(),
-                            Toast.LENGTH_LONG).show();
-                    activity.setConnectedDroneDevice(droneDevice);
-                    activity.initialSetting();
-                    activity.readParameter();
-                }
 
-                @Override
-                public void onConnectFail() {
-                    spinnerDroneDevice.setSelection(0);
-                    Toast.makeText(getActivity().getApplicationContext(), "Init controller error", Toast.LENGTH_LONG).show();
-                }
-            });
+        if (droneDevice == mMainActivity.getConnectedDroneDevice()) {
+            return;
         }
+
+        if (droneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
+            if (ADD_NEW_DEVICE_TITLE.equals(droneDevice.getName())) {
+                showAddNewDroneDialog();
+                mDroneDeviceSpinner.setSelection(0);
+            }
+        }
+        mMainActivity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
+            @Override
+            public void onConnected() {
+                Toast.makeText(getActivity().getApplicationContext(), "Init controller" + droneDevice.getName(),
+                        Toast.LENGTH_LONG).show();
+                mMainActivity.setConnectedDroneDevice(droneDevice);
+                mMainActivity.initialSetting();
+                mMainActivity.readParameter();
+            }
+
+            @Override
+            public void onConnectFail() {
+                mDroneDeviceSpinner.setSelection(0);
+                Toast.makeText(getActivity().getApplicationContext(), "Init controller error", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     @Override
@@ -233,10 +203,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onClick(View v) {
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Fragment fragment = null;
-        String backStackName = null;
-        Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.btn_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -245,12 +212,12 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                sharedPreferences.edit()
+                                mSharedPreferences.edit()
                                         .putString(LoginFragment.ARG_USER_ID, "")
                                         .putString(LoginFragment.ARG_USER_PW, "")
                                         .putBoolean(LoginFragment.ARG_STAY_LOGGED, false)
                                         .apply();
-                                transaction.replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+                                getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -261,36 +228,20 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                         })
                         .create();
                 dialog.show();
-
-                break;
-            case R.id.btn_piloting:
-                // 20150805 : disable pilotion function
-                //fragment = new PilotingFragment();
-                break;
+                return;
             case R.id.btn_mission_plan:
-                fragment = new WaypointEditorFragment();
-                bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 0);
-                fragment.setArguments(bundle);
-                break;
-            case R.id.ll_album:
-                fragment = new AlbumFragment();
-                break;
-            case R.id.ll_updates:
+                fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_PLANNING);
                 break;
             case R.id.btn_flight_history:
-                fragment = new WaypointEditorFragment();
-                bundle.putInt(AppConfig.MAIN_FRAG_ARGUMENT, 1);
-                fragment.setArguments(bundle);
+                fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_HISTORY);
                 break;
             case R.id.btn_flight_setting:
                 fragment = new SettingViewPagerFragment();
                 break;
         }
         if (fragment != null) {
-            transaction.add(R.id.frame_view, fragment, backStackName);
-            transaction.addToBackStack(MainFragment.class.getSimpleName());
-            transaction.hide(MainFragment.this);
-            transaction.commit();
+            getFragmentManager().beginTransaction().replace(R.id.frame_view, fragment, fragment.getClass().getSimpleName())
+                    .addToBackStack(fragment.getClass().getSimpleName()).commit();
         }
     }
 
@@ -299,48 +250,65 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     }
 
     private void checkTTS() {
-        Intent check = new Intent();
-        check.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        startActivityForResult(check, CHECK_CODE);
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, TTS_RESULT_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CHECK_CODE) {
-            if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                Intent install = new Intent();
-                install.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                startActivity(install);
-            }
+        if (requestCode == TTS_RESULT_CODE && resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+            Intent installIntent = new Intent();
+            installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+            startActivity(installIntent);
         }
     }
 
-    public class DeviceAdapter extends BaseAdapter implements SpinnerAdapter {
+    public class DeviceAdapter extends ArrayAdapter<DroneDevice> {
 
-        @Override
-        public int getCount() {
-            return mDroneDevices.size();
-        }
+        private Activity context;
+        List<DroneDevice> deer;
 
-        @Override
-        public DroneDevice getItem(int position) {
-            return mDroneDevices.get(position);
-        }
+        public DeviceAdapter(Activity context, int resource, List<DroneDevice> deer) {
 
-        @Override
-        public long getItemId(int position) {
-            return position;
+            super(context, resource, deer);
+            this.context = context;
+            this.deer = deer;
+
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            AbsListView.LayoutParams params = new AbsListView.LayoutParams(
-                    AbsListView.LayoutParams.WRAP_CONTENT,
-                    AbsListView.LayoutParams.MATCH_PARENT);
-            TextView text = new TextView(getActivity());
-            text.setLayoutParams(params);
-            text.setText(getItem(position).getName());
-            return text;
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.spinner_style_main, parent, false);
+                holder = new ViewHolder();
+                holder.textView = (TextView) convertView.findViewById(R.id.spinner_title_tv);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.textView.setText(getItem(position).getName());
+            return convertView;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false);
+                holder = new ViewHolder();
+                holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.textView.setText(getItem(position).getName());
+            return convertView;
+        }
+
+        private class ViewHolder {
+            public TextView textView;
         }
     }
 
@@ -364,7 +332,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                         if (deviceIp.trim().length() <= 0) {
                             return;
                         }
-                        activity.addDevice(deviceIp);
+                        mMainActivity.addDevice(deviceIp);
                     }
 
                 });

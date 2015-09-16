@@ -1,6 +1,5 @@
 package com.coretronic.drone.missionplan.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,18 +21,13 @@ import java.util.List;
  * Created by karot.chuang on 2015/8/4.
  */
 public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemListAdapter.HistoryItemListViewHolder> {
-    private static final String TAG = HistoryItemListAdapter.class.getSimpleName();
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-    private static Context context;
     private List<FlightHistory> flightHistoryList = null;
-
     private int focusIndex = -1;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-
-    public HistoryItemListAdapter(Context context) {
-        this.context = context;
+    public HistoryItemListAdapter() {
         this.flightHistoryList = new ArrayList<>();
     }
 
@@ -41,7 +35,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
         void onItemClick(View view, int position);
     }
 
-    public static OnItemClickListener mItemClickListener = null;
+    private OnItemClickListener mItemClickListener = null;
 
     public void SetOnItemClickListener(final OnItemClickListener listener) {
         mItemClickListener = listener;
@@ -86,7 +80,7 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
             super(itemView);
             tvLogDate = (TextView) itemView.findViewById(R.id.tv_log_date);
             tvLogTime = (TextView) itemView.findViewById(R.id.tv_log_time);
-            focusBarView = (View) itemView.findViewById(R.id.view_focusbar);
+            focusBarView = itemView.findViewById(R.id.view_focusbar);
             rowItemLayoutView = (RelativeLayout) itemView.findViewById(R.id.rowItemLayoutView);
 
             rowItemLayoutView.setOnClickListener(this);

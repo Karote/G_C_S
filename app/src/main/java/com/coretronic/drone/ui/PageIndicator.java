@@ -14,8 +14,6 @@ import com.coretronic.drone.R;
 public class PageIndicator extends LinearLayout {
     private static final int DEFAULT_PAGE_COUNT = 4;
     private ImageView[] indicators;
-    private int normalItemResId = R.drawable.icon_page_dot_off;
-    private int currentItemResId = R.drawable.icon_page_dot_on;
     private int size;
     private int margin;
 
@@ -53,9 +51,9 @@ public class PageIndicator extends LinearLayout {
                 addView(indicators[i], params);
             }
             if (i == position) {
-                indicators[i].setBackgroundResource(currentItemResId);
+                indicators[i].setBackgroundResource(R.drawable.icon_page_dot_on);
             } else {
-                indicators[i].setBackgroundResource(normalItemResId);
+                indicators[i].setBackgroundResource(R.drawable.icon_page_dot_off);
             }
         }
     }

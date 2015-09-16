@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/missionItemNumberPickerView"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:text="22" />
+<TextView style="@style/missionItemNumberPickerView"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_gravity="center"
+          android:gravity="center"
+          android:text="@string/wheel_text_hint"/>

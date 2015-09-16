@@ -21,36 +21,38 @@ import com.coretronic.drone.model.Mission.Type;
 
 import org.mavlink.messages.MAV_CMD;
 
-import java.util.Arrays;
-
 /**
  * Created by karot.chuang on 2015/6/23.
  */
 public class WaypointDetailFragment extends Fragment {
-    private static final String ARGUMENT_INDEX = "index";
-    private static final String ARGUMENT_TYPE = "type";
-    private static final String ARGUMENT_ALTITUDE = "altitude";
-    private static final String ARGUMENT_DELAY = "delay";
-    private static final String ARGUMENT_LATITUDE = "latitude";
-    private static final String ARGUMENT_LONGITUDE = "longitude";
+    private final static String ARGUMENT_INDEX = "index";
+    private final static String ARGUMENT_TYPE = "type";
+    private final static String ARGUMENT_ALTITUDE = "altitude";
+    private final static String ARGUMENT_DELAY = "delay";
+    private final static String ARGUMENT_LATITUDE = "latitude";
+    private final static String ARGUMENT_LONGITUDE = "longitude";
+    private final static String TXT_WAYPOINT = "Waypoint";
+    private final static String TXT_TAKEOFF = "Take Off";
+    private final static String TXT_LAND = "Land";
+    private final static String TXT_RTL = "RTL";
+    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL};
 
-    private static final String TXT_WAYPOINT = "Waypoint";
-    private static final String TXT_TAKEOFF = "Take Off";
-    private static final String TXT_LAND = "Land";
-    private static final String TXT_RTL = "RTL";
+    private final static int WAYPOINT_INDEX = 0;
+    private final static int TAKEOFF_INDEX = 1;
+    private final static int LAND_INDEX = 2;
+    private final static int RTL_INDEX = 3;
 
-    private static final String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL};
-
-    private TextView tx_name, tx_lat, tx_lng;
-    private Spinner spinner_type;
-    private ArrayAdapter<String> spinnerAdapter;
-    private View icon_type;
-    private Button bt_delete;
-    private AbstractWheel altitudeWheel, delayWheel;
-    private static final String TAG = WaypointDetailFragment.class.getSimpleName();
+    private TextView tx_name = null;
+    private TextView tx_lat = null;
+    private TextView tx_lng = null;
+    private Spinner spinner_type = null;
+    private View icon_type = null;
+    private AbstractWheel altitudeWheel = null;
+    private AbstractWheel delayWheel = null;
+    private PlanningFragment mPlanningFragment;
 
     public static WaypointDetailFragment newInstance(int index, Mission mission) {
-        WaypointDetailFragment f = new WaypointDetailFragment();
+        WaypointDetailFragment fragment = new WaypointDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_INDEX, index);
         args.putInt(ARGUMENT_TYPE, mission.getType() == null ? Type.WAY_POINT.getId() : mission.getType().getId());
@@ -58,21 +60,14 @@ public class WaypointDetailFragment extends Fragment {
         args.putInt(ARGUMENT_DELAY, mission.getWaitSeconds());
         args.putFloat(ARGUMENT_LATITUDE, mission.getLatitude());
         args.putFloat(ARGUMENT_LONGITUDE, mission.getLongitude());
-        f.setArguments(args);
-
-        return f;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_waypoint_detail, container, false);
         findviews(fragmentView);
-
         return fragmentView;
     }
 
@@ -81,16 +76,16 @@ public class WaypointDetailFragment extends Fragment {
         tx_lat = (TextView) fragmentView.findViewById(R.id.text_waypoint_lat);
         tx_lng = (TextView) fragmentView.findViewById(R.id.text_waypoint_lng);
         spinner_type = (Spinner) fragmentView.findViewById(R.id.spinner_detail_waypoint_type);
-        icon_type = (View) fragmentView.findViewById(R.id.icon_detail_waypoint_type);
-        bt_delete = (Button) fragmentView.findViewById(R.id.btn_detail_delete);
+        icon_type = fragmentView.findViewById(R.id.icon_detail_waypoint_type);
+        final Button bt_delete = (Button) fragmentView.findViewById(R.id.btn_detail_delete);
         bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlanningFragment.deleteItemMission();
+                ((PlanningFragment) getParentFragment()).deleteItemMission();
             }
         });
 
-        spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.spinner_waypoint_detail_style, POINT_TYPE);
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.spinner_waypoint_detail_style, POINT_TYPE);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_waypoint_detail_dropdown_style);
         spinner_type.setAdapter(spinnerAdapter);
         spinner_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -98,20 +93,20 @@ public class WaypointDetailFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("MissionType", "position:" + position);
                 switch (position) {
-                    case 0: // Waypoint
-                        PlanningFragment.setItemMissionType(Mission.Type.WAY_POINT);
+                    case WAYPOINT_INDEX: // Waypoint
+                        mPlanningFragment.setItemMissionType(Mission.Type.WAY_POINT);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
-                    case 1: // Take Off
-                        PlanningFragment.setItemMissionType(Mission.Type.TAKEOFF);
+                    case TAKEOFF_INDEX: // Take Off
+                        mPlanningFragment.setItemMissionType(Mission.Type.TAKEOFF);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
                         break;
-                    case 2: // Land
-                        PlanningFragment.setItemMissionType(Mission.Type.LAND);
+                    case LAND_INDEX: // Land
+                        mPlanningFragment.setItemMissionType(Mission.Type.LAND);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
                         break;
-                    case 3: // RTL
-                        PlanningFragment.setItemMissionType(Mission.Type.RTL);
+                    case RTL_INDEX: // RTL_INDEX
+                        mPlanningFragment.setItemMissionType(Mission.Type.RTL);
                         icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
                         break;
                     default:
@@ -131,7 +126,7 @@ public class WaypointDetailFragment extends Fragment {
         altitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                PlanningFragment.setItemMissionAltitude((float) newValue);
+                mPlanningFragment.setItemMissionAltitude((float) newValue);
             }
         });
 
@@ -141,7 +136,7 @@ public class WaypointDetailFragment extends Fragment {
         delayWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                PlanningFragment.setItemMissionDelay(newValue);
+                mPlanningFragment.setItemMissionDelay(newValue);
             }
         });
     }
@@ -149,6 +144,7 @@ public class WaypointDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mPlanningFragment = (PlanningFragment) getParentFragment();
         setviews();
     }
 
@@ -182,14 +178,14 @@ public class WaypointDetailFragment extends Fragment {
     private int typeToIndex(int type) {
         switch (type) {
             case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
-                return Arrays.asList(POINT_TYPE).indexOf(TXT_TAKEOFF);
+                return TAKEOFF_INDEX;
             case MAV_CMD.MAV_CMD_NAV_LAND:
-                return Arrays.asList(POINT_TYPE).indexOf(TXT_LAND);
+                return LAND_INDEX;
             case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
-                return Arrays.asList(POINT_TYPE).indexOf(TXT_RTL);
+                return RTL_INDEX;
             case MAV_CMD.MAV_CMD_NAV_WAYPOINT:
             default:
-                return Arrays.asList(POINT_TYPE).indexOf(TXT_WAYPOINT);
+                return WAYPOINT_INDEX;
         }
     }
 }

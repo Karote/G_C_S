@@ -1,25 +1,20 @@
 apply plugin: 'com.android.application'
 
+if(file('local.gradle').exists()){
+    apply from: 'local.gradle'
+}
+
 android {
 
-    signingConfigs {
-        release {
-            keyAlias CORETRONIC_RELEASE_KEY_ALIAS
-            keyPassword CORETRONIC_RELEASE_KEY_PASSWORD
-            storeFile file(CORETRONIC_RELEASE_KEY_STORE_PATH)
-            storePassword CORETRONIC_RELEASE_KEY_STORE_PASSWORD
-        }
-    }
-
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "com.contronic.drones"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 931
-        versionName "0.9.31"
+        versionCode 940
+        versionName "0.9.40"
     }
 
     packagingOptions {
@@ -31,25 +26,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
-            zipAlignEnabled true
-            signingConfig signingConfigs.release
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent,
-                            String.format("%s_%s_%s.apk",
-                                    defaultConfig.applicationId, defaultConfig.versionName , new Date().format('yyyyMMddHHmm')));
-                }
-            }
-        }
-        debug {
-            minifyEnabled false
-            debuggable true
-        }
-    }
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
         }
     }
 }

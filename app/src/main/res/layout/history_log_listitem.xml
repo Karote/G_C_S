@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="78dp"
-    android:layout_height="45dp"
-    android:layout_alignParentRight="true">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="78dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true">
 
     <RelativeLayout
         android:id="@+id/rowItemLayoutView"
         android:layout_width="78dp"
         android:layout_height="44dp"
-        android:background="@drawable/btn_plan_waypoint_bg">
+        android:background="@drawable/bg_recycle_list_item">
 
         <View
             android:id="@+id/view_focusbar"
             android:layout_width="4dp"
             android:layout_height="44dp"
-            android:background="#34a7ff"
-            android:visibility="gone" />
+            android:background="@color/blue_sky"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_log_date"
@@ -25,10 +25,10 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif-black"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@string/font_roboto_black"
+            android:textColor="@color/white"
             android:textSize="12sp"
-            tools:text="2015/08/03" />
+            tools:text="@string/date_hint"/>
 
         <TextView
             android:id="@+id/tv_log_time"
@@ -39,9 +39,9 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="4dp"
             android:layout_marginRight="4dp"
-            android:fontFamily="sans-serif"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@string/font_roboto_regular"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            tools:text="09:26" />
+            tools:text="@string/time_hint"/>
     </RelativeLayout>
 </RelativeLayout>

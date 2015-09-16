@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,50 +15,51 @@
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
             android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
 
         <com.coretronic.drone.ui.StatusView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="4dp" />
+            android:layout_marginLeft="4dp"/>
 
 
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
             android:layout_gravity="center|right"
             android:layout_marginRight="4dp"
+            android:background="@color/transparent"
             android:minWidth="50dp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="14sp"/>
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginLeft="12dp">
+        android:layout_marginTop="37dp">
 
         <Spinner
             android:id="@+id/spinner_drone_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|top" />
+            android:layout_width="160dp"
+            android:layout_height="36dp"
+            android:layout_gravity="left|top"
+            android:background="@color/field_bg"/>
 
         <TextView
             android:id="@+id/tv_app_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|top"
-            android:fontFamily="sans-serif-medium"
-            android:text="version"
-            android:textColor="#7D7D7D"
-            android:textSize="12sp" />
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="@string/version"
+            android:textColor="@color/version_text"
+            android:textSize="12sp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
                 <ImageView
                     android:layout_width="528dp"
                     android:layout_height="90dp"
-                    android:background="@drawable/main_bg" />
+                    android:background="@drawable/main_bg"/>
 
                 <ImageButton
                     android:id="@+id/btn_flight_setting"
@@ -82,10 +83,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="12dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/btn_main_setting"
-                    android:gravity="center" />
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/icon_main_setting_button"
+                    android:gravity="center"/>
             </RelativeLayout>
 
 
@@ -95,20 +96,6 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_piloting"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/main_btn_larg"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="Piloting"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
-                    android:visibility="gone" />
-
-                <Button
                     android:id="@+id/btn_mission_plan"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -116,12 +103,12 @@
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/main_btn_larg"
-                    android:fontFamily="sans-serif-condensed"
-                    android:textStyle="bold|italic"
+                    android:fontFamily="@string/font_roboto_condensed"
                     android:gravity="center"
-                    android:text="MISSION PLAN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="44sp" />
+                    android:text="@string/mission_plan"
+                    android:textColor="@color/white"
+                    android:textSize="44sp"
+                    android:textStyle="bold|italic"/>
 
                 <Button
                     android:id="@+id/btn_flight_history"
@@ -131,97 +118,13 @@
                     android:layout_marginRight="12dp"
                     android:layout_weight="1"
                     android:background="@drawable/main_btn_larg"
-                    android:fontFamily="sans-serif-condensed"
-                    android:textStyle="bold|italic"
+                    android:fontFamily="@string/font_roboto_condensed"
                     android:gravity="center"
-                    android:text="FLIGHT HISTORY"
-                    android:textColor="#FFFFFF"
-                    android:textSize="44sp" />
+                    android:text="@string/flight_history"
+                    android:textColor="@color/white"
+                    android:textSize="44sp"
+                    android:textStyle="bold|italic"/>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        android:id="@+id/ll_album"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/main_btn_sml"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="2dp"
-                            android:background="@drawable/ico_main_photo" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:text="Photos/ Video"
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_updates"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/main_btn_sml"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="2dp"
-                            android:background="@drawable/ico_main_updates" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:text="Updates"
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_preference"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/main_btn_sml"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="2dp"
-                            android:background="@drawable/ico_main_preference" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:text="Preference"
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

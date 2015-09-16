@@ -57,7 +57,8 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         switch (id) {
             case R.id.setting_bar_low_power_flash:
             case R.id.setting_bar_low_power_rtl:
-                seekBarTextView.setTvWidth(28);
+                float width = activity.getResources().getDimension(R.dimen.setting_low_power_tv_width);
+                seekBarTextView.setTvWidth((int)width);
                 break;
         }
     }
@@ -103,7 +104,7 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         if (flag) {
             tvValue.setTextColor(getResources().getColor(R.color.blue_sky));
         } else {
-            tvValue.setTextColor(getResources().getColor(R.color.seekbar_off_tv_color));
+            tvValue.setTextColor(getResources().getColor(R.color.gray));
         }
     }
 

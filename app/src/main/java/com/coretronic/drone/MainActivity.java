@@ -1,5 +1,6 @@
 package com.coretronic.drone;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.controller.DroneDevice;
+import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.ui.ViewManager;
@@ -137,11 +139,8 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         }
     }
 
-    public boolean hasGPSSignal(int eph) {
-        if (eph > 0) {
-            return true;
-        }
-        return false;
+    public static boolean hasGPSSignal(int eph) {
+        return eph > 0;
     }
 
     public void readParameter() {
@@ -238,21 +237,6 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         return settings;
     }
 
-    public boolean saveSettingsValue() {
-        if (connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
-            return false;
-        }
-        String name = connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
-        SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
-        JSONArray jsonArray = new JSONArray();
-        for (Setting setting : settings) {
-            jsonArray.put(setting.getValue());
-        }
-        Log.d(TAG, jsonArray.toString());
-        prefs.edit().putString(SETTINGS_VALUE, jsonArray.toString()).commit();
-        return true;
-    }
-
     public boolean loadSettingsValue() {
         String name = connectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
         SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
@@ -271,5 +255,14 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MapViewFragment.GOOGLE_LOCATION_REQUEST_CODE) {
+            getSupportFragmentManager().findFragmentByTag(MapViewFragment.class.getSimpleName()).onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

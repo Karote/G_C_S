@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="228dp"
+       android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_start_follow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/flight_altitude_textview"
+                    style="@style/mission_plan_detail_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+                    android:text="@string/flight_altitude"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/flight_altitude_textview"
+                    android:gravity="right"
+                    android:text="@string/unit_in_meter"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/dialog_divider"/>
+
+            <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+                android:id="@+id/follow_me_altitude_wheel"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                app:isAllVisible="false"
+                app:isCyclic="false"
+                app:visibleItems="5"/>
+
+            <!--<RelativeLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp">-->
+
+            <!--<TextView-->
+            <!--style="@style/mission_plan_detail_text_style"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:drawableRight="@drawable/ico_indicator_waypoint_arrow"-->
+            <!--android:text="Delay" />-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="sec"-->
+            <!--android:textSize="12sp" />-->
+
+            <!--</RelativeLayout>-->
+
+            <!--<View-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#e5e5e5" />-->
+
+            <!--<com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView-->
+            <!--android:id="@+id/follow_me_delay_wheel"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="28dp"-->
+            <!--app:isAllVisible="false"-->
+            <!--app:isCyclic="false"-->
+            <!--app:visibleItems="5" />-->
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_start_follow"
+            android:layout_width="204dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_start_follow_me_button">
+
+            <TextView
+                android:id="@+id/tx_start_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@string/font_roboto_regular"
+                android:text="@string/follow_me_start"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+            <View
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_toLeftOf="@id/tx_start_follow"
+                android:background="@drawable/ico_action_start_follow"/>
+
+        </RelativeLayout>
+        <Button
+            android:id="@+id/btn_stop_follow"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
+            android:background="@color/red"
+            android:fontFamily="@string/font_roboto_regular"
+            android:text="@string/follow_me_stop"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</FrameLayout>

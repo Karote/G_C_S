@@ -3,6 +3,7 @@ package com.coretronic.drone.missionplan.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,26 +21,41 @@ import java.util.List;
  * Created by karot.chuang on 2015/5/15.
  */
 public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
-    private List<Mission> mMissionList;
-    private Boolean isDeleteLayoutVisible = false;
+
+    private List<Mission> mMissionList = null;
+    private OnItemSelectedListener mItemClickListener = null;
+    private boolean isDeleteLayoutVisible = false;
     private int focusIndex = -1;
 
     public MissionItemListAdapter() {
-        this.mMissionList = new ArrayList<Mission>();
+        this.mMissionList = new ArrayList<>();
     }
 
-    public interface OnItemClickListener {
-        void onItemDeleteClick(View view, int position);
-
-        void onItemPlanClick(View view, int position);
+    public Mission getSelectedItem() {
+        return mMissionList.get(focusIndex);
     }
 
-    public static OnItemClickListener mItemClickListener = null;
+    public void removeSelected() {
+        if (focusIndex == -1) {
+            return;
+        }
+        mMissionList.remove(focusIndex);
+        focusIndex = -1;
+        notifyDataSetChanged();
+    }
 
-    public void SetOnItemClickListener(final OnItemClickListener listener) {
+    public interface OnItemSelectedListener {
+
+        void onItemDeleted(int position);
+
+        void onItemSelected(Mission mission, int currentIndex);
+
+        void onNothingSelected();
+    }
+
+    public void setOnItemClickListener(final OnItemSelectedListener listener) {
         mItemClickListener = listener;
     }
-
 
     @Override
     public MissionItemListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -48,15 +64,15 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     @Override
-    public void onBindViewHolder(MissionItemListViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final MissionItemListViewHolder viewHolder, final int position) {
 
-        Mission mission = mMissionList.get(i);
+        final Mission mission = mMissionList.get(position);
 
-        viewHolder.nameView.setText(String.format("%2d", i + 1));
-        viewHolder.altitudeView.setText(String.format("%d", (int) mission.getAltitude()));
+        viewHolder.nameView.setText(position + 1 + "");
+        viewHolder.altitudeView.setText((int) mission.getAltitude() + "");
         viewHolder.typeView.setBackgroundResource(getTypeResource(mission.getType()));
 
-        if (i == focusIndex) {
+        if (position == focusIndex) {
             viewHolder.focusBarView.setVisibility(View.VISIBLE);
         } else {
             viewHolder.focusBarView.setVisibility(View.GONE);
@@ -67,6 +83,37 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         } else {
             viewHolder.deleteLayout.setVisibility(View.GONE);
         }
+
+        viewHolder.rowItemLayoutView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (focusIndex == position) {
+                    viewHolder.focusBarView.setVisibility(View.GONE);
+                    focusIndex = -1;
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onNothingSelected();
+                    }
+                } else {
+                    viewHolder.focusBarView.setVisibility(View.VISIBLE);
+                    focusIndex = position;
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemSelected(mission, focusIndex);
+                    }
+                }
+            }
+        });
+
+        viewHolder.deleteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMissionList.remove(position);
+                notifyDataSetChanged();
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemDeleted(position);
+                }
+            }
+        });
+
     }
 
     private int getTypeResource(Type type) {
@@ -98,7 +145,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public class MissionItemListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MissionItemListViewHolder extends RecyclerView.ViewHolder {
         final TextView nameView, altitudeView;
         final View typeView;
         final LinearLayout deleteLayout;
@@ -109,41 +156,18 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         MissionItemListViewHolder(View itemView) {
             super(itemView);
             nameView = (TextView) itemView.findViewById(R.id.rowNameView);
-            typeView = (View) itemView.findViewById(R.id.icon_waypoint_type);
+            typeView = itemView.findViewById(R.id.icon_waypoint_type);
             altitudeView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
             deleteLayout = (LinearLayout) itemView.findViewById(R.id.rowDeleteLayout);
-            deleteLayout.setVisibility(LinearLayout.GONE);
             deleteButton = (ImageButton) itemView.findViewById(R.id.btn_plan_waypoint_delet);
             rowItemLayoutView = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
-            focusBarView = (View) itemView.findViewById(R.id.view_focusbar);
-
-            deleteButton.setOnClickListener(this);
-            rowItemLayoutView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (v.equals(deleteButton)) {
-                mItemClickListener.onItemDeleteClick(v, getAdapterPosition());
-            } else if (mItemClickListener != null) {
-
-                if (isDeleteLayoutVisible)
-                    return;
-
-                mItemClickListener.onItemPlanClick(v, getAdapterPosition());
-
-                if (focusIndex != getAdapterPosition()) {
-                    focusIndex = getAdapterPosition();
-                } else {
-                    focusIndex = -1;
-                }
-                notifyDataSetChanged();
-            }
+            focusBarView = itemView.findViewById(R.id.view_focusbar);
         }
     }
 
     public void add(Mission mission) {
         mMissionList.add(mission);
+        notifyDataSetChanged();
     }
 
     public void addAt(Mission mission, int position) {
@@ -164,27 +188,19 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     public List<Mission> cloneMissionList() {
-        return new ArrayList<Mission>(mMissionList);
+        return new ArrayList<>(mMissionList);
     }
 
     public Mission getMission(int position) {
         return mMissionList.get(position);
     }
 
-    public int getFocusIndex() {
-        return focusIndex;
-    }
-
-    public void clearFocusIndex() {
-        focusIndex = -1;
-    }
-
     public void setDeleteLayoutVisible(boolean isVisible) {
         isDeleteLayoutVisible = isVisible;
-        unselectAdapter();
+        onNothingSelected();
     }
 
-    public void unselectAdapter(){
+    public void onNothingSelected() {
         focusIndex = -1;
         notifyDataSetChanged();
     }

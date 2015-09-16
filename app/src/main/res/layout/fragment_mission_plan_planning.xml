@@ -3,202 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        layout="@layout/mav_info_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+
 
     <LinearLayout
-        android:id="@+id/mav_info"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/plan_go_button"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:background="#b3000000">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon_plan_go_button" />
 
-            <TextView
-                style="@style/mav_info_title_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FLIGHT TIME" />
-
-            <TextView
-                android:id="@+id/flight_time_text"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <ImageView
+            android:id="@+id/plan_stop_button"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:background="#b3000000">
-
-            <TextView
-                style="@style/mav_info_title_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ALTITUDE" />
-
-            <TextView
-                android:id="@+id/altitude_text"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5m" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:background="#b3000000">
-
-            <TextView
-                style="@style/mav_info_title_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SPEED" />
-
-            <TextView
-                android:id="@+id/speed_text"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="300.3km/h" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:background="#b3000000"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/location_lat_text"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="-90.0000000," />
-
-            <TextView
-                android:id="@+id/location_lng_text"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="-180.0000000" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/bottom_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/layout_plan_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/layout_go_and_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/btn_plan_go"
-                    android:layout_width="72dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/btn_plan_go" />
-
-                <LinearLayout
-                    android:id="@+id/layout_plan_stop"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/btn_plan_white"
-                    android:padding="3dp">
-
-                    <Button
-                        android:id="@+id/btn_plan_stop"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/btn_plan_stop" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="115dp"
-                android:layout_height="44dp"
-                android:background="@drawable/btn_plan_white"
-                android:orientation="horizontal"
-                android:padding="3dp">
-
-                <Button
-                    android:id="@+id/btn_plan_land"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/btn_plan_land" />
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="34dp"
-                    android:background="#d1d1d1"
-                    android:layout_gravity="center_vertical" />
-                <Button
-                    android:id="@+id/btn_plan_rtl"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:background="@drawable/btn_plan_rtl" />
-            </LinearLayout>
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_plan_white"
+            android:padding="3dp"
+            android:src="@drawable/icon_plan_stop_button" />
 
         <include
-            layout="@layout/btn_plan_location_group"
+            layout="@layout/control_button_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
-        <LinearLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/btn_plan_white"
-            android:padding="3dp">
-
-            <Button
-                android:id="@+id/btn_map_type"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center"
-                android:background="@drawable/btn_map_type" />
-        </LinearLayout>
     </LinearLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mission_item_recycler_view"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -206,19 +52,10 @@
         android:scrollbars="vertical" />
 
     <FrameLayout
-        android:id="@+id/waypoint_detail_container"
+        android:id="@+id/way_point_detail_container"
         android:layout_width="240dp"
         android:layout_height="258dp"
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:layout_toStartOf="@id/mission_item_recycler_view"
-        android:clickable="true" />
-
-    <FrameLayout
-        android:id="@+id/tap_and_go_container"
-        android:layout_width="228dp"
-        android:layout_height="180dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:clickable="true" />
 </RelativeLayout>

@@ -167,7 +167,7 @@ public class Setting {
                 break;
 
             case LOW_BATTERY_PROTECTION_WARN_ENABLE:
-                parameter = Parameter.PowerProtection.getInstance().setWarningLevelEnabled(value == Setting.ON ? true : false);
+                parameter = Parameter.PowerProtection.getInstance().setWarningLevelEnabled(value == Setting.ON);
                 break;
 
             case LOW_BATTERY_PROTECTION_WARN_VALUE:
@@ -175,7 +175,7 @@ public class Setting {
                 break;
 
             case LOW_BATTERY_PROTECTION_CRITICAL_ENABLE:
-                parameter = Parameter.PowerProtection.getInstance().setCriticalLevelEnabled(value == Setting.ON ? true : false);
+                parameter = Parameter.PowerProtection.getInstance().setCriticalLevelEnabled(value == Setting.ON);
                 break;
 
             case LOW_BATTERY_PROTECTION_CRITICAL_VALUE:

@@ -1,11 +1,8 @@
 package com.coretronic.drone.missionplan.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,6 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
 import com.coretronic.drone.model.FlightHistory;
-import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.OnFlightHistoryUpdateListener;
 
 import java.text.SimpleDateFormat;
@@ -29,53 +25,25 @@ import java.util.List;
  * Created by karot.chuang on 2015/7/22.
  */
 public class HistoryFragment extends MavInfoFragment {
+    private final static SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
 
-    private static final String TAG = HistoryFragment.class.getSimpleName();
-
-    private FragmentActivity fragmentActivity = null;
     private LinearLayout drone_log_info = null;
     private TextView tv_flightDistance = null;
-    private static HistoryItemListAdapter mHistoryItemAdapter = null;
+    private HistoryItemListAdapter mHistoryItemAdapter = null;
     private Button btn_activate_plan = null;
 
-    private static HistoryAdapterListener mCallback = null;
-
-    public interface HistoryAdapterListener extends PlanningFragment.MissionAdapterListener{
-        void LoadPathLog(List<Float> markers, List<Long> path);
-
-        void ClearPath();
-
-        void SpinnerSetToPlanning(List<Mission> missionList, boolean isSwitchFromHistoryFile);
-    }
+    private MapViewFragment mMapViewFragment = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCallback = (HistoryAdapterListener) getParentFragment();
+        mMapViewFragment = (MapViewFragment) getParentFragment();
         ((MainActivity) getActivity()).registerOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        fragmentActivity = getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mission_plan_history, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_mission_plan_history, container, false);
     }
 
     @Override
@@ -95,7 +63,7 @@ public class HistoryFragment extends MavInfoFragment {
         btn_activate_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.SpinnerSetToPlanning(mHistoryItemAdapter.getFocusHistory().getMissions(), true);
+                mMapViewFragment.activateWithMission(mHistoryItemAdapter.getFocusHistory().getMissions());
             }
         });
 
@@ -105,7 +73,7 @@ public class HistoryFragment extends MavInfoFragment {
                 .getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(recyclerLayoutMgr);
 
-        mHistoryItemAdapter = new HistoryItemListAdapter(view.getContext());
+        mHistoryItemAdapter = new HistoryItemListAdapter();
         recyclerView.setAdapter(mHistoryItemAdapter);
 
         mHistoryItemAdapter.SetOnItemClickListener(new HistoryItemListAdapter.OnItemClickListener() {
@@ -127,20 +95,19 @@ public class HistoryFragment extends MavInfoFragment {
                             flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLatitude());
                             flightPath.add(mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(i).getLongitude());
                         }
-                        mCallback.LoadPathLog(markerList, flightPath);
-
+                        mMapViewFragment.loadHistory(markerList, flightPath);
 
                         long durationTime = 0;
                         if (j > 2) {
                             durationTime = mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(j - 1).getCurrentTimeStamp() -
                                     mHistoryItemAdapter.getFlightLog(position).getRecordItems().get(0).getCurrentTimeStamp();
                         }
-                        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+
                         tv_flightTime.setText(timeFormat.format(durationTime));
                         drone_log_info.setVisibility(View.VISIBLE);
                         btn_activate_plan.setVisibility(View.VISIBLE);
                     } else {
-                        mCallback.ClearPath();
+                        mMapViewFragment.clearHistoryMarkerPath();
                         drone_log_info.setVisibility(View.GONE);
                         btn_activate_plan.setVisibility(View.GONE);
                     }
@@ -151,18 +118,12 @@ public class HistoryFragment extends MavInfoFragment {
             }
         });
 
-        final Button btn_map_type = (Button) view.findViewById(R.id.btn_map_type);
-        btn_map_type.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.map_type_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.changeMapType();
+                mMapViewFragment.changeMapType();
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -171,24 +132,22 @@ public class HistoryFragment extends MavInfoFragment {
         ((MainActivity) getActivity()).unregisterOnFlightHistoryUpdateListener(onFlightHistoryUpdateListener);
     }
 
-    OnFlightHistoryUpdateListener onFlightHistoryUpdateListener = new OnFlightHistoryUpdateListener() {
+    private OnFlightHistoryUpdateListener onFlightHistoryUpdateListener = new OnFlightHistoryUpdateListener() {
         @Override
         public void OnFlightHistoryUpdated(final FlightHistory flightHistory) {
-            Log.d("morris", flightHistory.getId());
-
-            if (flightHistory == null) {
-                return;
+            if (flightHistory != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mHistoryItemAdapter.add(flightHistory);
+                    }
+                });
             }
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mHistoryItemAdapter.add(flightHistory);
-                }
-            });
         }
     };
 
-    public void setFlightDistance(int lengthInMeters) {
+    @Override
+    public void onPolylineLengthCalculated(int lengthInMeters) {
         tv_flightDistance.setText(String.valueOf(lengthInMeters) + " m");
     }
 

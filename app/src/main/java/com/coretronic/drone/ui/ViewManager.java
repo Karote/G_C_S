@@ -70,7 +70,7 @@ public class ViewManager {
                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        activity.setSettingValue(settingType, isChecked == true ? Setting.ON : Setting.OFF);
+                        activity.setSettingValue(settingType, isChecked ? Setting.ON : Setting.OFF);
                         Log.d(TAG, "isSetting[" + type + "]: " + setting.getValue());
                         if (setting.getParameterType() != null && activity.getDroneController() != null) {
                             activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
