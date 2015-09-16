@@ -12,13 +12,15 @@
     <dimen name="setting_low_power_tv_width">28dp</dimen>
 
     <dimen name="compass_ruler_height">1.2dp</dimen>
-    <dimen name="mission_plan_spinner_width">184dp</dimen>
-    <dimen name="action_bar_height">36dp</dimen>
     <dimen name="delete_option_button_width">52dp</dimen>
 
     <dimen name="control_button_group_divider_height">34dp</dimen>
     <dimen name="control_button_group_background_padding">3dp</dimen>
     <dimen name="control_button_group_landing_button_text_size">18sp</dimen>
     <dimen name="control_button_group_landing_button_width">132dp</dimen>
+
+    <dimen name="fragment_mission_plan_action_bar_height">36dp</dimen>
+    <dimen name="fragment_mission_plan_action_bar_status_left_margin">2dp</dimen>
+    <dimen name="fragment_mission_plan_spinner_width">184dp</dimen>
 
 </resources>
