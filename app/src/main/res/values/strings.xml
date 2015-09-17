@@ -44,7 +44,7 @@
     <string name="longitude">Longitude</string>
     <string name="btn_go">GO</string>
     <string name="unit_in_meter">m</string>
-    <string name="flight_altitude">Flight Altitude</string>
+    <string name="flight_altitude">Altitude</string>
     <string name="flight_distance">FLIGHT DISTANCE</string>
     <string name="location_format">0.0000000</string>
     <string name="altitude">ALTITUDE</string>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ public class WaypointDetailFragment extends Fragment {
     private TextView tx_lat = null;
     private TextView tx_lng = null;
     private Spinner spinner_type = null;
-    private View icon_type = null;
+    private ImageView icon_type = null;
     private AbstractWheel altitudeWheel = null;
     private AbstractWheel delayWheel = null;
     private PlanningFragment mPlanningFragment;
@@ -72,11 +73,11 @@ public class WaypointDetailFragment extends Fragment {
     }
 
     private void findviews(View fragmentView) {
-        tx_name = (TextView) fragmentView.findViewById(R.id.text_detail_waypoint_name);
-        tx_lat = (TextView) fragmentView.findViewById(R.id.text_waypoint_lat);
-        tx_lng = (TextView) fragmentView.findViewById(R.id.text_waypoint_lng);
-        spinner_type = (Spinner) fragmentView.findViewById(R.id.spinner_detail_waypoint_type);
-        icon_type = fragmentView.findViewById(R.id.icon_detail_waypoint_type);
+        tx_name = (TextView) fragmentView.findViewById(R.id.way_point_detail_name_text);
+        tx_lat = (TextView) fragmentView.findViewById(R.id.way_point_detail_lat_text);
+        tx_lng = (TextView) fragmentView.findViewById(R.id.way_point_detail_lng_text);
+        spinner_type = (Spinner) fragmentView.findViewById(R.id.way_point_detail_type_spinner);
+        icon_type = (ImageView) fragmentView.findViewById(R.id.way_point_detail_type_icon);
         final Button bt_delete = (Button) fragmentView.findViewById(R.id.btn_detail_delete);
         bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +86,7 @@ public class WaypointDetailFragment extends Fragment {
             }
         });
 
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.spinner_waypoint_detail_style, POINT_TYPE);
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.way_point_detail_spinner_text_layout, POINT_TYPE);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_waypoint_detail_dropdown_style);
         spinner_type.setAdapter(spinnerAdapter);
         spinner_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -95,19 +96,19 @@ public class WaypointDetailFragment extends Fragment {
                 switch (position) {
                     case WAYPOINT_INDEX: // Waypoint
                         mPlanningFragment.setItemMissionType(Mission.Type.WAY_POINT);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
+                        icon_type.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
                     case TAKEOFF_INDEX: // Take Off
                         mPlanningFragment.setItemMissionType(Mission.Type.TAKEOFF);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
+                        icon_type.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                         break;
                     case LAND_INDEX: // Land
                         mPlanningFragment.setItemMissionType(Mission.Type.LAND);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
+                        icon_type.setImageResource(R.drawable.ico_indicator_plan_land);
                         break;
                     case RTL_INDEX: // RTL_INDEX
                         mPlanningFragment.setItemMissionType(Mission.Type.RTL);
-                        icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
+                        icon_type.setImageResource(R.drawable.ico_indicator_plan_home);
                         break;
                     default:
                         break;
@@ -158,16 +159,16 @@ public class WaypointDetailFragment extends Fragment {
             spinner_type.setSelection(typeToIndex(arguments.getInt(ARGUMENT_TYPE)));
             switch (arguments.getInt(ARGUMENT_TYPE)) {
                 case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
-                    icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_takeoff);
+                    icon_type.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                     break;
                 case MAV_CMD.MAV_CMD_NAV_LAND:
-                    icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_land);
+                    icon_type.setImageResource(R.drawable.ico_indicator_plan_land);
                     break;
                 case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
-                    icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_home);
+                    icon_type.setImageResource(R.drawable.ico_indicator_plan_home);
                     break;
                 default:
-                    icon_type.setBackgroundResource(R.drawable.ico_indicator_plan_waypoint);
+                    icon_type.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                     break;
             }
             altitudeWheel.setCurrentItem((int) arguments.getFloat(ARGUMENT_ALTITUDE));

@@ -1,211 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="240dp"
-                android:layout_height="258dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/title_rect"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/black">
+        android:background="@color/black"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/text_detail_waypoint_name"
+            android:id="@+id/way_point_detail_name_text"
+            style="@style/way_point_detail_name_text_style"
             android:layout_width="28dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:fontFamily="@string/font_roboto_regular"
-            android:text="@string/mission_id_hint"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:text="@string/mission_id_hint" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="32dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/white"/>
+            android:background="@color/white" />
 
-        <View
-            android:id="@+id/icon_detail_waypoint_type"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+        <ImageView
+            android:id="@+id/way_point_detail_type_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ico_indicator_plan_waypoint"/>
+            android:src="@drawable/ico_indicator_plan_waypoint" />
 
         <Spinner
-            android:id="@+id/spinner_detail_waypoint_type"
+            android:id="@+id/way_point_detail_type_spinner"
             android:layout_width="149dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@color/black"/>
+            android:background="@drawable/way_point_detail_type_spinner_bg" />
 
     </LinearLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="218dp"
-        android:layout_below="@id/title_rect"
-        android:background="@color/white">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:drawableEnd="@drawable/ico_indicator_waypoint_arrow"
+                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+                android:text="@string/flight_altitude" />
+
+            <TextView
+                style="@style/way_point_detail_unit_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/unit_in_meter" />
+
+        </RelativeLayout>
+
+        <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+            android:id="@+id/altitude_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginTop="4dp"
+            app:isAllVisible="false"
+            app:isCyclic="false"
+            app:visibleItems="5" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:drawableEnd="@drawable/ico_indicator_waypoint_arrow"
+                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+                android:text="@string/delay" />
+
+            <TextView
+                style="@style/way_point_detail_unit_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/second" />
+
+        </RelativeLayout>
+
+        <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+            android:id="@+id/delay_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginTop="4dp"
+            app:isAllVisible="false"
+            app:isCyclic="false"
+            app:visibleItems="5" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/flight_altitude_textview"
-                    style="@style/mission_plan_detail_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                    android:text="@string/flight_altitude"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@+id/flight_altitude_textview"
-                    android:fontFamily="@string/font_roboto_regular"
-                    android:gravity="right"
-                    android:text="@string/unit_in_meter"
-                    android:textSize="12sp"/>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="@color/dialog_divider"/>
-
-            <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-                android:id="@+id/altitude_wheel"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                app:isAllVisible="false"
-                app:isCyclic="false"
-                app:visibleItems="5"/>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:id="@+id/flight_delay_textview"
-                    style="@style/mission_plan_detail_text_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                    android:text="@string/delay"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@+id/flight_delay_textview"
-                    android:fontFamily="@string/font_roboto_regular"
-                    android:gravity="right"
-                    android:text="@string/second"
-                    android:textSize="12sp"/>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="@color/dialog_divider"/>
-
-            <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-                android:id="@+id/delay_wheel"
-                android:layout_width="match_parent"
-                android:layout_height="28dp"
-                app:isAllVisible="false"
-                app:isCyclic="false"
-                app:visibleItems="5"/>
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="100dp"
+                <TextView
+                    style="@style/mission_plan_detail_text_style"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text="@string/latitude" />
 
-                    <TextView
-                        style="@style/mission_plan_detail_text_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                        android:text="@string/latitude"/>
+                <TextView
+                    android:id="@+id/way_point_detail_lat_text"
+                    style="@style/way_point_detail_location_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/mission_item_location_field_bg"
+                    android:padding="4dp"
+                    android:text="@string/location_format" />
 
-                    <TextView
-                        android:id="@+id/text_waypoint_lat"
-                        android:layout_width="100dp"
-                        android:layout_height="28dp"
-                        android:layout_marginTop="2dp"
-                        android:background="@color/mission_item_location_field_bg"
-                        android:fontFamily="@string/font_roboto_regular"
-                        android:gravity="center"
-                        android:text="@string/location_format"
-                        android:textSize="14sp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/mission_plan_detail_text_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                        android:text="@string/longitude"/>
-
-                    <TextView
-                        android:id="@+id/text_waypoint_lng"
-                        android:layout_width="100dp"
-                        android:layout_height="28dp"
-                        android:layout_marginTop="2dp"
-                        android:background="@color/mission_item_location_field_bg"
-                        android:fontFamily="@string/font_roboto_regular"
-                        android:gravity="center"
-                        android:text="@string/location_format"
-                        android:textSize="14sp"/>
-
-                </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_detail_delete"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_way_point_detail_delete_button"
-                android:text="@string/delete"
-                android:textColor="@color/red"
-                android:textSize="14sp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/mission_plan_detail_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/longitude" />
+
+                <TextView
+                    android:id="@+id/way_point_detail_lng_text"
+                    style="@style/way_point_detail_location_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/mission_item_location_field_bg"
+                    android:text="@string/location_format" />
+
+            </LinearLayout>
         </LinearLayout>
 
-    </ScrollView>
+        <Button
+            android:id="@+id/btn_detail_delete"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_way_point_detail_delete_button"
+            android:text="@string/delete"
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
