@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/action_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height"
+        android:layout_height="@dimen/fragment_mission_plan_action_bar_height"
         android:layout_alignParentTop="true"
         android:background="@color/black_transparent_70"
         android:clickable="true">
@@ -29,12 +29,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="@dimen/fragment_mission_plan_action_bar_status_left_margin"
             android:layout_toRightOf="@id/back_to_main_button" />
 
         <Spinner
             android:id="@+id/mission_plan_spinner"
-            android:layout_width="@dimen/mission_plan_spinner_width"
+            android:layout_width="@dimen/fragment_mission_plan_spinner_width"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:background="@drawable/spinner_menu_bg"

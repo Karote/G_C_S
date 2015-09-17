@@ -1,55 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="188dp"
+    android:layout_width="@dimen/tap_and_go_dialog_fragment_width"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:clickable="true"
     android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
-    android:paddingTop="10dp">
+    android:paddingBottom="@dimen/tap_and_go_dialog_fragment_bottom_padding"
+    android:paddingEnd="@dimen/tap_and_go_dialog_fragment_right_padding"
+    android:paddingLeft="@dimen/tap_and_go_dialog_fragment_left_padding"
+    android:paddingRight="@dimen/tap_and_go_dialog_fragment_right_padding"
+    android:paddingStart="@dimen/tap_and_go_dialog_fragment_left_padding"
+    android:paddingTop="@dimen/tap_and_go_dialog_fragment_top_padding">
 
     <TextView
         android:id="@+id/tap_and_go_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
         android:text="@string/btn_cancel"
         android:textColor="@color/go_dialog_cancel" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/tap_and_go_dialog_divider_top_margin"
         android:background="@color/dialog_divider" />
 
     <TextView
         android:id="@+id/tap_and_go_location_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_dialog_location_text_top_margin"
         android:fontFamily="@string/font_roboto_medium"
         android:gravity="center"
         android:text="@string/location_format"
         android:textColor="@color/go_location_info_text"
-        android:textSize="12sp" />
+        android:textSize="@dimen/tap_and_go_dialog_location_text_size" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp">
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_dialog_altitude_unit_layout_top_margin">
 
         <TextView
             style="@style/mission_plan_detail_text_style"
@@ -69,19 +71,19 @@
             android:fontFamily="@string/font_roboto_medium"
             android:text="@string/unit_in_meter"
             android:textColor="@color/go_dialog_unit"
-            android:textSize="12sp" />
+            android:textSize="@dimen/tap_and_go_dialog_unit_text_size" />
 
     </RelativeLayout>
 
     <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
         android:id="@+id/tap_and_go_altitude_wheel"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_height="@dimen/tap_and_go_altitude_wheel_height"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_altitude_wheel_top_margin"
         app:isAllVisible="false"
         app:isCyclic="false"
         app:visibleItems="5" />
@@ -89,19 +91,19 @@
     <Button
         android:id="@+id/tap_and_go_start_button"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="@dimen/tap_and_go_start_button_height"
         android:layout_gravity="bottom"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_start_button_top_margin"
         android:background="@color/go_btn_bg"
         android:fontFamily="@string/font_roboto_regular"
         android:gravity="center"
         android:text="@string/btn_go"
         android:textColor="#FFFEFE"
-        android:textSize="20sp"
+        android:textSize="@dimen/tap_and_go_start_button_text_size"
         android:textStyle="bold" />
 
 </LinearLayout>

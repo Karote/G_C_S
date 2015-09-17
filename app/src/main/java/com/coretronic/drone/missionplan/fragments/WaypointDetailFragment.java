@@ -86,7 +86,7 @@ public class WaypointDetailFragment extends Fragment {
             }
         });
 
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.way_point_detail_spinner_text_layout, POINT_TYPE);
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.way_point_detail_type_spinner_text_layout, POINT_TYPE);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_waypoint_detail_dropdown_style);
         spinner_type.setAdapter(spinnerAdapter);
         spinner_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

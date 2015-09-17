@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    >
+    android:layout_centerHorizontal="true">
 
-    <LinearLayout android:id="@+id/compass_level"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/instrument_compass_up"/>
+    <LinearLayout
+        android:id="@+id/compass_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/instrument_compass_down"/>
+            android:background="@drawable/instrument_compass_up" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/instrument_compass_down" />
 
     </LinearLayout>
 
@@ -32,38 +31,38 @@
         android:id="@+id/image_parent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_margin="8dp">
-        <ImageView android:id="@+id/compass_ruler"
-                   android:layout_width="wrap_content"
-                   android:layout_height="145dp"
-                   android:layout_gravity="center"
-                   android:scaleType="fitXY"
-                   android:src="@drawable/instrument_scale"
-            />
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/compass_ruler"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/instrument_compass_ruler_height"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/instrument_scale" />
     </FrameLayout>
 
-    <ImageView android:id="@+id/compass_circle"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_centerInParent="true"
-               android:adjustViewBounds="true"
-               android:src="@drawable/instrument_compass_circle"
-        />
+    <ImageView
+        android:id="@+id/compass_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/instrument_compass_circle" />
 
-    <ImageView android:id="@+id/compass_direction"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_centerInParent="true"
-               android:adjustViewBounds="true"
-               android:src="@drawable/instrument_compass_arrow"
-        />
+    <ImageView
+        android:id="@+id/compass_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/instrument_compass_arrow" />
 
-    <ImageView android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_centerInParent="true"
-               android:adjustViewBounds="true"
-               android:src="@drawable/instrument_benchmark"
-        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/instrument_benchmark" />
 
 </RelativeLayout>
