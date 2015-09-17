@@ -21,7 +21,7 @@ public class TapAndGoDialogFragment extends Fragment {
     private static final String ARGUMENT_LATITUDE = "latitude";
     private static final String ARGUMENT_LONGITUDE = "longitude";
 
-    private TextView tx_lat, tx_lng;
+    private TextView location_text;
     private AbstractWheel altitudeWheel;
 
     private int tapGo_altitude;
@@ -46,11 +46,10 @@ public class TapAndGoDialogFragment extends Fragment {
     }
 
     private void findViews(View fragmentView) {
-        tx_lat = (TextView) fragmentView.findViewById(R.id.text_tap_and_go_lat);
-        tx_lng = (TextView) fragmentView.findViewById(R.id.text_tap_and_go_lng);
+        location_text = (TextView) fragmentView.findViewById(R.id.tap_and_go_location_text);
 
         altitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.tap_and_go_altitude_wheel);
-        altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%01d"));
+        altitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.tap_and_go_altitude_spinner_wheel_text_layout, 0, 20, "%01d"));
         altitudeWheel.setCyclic(false);
         altitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
@@ -59,7 +58,7 @@ public class TapAndGoDialogFragment extends Fragment {
             }
         });
 
-        final Button btn_go = (Button) fragmentView.findViewById(R.id.btn_tap_and_go_go);
+        final Button btn_go = (Button) fragmentView.findViewById(R.id.tap_and_go_start_button);
         btn_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,8 +90,7 @@ public class TapAndGoDialogFragment extends Fragment {
             tapGo_lng = arguments.getFloat(ARGUMENT_LONGITUDE);
 
             altitudeWheel.setCurrentItem(tapGo_altitude);
-            tx_lat.setText(String.format("%.07f", tapGo_lat));
-            tx_lng.setText(String.format("%.07f", tapGo_lng));
+            location_text.setText(String.format("%.07f,", tapGo_lat) + String.format("%.07f", tapGo_lng));
         }
     }
 }
