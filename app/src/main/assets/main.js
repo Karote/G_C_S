@@ -76,6 +76,11 @@ function initMap() {
             draggable : true
         });
     });
+
+    google.maps.event.addListener(map, 'bounds_changed', function(){
+        initializeNoWayPointZone(map.getBounds());
+    });
+
 }
 
 function initPlanningDroneMarker() {
