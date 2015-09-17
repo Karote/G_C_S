@@ -128,6 +128,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         ((MainActivity) getActivity()).unregisterDroneStatusChangedListener(this);
         ((MainActivity) getActivity()).unregisterDeviceChangedListener(this);
         mStatusView.onDisconnect();
+        mDroneMap.onDestroy();
     }
 
     @Override

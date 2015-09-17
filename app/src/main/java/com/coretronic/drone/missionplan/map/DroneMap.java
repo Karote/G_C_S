@@ -100,8 +100,7 @@ public class DroneMap implements OnMapEventCallback {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mMapWebView.loadUrl("javascript:setMapClickable(" + mCanAddMarket + ")");
-                mMapWebView.loadUrl("javascript:setTapGoMode(" + mIsTapAndGoMode + ")");
+                init(mIsTapAndGoMode , mCanAddMarket);
             }
         });
     }
@@ -187,7 +186,7 @@ public class DroneMap implements OnMapEventCallback {
         return this;
     }
 
-    public void clear() {
+    public void onDestroy() {
         mMapWebView.loadUrl("about:blank");
     }
 
