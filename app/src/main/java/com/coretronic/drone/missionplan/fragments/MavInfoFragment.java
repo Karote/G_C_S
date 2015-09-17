@@ -97,22 +97,22 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
     }
 
     @Override
-    public void onClick(float lat, float lon) {
+    public void onMapClickEvent(float lat, float lon) {
 
     }
 
     @Override
-    public void onDragEnd(int index, float lat, float lon) {
+    public void onMapDragEndEvent(int index, float lat, float lon) {
 
     }
 
     @Override
-    public void onPolylineLengthCalculated(int lengthInMeters) {
+    public void onMapPolylineLengthCalculated(int lengthInMeters) {
 
     }
 
     @Override
-    public void onDragStart() {
+    public void onMapDragStartEvent() {
 
     }
 }

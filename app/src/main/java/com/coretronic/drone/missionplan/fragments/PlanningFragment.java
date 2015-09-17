@@ -309,21 +309,21 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     }
 
     @Override
-    public void onDragEnd(int index, float lat, float lon) {
+    public void onMapDragEndEvent(int index, float lat, float lon) {
         mMissionItemAdapter.getMission(index).setLatitude(lat);
         mMissionItemAdapter.getMission(index).setLongitude(lon);
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onClick(float lat, float lon) {
+    public void onMapClickEvent(float lat, float lon) {
         mMissionItemAdapter.add(MapViewFragment.createNewMission(lat, lon, DEFAULT_ALTITUDE, DEFAULT_WAIT_SECONDS, DEFAULT_AUTO_CONTINUE,
                 DEFAULT_RADIUS, DEFAULT_TYPE));
         updateMissionToMap();
     }
 
     @Override
-    public void onDragStart() {
+    public void onMapDragStartEvent() {
         mMissionItemAdapter.onNothingSelected();
         wayPointDetail_layout.setVisibility(View.GONE);
     }

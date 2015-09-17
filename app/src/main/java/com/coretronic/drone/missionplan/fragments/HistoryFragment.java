@@ -147,7 +147,7 @@ public class HistoryFragment extends MavInfoFragment {
     };
 
     @Override
-    public void onPolylineLengthCalculated(int lengthInMeters) {
+    public void onMapPolylineLengthCalculated(int lengthInMeters) {
         tv_flightDistance.setText(String.valueOf(lengthInMeters) + " m");
     }
 

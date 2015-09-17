@@ -31,62 +31,62 @@ public class DroneMap implements OnMapEventCallback {
 
     @Override
     @JavascriptInterface
-    public void onClick(final float lat, final float lon) {
+    public void onMapClickEvent(final float lat, final float lon) {
         if (mOnMapEventCallback == null) {
             return;
         }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mOnMapEventCallback.onClick(lat, lon);
+                mOnMapEventCallback.onMapClickEvent(lat, lon);
             }
         });
     }
 
     @Override
     @JavascriptInterface
-    public void onDragEnd(final int index, final float lat, final float lon) {
+    public void onMapDragEndEvent(final int index, final float lat, final float lon) {
         if (mOnMapEventCallback == null) {
             return;
         }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mOnMapEventCallback.onDragEnd(index, lat, lon);
+                mOnMapEventCallback.onMapDragEndEvent(index, lat, lon);
             }
         });
     }
 
     @Override
     @JavascriptInterface
-    public void onDragStart() {
+    public void onMapDragStartEvent() {
         if (mOnMapEventCallback == null) {
             return;
         }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mOnMapEventCallback.onDragStart();
+                mOnMapEventCallback.onMapDragStartEvent();
             }
         });
     }
 
     @Override
     @JavascriptInterface
-    public void onPolylineLengthCalculated(final int lengthInMeters) {
+    public void onMapPolylineLengthCalculated(final int lengthInMeters) {
         if (mOnMapEventCallback == null) {
             return;
         }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mOnMapEventCallback.onPolylineLengthCalculated(lengthInMeters);
+                mOnMapEventCallback.onMapPolylineLengthCalculated(lengthInMeters);
             }
         });
     }
 
     @JavascriptInterface
-    public void onWarningMessage(final String message) {
+    public void onMapWarningMessage(final String message) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -100,7 +100,7 @@ public class DroneMap implements OnMapEventCallback {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                init(mIsTapAndGoMode , mCanAddMarket);
+                init(mIsTapAndGoMode, mCanAddMarket);
             }
         });
     }

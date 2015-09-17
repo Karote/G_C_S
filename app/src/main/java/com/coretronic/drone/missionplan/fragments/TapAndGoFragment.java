@@ -88,7 +88,7 @@ public class TapAndGoFragment extends MavInfoFragment {
     }
 
     @Override
-    public void onClick(float lat, float lon) {
+    public void onMapClickEvent(float lat, float lon) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         TapAndGoDialogFragment tapAndGoDialogFragment = TapAndGoDialogFragment.newInstance(DEFAULT_ALTITUDE, lat, lon);
         fragmentTransaction
