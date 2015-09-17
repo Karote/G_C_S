@@ -41,4 +41,51 @@
     <dimen name="mav_info_location_text_width">80dp</dimen>
     <dimen name="mav_info_title_text_size">10sp</dimen>
     <dimen name="mav_info_content_text_size">14sp</dimen>
+
+    <!-- way_point_detail -->
+    <dimen name="way_point_detail_fragment_width">240dp</dimen>
+
+    <dimen name="way_point_detail_title_layout_height">40dp</dimen>
+
+    <dimen name="way_point_detail_content_layout_bottom_padding">20dp</dimen>
+    <dimen name="way_point_detail_content_layout_left_padding">16dp</dimen>
+    <dimen name="way_point_detail_content_layout_right_padding">16dp</dimen>
+    <dimen name="way_point_detail_content_layout_top_padding">4dp</dimen>
+
+    <dimen name="way_point_detail_name_text_width">28dp</dimen>
+    <dimen name="way_point_detail_name_text_left_margin">16dp</dimen>
+    <dimen name="way_point_detail_name_text_top_margin">12dp</dimen>
+    <dimen name="way_point_detail_name_text_size">20sp</dimen>
+
+    <dimen name="way_point_detail_divider_width">1dp</dimen>
+    <dimen name="way_point_detail_divider_height">32dp</dimen>
+    <dimen name="way_point_detail_divider_left_margin">4dp</dimen>
+    <dimen name="way_point_detail_divider_top_margin">4dp</dimen>
+
+    <dimen name="way_point_detail_type_spinner_width">149dp</dimen>
+    <dimen name="way_point_detail_type_spinner_right_margin">16dp</dimen>
+    <dimen name="way_point_detail_type_spinner_left_margin">8dp</dimen>
+    <dimen name="way_point_detail_type_spinner_top_margin">8dp</dimen>
+    <dimen name="way_point_detail_type_spinner_text_size">18sp</dimen>
+
+    <dimen name="way_point_detail_spinner_wheel_height">28dp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_top_margin">4dp</dimen>
+
+    <dimen name="way_point_detail_location_layout_top_margin">16dp</dimen>
+    <dimen name="way_point_detail_location_text_height">28dp</dimen>
+    <dimen name="way_point_detail_location_text_size">14sp</dimen>
+    <dimen name="way_point_detail_location_text_top_margin">2dp</dimen>
+    <dimen name="way_point_detail_longitude_layout_left_margin">8dp</dimen>
+
+    <dimen name="way_point_detail_delete_button_height">28dp</dimen>
+    <dimen name="way_point_detail_delete_button_top_margin">6dp</dimen>
+    <dimen name="way_point_detail_delete_button_text_size">14sp</dimen>
+
+    <dimen name="way_point_detail_unit_text_size">12sp</dimen>
+    <dimen name="way_point_detail_delay_unit_layout_top_margin">10dp</dimen>
+
+    <dimen name="way_point_detail_type_icon_left_margin">12dp</dimen>
+    <dimen name="way_point_detail_type_icon_top_margin">8dp</dimen>
+
+    <dimen name="mission_plan_detail_text_size">14sp</dimen>
 </resources>
