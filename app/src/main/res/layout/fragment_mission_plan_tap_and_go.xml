@@ -5,7 +5,7 @@
 
     <include
         layout="@layout/mav_info_panel"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -15,9 +15,9 @@
         layout="@layout/control_button_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginLeft="@dimen/control_button_group_left_margin"
+        android:layout_marginStart="@dimen/control_button_group_left_margin"
+        android:layout_marginTop="@dimen/control_button_group_top_margin" />
 
     <FrameLayout
         android:id="@+id/tap_and_go_container"

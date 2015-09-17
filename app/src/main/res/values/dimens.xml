@@ -88,4 +88,30 @@
     <dimen name="way_point_detail_type_icon_top_margin">8dp</dimen>
 
     <dimen name="mission_plan_detail_text_size">14sp</dimen>
+
+    <!-- tap_and_go_dialog -->
+    <dimen name="tap_and_go_dialog_fragment_width">188dp</dimen>
+    <dimen name="tap_and_go_dialog_fragment_bottom_padding">16dp</dimen>
+    <dimen name="tap_and_go_dialog_fragment_left_padding">12dp</dimen>
+    <dimen name="tap_and_go_dialog_fragment_right_padding">12dp</dimen>
+    <dimen name="tap_and_go_dialog_fragment_top_padding">10dp</dimen>
+
+    <dimen name="tap_and_go_dialog_content_left_margin">8dp</dimen>
+    <dimen name="tap_and_go_dialog_content_right_margin">8dp</dimen>
+
+    <dimen name="tap_and_go_dialog_divider_top_margin">10dp</dimen>
+
+    <dimen name="tap_and_go_dialog_location_text_top_margin">6dp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_size">12sp</dimen>
+
+    <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">6dp</dimen>
+    <dimen name="tap_and_go_dialog_unit_text_size">12sp</dimen>
+
+    <dimen name="tap_and_go_altitude_wheel_height">32dp</dimen>
+    <dimen name="tap_and_go_altitude_wheel_top_margin">6dp</dimen>
+
+    <dimen name="tap_and_go_start_button_height">32dp</dimen>
+    <dimen name="tap_and_go_start_button_top_margin">12dp</dimen>
+    <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
+
 </resources>
