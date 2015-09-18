@@ -12,7 +12,7 @@
     </style>
 
     <style name="progress_style">
-        <item name="android:progressDrawable">@drawable/progress_drawable</item>
+        <item name="android:progressDrawable">@drawable/custom_seek_bar_progress_drawable</item>
         <item name="android:thumb">@drawable/thumb</item>
     </style>
 

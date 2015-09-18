@@ -190,7 +190,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/way_point_detail_delete_button_height"
             android:layout_marginTop="@dimen/way_point_detail_delete_button_top_margin"
-            android:background="@drawable/bg_way_point_detail_delete_button"
+            android:background="@drawable/way_point_detail_dialog_delete_button_bg"
             android:text="@string/delete"
             android:textColor="@color/red"
             android:textSize="@dimen/way_point_detail_delete_button_text_size" />

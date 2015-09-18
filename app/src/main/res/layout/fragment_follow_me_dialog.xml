@@ -100,7 +100,7 @@
             android:layout_height="28dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_start_follow_me_button">
+            android:background="@drawable/follow_me_dialog_start_follow_me_button_bg">
 
             <TextView
                 android:id="@+id/tx_start_follow"

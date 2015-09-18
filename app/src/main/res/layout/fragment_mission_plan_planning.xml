@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/icon_plan_go_button" />
+            android:src="@drawable/planning_fragment_plan_go_button_icon" />
 
         <ImageView
             android:id="@+id/plan_stop_button"
@@ -34,7 +34,7 @@
             android:layout_gravity="center"
             android:background="@drawable/btn_plan_white"
             android:padding="@dimen/control_button_group_background_padding"
-            android:src="@drawable/icon_plan_stop_button" />
+            android:src="@drawable/drone_control_group_drone_stop_button_icon" />
 
         <include
             layout="@layout/control_button_group"

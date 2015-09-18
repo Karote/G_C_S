@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="4dp"
-        android:src="@drawable/icon_undo_button"/>
+        android:src="@drawable/marker_editor_undo_button_icon"/>
 
     <ImageView
         android:id="@+id/delete_button"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="8dp"
-        android:src="@drawable/icon_delete_button"/>
+        android:src="@drawable/marker_editor_delete_button_icon"/>
 
     <RadioGroup
         android:id="@+id/multi_or_single_radioGroup"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:background="@drawable/icon_multi_way_point_button"
+            android:background="@drawable/marker_editor_multi_way_point_button_icon"
             android:button="@android:color/transparent"
             />
 
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
-            android:background="@drawable/icon_tap_and_go_button"
+            android:background="@drawable/marker_editor_tap_and_go_button_icon"
             android:button="@color/transparent"
             android:checked="true"/>
     </RadioGroup>
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:background="@drawable/bg_delete_option_button"
+            android:background="@drawable/marker_editor_delete_option_button_bg"
             android:text="@string/delete_done"
             android:textColor="@color/white"
             android:textSize="12sp"/>
@@ -73,7 +73,7 @@
             android:layout_width="@dimen/delete_option_button_width"
             android:layout_height="match_parent"
             android:layout_marginRight="4dp"
-            android:background="@drawable/bg_delete_option_button"
+            android:background="@drawable/marker_editor_delete_option_button_bg"
             android:gravity="center"
             android:text="@string/delete_all"
             android:textColor="@color/red"

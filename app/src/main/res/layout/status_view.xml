@@ -8,7 +8,7 @@
         android:id="@+id/iv_communication_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/level_list_communicate_light" />
+        android:src="@drawable/status_bar_communicate_light_level_list" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
             android:id="@+id/iv_gps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/level_list_gps_status" />
+            android:src="@drawable/status_bar_gps_status_level_list" />
 
         <TextView
             android:id="@+id/tv_gps"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/status_bar_rf_left_margin"
-        android:src="@drawable/level_list_rf_status" />
+        android:src="@drawable/status_bar_rf_status_level_list" />
 
     <ProgressBar
         android:id="@+id/progress_battery"
@@ -47,7 +47,7 @@
         android:layout_height="@dimen/status_bar_battery_progress_height"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/status_bar_battery_progress_left_margin"
-        android:progressDrawable="@drawable/progress_drawable_battery" />
+        android:progressDrawable="@drawable/status_bar_battery_progress_drawable" />
 
     <TextView
         android:id="@+id/tv_battery"
