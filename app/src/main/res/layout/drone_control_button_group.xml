@@ -11,13 +11,27 @@
         android:orientation="horizontal"
         android:padding="@dimen/control_button_group_background_padding">
 
-        <Button
-            android:id="@+id/drone_landing_button"
-            style="@style/drone_landing_text_style"
-            android:layout_width="@dimen/control_button_group_landing_button_width"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:text="@string/drone_landing_button_text" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/plan_go_button"
+                style="@style/drone_go_text_style"
+                android:layout_width="@dimen/control_button_group_landing_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:text="@string/btn_go"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/drone_landing_button"
+                style="@style/drone_landing_text_style"
+                android:layout_width="@dimen/control_button_group_landing_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:text="@string/drone_landing_button_text" />
+        </FrameLayout>
 
         <View style="@style/control_button_group_divider" />
 
