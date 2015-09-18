@@ -420,7 +420,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private void setUpEditMarkerLayout(View view) {
         markerEditorControlPanel_layout = (LinearLayout) view.findViewById(R.id.marker_editor_control_panel);
         deleteOption_layout = (LinearLayout) view.findViewById(R.id.delete_option_layout);
-        deleteOption_layout.setVisibility(LinearLayout.GONE);
 
         mUndoButton = view.findViewById(R.id.undo_button);
         mUndoButton.setOnClickListener(this);
@@ -569,7 +568,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 return;
             case R.id.delete_all_button:
                 setDeleteOptionShow(false);
-                mDroneMap.clearMissionPlanningMarkers();
                 mDroneMap.setAddMarkerEnable(true);
                 break;
             case R.id.delete_button:
@@ -613,7 +611,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
     }
 
-    public void activateWithMission(List<Mission> missionList) {
+    public void activateWithExistedMission(List<Mission> missionList) {
         mCurrentMissionList = missionList;
         mIsSpinnerTriggerByUser = false;
         mSpinnerView.setSelection(FRAGMENT_TYPE_PLANNING);

@@ -165,10 +165,6 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:loadHistory(" + markerJSON + "," + pathJson + ")");
     }
 
-    public void clearMissionPlanningMarkers() {
-
-    }
-
     public void clearHistoryMarkerPath() {
         mMapWebView.loadUrl("javascript:clearHistoryMarkerPath()");
     }

@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
@@ -21,48 +20,50 @@ import java.util.List;
  * Created by karot.chuang on 2015/8/4.
  */
 public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemListAdapter.HistoryItemListViewHolder> {
-    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-    private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+    private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
-    private List<FlightHistory> flightHistoryList = null;
-    private int focusIndex = -1;
+    private List<FlightHistory> mFlightHistoryList = null;
+    private int mFocusIndex = -1;
 
     public HistoryItemListAdapter() {
-        this.flightHistoryList = new ArrayList<>();
+        this.mFlightHistoryList = new ArrayList<>();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+    public interface onFlightHisorySelectedListener {
+
+        void onFlightHistorySelected(FlightHistory flightHistory);
+
+        void onNothingSelected();
     }
 
-    private OnItemClickListener mItemClickListener = null;
+    private onFlightHisorySelectedListener mItemClickListener = null;
 
-    public void SetOnItemClickListener(final OnItemClickListener listener) {
+    public void setOnFlightHisorySelectedListener(final onFlightHisorySelectedListener listener) {
         mItemClickListener = listener;
     }
 
     @Override
     public HistoryItemListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_log_listitem, viewGroup, false);
-        return new HistoryItemListViewHolder(v);
+        return new HistoryItemListViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_log_listitem, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(HistoryItemListViewHolder viewHolder, int i) {
-        Date resultdate = new Date(flightHistoryList.get(i).getCreatedTime());
-        viewHolder.tvLogDate.setText(dateFormat.format(resultdate));
-        viewHolder.tvLogTime.setText(timeFormat.format(resultdate));
+        Date flightHistoryCreatedTime = new Date(mFlightHistoryList.get(i).getCreatedTime());
+        viewHolder.logDateTextView.setText(DATE_FORMAT.format(flightHistoryCreatedTime));
+        viewHolder.logTimeTextView.setText(TIME_FORMAT.format(flightHistoryCreatedTime));
 
-        if (i == focusIndex) {
-            viewHolder.focusBarView.setVisibility(View.VISIBLE);
+        if (i == mFocusIndex) {
+            viewHolder.focusBar.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.focusBarView.setVisibility(View.GONE);
+            viewHolder.focusBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return flightHistoryList.size();
+        return mFlightHistoryList.size();
     }
 
     @Override
@@ -71,53 +72,41 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
     }
 
     public class HistoryItemListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView tvLogDate;
-        final TextView tvLogTime;
-        final View focusBarView;
-        final RelativeLayout rowItemLayoutView;
+        final TextView logDateTextView;
+        final TextView logTimeTextView;
+        final View focusBar;
 
         HistoryItemListViewHolder(View itemView) {
             super(itemView);
-            tvLogDate = (TextView) itemView.findViewById(R.id.tv_log_date);
-            tvLogTime = (TextView) itemView.findViewById(R.id.tv_log_time);
-            focusBarView = itemView.findViewById(R.id.view_focusbar);
-            rowItemLayoutView = (RelativeLayout) itemView.findViewById(R.id.rowItemLayoutView);
-
-            rowItemLayoutView.setOnClickListener(this);
+            logDateTextView = (TextView) itemView.findViewById(R.id.tv_log_date);
+            logTimeTextView = (TextView) itemView.findViewById(R.id.tv_log_time);
+            focusBar = itemView.findViewById(R.id.view_focusbar);
+            itemView.findViewById(R.id.rowItemLayoutView).setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null) {
 
-                mItemClickListener.onItemClick(v, getAdapterPosition());
-
-                if (focusIndex != getAdapterPosition()) {
-                    focusIndex = getAdapterPosition();
+                if (mFocusIndex != getAdapterPosition()) {
+                    mFocusIndex = getAdapterPosition();
+                    mItemClickListener.onFlightHistorySelected(mFlightHistoryList.get(mFocusIndex));
+                    focusBar.setVisibility(View.VISIBLE);
                 } else {
-                    focusIndex = -1;
+                    mFocusIndex = -1;
+                    mItemClickListener.onNothingSelected();
+                    focusBar.setVisibility(View.GONE);
                 }
+                
                 notifyDataSetChanged();
             }
         }
     }
 
-    public FlightHistory getFlightLog(int position) {
-        return flightHistoryList.get(position);
-    }
-
-    public int getFocusIndex() {
-        return focusIndex;
-    }
-
-    public FlightHistory getFocusHistory() {
-        return flightHistoryList.get(getFocusIndex());
-    }
-
     public synchronized void add(FlightHistory flightHistory) {
 
         boolean historyExisted = false;
-        for (FlightHistory history : flightHistoryList) {
+        for (FlightHistory history : mFlightHistoryList) {
             if (history.getId().equals(flightHistory.getId())) {
                 history.replace(flightHistory);
                 historyExisted = true;
@@ -125,10 +114,10 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
             }
         }
         if (!historyExisted) {
-            flightHistoryList.add(flightHistory);
+            mFlightHistoryList.add(flightHistory);
         }
 
-        Collections.sort(flightHistoryList, new Comparator<FlightHistory>() {
+        Collections.sort(mFlightHistoryList, new Comparator<FlightHistory>() {
             @Override
             public int compare(FlightHistory lhs, FlightHistory rhs) {
                 return Long.valueOf(rhs.getCreatedTime()).compareTo(lhs.getCreatedTime());
@@ -139,6 +128,6 @@ public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemList
     }
 
     public void clearList() {
-        flightHistoryList.clear();
+        mFlightHistoryList.clear();
     }
 }

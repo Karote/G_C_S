@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,23 +23,23 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     private List<Mission> mMissionList = null;
     private OnItemSelectedListener mItemClickListener = null;
-    private boolean isDeleteLayoutVisible = false;
-    private int focusIndex = -1;
+    private boolean mIsDeleteLayoutVisible = false;
+    private int mFocusIndex = -1;
 
     public MissionItemListAdapter() {
         this.mMissionList = new ArrayList<>();
     }
 
     public Mission getSelectedItem() {
-        return mMissionList.get(focusIndex);
+        return mMissionList.get(mFocusIndex);
     }
 
     public void removeSelected() {
-        if (focusIndex == -1) {
+        if (mFocusIndex == -1) {
             return;
         }
-        mMissionList.remove(focusIndex);
-        focusIndex = -1;
+        mMissionList.remove(mFocusIndex);
+        mFocusIndex = -1;
         notifyDataSetChanged();
     }
 
@@ -68,36 +67,36 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
         final Mission mission = mMissionList.get(position);
 
-        viewHolder.nameView.setText(position + 1 + "");
-        viewHolder.altitudeView.setText((int) mission.getAltitude() + "");
+        viewHolder.serialNumberTextView.setText(position + 1 + "");
+        viewHolder.altitudeTextView.setText((int) mission.getAltitude() + "");
         viewHolder.typeView.setBackgroundResource(getTypeResource(mission.getType()));
 
-        if (position == focusIndex) {
-            viewHolder.focusBarView.setVisibility(View.VISIBLE);
+        if (position == mFocusIndex) {
+            viewHolder.focusBar.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.focusBarView.setVisibility(View.GONE);
+            viewHolder.focusBar.setVisibility(View.GONE);
         }
 
-        if (isDeleteLayoutVisible) {
-            viewHolder.deleteLayout.setVisibility(View.VISIBLE);
+        if (mIsDeleteLayoutVisible) {
+            viewHolder.deletePanel.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.deleteLayout.setVisibility(View.GONE);
+            viewHolder.deletePanel.setVisibility(View.GONE);
         }
 
-        viewHolder.rowItemLayoutView.setOnClickListener(new OnClickListener() {
+        viewHolder.rowItemLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (focusIndex == position) {
-                    viewHolder.focusBarView.setVisibility(View.GONE);
-                    focusIndex = -1;
+                if (mFocusIndex == position) {
+                    viewHolder.focusBar.setVisibility(View.GONE);
+                    mFocusIndex = -1;
                     if (mItemClickListener != null) {
                         mItemClickListener.onNothingSelected();
                     }
                 } else {
-                    viewHolder.focusBarView.setVisibility(View.VISIBLE);
-                    focusIndex = position;
+                    viewHolder.focusBar.setVisibility(View.VISIBLE);
+                    mFocusIndex = position;
                     if (mItemClickListener != null) {
-                        mItemClickListener.onItemSelected(mission, focusIndex);
+                        mItemClickListener.onItemSelected(mission, mFocusIndex);
                     }
                 }
             }
@@ -146,22 +145,22 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     public class MissionItemListViewHolder extends RecyclerView.ViewHolder {
-        final TextView nameView, altitudeView;
+        final TextView serialNumberTextView, altitudeTextView;
         final View typeView;
-        final LinearLayout deleteLayout;
+        final View deletePanel;
         final ImageButton deleteButton;
-        final RelativeLayout rowItemLayoutView;
-        final View focusBarView;
+        final RelativeLayout rowItemLayout;
+        final View focusBar;
 
         MissionItemListViewHolder(View itemView) {
             super(itemView);
-            nameView = (TextView) itemView.findViewById(R.id.rowNameView);
+            serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
-            altitudeView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
-            deleteLayout = (LinearLayout) itemView.findViewById(R.id.rowDeleteLayout);
+            altitudeTextView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
+            deletePanel = itemView.findViewById(R.id.rowDeleteLayout);
             deleteButton = (ImageButton) itemView.findViewById(R.id.btn_plan_waypoint_delet);
-            rowItemLayoutView = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
-            focusBarView = itemView.findViewById(R.id.view_focusbar);
+            rowItemLayout = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
+            focusBar = itemView.findViewById(R.id.view_focusbar);
         }
     }
 
@@ -196,12 +195,12 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     public void setDeleteLayoutVisible(boolean isVisible) {
-        isDeleteLayoutVisible = isVisible;
+        mIsDeleteLayoutVisible = isVisible;
         onNothingSelected();
     }
 
     public void onNothingSelected() {
-        focusIndex = -1;
+        mFocusIndex = -1;
         notifyDataSetChanged();
     }
 

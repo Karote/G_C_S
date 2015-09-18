@@ -10,7 +10,7 @@ import android.widget.Switch;
 
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.piloting.Setting;
-import com.coretronic.drone.piloting.settings.module.SwitchEvent;
+import com.coretronic.drone.piloting.settings.SwitchEvent;
 
 import de.greenrobot.event.EventBus;
 

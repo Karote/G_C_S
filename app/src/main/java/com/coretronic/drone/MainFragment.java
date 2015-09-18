@@ -28,7 +28,7 @@ import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
-import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
+import com.coretronic.drone.piloting.settings.SettingFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.utility.AppConfig;
 
@@ -65,7 +65,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         ((TextView) view.findViewById(R.id.tv_app_version)).setText("v " + BuildConfig.VERSION_NAME);
         Button logoutButton = (Button) view.findViewById(R.id.btn_logout);
         logoutButton.setOnClickListener(this);
-        logoutButton.setText(mSharedPreferences.getString(LoginFragment.ARG_USER_ID, ""));
+        logoutButton.setText(mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, ""));
 
         mStatusView = (StatusView) view.findViewById(R.id.status);
 
@@ -82,20 +82,21 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mMainActivity = (MainActivity) activity;
-        checkIfUserLogin();
+        mSharedPreferences = mMainActivity.getPreferences(Context.MODE_PRIVATE);
+        if (!initCloudStorage()) {
+            Toast.makeText(mMainActivity, "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
+            mMainActivity.switchToLoginFragment();
+        }
         checkTTS();
     }
 
-    private void checkIfUserLogin() {
-        mSharedPreferences = mMainActivity.getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
-        String userId = mSharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
+    private boolean initCloudStorage() {
+        String userId = mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "");
         if (userId.length() == 0) {
-            Toast.makeText(mMainActivity, "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
-            getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
-            return;
-        } else {
-            mMainActivity.login(userId.replace("@", "_").replace(".", "_").toLowerCase());
+            return false;
         }
+        mMainActivity.login(userId.replace("@", "_").replace(".", "_").toLowerCase());
+        return true;
     }
 
     @Override
@@ -115,6 +116,9 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
+        if (mDeviceAdapter.contains(droneDevice)) {
+            return;
+        }
         mDeviceAdapter.add(droneDevice);
     }
 
@@ -164,8 +168,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         mMainActivity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
             @Override
             public void onConnected() {
-                Toast.makeText(getActivity().getApplicationContext(), "Init controller" + droneDevice.getName(),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Init controller" + droneDevice.getName(), Toast.LENGTH_LONG).show();
                 mMainActivity.setConnectedDroneDevice(droneDevice);
                 mMainActivity.initialSetting();
                 mMainActivity.readParameter();
@@ -174,7 +177,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             @Override
             public void onConnectFail() {
                 mDroneDeviceSpinner.setSelection(0);
-                Toast.makeText(getActivity().getApplicationContext(), "Init controller error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Init controller error", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -185,23 +188,28 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     }
 
+    private void clearUserInfo() {
+
+        mSharedPreferences.edit()
+                .putString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "")
+                .putString(AppConfig.SHARED_PREFERENCE_USER_PASSWORD_KEY, "")
+                .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, false)
+                .apply();
+    }
+
     @Override
     public void onClick(View v) {
         Fragment fragment = null;
         switch (v.getId()) {
             case R.id.btn_logout:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
                 Dialog dialog = builder.setTitle("Log Out")
                         .setMessage("Do you want to log out?")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mSharedPreferences.edit()
-                                        .putString(LoginFragment.ARG_USER_ID, "")
-                                        .putString(LoginFragment.ARG_USER_PW, "")
-                                        .putBoolean(LoginFragment.ARG_STAY_LOGGED, false)
-                                        .apply();
-                                getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+                                clearUserInfo();
+                                mMainActivity.switchToLoginFragment();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -220,7 +228,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_HISTORY);
                 break;
             case R.id.btn_flight_setting:
-                fragment = new SettingViewPagerFragment();
+                fragment = new SettingFragment();
                 break;
         }
         if (fragment != null) {
@@ -278,7 +286,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
+            ViewHolder holder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.spinner_item, parent, false);
                 holder = new ViewHolder();

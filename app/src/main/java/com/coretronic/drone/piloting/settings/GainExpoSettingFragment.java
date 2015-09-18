@@ -1,5 +1,6 @@
 package com.coretronic.drone.piloting.settings;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,25 +17,29 @@ import com.coretronic.drone.ui.SeekBarTextView;
  */
 public class GainExpoSettingFragment extends UnBindDrawablesFragment {
     private static final String TAG = GainExpoSettingFragment.class.getSimpleName();
-    private MainActivity activity;
+    private MainActivity mMainActivity;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activity = (MainActivity) getActivity();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMainActivity = (MainActivity) activity;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_settings_gain_expo_page, container, false);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_basic_aileron_gain, Setting.SettingType.BASIC_AILERON_GAIN);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_basic_elevator_gain, Setting.SettingType.BASIC_ELEVATOR_GAIN);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_basic_rudder_gain, Setting.SettingType.BASIC_RUDDER_GAIN);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_attitude_aileron_gain, Setting.SettingType.ATTITUDE_AILERON_GAIN);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_attitude_elevator_gain, Setting.SettingType.ATTITUDE_ELEVATOR_GAIN);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_attitude_rudder_gain, Setting.SettingType.ATTITUDE_RUDDER_GAIN);
-        SeekBarTextView.assignSettingSeekBarTextView(activity, fragmentView, R.id.setting_bar_attitude_gain, Setting.SettingType.ATTITUDE_GAIN);
+        return inflater.inflate(R.layout.fragment_settings_gain_expo_page, container, false);
+    }
 
-        return fragmentView;
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_basic_aileron_gain, Setting.SettingType.BASIC_AILERON_GAIN);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_basic_elevator_gain, Setting.SettingType.BASIC_ELEVATOR_GAIN);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_basic_rudder_gain, Setting.SettingType.BASIC_RUDDER_GAIN);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_aileron_gain, Setting.SettingType.ATTITUDE_AILERON_GAIN);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_elevator_gain, Setting.SettingType.ATTITUDE_ELEVATOR_GAIN);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_rudder_gain, Setting.SettingType.ATTITUDE_RUDDER_GAIN);
+        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_gain, Setting.SettingType.ATTITUDE_GAIN);
+
     }
 }

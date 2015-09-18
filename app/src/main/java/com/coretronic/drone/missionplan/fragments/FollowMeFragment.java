@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
@@ -24,8 +23,8 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 20;
 
-    private AbstractWheel altitudeWheel = null;
-    private RelativeLayout startFollowMe = null;
+    private AbstractWheel mAltitudeWheel = null;
+    private View mStartFollowMePanel = null;
     private Button mStopFollowMeButton = null;
 
     @Override
@@ -46,20 +45,20 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
         super.onViewCreated(view, savedInstanceState);
 
         // FollowMe Control Panel
-        startFollowMe = (RelativeLayout) view.findViewById(R.id.rl_start_follow);
-        startFollowMe.setOnClickListener(onFollowBtnClickListener);
+        mStartFollowMePanel = view.findViewById(R.id.rl_start_follow);
+        mStartFollowMePanel.setOnClickListener(onFollowBtnClickListener);
 
         mStopFollowMeButton = (Button) view.findViewById(R.id.btn_stop_follow);
         mStopFollowMeButton.setOnClickListener(onFollowBtnClickListener);
         mStopFollowMeButton.setVisibility(View.GONE);
 
-        altitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
+        mAltitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
         final NumericWheelAdapter altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), MIN_VALUE, MAX_VALUE, "%01d");
         altitudeAdapter.setItemResource(R.layout.text_wheel_number);
-        altitudeWheel.setViewAdapter(altitudeAdapter);
-        altitudeWheel.setCyclic(false);
-        altitudeWheel.setCurrentItem(DEFAULT_ALTITUDE - MIN_VALUE);
-        altitudeWheel.addScrollingListener(new OnWheelScrollListener() {
+        mAltitudeWheel.setViewAdapter(altitudeAdapter);
+        mAltitudeWheel.setCyclic(false);
+        mAltitudeWheel.setCurrentItem(DEFAULT_ALTITUDE - MIN_VALUE);
+        mAltitudeWheel.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(AbstractWheel wheel) {
 
@@ -67,8 +66,8 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
 
             @Override
             public void onScrollingFinished(AbstractWheel wheel) {
-                if (startFollowMe.getVisibility() == View.GONE) {
-                    ((MainActivity) getActivity()).getDroneController().startFollowMe(altitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
+                if (mStartFollowMePanel.getVisibility() == View.GONE) {
+                    ((MainActivity) getActivity()).getDroneController().startFollowMe(mAltitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
                 }
             }
         });
@@ -88,16 +87,16 @@ public class FollowMeFragment extends MavInfoFragment implements DroneController
             switch (v.getId()) {
                 case R.id.rl_start_follow:
                     if (drone != null) {
-                        drone.startFollowMe(altitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
+                        drone.startFollowMe(mAltitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
                     }
-                    startFollowMe.setVisibility(View.GONE);
+                    mStartFollowMePanel.setVisibility(View.GONE);
                     mStopFollowMeButton.setVisibility(View.VISIBLE);
                     break;
                 case R.id.btn_stop_follow:
                     if (drone != null) {
                         drone.startFollowMe(0, FollowMeFragment.this);
                     }
-                    startFollowMe.setVisibility(View.VISIBLE);
+                    mStartFollowMePanel.setVisibility(View.VISIBLE);
                     mStopFollowMeButton.setVisibility(View.GONE);
                     break;
                 case R.id.my_location_button:

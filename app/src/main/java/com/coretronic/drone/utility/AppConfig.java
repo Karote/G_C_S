@@ -7,9 +7,12 @@ import android.os.Environment;
  */
 public class AppConfig {
 
-    public static String ALBUM_PATH = "/CoretronicDrone/";
-    public static String SHAREDPREFERENCE_ID = "coretronic_drone";
-    public static String PREF_FLAT_TRIM_LAST_TIME = "flat_trim_time";
+    public final static String ALBUM_PATH = "/CoretronicDrone/";
+    public final static String PREF_FLAT_TRIM_LAST_TIME = "flat_trim_time";
+
+    public final static String SHARED_PREFERENCE_USER_MAIL_KEY = "user_id";
+    public final static String SHARED_PREFERENCE_USER_PASSWORD_KEY = "user_passwd";
+    public final static String SHARED_PREFERENCE_USER_STAY_LOGIN_KEY = "stay_logged";
 
     public static String getMediaFolderPosition() {
         return Environment.getExternalStoragePublicDirectory(

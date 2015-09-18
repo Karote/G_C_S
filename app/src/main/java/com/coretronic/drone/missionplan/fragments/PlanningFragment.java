@@ -1,7 +1,6 @@
 package com.coretronic.drone.missionplan.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,19 +25,18 @@ import java.util.List;
  * Created by karot.chuang on 2015/7/21.
  */
 public class PlanningFragment extends MavInfoFragment implements MissionLoaderListener {
-    private final static String ARG_From_History = "argFromHistory";
 
+    private final static String ARG_From_History = "argFromHistory";
+    private final static boolean DEFAULT_AUTO_CONTINUE = false;
     private final static int DEFAULT_ALTITUDE = 8;
     private final static int DEFAULT_WAIT_SECONDS = 0;
-    private final static boolean DEFAULT_AUTO_CONTINUE = false;
     private final static int DEFAULT_RADIUS = 0;
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
 
-    private MissionItemListAdapter mMissionItemAdapter = null;
-    private FrameLayout wayPointDetail_layout = null;
-
-    private WaypointDetailFragment detailFragment = null;
-    private ProgressDialog progressDialog = null;
+    private MissionItemListAdapter mMissionItemAdapter;
+    private FrameLayout mWayPointDetailPanel;
+    private MissionItemDetailFragment mMissionItemDetailFragment;
+    private ProgressDialog mLoadMissionProgressDialog;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -83,8 +81,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mMissionItemAdapter = new MissionItemListAdapter();
         recyclerView.setAdapter(mMissionItemAdapter);
 
-        wayPointDetail_layout = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
-        wayPointDetail_layout.setVisibility(View.GONE);
+        mWayPointDetailPanel = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
+        mWayPointDetailPanel.setVisibility(View.GONE);
 
         mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
             @Override
@@ -95,14 +93,14 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             @Override
             public void onItemSelected(Mission mission, int currentIndex) {
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                detailFragment = WaypointDetailFragment.newInstance(currentIndex + 1, mission);
-                fragmentTransaction.replace(R.id.way_point_detail_container, detailFragment, "DetailFragment").commit();
-                wayPointDetail_layout.setVisibility(View.VISIBLE);
+                mMissionItemDetailFragment = MissionItemDetailFragment.newInstance(currentIndex + 1, mission);
+                fragmentTransaction.replace(R.id.way_point_detail_container, mMissionItemDetailFragment, "DetailFragment").commit();
+                mWayPointDetailPanel.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onNothingSelected() {
-                wayPointDetail_layout.setVisibility(View.GONE);
+                mWayPointDetailPanel.setVisibility(View.GONE);
             }
         });
 
@@ -134,7 +132,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                         return;
                     }
                     droneController.writeMissions(droneMissionList, missionLoaderListener);
-                    showProgressDialog("Loading", "Please wait...");
+                    showLoadProgressDialog("Loading", "Please wait...");
                     break;
                 case R.id.drone_landing_button:
                     if (droneController != null) {
@@ -182,7 +180,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                         if (droneController != null) {
                             droneController.startMission();
                         }
-                        progressDialog.dismiss();
+                        mLoadMissionProgressDialog.dismiss();
                     }
                 }
             });
@@ -204,7 +202,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         } else {
             mMissionItemAdapter.setDeleteLayoutVisible(false);
         }
-        wayPointDetail_layout.setVisibility(View.GONE);
+        mWayPointDetailPanel.setVisibility(View.GONE);
     }
 
     // methods for DetailFragment
@@ -223,9 +221,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mMissionItemAdapter.notifyDataSetChanged();
     }
 
-    public void deleteItemMission() {
+    public void deleteSelectedMission() {
         mMissionItemAdapter.removeSelected();
-        wayPointDetail_layout.setVisibility(View.GONE);
+        mWayPointDetailPanel.setVisibility(View.GONE);
         updateMissionToMap();
     }
 
@@ -236,8 +234,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+        if (mLoadMissionProgressDialog != null && mLoadMissionProgressDialog.isShowing()) {
+            mLoadMissionProgressDialog.dismiss();
         }
     }
 
@@ -266,7 +264,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             return;
         }
         mMapViewFragment.getDroneController().readMissions(this);
-        showProgressDialog("Loading", "Please wait...");
+        showLoadProgressDialog("Loading", "Please wait...");
     }
 
     @Override
@@ -277,8 +275,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
+                if (mLoadMissionProgressDialog != null) {
+                    mLoadMissionProgressDialog.dismiss();
                 }
                 if (missions == null || missions.size() == 0) {
                     Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
@@ -290,22 +288,22 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         });
     }
 
-    private void showProgressDialog(String title, String message) {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity()) {
+    private void showLoadProgressDialog(String title, String message) {
+        if (mLoadMissionProgressDialog == null) {
+            mLoadMissionProgressDialog = new ProgressDialog(getActivity()) {
                 @Override
                 public void onBackPressed() {
                     super.onBackPressed();
                     dismiss();
                 }
             };
-            progressDialog.setCancelable(false);
+            mLoadMissionProgressDialog.setCancelable(false);
         } else {
-            progressDialog.dismiss();
+            mLoadMissionProgressDialog.dismiss();
         }
-        progressDialog.setTitle(title);
-        progressDialog.setMessage(message);
-        progressDialog.show();
+        mLoadMissionProgressDialog.setTitle(title);
+        mLoadMissionProgressDialog.setMessage(message);
+        mLoadMissionProgressDialog.show();
     }
 
     @Override
@@ -325,88 +323,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onMapDragStartEvent() {
         mMissionItemAdapter.onNothingSelected();
-        wayPointDetail_layout.setVisibility(View.GONE);
+        mWayPointDetailPanel.setVisibility(View.GONE);
     }
 
-    private class FixedLinearLayoutManager extends LinearLayoutManager {
 
-        public FixedLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
-            super(context, orientation, reverseLayout);
-        }
-
-        private int[] mMeasuredDimension = new int[2];
-
-        @Override
-        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
-                              int widthSpec, int heightSpec) {
-            final int widthMode = View.MeasureSpec.getMode(widthSpec);
-            final int heightMode = View.MeasureSpec.getMode(heightSpec);
-            final int widthSize = View.MeasureSpec.getSize(widthSpec);
-            final int heightSize = View.MeasureSpec.getSize(heightSpec);
-            int width = 0;
-            int height = 0;
-            for (int i = 0; i < getItemCount(); i++) {
-                measureScrapChild(recycler, i,
-                        View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                        mMeasuredDimension);
-
-                if (getOrientation() == HORIZONTAL) {
-                    width = width + mMeasuredDimension[0];
-                    if (i == 0) {
-                        height = mMeasuredDimension[1];
-                    }
-                } else {
-                    height = height + mMeasuredDimension[1];
-                    if (i == 0) {
-                        width = mMeasuredDimension[0];
-                    }
-                }
-            }
-            switch (widthMode) {
-                case View.MeasureSpec.EXACTLY:
-                    width = widthSize;
-                case View.MeasureSpec.AT_MOST:
-                case View.MeasureSpec.UNSPECIFIED:
-            }
-
-            switch (heightMode) {
-                case View.MeasureSpec.EXACTLY:
-                    height = heightSize;
-                case View.MeasureSpec.AT_MOST:
-                case View.MeasureSpec.UNSPECIFIED:
-            }
-            setMeasuredDimension(width, Math.min(height, heightSize));
-        }
-
-        private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
-                                       int heightSpec, int[] measuredDimension) {
-            View view = recycler.getViewForPosition(position);
-            if (view != null) {
-                RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
-                int childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec,
-                        getPaddingLeft() + getPaddingRight(), p.width);
-                int childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec,
-                        getPaddingTop() + getPaddingBottom(), p.height);
-
-                view.measure(childWidthSpec, childHeightSpec);
-                int width = view.getMeasuredWidth();
-                if (view instanceof ViewGroup) {
-                    int childTotalWidth = 0;
-                    for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                        View childView = ((ViewGroup) view).getChildAt(i);
-                        if (childView.getVisibility() == View.VISIBLE) {
-                            childTotalWidth += childView.getMeasuredWidth();
-                        }
-                    }
-                    width = childTotalWidth;
-                }
-
-                measuredDimension[0] = width + p.leftMargin + p.rightMargin;
-                measuredDimension[1] = view.getMeasuredHeight() + p.bottomMargin + p.topMargin;
-                recycler.recycleView(view);
-            }
-        }
-    }
 
 }
