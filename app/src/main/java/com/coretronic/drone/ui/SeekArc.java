@@ -7,23 +7,15 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.coretronic.drone.R;
 
 public class SeekArc extends View {
 
-    private static final String TAG = SeekArc.class.getSimpleName();
     private static int INVALID_PROGRESS_VALUE = -1;
     // The initial rotational offset -90 means we start at 12 o'clock
     private final int mAngleOffset = -90;
-
-    /**
-     * The Drawable for the seek arc thumbnail
-     */
-//    private Drawable mThumb;
 
     /**
      * The Maximum value that this SeekArc can be set to
@@ -66,24 +58,10 @@ public class SeekArc extends View {
     private boolean mRoundedEdges = false;
 
     // Internal variables
-    private int mArcRadius = 0;
     private float mProgressSweep = 0;
     private RectF mArcRect = new RectF();
     private Paint mArcPaint;
     private Paint mProgressPaint;
-    private int mTranslateX;
-    private int mTranslateY;
-    private double mTouchAngle;
-    private float mTouchIgnoreRadius;
-    private OnSeekArcChangeListener mOnSeekArcChangeListener;
-
-    public interface OnSeekArcChangeListener {
-        void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser);
-
-        void onStartTrackingTouch(SeekArc seekArc);
-
-        void onStopTrackingTouch(SeekArc seekArc);
-    }
 
     public SeekArc(Context context) {
         super(context);
@@ -102,7 +80,6 @@ public class SeekArc extends View {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
 
-        Log.d(TAG, "Initialising SeekArc");
         final Resources res = getResources();
         float density = context.getResources().getDisplayMetrics().density;
 
@@ -187,41 +164,12 @@ public class SeekArc extends View {
         float left = 0;
         int arcDiameter = 0;
 
-        mTranslateX = (int) (width * 0.5f);
-        mTranslateY = (int) (height * 0.5f);
-
         arcDiameter = min - getPaddingLeft();
-        mArcRadius = arcDiameter / 2;
         top = height / 2 - (arcDiameter / 2);
         left = width / 2 - (arcDiameter / 2);
         mArcRect.set(left, top, left + arcDiameter, top + arcDiameter);
 
-        mTouchIgnoreRadius = (float) mArcRadius / 4;
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                onStartTrackingTouch();
-                updateOnTouch(event);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                updateOnTouch(event);
-                break;
-            case MotionEvent.ACTION_UP:
-                onStopTrackingTouch();
-                setPressed(false);
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                onStopTrackingTouch();
-                setPressed(false);
-
-                break;
-        }
-
-        return true;
     }
 
     @Override
@@ -230,81 +178,10 @@ public class SeekArc extends View {
         invalidate();
     }
 
-    private void onStartTrackingTouch() {
-        if (mOnSeekArcChangeListener != null) {
-            mOnSeekArcChangeListener.onStartTrackingTouch(this);
-        }
-    }
-
-    private void onStopTrackingTouch() {
-        if (mOnSeekArcChangeListener != null) {
-            mOnSeekArcChangeListener.onStopTrackingTouch(this);
-        }
-    }
-
-    private void updateOnTouch(MotionEvent event) {
-        boolean ignoreTouch = ignoreTouch(event.getX(), event.getY());
-        if (ignoreTouch) {
-            return;
-        }
-        setPressed(true);
-        mTouchAngle = getTouchDegrees(event.getX(), event.getY());
-        int progress = getProgressForAngle(mTouchAngle);
-        onProgressRefresh(progress, true);
-    }
-
-    private boolean ignoreTouch(float xPos, float yPos) {
-        boolean ignore = false;
-        float x = xPos - mTranslateX;
-        float y = yPos - mTranslateY;
-
-        float touchRadius = (float) Math.sqrt(((x * x) + (y * y)));
-        if (touchRadius < mTouchIgnoreRadius) {
-            ignore = true;
-        }
-        return ignore;
-    }
-
-    private double getTouchDegrees(float xPos, float yPos) {
-        float x = xPos - mTranslateX;
-        float y = yPos - mTranslateY;
-        // convert to arc Angle
-        double angle = Math.toDegrees(Math.atan2(y, x) + (Math.PI / 2)
-                - Math.toRadians(mRotation));
-        if (angle < 0) {
-            angle = 360 + angle;
-        }
-        angle -= mStartAngle;
-        return angle;
-    }
-
-    private int getProgressForAngle(double angle) {
-        int touchProgress = (int) Math.round(valuePerDegree() * angle);
-
-        touchProgress = (touchProgress < 0) ? INVALID_PROGRESS_VALUE
-                : touchProgress;
-        touchProgress = (touchProgress > mMax) ? INVALID_PROGRESS_VALUE
-                : touchProgress;
-        return touchProgress;
-    }
-
-    private float valuePerDegree() {
-        return (float) mMax / mSweepAngle;
-    }
-
-    private void onProgressRefresh(int progress, boolean fromUser) {
-        updateProgress(progress, fromUser);
-    }
-
-    private void updateProgress(int progress, boolean fromUser) {
+    private void updateProgress(int progress) {
 
         if (progress == INVALID_PROGRESS_VALUE) {
             return;
-        }
-
-        if (mOnSeekArcChangeListener != null) {
-            mOnSeekArcChangeListener
-                    .onProgressChanged(this, progress, fromUser);
         }
 
         progress = (progress > mMax) ? mMax : progress;
@@ -316,72 +193,9 @@ public class SeekArc extends View {
         invalidate();
     }
 
-    /**
-     * Sets a listener to receive notifications of changes to the SeekArc's
-     * progress level. Also provides notifications of when the user starts and
-     * stops a touch gesture within the SeekArc.
-     *
-     * @param l The seek bar notification listener
-     */
-    public void setOnSeekArcChangeListener(OnSeekArcChangeListener l) {
-        mOnSeekArcChangeListener = l;
-    }
 
     public void setProgress(int progress) {
-        updateProgress(progress, false);
-    }
-
-    public int getProgressWidth() {
-        return mProgressWidth;
-    }
-
-    public void setProgressWidth(int mProgressWidth) {
-        this.mProgressWidth = mProgressWidth;
-        mProgressPaint.setStrokeWidth(mProgressWidth);
-    }
-
-    public int getArcWidth() {
-        return mArcWidth;
-    }
-
-    public void setArcWidth(int mArcWidth) {
-        this.mArcWidth = mArcWidth;
-        mArcPaint.setStrokeWidth(mArcWidth);
-    }
-
-    public int getArcRotation() {
-        return mRotation;
-    }
-
-    public void setArcRotation(int mRotation) {
-        this.mRotation = mRotation;
-    }
-
-    public int getStartAngle() {
-        return mStartAngle;
-    }
-
-    public void setStartAngle(int mStartAngle) {
-        this.mStartAngle = mStartAngle;
-    }
-
-    public int getSweepAngle() {
-        return mSweepAngle;
-    }
-
-    public void setSweepAngle(int mSweepAngle) {
-        this.mSweepAngle = mSweepAngle;
-    }
-
-    public void setRoundedEdges(boolean isEnabled) {
-        mRoundedEdges = isEnabled;
-        if (mRoundedEdges) {
-            mArcPaint.setStrokeCap(Paint.Cap.ROUND);
-            mProgressPaint.setStrokeCap(Paint.Cap.ROUND);
-        } else {
-            mArcPaint.setStrokeCap(Paint.Cap.SQUARE);
-            mProgressPaint.setStrokeCap(Paint.Cap.SQUARE);
-        }
+        updateProgress(progress);
     }
 
 }
