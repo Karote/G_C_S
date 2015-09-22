@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
+    private Button mPlanGoButton = null;
+    private Button mDroneLandingButton = null;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -105,8 +108,12 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         });
 
         // Go & Stop & Location Button Panel
-        view.findViewById(R.id.plan_go_button).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.drone_landing_button).setOnClickListener(onPlanningBtnClickListener);
+        mPlanGoButton = (Button) view.findViewById(R.id.plan_go_button);
+        mPlanGoButton.setOnClickListener(onPlanningBtnClickListener);
+        mPlanGoButton.setVisibility(View.VISIBLE);
+        mDroneLandingButton = (Button) view.findViewById(R.id.drone_landing_button);
+        mDroneLandingButton.setOnClickListener(onPlanningBtnClickListener);
+        mDroneLandingButton.setVisibility(View.GONE);
         view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.plan_stop_button).setOnClickListener(onPlanningBtnClickListener);
 
@@ -137,6 +144,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 case R.id.drone_landing_button:
                     if (droneController != null) {
                         droneController.land();
+                        mDroneLandingButton.setVisibility(View.GONE);
+                        mPlanGoButton.setVisibility(View.VISIBLE);
                     }
                     break;
                 case R.id.drone_rtl_button:
@@ -181,6 +190,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                             droneController.startMission();
                         }
                         mLoadMissionProgressDialog.dismiss();
+                        mPlanGoButton.setVisibility(View.GONE);
+                        mDroneLandingButton.setVisibility(View.VISIBLE);
                     }
                 }
             });

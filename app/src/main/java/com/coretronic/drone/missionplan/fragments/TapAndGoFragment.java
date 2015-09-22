@@ -29,6 +29,7 @@ public class TapAndGoFragment extends MavInfoFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Go & Stop & Location Button Panel
+        view.findViewById(R.id.plan_stop_button).setVisibility(View.GONE);
         view.findViewById(R.id.drone_landing_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.my_location_button).setOnClickListener(onPlanningBtnClickListener);
