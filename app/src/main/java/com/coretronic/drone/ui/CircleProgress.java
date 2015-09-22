@@ -15,7 +15,7 @@ import com.coretronic.drone.R;
 public class CircleProgress extends RelativeLayout {
     SeekArc mCircleProgressBar;
     TextView mTitleTextView;
-    TextView mUintTextView;
+    TextView mUnitTextView;
     TextView mContentTextView;
 
     public CircleProgress(Context context, AttributeSet attrs) {
@@ -26,7 +26,7 @@ public class CircleProgress extends RelativeLayout {
 
         mCircleProgressBar = (SeekArc) this.findViewById(R.id.circle_progress_bar);
         mTitleTextView = (TextView) this.findViewById(R.id.circle_progress_title);
-        mUintTextView = (TextView) this.findViewById(R.id.circle_progress_unit);
+        mUnitTextView = (TextView) this.findViewById(R.id.circle_progress_unit);
         mContentTextView = (TextView) this.findViewById(R.id.circle_progress_content);
 
         initFromAttributes(context, attrs);
@@ -41,7 +41,7 @@ public class CircleProgress extends RelativeLayout {
                     this.mTitleTextView.setText(a.getString(attr));
                     break;
                 case R.styleable.CircleProgress_cp_unit:
-                    this.mUintTextView.setText(a.getString(attr));
+                    this.mUnitTextView.setText(a.getString(attr));
                     break;
             }
         }
@@ -52,7 +52,7 @@ public class CircleProgress extends RelativeLayout {
         mCircleProgressBar.setProgress(value);
     }
 
-    public void setmContentTextView(String content) {
+    public void setContentTextView(String content) {
         mContentTextView.setText(content);
     }
 }
