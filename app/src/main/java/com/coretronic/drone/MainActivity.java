@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
-import com.coretronic.drone.piloting.Setting;
+import com.coretronic.drone.settings.Setting;
 import com.coretronic.drone.service.Parameter;
-import com.coretronic.drone.ui.ViewManager;
+import com.coretronic.drone.util.ViewManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;

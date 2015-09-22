@@ -1,4 +1,4 @@
-package com.coretronic.drone.piloting;
+package com.coretronic.drone.settings;
 
 import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.service.Parameter.Orientation;

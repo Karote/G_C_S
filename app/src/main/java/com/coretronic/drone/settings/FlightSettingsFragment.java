@@ -1,4 +1,4 @@
-package com.coretronic.drone.piloting.settings;
+package com.coretronic.drone.settings;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,10 +16,9 @@ import android.widget.Toast;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.UnBindDrawablesFragment;
-import com.coretronic.drone.piloting.Setting;
 import com.coretronic.drone.ui.SeekBarTextView;
-import com.coretronic.drone.ui.ViewManager;
-import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.util.ViewManager;
+import com.coretronic.drone.util.AppConfig;
 
 import de.greenrobot.event.EventBus;
 
@@ -52,14 +51,14 @@ public class FlightSettingsFragment extends UnBindDrawablesFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_rotation_max, Setting.SettingType.ROTATION_SPEED_MAX);
-        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_tilt_angle_max, Setting.SettingType.TILT_ANGLE_MAX);
-        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_vertical_speed_max, Setting.SettingType.VERTICAL_SPEED_MAX);
-        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_altitude_max, Setting.SettingType.ALTITUDE_LIMIT);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_rotation_max, Setting.SettingType.ROTATION_SPEED_MAX);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_tilt_angle_max, Setting.SettingType.TILT_ANGLE_MAX);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_vertical_speed_max, Setting.SettingType.VERTICAL_SPEED_MAX);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_altitude_max, Setting.SettingType.ALTITUDE_LIMIT);
         ViewManager.assignSwitchView(mMainActivity, view, R.id.switch_low_power_level_1, Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_ENABLE);
-        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_low_power_flash, Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_VALUE);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_low_power_flash, Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_VALUE);
         ViewManager.assignSwitchView(mMainActivity, view, R.id.switch_low_power_level_2, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE);
-        SeekBarTextView.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_low_power_rtl, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_low_power_rtl, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE);
 
         Switch mLowPowerLevelOneSwitch = (Switch) view.findViewById(R.id.switch_low_power_level_1);
         Switch mLowPowerLevelTwoSwitch = (Switch) view.findViewById(R.id.switch_low_power_level_2);

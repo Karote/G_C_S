@@ -28,9 +28,9 @@ import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
-import com.coretronic.drone.piloting.settings.SettingFragment;
+import com.coretronic.drone.settings.SettingFragment;
 import com.coretronic.drone.ui.StatusView;
-import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.util.AppConfig;
 
 import java.util.ArrayList;
 import java.util.List;

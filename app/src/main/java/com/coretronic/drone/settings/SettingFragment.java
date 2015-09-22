@@ -1,4 +1,4 @@
-package com.coretronic.drone.piloting.settings;
+package com.coretronic.drone.settings;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;

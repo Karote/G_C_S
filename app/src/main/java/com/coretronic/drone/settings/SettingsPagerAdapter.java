@@ -1,4 +1,4 @@
-package com.coretronic.drone.piloting.settings;
+package com.coretronic.drone.settings;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

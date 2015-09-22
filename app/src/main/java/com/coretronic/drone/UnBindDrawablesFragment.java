@@ -2,7 +2,7 @@ package com.coretronic.drone;
 
 import android.support.v4.app.Fragment;
 
-import com.coretronic.drone.ui.ViewManager;
+import com.coretronic.drone.util.ViewManager;
 
 /**
  * Created by jiaLian on 15/4/8.

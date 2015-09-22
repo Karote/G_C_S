@@ -1,4 +1,4 @@
-package com.coretronic.drone.utility;
+package com.coretronic.drone.util;
 
 import android.content.Context;
 import android.util.Log;

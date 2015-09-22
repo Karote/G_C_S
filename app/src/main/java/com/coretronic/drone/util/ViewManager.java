@@ -1,4 +1,4 @@
-package com.coretronic.drone.ui;
+package com.coretronic.drone.util;
 
 import android.util.Log;
 import android.view.View;
@@ -9,8 +9,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.coretronic.drone.MainActivity;
-import com.coretronic.drone.piloting.Setting;
-import com.coretronic.drone.piloting.settings.SwitchEvent;
+import com.coretronic.drone.R;
+import com.coretronic.drone.settings.Setting;
+import com.coretronic.drone.settings.SwitchEvent;
+import com.coretronic.drone.ui.SeekBarTextView;
 
 import de.greenrobot.event.EventBus;
 
@@ -94,6 +96,32 @@ public class ViewManager {
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
+        }
+    }
+
+    public static void assignSettingSeekBarTextView(final MainActivity activity, final View view, int id, final Setting.SettingType settingType) {
+        final Setting setting = activity.getSetting(settingType);
+        Log.d(TAG, "setting: " + setting.getMinValue() + ", " + setting.getMaxValue() + ", " + setting.getValue() + ", " + setting.getUnit());
+        SeekBarTextView seekBarTextView = (SeekBarTextView) view.findViewById(id);
+        seekBarTextView.setConfig(setting.getMinValue(), setting.getMaxValue(), setting.getUnit());
+        seekBarTextView.setValue(setting.getValue());
+        seekBarTextView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(int value) {
+                Log.d(TAG, "onStopTrackingTouch");
+                activity.setSettingValue(settingType, value);
+                if (setting.getParameterType() != null && activity.getDroneController() != null) {
+                    activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
+                }
+            }
+        });
+        switch (id) {
+            case R.id.setting_bar_low_power_flash:
+            case R.id.setting_bar_low_power_rtl:
+                float width = activity.getResources().getDimension(R.dimen.setting_low_power_tv_width);
+                seekBarTextView.setTvWidth((int)width);
+                break;
         }
     }
 }

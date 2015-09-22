@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.util.AppConfig;
 
 public class LoginFragment extends Fragment {
 
