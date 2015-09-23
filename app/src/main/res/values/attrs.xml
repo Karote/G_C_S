@@ -29,9 +29,4 @@
         <attr name="progressColor" format="color" />
         <attr name="roundEdges" format="boolean" />
     </declare-styleable>
-
-    <declare-styleable name="CircleProgress">
-        <attr name="cp_title" format="string" />
-        <attr name="cp_unit" format="string" />
-    </declare-styleable>
 </resources>
