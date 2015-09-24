@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="rectangle">
-    <solid android:color="#9E9E9E"/>
-    <size android:width="64dp" android:height="32dp"/>
-    <corners android:bottomLeftRadius="32dp" android:bottomRightRadius="32dp"
-             android:topLeftRadius="0dp" android:topRightRadius="0dp"/>
+    android:shape="rectangle">
+    <solid android:color="#9E9E9E" />
+    <size
+        android:width="@dimen/instrument_compass_level_width"
+        android:height="@dimen/instrument_compass_level_height" />
+    <corners
+        android:bottomLeftRadius="@dimen/instrument_compass_level_radius"
+        android:bottomRightRadius="@dimen/instrument_compass_level_radius"
+        android:topLeftRadius="0dp"
+        android:topRightRadius="0dp" />
 </shape>

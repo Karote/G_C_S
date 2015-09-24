@@ -35,6 +35,9 @@
     <dimen name="status_bar_battery_text_size">14sp</dimen>
 
     <dimen name="instrument_compass_ruler_height">145dp</dimen>
+    <dimen name="instrument_compass_level_width">64dp</dimen>
+    <dimen name="instrument_compass_level_height">32dp</dimen>
+    <dimen name="instrument_compass_level_radius">32dp</dimen>
     <dimen name="aircraft_compass_size">76dp</dimen>
 
     <dimen name="mav_info_background_height">20dp</dimen>
