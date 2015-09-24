@@ -2,9 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/spinner_dropdown_text"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@color/white"
+    android:layout_height="@dimen/fragment_mission_plan_spinner_dropdown_height"
+    android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
     android:fontFamily="@string/font_roboto_medium"
     android:gravity="center"
-    android:textColor="@color/black"
-    android:textSize="18sp" />
+    android:textColor="#474747"
+    android:textSize="@dimen/fragment_mission_plan_spinner_dropdown_text_size" />
