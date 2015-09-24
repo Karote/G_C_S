@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,12 +70,12 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
         viewHolder.serialNumberTextView.setText(position + 1 + "");
         viewHolder.altitudeTextView.setText((int) mission.getAltitude() + "");
-        viewHolder.typeView.setBackgroundResource(getTypeResource(mission.getType()));
+        ((ImageView) viewHolder.typeView).setImageResource(getTypeResource(mission.getType()));
 
         if (position == mFocusIndex) {
             viewHolder.focusBar.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.focusBar.setVisibility(View.GONE);
+            viewHolder.focusBar.setVisibility(View.INVISIBLE);
         }
 
         if (mIsDeleteLayoutVisible) {
@@ -87,7 +88,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             @Override
             public void onClick(View v) {
                 if (mFocusIndex == position) {
-                    viewHolder.focusBar.setVisibility(View.GONE);
+                    viewHolder.focusBar.setVisibility(View.INVISIBLE);
                     mFocusIndex = -1;
                     if (mItemClickListener != null) {
                         mItemClickListener.onNothingSelected();
