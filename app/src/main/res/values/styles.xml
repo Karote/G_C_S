@@ -122,4 +122,14 @@
         <item name="android:layout_alignParentLeft">true</item>
     </style>
 
+    <style name="drone_control_button_group_layout_style">
+        <item name="android:layout_marginLeft">@dimen/drone_control_button_group_left_margin</item>
+        <item name="android:layout_marginTop">@dimen/drone_control_button_group_top_margin</item>
+    </style>
+
+    <style name="map_control_button_group_layout_style">
+        <item name="android:layout_marginTop">@dimen/map_control_button_group_top_margin</item>
+        <item name="android:layout_toRightOf">@id/drone_control_button_group</item>
+    </style>
+
 </resources>

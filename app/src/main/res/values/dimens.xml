@@ -17,8 +17,9 @@
     <dimen name="control_button_group_background_padding">3dp</dimen>
     <dimen name="control_button_group_landing_button_text_size">18sp</dimen>
     <dimen name="control_button_group_landing_button_width">132dp</dimen>
-    <dimen name="control_button_group_left_margin">4dp</dimen>
-    <dimen name="control_button_group_top_margin">8dp</dimen>
+    <dimen name="drone_control_button_group_left_margin">4dp</dimen>
+    <dimen name="drone_control_button_group_top_margin">8dp</dimen>
+    <dimen name="map_control_button_group_top_margin">8dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_height">36dp</dimen>
     <dimen name="fragment_mission_plan_action_bar_status_left_margin">2dp</dimen>

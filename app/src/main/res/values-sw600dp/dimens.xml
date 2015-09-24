@@ -21,4 +21,9 @@
     <dimen name="marker_editor_control_panel_delete_option_button_margin">2dp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_text_size">22sp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_button_text_padding">16dp</dimen>
+
+    <dimen name="drone_control_button_group_left_margin">12dp</dimen>
+    <dimen name="drone_control_button_group_bottom_margin">48dp</dimen>
+    <dimen name="map_control_button_group_left_margin">12dp</dimen>
+    <dimen name="map_control_button_group_top_margin">12dp</dimen>
 </resources>
