@@ -92,9 +92,10 @@
     <string name="switch_btn_off">OFF</string>
     <string name="switch_btn_on">ON</string>
     <string name="reset">RESET</string>
-    <string name="altitude_hint">5m</string>
+    <string name="altitude_hint">5</string>
     <string name="speed">SPEED</string>
-    <string name="speed_hint">300.3km/h</string>
+    <string name="speed_hint">300.3</string>
+    <string name="speed_unit">km/h</string>
     <string name="target">TARGET</string>
     <string name="target_hint">600m</string>
     <string name="from_me">FROM ME</string>
