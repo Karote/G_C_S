@@ -9,4 +9,7 @@
     <dimen name="instrument_compass_level_height">74dp</dimen>
     <dimen name="instrument_compass_level_radius">74dp</dimen>
     <dimen name="aircraft_compass_size">160dp</dimen>
+
+    <dimen name="mav_info_location_text_width">124dp</dimen>
+
 </resources>
