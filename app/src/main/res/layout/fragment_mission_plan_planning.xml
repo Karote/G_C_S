@@ -4,10 +4,6 @@
     android:layout_height="match_parent">
 
     <include
-        style="@style/mav_info_panel_layout_style"
-        layout="@layout/mav_info_panel" />
-
-    <include
         android:id="@+id/drone_control_button_group"
         style="@style/drone_control_button_group_layout_style"
         layout="@layout/drone_control_button_group"
@@ -37,4 +33,8 @@
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:layout_toStartOf="@id/mission_item_recycler_view"
         android:clickable="true" />
+
+    <include
+        style="@style/mav_info_panel_layout_style"
+        layout="@layout/mav_info_panel" />
 </RelativeLayout>
