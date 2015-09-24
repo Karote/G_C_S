@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/undo_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="4dp"
-        android:src="@drawable/marker_editor_undo_button_icon"/>
+        android:layout_marginEnd="@dimen/marker_editor_control_panel_undo_button_right_margin"
+        android:layout_marginRight="@dimen/marker_editor_control_panel_undo_button_right_margin"
+        android:src="@drawable/marker_editor_undo_button_icon" />
 
     <ImageView
         android:id="@+id/delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/marker_editor_delete_button_icon"/>
+        android:layout_marginEnd="@dimen/marker_editor_control_panel_delete_button_right_margin"
+        android:layout_marginRight="@dimen/marker_editor_control_panel_delete_button_right_margin"
+        android:src="@drawable/marker_editor_delete_button_icon" />
 
     <RadioGroup
         android:id="@+id/multi_or_single_radioGroup"
@@ -31,20 +33,22 @@
             android:id="@+id/multi_way_point_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginLeft="@dimen/marker_editor_control_panel_multi_way_point_button_left_margin"
             android:layout_marginRight="4dp"
+            android:layout_marginStart="@dimen/marker_editor_control_panel_multi_way_point_button_left_margin"
             android:background="@drawable/marker_editor_multi_way_point_button_icon"
-            android:button="@android:color/transparent"
-            />
+            android:button="@android:color/transparent" />
 
         <RadioButton
             android:id="@+id/tap_and_go_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="@dimen/marker_editor_control_panel_tap_and_go_button_right_margin"
+            android:layout_marginRight="@dimen/marker_editor_control_panel_tap_and_go_button_right_margin"
             android:background="@drawable/marker_editor_tap_and_go_button_icon"
             android:button="@color/transparent"
-            android:checked="true"/>
+            android:checked="true" />
     </RadioGroup>
 
 
@@ -59,25 +63,34 @@
 
         <Button
             android:id="@+id/delete_done_button"
-            android:layout_width="@dimen/delete_option_button_width"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="@dimen/marker_editor_control_panel_delete_option_button_margin"
+            android:layout_marginLeft="@dimen/marker_editor_control_panel_delete_option_button_margin"
+            android:layout_marginRight="@dimen/marker_editor_control_panel_delete_option_button_margin"
+            android:layout_marginStart="@dimen/marker_editor_control_panel_delete_option_button_margin"
             android:background="@drawable/marker_editor_delete_option_button_bg"
+            android:fontFamily="@string/font_roboto_condensed"
+            android:paddingLeft="@dimen/marker_editor_control_panel_delete_option_button_text_padding"
+            android:paddingRight="@dimen/marker_editor_control_panel_delete_option_button_text_padding"
             android:text="@string/delete_done"
             android:textColor="@color/white"
-            android:textSize="12sp"/>
+            android:textSize="@dimen/marker_editor_control_panel_delete_option_text_size" />
 
         <Button
             android:id="@+id/delete_all_button"
-            android:layout_width="@dimen/delete_option_button_width"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="@dimen/marker_editor_control_panel_delete_option_button_margin"
+            android:layout_marginRight="@dimen/marker_editor_control_panel_delete_option_button_margin"
             android:background="@drawable/marker_editor_delete_option_button_bg"
+            android:fontFamily="@string/font_roboto_condensed"
             android:gravity="center"
+            android:paddingLeft="@dimen/marker_editor_control_panel_delete_option_button_text_padding"
+            android:paddingRight="@dimen/marker_editor_control_panel_delete_option_button_text_padding"
             android:text="@string/delete_all"
-            android:textColor="@color/red"
-            android:textSize="12sp"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/marker_editor_control_panel_delete_option_text_size" />
 
     </LinearLayout>
 

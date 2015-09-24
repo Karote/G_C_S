@@ -12,7 +12,6 @@
     <dimen name="setting_low_power_tv_width">28dp</dimen>
 
     <dimen name="compass_ruler_height">1.2dp</dimen>
-    <dimen name="delete_option_button_width">52dp</dimen>
 
     <dimen name="control_button_group_divider_height">34dp</dimen>
     <dimen name="control_button_group_background_padding">3dp</dimen>
@@ -116,5 +115,14 @@
     <dimen name="tap_and_go_start_button_height">32dp</dimen>
     <dimen name="tap_and_go_start_button_top_margin">12dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
+
+    <!-- marker_editor_control_panel -->
+    <dimen name="marker_editor_control_panel_undo_button_right_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_button_right_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_button_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_text_size">12sp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_button_text_padding">6dp</dimen>
 
 </resources>
