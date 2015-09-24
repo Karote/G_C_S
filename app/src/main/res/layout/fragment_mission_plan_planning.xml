@@ -4,12 +4,8 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/mav_info_panel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        style="@style/mav_info_panel_layout_style"
+        layout="@layout/mav_info_panel" />
 
 
     <LinearLayout
