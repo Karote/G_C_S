@@ -22,6 +22,8 @@
     <color name="dark_gray">#AAA</color>
     <color name="transparent">#00000000</color>
 
+    <color name="black_transparent_95">#F2000000</color>
+    <color name="black_transparent_80">#CC000000</color>
     <color name="black_transparent_70">#B3000000</color>
     <color name="black_transparent_40">#66000000</color>
     <color name="black_transparent_35">#59000000</color>
@@ -54,4 +56,5 @@
     <color name="activate_btn_border">#99787878</color>
 
     <color name="white_transparent_40">#66FFFFFF</color>
+    <color name="white_transparent_15">#26FFFFFF</color>
 </resources>

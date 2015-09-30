@@ -1,0 +1,42 @@
+<resources>
+    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
+         (such as screen margins) for screens with more than 820dp of available width. This
+         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
+    <dimen name="compass_ruler_height">2.58dp</dimen>
+    <dimen name="activity_horizontal_margin">64dp</dimen>
+    <dimen name="instrument_compass_ruler_height">310dp</dimen>
+    <dimen name="instrument_compass_level_width">148dp</dimen>
+    <dimen name="instrument_compass_level_height">74dp</dimen>
+    <dimen name="instrument_compass_level_radius">74dp</dimen>
+    <dimen name="aircraft_compass_size">160dp</dimen>
+
+    <dimen name="mav_info_location_text_width">124dp</dimen>
+
+    <dimen name="fragment_mission_plan_action_bar_height">48dp</dimen>
+
+    <dimen name="marker_editor_control_panel_undo_button_right_margin">2dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_button_right_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_button_margin">2dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_text_size">22sp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_button_text_padding">16dp</dimen>
+
+    <dimen name="fragment_mission_plan_spinner_width">214dp</dimen>
+    <dimen name="fragment_mission_plan_spinner_height">48dp</dimen>
+    <dimen name="fragment_mission_plan_spinner_text_size">22sp</dimen>
+    <dimen name="fragment_mission_plan_spinner_dropdown_height">48dp</dimen>
+    <dimen name="fragment_mission_plan_spinner_dropdown_text_size">22sp</dimen>
+
+    <dimen name="control_button_group_background_padding">6dp</dimen>
+    <dimen name="control_button_group_landing_button_text_size">22sp</dimen>
+    <dimen name="drone_control_button_group_right_padding">6dp</dimen>
+    <dimen name="drone_control_button_group_landing_button_width">132dp</dimen>
+    <dimen name="drone_control_button_group_divider_h_margin">4dp</dimen>
+    <dimen name="drone_control_button_group_divider_height">56dp</dimen>
+    <dimen name="drone_control_button_group_left_margin">12dp</dimen>
+    <dimen name="drone_control_button_group_bottom_margin">48dp</dimen>
+    <dimen name="drone_control_button_group_btn_v_margin">6dp</dimen>
+    <dimen name="map_control_button_group_left_margin">12dp</dimen>
+    <dimen name="map_control_button_group_top_margin">12dp</dimen>
+</resources>

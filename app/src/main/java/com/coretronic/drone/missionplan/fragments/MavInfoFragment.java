@@ -59,13 +59,13 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
         if (mDroneAltitudeTextView == null)
             return;
 
-        mDroneAltitudeTextView.setText(String.format("%.1f m", altitude));
+        mDroneAltitudeTextView.setText(String.format("%.1f", altitude));
     }
 
     final public void onSpeedUpdate(float groundSpeed) {
         if (mDroneSpeedTextView == null)
             return;
-        mDroneSpeedTextView.setText(String.format("%.1f km/h", groundSpeed));
+        mDroneSpeedTextView.setText(String.format("%.1f", groundSpeed));
     }
 
     final public void onLocationUpdate(long droneLat, long droneLng) {

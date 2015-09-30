@@ -10,13 +10,15 @@
         android:layout_width="@dimen/aircraft_compass_size"
         android:layout_height="@dimen/aircraft_compass_size"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp" />
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="6dp"
+        android:layout_marginStart="4dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -28,6 +30,10 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="@dimen/mav_info_location_text_width"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginStart="2dp"
                 android:gravity="end"
                 android:text="@string/latitude_hint" />
 
@@ -36,6 +42,10 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="@dimen/mav_info_location_text_width"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginStart="2dp"
                 android:gravity="end"
                 android:text="@string/longitude_hint" />
 
@@ -57,6 +67,10 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginStart="2dp"
                 android:text="@string/duration_hint" />
 
             <TextView
@@ -70,7 +84,17 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:text="@string/altitude_hint" />
+
+            <TextView
+                style="@style/mav_info_content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginRight="6dp"
+                android:text="@string/unit_in_meter" />
 
             <TextView
                 style="@style/mav_info_title_text_style"
@@ -83,7 +107,17 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:text="@string/speed_hint" />
+
+            <TextView
+                style="@style/mav_info_content_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginRight="6dp"
+                android:text="@string/speed_unit" />
 
             <!--<TextView-->
             <!--style="@style/mav_info_title_text_style"-->
@@ -94,6 +128,10 @@
             <!--<TextView-->
             <!--android:id="@+id/target_distance_text"-->
             <!--style="@style/mav_info_content_text_style"-->
+            <!--android:layout_marginEnd="6dp"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginRight="6dp"-->
+            <!--android:layout_marginStart="2dp"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:text="@string/target_hint" />-->
@@ -110,6 +148,10 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginStart="2dp"
                 android:text="@string/from_me_hint"
                 android:visibility="gone" />
 

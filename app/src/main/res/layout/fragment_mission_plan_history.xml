@@ -30,6 +30,10 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginStart="2dp"
                 android:text="@string/unit_in_meter" />
 
         </LinearLayout>
@@ -52,6 +56,10 @@
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginStart="2dp"
                 android:text="@string/duration_hint" />
 
         </LinearLayout>

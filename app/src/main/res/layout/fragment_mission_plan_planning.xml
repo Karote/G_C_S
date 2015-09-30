@@ -4,32 +4,17 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/mav_info_panel"
+        android:id="@+id/drone_control_button_group"
+        style="@style/drone_control_button_group_layout_style"
+        layout="@layout/drone_control_button_group"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="wrap_content" />
 
-
-    <LinearLayout
+    <include
+        style="@style/map_control_button_group_layout_style"
+        layout="@layout/map_control_button_group"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/control_button_group_left_margin"
-        android:layout_marginStart="@dimen/control_button_group_left_margin"
-        android:layout_marginTop="@dimen/control_button_group_top_margin"
-        android:orientation="horizontal">
-
-        <include
-            layout="@layout/drone_control_button_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <include
-            layout="@layout/map_control_button_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 
     <android.support.v7.widget.RecyclerView
@@ -48,4 +33,8 @@
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:layout_toStartOf="@id/mission_item_recycler_view"
         android:clickable="true" />
+
+    <include
+        style="@style/mav_info_panel_layout_style"
+        layout="@layout/mav_info_panel" />
 </RelativeLayout>

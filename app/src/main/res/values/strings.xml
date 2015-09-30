@@ -13,8 +13,8 @@
         <item>Spline waypoint</item>
         <item>Circle</item>
     </string-array>
-    <string name="delete_all">Delete\nAll</string>
-    <string name="delete_done">Done</string>
+    <string name="delete_all">DELETE ALL</string>
+    <string name="delete_done">DONE</string>
     <string name="btn_cancel">CANCEL</string>
     <string name="btn_ok">OK</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
@@ -92,9 +92,10 @@
     <string name="switch_btn_off">OFF</string>
     <string name="switch_btn_on">ON</string>
     <string name="reset">RESET</string>
-    <string name="altitude_hint">5m</string>
+    <string name="altitude_hint">5</string>
     <string name="speed">SPEED</string>
-    <string name="speed_hint">300.3km/h</string>
+    <string name="speed_hint">300.3</string>
+    <string name="speed_unit">km/h</string>
     <string name="target">TARGET</string>
     <string name="target_hint">600m</string>
     <string name="from_me">FROM ME</string>
