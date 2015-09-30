@@ -47,6 +47,7 @@
         android:src="@drawable/drone_control_group_drone_rtl_button_icon" />
 
     <View
+        android:id="@+id/plan_stop_button_divider"
         android:layout_width="1dp"
         android:layout_height="@dimen/drone_control_button_group_divider_height"
         android:layout_marginEnd="@dimen/drone_control_button_group_divider_h_margin"
