@@ -13,12 +13,17 @@
 
     <dimen name="compass_ruler_height">1.2dp</dimen>
 
-    <dimen name="control_button_group_divider_height">34dp</dimen>
-    <dimen name="control_button_group_background_padding">3dp</dimen>
-    <dimen name="control_button_group_landing_button_text_size">18sp</dimen>
-    <dimen name="control_button_group_landing_button_width">132dp</dimen>
-    <dimen name="drone_control_button_group_left_margin">4dp</dimen>
+    <dimen name="control_button_group_background_padding">2dp</dimen>
+    <dimen name="control_button_group_landing_button_text_size">20sp</dimen>
+    <dimen name="drone_control_button_group_right_padding">0dp</dimen>
+    <dimen name="drone_control_button_group_divider_height">44dp</dimen>
+    <dimen name="drone_control_button_group_divider_h_margin">0dp</dimen>
+    <dimen name="drone_control_button_group_landing_button_width">120dp</dimen>
+    <dimen name="drone_control_button_group_btn_v_margin">0dp</dimen>
+    <dimen name="drone_control_button_group_left_margin">8dp</dimen>
     <dimen name="drone_control_button_group_top_margin">8dp</dimen>
+    <dimen name="map_control_button_group_divider_height">44dp</dimen>
+    <dimen name="map_control_button_group_left_margin">4dp</dimen>
     <dimen name="map_control_button_group_top_margin">8dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_height">36dp</dimen>

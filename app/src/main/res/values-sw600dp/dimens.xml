@@ -22,14 +22,21 @@
     <dimen name="marker_editor_control_panel_delete_option_text_size">22sp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_button_text_padding">16dp</dimen>
 
-    <dimen name="drone_control_button_group_left_margin">12dp</dimen>
-    <dimen name="drone_control_button_group_bottom_margin">48dp</dimen>
-    <dimen name="map_control_button_group_left_margin">12dp</dimen>
-    <dimen name="map_control_button_group_top_margin">12dp</dimen>
-
     <dimen name="fragment_mission_plan_spinner_width">214dp</dimen>
     <dimen name="fragment_mission_plan_spinner_height">48dp</dimen>
     <dimen name="fragment_mission_plan_spinner_text_size">22sp</dimen>
     <dimen name="fragment_mission_plan_spinner_dropdown_height">48dp</dimen>
     <dimen name="fragment_mission_plan_spinner_dropdown_text_size">22sp</dimen>
+
+    <dimen name="control_button_group_background_padding">6dp</dimen>
+    <dimen name="control_button_group_landing_button_text_size">22sp</dimen>
+    <dimen name="drone_control_button_group_right_padding">6dp</dimen>
+    <dimen name="drone_control_button_group_landing_button_width">132dp</dimen>
+    <dimen name="drone_control_button_group_divider_h_margin">4dp</dimen>
+    <dimen name="drone_control_button_group_divider_height">56dp</dimen>
+    <dimen name="drone_control_button_group_left_margin">12dp</dimen>
+    <dimen name="drone_control_button_group_bottom_margin">48dp</dimen>
+    <dimen name="drone_control_button_group_btn_v_margin">6dp</dimen>
+    <dimen name="map_control_button_group_left_margin">12dp</dimen>
+    <dimen name="map_control_button_group_top_margin">12dp</dimen>
 </resources>
