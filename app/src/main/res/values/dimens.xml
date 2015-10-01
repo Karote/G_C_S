@@ -150,5 +150,6 @@
     <dimen name="history_fragment_log_listitem_date_text_size">16sp</dimen>
     <dimen name="history_fragment_log_listitem_time_text_bottom_margin">8dp</dimen>
     <dimen name="history_fragment_log_listitem_time_text_size">12sp</dimen>
+    <dimen name="control_progress_circle_thumb_size">38dp</dimen>
 
 </resources>
