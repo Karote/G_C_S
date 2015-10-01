@@ -22,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:src="@drawable/mission_plan_fragment_back_to_main_button_icon" />
 
         <com.coretronic.drone.ui.StatusView
@@ -30,6 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/fragment_mission_plan_action_bar_status_left_margin"
+            android:layout_marginStart="@dimen/fragment_mission_plan_action_bar_status_left_margin"
+            android:layout_toEndOf="@id/back_to_main_button"
             android:layout_toRightOf="@id/back_to_main_button" />
 
         <Spinner
