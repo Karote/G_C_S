@@ -59,4 +59,5 @@
     <dimen name="history_fragment_log_listitem_time_text_size">16sp</dimen>
 
     <dimen name="control_progress_circle_thumb_size">48dp</dimen>
+    <dimen name="aircraft_compass_ruler_outer_padding">16dp</dimen>
 </resources>

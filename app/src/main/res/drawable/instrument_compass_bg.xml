@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#9E9E9E"/>
+            <size android:width="@dimen/instrument_compass_level_width" android:height="@dimen/instrument_compass_level_width"/>
+        </shape>
+    </item>
+    <item android:bottom="@dimen/instrument_compass_level_radius">
+        <shape android:shape="rectangle">
+            <solid android:color="#5ab7ff"/>
+            <size android:width="@dimen/instrument_compass_level_width" android:height="@dimen/instrument_compass_level_radius"/>
+            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="0dp"
+                     android:topLeftRadius="@dimen/instrument_compass_level_radius" android:topRightRadius="@dimen/instrument_compass_level_radius"/>
+        </shape>
+    </item>
+</layer-list>
