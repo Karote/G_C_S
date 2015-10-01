@@ -45,7 +45,7 @@
     <string name="btn_go">GO</string>
     <string name="unit_in_meter">m</string>
     <string name="flight_altitude">Altitude</string>
-    <string name="flight_distance">FLIGHT DISTANCE</string>
+    <string name="flight_distance">DISTANCE</string>
     <string name="location_format">0.0000000</string>
     <string name="altitude">ALTITUDE</string>
 
@@ -59,10 +59,10 @@
     <string name="follow_me_stop">STOP FOLLOW</string>
 
     <!-- History-->
-    <string name="flight_duration">FLIGHT TIME</string>
+    <string name="flight_duration">TIME</string>
     <string name="duration_hint">00:00</string>
-    <string name="activate_plan">ACTIVATE PLAN</string>
-    <string name="date_hint">2015/08/03</string>
+    <string name="activate_plan">ACTIVATE</string>
+    <string name="date_hint">05.05.2015</string>
     <string name="time_hint">09:26</string>
 
     <!-- Setting-->

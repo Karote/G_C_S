@@ -20,7 +20,7 @@ import java.util.List;
  * Created by karot.chuang on 2015/8/4.
  */
 public class HistoryItemListAdapter extends RecyclerView.Adapter<HistoryItemListAdapter.HistoryItemListViewHolder> {
-    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM.dd.yyyy");
     private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     private List<FlightHistory> mFlightHistoryList = null;
