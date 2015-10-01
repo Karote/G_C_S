@@ -17,6 +17,7 @@
     <dimen name="marker_editor_control_panel_undo_button_right_margin">2dp</dimen>
     <dimen name="marker_editor_control_panel_delete_button_right_margin">8dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_multi_way_point_button_right_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">8dp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_button_margin">2dp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_text_size">22sp</dimen>
@@ -39,4 +40,21 @@
     <dimen name="drone_control_button_group_btn_v_margin">6dp</dimen>
     <dimen name="map_control_button_group_left_margin">12dp</dimen>
     <dimen name="map_control_button_group_top_margin">12dp</dimen>
+
+
+    <dimen name="history_fragment_activate_button_width">144dp</dimen>
+    <dimen name="history_fragment_activate_button_height">60dp</dimen>
+    <dimen name="history_fragment_activate_button_left_margin">12dp</dimen>
+    <dimen name="history_fragment_activate_button_bottom_margin">8dp</dimen>
+    <dimen name="history_fragment_info_layout_height">44dp</dimen>
+    <dimen name="history_fragment_info_text_bottom_margin">4dp</dimen>
+    <dimen name="history_fragment_info_text_left_margin">8dp</dimen>
+    <dimen name="history_fragment_log_listitem_width">132dp</dimen>
+    <dimen name="history_fragment_log_listitem_height">62dp</dimen>
+    <dimen name="history_fragment_log_listitem_focus_bar_height">60dp</dimen>
+    <dimen name="history_fragment_log_listitem_date_text_right_margin">8dp</dimen>
+    <dimen name="history_fragment_log_listitem_date_text_top_margin">10dp</dimen>
+    <dimen name="history_fragment_log_listitem_date_text_size">22sp</dimen>
+    <dimen name="history_fragment_log_listitem_time_text_bottom_margin">8dp</dimen>
+    <dimen name="history_fragment_log_listitem_time_text_size">16sp</dimen>
 </resources>

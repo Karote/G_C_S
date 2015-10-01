@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="78dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/history_fragment_log_listitem_width"
+    android:layout_height="@dimen/history_fragment_log_listitem_height"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true">
 
     <RelativeLayout
         android:id="@+id/rowItemLayoutView"
-        android:layout_width="78dp"
-        android:layout_height="44dp"
-        android:background="@drawable/recycle_view_list_item_bg">
+        android:layout_width="@dimen/history_fragment_log_listitem_width"
+        android:layout_height="@dimen/history_fragment_log_listitem_focus_bar_height"
+        android:background="@color/black_transparent_95">
 
         <View
             android:id="@+id/view_focusbar"
-            android:layout_width="4dp"
-            android:layout_height="44dp"
+            android:layout_width="8dp"
+            android:layout_height="@dimen/history_fragment_log_listitem_focus_bar_height"
             android:background="@color/blue_sky"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_log_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@string/font_roboto_black"
+            android:layout_marginEnd="@dimen/history_fragment_log_listitem_date_text_right_margin"
+            android:layout_marginRight="@dimen/history_fragment_log_listitem_date_text_right_margin"
+            android:layout_marginTop="@dimen/history_fragment_log_listitem_date_text_top_margin"
+            android:fontFamily="@string/font_roboto_condensed"
             android:textColor="@color/white"
-            android:textSize="12sp"
-            tools:text="@string/date_hint"/>
+            android:textSize="@dimen/history_fragment_log_listitem_date_text_size"
+            android:textStyle="bold"
+            tools:text="@string/date_hint" />
 
         <TextView
             android:id="@+id/tv_log_time"
@@ -37,11 +42,24 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="4dp"
-            android:layout_marginRight="4dp"
-            android:fontFamily="@string/font_roboto_regular"
-            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/history_fragment_log_listitem_time_text_bottom_margin"
+            android:layout_marginEnd="@dimen/history_fragment_log_listitem_date_text_right_margin"
+            android:layout_marginRight="@dimen/history_fragment_log_listitem_date_text_right_margin"
+            android:fontFamily="@string/font_roboto_light"
+            android:textColor="@color/drone_info_text"
+            android:textSize="@dimen/history_fragment_log_listitem_time_text_size"
             android:textStyle="bold"
-            tools:text="@string/time_hint"/>
+            tools:text="@string/time_hint" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/history_fragment_log_listitem_time_text_bottom_margin"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@id/tv_log_time"
+            android:layout_toStartOf="@id/tv_log_time"
+            android:src="@drawable/icon_indicator_time_light" />
     </RelativeLayout>
 </RelativeLayout>

@@ -26,22 +26,22 @@
     <dimen name="map_control_button_group_left_margin">4dp</dimen>
     <dimen name="map_control_button_group_top_margin">8dp</dimen>
 
-    <dimen name="fragment_mission_plan_action_bar_height">36dp</dimen>
-    <dimen name="fragment_mission_plan_action_bar_status_left_margin">2dp</dimen>
+    <dimen name="fragment_mission_plan_action_bar_height">44dp</dimen>
+    <dimen name="fragment_mission_plan_action_bar_status_left_margin">0dp</dimen>
     <dimen name="fragment_mission_plan_spinner_width">184dp</dimen>
     <dimen name="fragment_mission_plan_spinner_height">36dp</dimen>
     <dimen name="fragment_mission_plan_spinner_text_size">18sp</dimen>
     <dimen name="fragment_mission_plan_spinner_dropdown_height">48dp</dimen>
     <dimen name="fragment_mission_plan_spinner_dropdown_text_size">18sp</dimen>
 
-    <dimen name="status_bar_gps_left_margin">6dp</dimen>
-    <dimen name="status_bar_gps_text_size">9sp</dimen>
+    <dimen name="status_bar_gps_left_margin">8dp</dimen>
+    <dimen name="status_bar_gps_text_size">10sp</dimen>
     <dimen name="status_bar_rf_left_margin">6dp</dimen>
-    <dimen name="status_bar_battery_progress_width">36dp</dimen>
-    <dimen name="status_bar_battery_progress_height">8dp</dimen>
+    <dimen name="status_bar_battery_progress_width">32dp</dimen>
+    <dimen name="status_bar_battery_progress_height">6dp</dimen>
     <dimen name="status_bar_battery_progress_left_margin">12dp</dimen>
-    <dimen name="status_bar_battery_text_left_margin">4dp</dimen>
-    <dimen name="status_bar_battery_text_size">14sp</dimen>
+    <dimen name="status_bar_battery_text_left_margin">2dp</dimen>
+    <dimen name="status_bar_battery_text_size">12sp</dimen>
 
     <dimen name="instrument_compass_ruler_height">145dp</dimen>
     <dimen name="instrument_compass_level_width">64dp</dimen>
@@ -127,12 +127,28 @@
     <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
 
     <!-- marker_editor_control_panel -->
-    <dimen name="marker_editor_control_panel_undo_button_right_margin">4dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_button_right_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_undo_button_right_margin">1dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_button_right_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_multi_way_point_button_right_margin">2dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">4dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_option_button_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_button_margin">1dp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_text_size">12sp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_button_text_padding">6dp</dimen>
+    <dimen name="history_fragment_activate_button_width">136dp</dimen>
+    <dimen name="history_fragment_activate_button_height">56dp</dimen>
+    <dimen name="history_fragment_activate_button_left_margin">8dp</dimen>
+    <dimen name="history_fragment_activate_button_bottom_margin">6dp</dimen>
+    <dimen name="history_fragment_info_layout_height">22dp</dimen>
+    <dimen name="history_fragment_info_text_bottom_margin">4dp</dimen>
+    <dimen name="history_fragment_info_text_left_margin">8dp</dimen>
+    <dimen name="history_fragment_log_listitem_width">96dp</dimen>
+    <dimen name="history_fragment_log_listitem_height">49dp</dimen>
+    <dimen name="history_fragment_log_listitem_focus_bar_height">48dp</dimen>
+    <dimen name="history_fragment_log_listitem_date_text_right_margin">6dp</dimen>
+    <dimen name="history_fragment_log_listitem_date_text_top_margin">8dp</dimen>
+    <dimen name="history_fragment_log_listitem_date_text_size">16sp</dimen>
+    <dimen name="history_fragment_log_listitem_time_text_bottom_margin">8dp</dimen>
+    <dimen name="history_fragment_log_listitem_time_text_size">12sp</dimen>
 
 </resources>

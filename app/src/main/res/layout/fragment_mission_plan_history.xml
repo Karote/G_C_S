@@ -5,69 +5,59 @@
 
     <LinearLayout
         android:id="@+id/drone_log_info"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/history_fragment_info_layout_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black_transparent_85"
         android:orientation="horizontal"
         android:visibility="gone">
 
-
-        <LinearLayout
+        <TextView
+            style="@style/mav_info_title_text_style"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:background="@color/black_transparent_70">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
+            android:layout_marginLeft="@dimen/history_fragment_info_text_left_margin"
+            android:layout_marginStart="@dimen/history_fragment_info_text_left_margin"
+            android:text="@string/flight_distance" />
 
-            <TextView
-                style="@style/mav_info_title_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/flight_distance" />
-
-            <TextView
-                android:id="@+id/tv_flight_distance"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="6dp"
-                android:layout_marginStart="2dp"
-                android:text="@string/unit_in_meter" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_flight_distance"
+            style="@style/mav_info_content_text_style"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:background="@color/black_transparent_70">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="2dp"
+            android:text="@string/unit_in_meter" />
 
-            <TextView
-                style="@style/mav_info_title_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/flight_duration" />
 
-            <TextView
-                android:id="@+id/tv_flight_time"
-                style="@style/mav_info_content_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="6dp"
-                android:layout_marginStart="2dp"
-                android:text="@string/duration_hint" />
+        <TextView
+            style="@style/mav_info_title_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
+            android:text="@string/flight_duration" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_flight_time"
+            style="@style/mav_info_content_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="2dp"
+            android:text="@string/duration_hint" />
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/flight_history_recycler_view"
-        android:layout_width="78dp"
+        android:layout_width="@dimen/history_fragment_log_listitem_width"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -76,29 +66,29 @@
 
     <Button
         android:id="@+id/btn_activate_plan"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:background="@drawable/history_fragment_activate_plan_button_bg"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:layout_width="@dimen/history_fragment_activate_button_width"
+        android:layout_height="@dimen/history_fragment_activate_button_height"
+        android:layout_above="@id/drone_log_info"
+        android:layout_marginBottom="@dimen/history_fragment_activate_button_bottom_margin"
+        android:layout_marginLeft="@dimen/history_fragment_activate_button_left_margin"
+        android:layout_marginStart="@dimen/history_fragment_activate_button_left_margin"
+        android:background="@drawable/btn_plan_white"
+        android:fontFamily="@string/font_roboto_regular"
         android:text="@string/activate_plan"
-        android:textColor="@color/white"
+        android:textColor="#669900"
+        android:textSize="22sp"
+        android:textStyle="bold"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/map_type_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toEndOf="@id/btn_activate_plan"
-        android:layout_toRightOf="@id/btn_activate_plan"
+        android:layout_marginLeft="@dimen/map_control_button_group_left_margin"
+        android:layout_marginStart="@dimen/map_control_button_group_left_margin"
+        android:layout_marginTop="@dimen/map_control_button_group_top_margin"
         android:background="@drawable/btn_plan_white"
-        android:padding="3dp"
+        android:padding="@dimen/control_button_group_background_padding"
         android:src="@drawable/map_control_group_map_type_button_icon" />
 
 </RelativeLayout>
