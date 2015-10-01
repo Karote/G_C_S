@@ -16,4 +16,17 @@
     <declare-styleable name="WheelHorizontalView">
         <attr name="selectionDividerWidth" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="SeekArc">
+        <attr name="max" format="integer" />
+        <attr name="progressWidth" format="dimension" />
+        <attr name="arcWidth" format="dimension" />
+        <attr name="progress" format="integer" />
+        <attr name="rotation" format="integer" />
+        <attr name="startAngle" format="integer" />
+        <attr name="sweepAngle" format="integer" />
+        <attr name="arcColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="roundEdges" format="boolean" />
+    </declare-styleable>
 </resources>

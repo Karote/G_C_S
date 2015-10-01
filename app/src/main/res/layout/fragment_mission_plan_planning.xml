@@ -4,42 +4,17 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/mav_info_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
-
-
-    <LinearLayout
+        android:id="@+id/drone_control_button_group"
+        style="@style/drone_control_button_group_layout_style"
+        layout="@layout/drone_control_button_group"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content" />
 
-        <ImageView
-            android:id="@+id/plan_go_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/icon_plan_go_button" />
-
-        <ImageView
-            android:id="@+id/plan_stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/btn_plan_white"
-            android:padding="3dp"
-            android:src="@drawable/icon_plan_stop_button" />
-
-        <include
-            layout="@layout/control_button_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <include
+        style="@style/map_control_button_group_layout_style"
+        layout="@layout/map_control_button_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
     <android.support.v7.widget.RecyclerView
@@ -53,9 +28,13 @@
 
     <FrameLayout
         android:id="@+id/way_point_detail_container"
-        android:layout_width="240dp"
-        android:layout_height="258dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:layout_toStartOf="@id/mission_item_recycler_view"
         android:clickable="true" />
+
+    <include
+        style="@style/mav_info_panel_layout_style"
+        layout="@layout/mav_info_panel" />
 </RelativeLayout>

@@ -4,8 +4,8 @@
         <shape>
             <color android:color="@android:color/transparent" />
             <size
-                android:height="38dp"
-                android:width="38dp" />
+                android:height="@dimen/control_progress_circle_thumb_size"
+                android:width="@dimen/control_progress_circle_thumb_size" />
             <solid android:color="@android:color/transparent" />
         </shape>
     </item>

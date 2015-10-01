@@ -2,11 +2,11 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/spinner_text"
     android:layout_width="wrap_content"
-    android:layout_height="36dp"
+    android:layout_height="@dimen/fragment_mission_plan_spinner_height"
     android:drawablePadding="8dp"
     android:drawableRight="@drawable/ico_action_down_arrow"
     android:fontFamily="@string/font_roboto_medium"
     android:gravity="center"
     android:singleLine="true"
     android:textColor="@color/white"
-    android:textSize="18sp" />
+    android:textSize="@dimen/fragment_mission_plan_spinner_text_size" />

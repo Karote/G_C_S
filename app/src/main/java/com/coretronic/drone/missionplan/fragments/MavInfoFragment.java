@@ -18,11 +18,11 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
 
     protected MapViewFragment mMapViewFragment;
 
-    private TextView tv_droneAltitude;
-    private TextView tv_droneLat;
-    private TextView tv_droneSpeed;
-    private TextView tv_droneFlightTime;
-    private TextView tv_droneLng;
+    private TextView mDroneAltitudeTextView;
+    private TextView mDroneLatitudeTextView;
+    private TextView mDroneLongitudeTextView;
+    private TextView mDroneSpeedTextView;
+    private TextView mDroneFlightTimeTextView;
     private AircraftCompassWrapView mAircraftCompassWrapView;
 
     @Override
@@ -33,11 +33,11 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
 
     protected void initMavInfoView(View view, int altitudeViewID, int speedViewId, int flightTimeViewId, int latitudeViewId, int
             longitudeViewId) {
-        tv_droneAltitude = (TextView) view.findViewById(altitudeViewID);
-        tv_droneSpeed = (TextView) view.findViewById(speedViewId);
-        tv_droneLat = (TextView) view.findViewById(flightTimeViewId);
-        tv_droneLng = (TextView) view.findViewById(latitudeViewId);
-        tv_droneFlightTime = (TextView) view.findViewById(longitudeViewId);
+        mDroneAltitudeTextView = (TextView) view.findViewById(altitudeViewID);
+        mDroneSpeedTextView = (TextView) view.findViewById(speedViewId);
+        mDroneLatitudeTextView = (TextView) view.findViewById(flightTimeViewId);
+        mDroneLongitudeTextView = (TextView) view.findViewById(latitudeViewId);
+        mDroneFlightTimeTextView = (TextView) view.findViewById(longitudeViewId);
         mAircraftCompassWrapView = new AircraftCompassWrapView(view, R.id.compass_circle, R.id.compass_level, R.id.compass_ruler, R.id
                 .compass_direction);
 
@@ -56,32 +56,32 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
     }
 
     final public void onAltitdueUpdate(float altitude) {
-        if (tv_droneAltitude == null)
+        if (mDroneAltitudeTextView == null)
             return;
 
-        tv_droneAltitude.setText(String.format("%.1f m", altitude));
+        mDroneAltitudeTextView.setText(String.format("%.1f", altitude));
     }
 
     final public void onSpeedUpdate(float groundSpeed) {
-        if (tv_droneSpeed == null)
+        if (mDroneSpeedTextView == null)
             return;
-        tv_droneSpeed.setText(String.format("%.1f km/h", groundSpeed));
+        mDroneSpeedTextView.setText(String.format("%.1f", groundSpeed));
     }
 
     final public void onLocationUpdate(long droneLat, long droneLng) {
-        if (tv_droneLat == null || tv_droneLng == null)
+        if (mDroneLatitudeTextView == null || mDroneLongitudeTextView == null)
             return;
-        tv_droneLat.setText(String.format("%d.%07d,", droneLat / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
-        tv_droneLng.setText(String.format("%d.%07d", droneLng / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
+        mDroneLatitudeTextView.setText(String.format("%d.%07d,", droneLat / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
+        mDroneLongitudeTextView.setText(String.format("%d.%07d", droneLng / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
     }
 
     final public void onFlightTimeUpdate(int flightTime) {
-        if (tv_droneFlightTime == null || flightTime < 0)
+        if (mDroneFlightTimeTextView == null || flightTime < 0)
             return;
 
         int minutes = Math.min(flightTime / 60, 99);
         int seconds = flightTime % 60;
-        tv_droneFlightTime.setText(String.format("%02d:%02d", minutes, seconds));
+        mDroneFlightTimeTextView.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     final public void onAttitudeUpdate(float yaw, float roll, float pitch) {
@@ -97,22 +97,22 @@ public class MavInfoFragment extends Fragment implements OnMapEventCallback {
     }
 
     @Override
-    public void onClick(float lat, float lon) {
+    public void onMapClickEvent(float lat, float lon) {
 
     }
 
     @Override
-    public void onDragEnd(int index, float lat, float lon) {
+    public void onMapDragEndEvent(int index, float lat, float lon) {
 
     }
 
     @Override
-    public void onPolylineLengthCalculated(int lengthInMeters) {
+    public void onMapPolylineLengthCalculated(int lengthInMeters) {
 
     }
 
     @Override
-    public void onDragStart() {
+    public void onMapDragStartEvent() {
 
     }
 }

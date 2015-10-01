@@ -1,30 +1,26 @@
 package com.coretronic.drone;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.util.AppConfig;
 
 public class LoginFragment extends Fragment {
 
-    private EditText edUserId;
-    private EditText edUserPw;
-    private CheckBox stayLogged;
-    private SharedPreferences sharedPreferences;
-    public static final String ARG_USER_ID = "user_id";
-    public static final String ARG_USER_PW = "user_passwd";
-    public static final String ARG_STAY_LOGGED = "stay_logged";
-
+    private EditText mUserMailEditText;
+    private EditText mUserPasswordEditText;
+    private CheckBox mIsStayLoginCheckBox;
+    private SharedPreferences mSharedPreferences;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -33,95 +29,88 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getActivity().getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(ARG_STAY_LOGGED, false)) {
-            replaceFragment();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_login, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mUserMailEditText = (EditText) view.findViewById(R.id.ed_user_id);
+        if (mSharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, false)) {
+            switchToMainFragment();
         }
-    }
+        mUserPasswordEditText = (EditText) view.findViewById(R.id.ed_user_pwd);
+        mIsStayLoginCheckBox = (CheckBox) view.findViewById(R.id.chk_stay_logged);
+        view.findViewById(R.id.login_ok_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userEmail = mUserMailEditText.getText().toString();
+                String userPassword = mUserPasswordEditText.getText().toString();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
-        initView(v);
-        return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void initView(View v) {
-        edUserId = (EditText) v.findViewById(R.id.ed_user_id);
-        edUserId.setText(sharedPreferences.getString(ARG_USER_ID,""));
-        edUserPw = (EditText) v.findViewById(R.id.ed_user_pwd);
-        stayLogged = (CheckBox) v.findViewById(R.id.chk_stay_logged);
-        Button btnOk = (Button) v.findViewById(R.id.login_ok_button);
-        btnOk.setOnClickListener(btnListener);
-    }
-
-
-    View.OnClickListener btnListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            String uid = edUserId.getText().toString();
-            String upw = edUserPw.getText().toString();
-
-            if (checkID(uid, upw)) {
-                sharedPreferences.edit().putString(ARG_USER_ID, uid)
-                        .putString(ARG_USER_PW, upw)
-                        .putBoolean(ARG_STAY_LOGGED, stayLogged.isChecked())
-                        .apply();
-                replaceFragment();
+                if (checkInputDataValid(userEmail, userPassword)) {
+                    mSharedPreferences.edit().putString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, userEmail)
+                            .putString(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, userPassword)
+                            .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mIsStayLoginCheckBox.isChecked())
+                            .apply();
+                    switchToMainFragment();
+                }
             }
-        }
-    };
-
-
-    private void replaceFragment() {
-        MainFragment fragment = new MainFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_view, fragment, LoginFragment.class.getSimpleName());
-        transaction.commit();
+        });
     }
 
+    private void switchToMainFragment() {
+        getFragmentManager().beginTransaction().replace(R.id.frame_view, new MainFragment(), LoginFragment.class.getSimpleName()).commit();
+    }
 
-    private boolean checkID(String uid, String pw) {
-        if (uid.trim().length() == 0) {
-            Toast.makeText(getActivity(), "Email is null", Toast.LENGTH_SHORT).show();
+    private boolean checkInputDataValid(String mail, String password) {
+        if (mail.trim().length() == 0) {
+            showWarningToast("Email is null");
             return false;
-        } else if (pw.trim().length() == 0) {
-            Toast.makeText(getActivity(), "Passwd is null", Toast.LENGTH_SHORT).show();
+        }
+        if (password.trim().length() == 0) {
+            showWarningToast("Passwd is null");
             return false;
         }
 
-        if(!isValidEmail(uid)){
-            Toast.makeText(getActivity(), "Email format error", Toast.LENGTH_SHORT).show();
+        if (!isValidEmail(mail)) {
+            showWarningToast("Email format error");
             return false;
         }
 
-        String oldUserId = sharedPreferences.getString(ARG_USER_ID, "");
-        String oldUserPw = sharedPreferences.getString(ARG_USER_PW, "");
+        String oldUserMail = mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "");
+        String oldUserPassword = mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_PASSWORD_KEY, "");
 
-        if ((oldUserId.length() == 0) || (oldUserPw.length() == 0)) {
+        if ((oldUserMail.length() == 0) || (oldUserPassword.length() == 0)) {
             return true;
         }
 
-        if (!uid.equals(oldUserId)) {
-            Toast.makeText(getActivity(), "Email error", Toast.LENGTH_SHORT).show();
+        if (!mail.equals(oldUserMail)) {
+            showWarningToast("Email error");
             return false;
-        } else if (!pw.equals(sharedPreferences.getString(ARG_USER_PW, ""))) {
-            Toast.makeText(getActivity(), "Password error", Toast.LENGTH_SHORT).show();
+        }
+        if (!password.equals(oldUserPassword)) {
+            showWarningToast("Password error");
             return false;
         }
 
         return true;
     }
 
-    public static boolean isValidEmail(CharSequence target) {
-        return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    private void showWarningToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isValidEmail(String mail) {
+        return mail != null && android.util.Patterns.EMAIL_ADDRESS.matcher(mail).matches();
     }
 }

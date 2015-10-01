@@ -1,146 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="228dp"
-              android:layout_height="180dp"
-              android:background="@color/white"
-              android:clickable="true"
-              android:orientation="vertical"
-              android:paddingBottom="8dp"
-              android:paddingLeft="12dp"
-              android:paddingRight="12dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/tap_and_go_dialog_fragment_width"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/tap_and_go_dialog_fragment_bottom_padding"
+    android:paddingEnd="@dimen/tap_and_go_dialog_fragment_right_padding"
+    android:paddingLeft="@dimen/tap_and_go_dialog_fragment_left_padding"
+    android:paddingRight="@dimen/tap_and_go_dialog_fragment_right_padding"
+    android:paddingStart="@dimen/tap_and_go_dialog_fragment_left_padding"
+    android:paddingTop="@dimen/tap_and_go_dialog_fragment_top_padding">
 
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/tap_and_go_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:text="@string/btn_cancel"
+        android:textColor="@color/go_dialog_cancel" />
 
-        <TextView
-            android:id="@+id/tap_and_go_cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/btn_cancel"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/tap_and_go_dialog_divider_top_margin"
+        android:background="@color/dialog_divider" />
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/dialog_divider"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/tap_and_go_location_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_dialog_location_text_top_margin"
+        android:fontFamily="@string/font_roboto_medium"
+        android:gravity="center"
+        android:text="@string/location_format"
+        android:textColor="@color/go_location_info_text"
+        android:textSize="@dimen/tap_and_go_dialog_location_text_size" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_dialog_altitude_unit_layout_top_margin">
 
-            <TextView
-                android:id="@+id/flight_altitude_textview"
-                style="@style/mission_plan_detail_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                android:text="@string/flight_altitude"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/flight_altitude_textview"
-                android:fontFamily="@string/font_roboto_medium"
-                android:gravity="right"
-                android:text="@string/unit_in_meter"
-                android:textSize="12sp"/>
-
-        </RelativeLayout>
-
-        <View
+        <TextView
+            style="@style/mission_plan_detail_text_style"
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/dialog_divider"/>
-
-        <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-            android:id="@+id/tap_and_go_altitude_wheel"
-            android:layout_width="match_parent"
-            android:layout_height="28dp"
-            app:isAllVisible="false"
-            app:isCyclic="false"
-            app:visibleItems="5"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:drawableEnd="@drawable/ico_indicator_waypoint_arrow"
+            android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
+            android:text="@string/flight_altitude" />
 
-            <TextView
-                style="@style/mission_plan_detail_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                android:text="@string/latitude"/>
-
-            <TextView
-                android:id="@+id/text_tap_and_go_lat"
-                android:layout_width="100dp"
-                android:layout_height="28dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/mission_item_location_field_bg"
-                android:fontFamily="@string/font_roboto_regular"
-                android:gravity="center"
-                android:text="@string/location_format"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="100dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:orientation="vertical">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="@string/unit_in_meter"
+            android:textColor="@color/go_dialog_unit"
+            android:textSize="@dimen/tap_and_go_dialog_unit_text_size" />
 
-            <TextView
-                style="@style/mission_plan_detail_text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
-                android:text="@string/longitude"/>
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/text_tap_and_go_lng"
-                android:layout_width="100dp"
-                android:layout_height="28dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/mission_item_location_field_bg"
-                android:fontFamily="@string/font_roboto_regular"
-                android:gravity="center"
-                android:text="@string/location_format"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
-    </LinearLayout>
+    <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+        android:id="@+id/tap_and_go_altitude_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tap_and_go_altitude_wheel_height"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_altitude_wheel_top_margin"
+        app:isAllVisible="false"
+        app:isCyclic="false"
+        app:visibleItems="5" />
 
     <Button
-        android:id="@+id/btn_tap_and_go_go"
-        android:layout_width="204dp"
-        android:layout_height="28dp"
+        android:id="@+id/tap_and_go_start_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tap_and_go_start_button_height"
         android:layout_gravity="bottom"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_start_follow_me_button"
+        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+        android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="@dimen/tap_and_go_start_button_top_margin"
+        android:background="@color/go_btn_bg"
         android:fontFamily="@string/font_roboto_regular"
         android:gravity="center"
         android:text="@string/btn_go"
-        android:textColor="@color/white"
-        android:textSize="16sp"/>
+        android:textColor="#FFFEFE"
+        android:textSize="@dimen/tap_and_go_start_button_text_size"
+        android:textStyle="bold" />
 
 </LinearLayout>

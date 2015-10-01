@@ -13,8 +13,8 @@
         <item>Spline waypoint</item>
         <item>Circle</item>
     </string-array>
-    <string name="delete_all">Delete\nAll</string>
-    <string name="delete_done">Done</string>
+    <string name="delete_all">DELETE ALL</string>
+    <string name="delete_done">DONE</string>
     <string name="btn_cancel">CANCEL</string>
     <string name="btn_ok">OK</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
@@ -44,8 +44,8 @@
     <string name="longitude">Longitude</string>
     <string name="btn_go">GO</string>
     <string name="unit_in_meter">m</string>
-    <string name="flight_altitude">Flight Altitude</string>
-    <string name="flight_distance">FLIGHT DISTANCE</string>
+    <string name="flight_altitude">Altitude</string>
+    <string name="flight_distance">DISTANCE</string>
     <string name="location_format">0.0000000</string>
     <string name="altitude">ALTITUDE</string>
 
@@ -59,10 +59,10 @@
     <string name="follow_me_stop">STOP FOLLOW</string>
 
     <!-- History-->
-    <string name="flight_duration">FLIGHT TIME</string>
+    <string name="flight_duration">TIME</string>
     <string name="duration_hint">00:00</string>
-    <string name="activate_plan">ACTIVATE PLAN</string>
-    <string name="date_hint">2015/08/03</string>
+    <string name="activate_plan">ACTIVATE</string>
+    <string name="date_hint">05.05.2015</string>
     <string name="time_hint">09:26</string>
 
     <!-- Setting-->
@@ -92,9 +92,10 @@
     <string name="switch_btn_off">OFF</string>
     <string name="switch_btn_on">ON</string>
     <string name="reset">RESET</string>
-    <string name="altitude_hint">5m</string>
+    <string name="altitude_hint">5</string>
     <string name="speed">SPEED</string>
-    <string name="speed_hint">300.3km/h</string>
+    <string name="speed_hint">300.3</string>
+    <string name="speed_unit">km/h</string>
     <string name="target">TARGET</string>
     <string name="target_hint">600m</string>
     <string name="from_me">FROM ME</string>

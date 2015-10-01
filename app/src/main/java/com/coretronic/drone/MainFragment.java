@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,9 +28,9 @@ import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
-import com.coretronic.drone.piloting.settings.SettingViewPagerFragment;
+import com.coretronic.drone.settings.SettingFragment;
 import com.coretronic.drone.ui.StatusView;
-import com.coretronic.drone.utility.AppConfig;
+import com.coretronic.drone.util.AppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,81 +38,72 @@ import java.util.List;
 public class MainFragment extends UnBindDrawablesFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneDevice.OnDeviceChangedListener, DroneController.StatusChangedListener {
 
     private static final String ADD_NEW_DEVICE_TITLE = "Add New Device";
-
     private static final String TAG = MainFragment.class.getSimpleName();
     private static final String G2_IP = "192.168.42.1";
 
     private StatusView mStatusView;
     private Spinner mDroneDeviceSpinner;
 
-    private List<DroneDevice> mDroneDevices;
     private DeviceAdapter mDeviceAdapter;
     private MainActivity mMainActivity;
     private SharedPreferences mSharedPreferences;
 
     private final int TTS_RESULT_CODE = 0x1;
-    private Button btnLogout;
 
-    private void assignViews(View view) {
-        Button btnMissionPlan = (Button) view.findViewById(R.id.btn_mission_plan);
-        btnLogout = (Button) view.findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(this);
-        btnMissionPlan.setOnClickListener(this);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.main_fragment, container, false);
+    }
 
-        // 20150814 add flight history and flight setting button
-        Button btnFlightHistory = (Button) view.findViewById(R.id.btn_flight_history);
-        ImageButton btnFlightSetting = (ImageButton) view.findViewById(R.id.btn_flight_setting);
-        btnFlightHistory.setOnClickListener(this);
-        btnFlightSetting.setOnClickListener(this);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.btn_mission_plan).setOnClickListener(this);
+        view.findViewById(R.id.btn_flight_history).setOnClickListener(this);
+        view.findViewById(R.id.btn_flight_setting).setOnClickListener(this);
 
-        // version setting
-        TextView tvAppVersion = (TextView) view.findViewById(R.id.tv_app_version);
-        tvAppVersion.setText("v " + BuildConfig.VERSION_NAME);
+        ((TextView) view.findViewById(R.id.tv_app_version)).setText("v " + BuildConfig.VERSION_NAME);
+        Button logoutButton = (Button) view.findViewById(R.id.btn_logout);
+        logoutButton.setOnClickListener(this);
+        logoutButton.setText(mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, ""));
 
         mStatusView = (StatusView) view.findViewById(R.id.status);
 
-        mDroneDeviceSpinner = (Spinner) view.findViewById(R.id.spinner_drone_device);
-        mDroneDevices = new ArrayList<>();
-        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, "Select Device", 77));
-        mDroneDevices.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, ADD_NEW_DEVICE_TITLE, 88));
+        mDeviceAdapter = new DeviceAdapter(mMainActivity, R.layout.spinner_item, new ArrayList<DroneDevice>());
+        mDeviceAdapter.add(DroneDevice.FAKE_DRONE_DEVICE);
+        mDeviceAdapter.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, ADD_NEW_DEVICE_TITLE, 88));
 
-        mDeviceAdapter = new DeviceAdapter(getActivity(), R.layout.spinner_item, mDroneDevices);
+        mDroneDeviceSpinner = (Spinner) view.findViewById(R.id.spinner_drone_device);
         mDroneDeviceSpinner.setAdapter(mDeviceAdapter);
         mDroneDeviceSpinner.setOnItemSelectedListener(this);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMainActivity = (MainActivity) activity;
+        mSharedPreferences = mMainActivity.getPreferences(Context.MODE_PRIVATE);
+        if (!initCloudStorage()) {
+            Toast.makeText(mMainActivity, "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
+            mMainActivity.switchToLoginFragment();
+        }
         checkTTS();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_fragment, container, false);
-        assignViews(view);
-        return view;
+    private boolean initCloudStorage() {
+        String userId = mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "");
+        if (userId.length() == 0) {
+            return false;
+        }
+        mMainActivity.login(userId.replace("@", "_").replace(".", "_").toLowerCase());
+        return true;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mMainActivity = (MainActivity) getActivity();
-        mSharedPreferences = mMainActivity.getSharedPreferences(AppConfig.SHAREDPREFERENCE_ID, Context.MODE_PRIVATE);
-        String userId = mSharedPreferences.getString(LoginFragment.ARG_USER_ID, "");
-        Log.d("morris", "db name:" + userId);
-        // login the couchbase
-        if (userId.length() == 0) {
-            Toast.makeText(getActivity(), "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
-            getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
-            return;
-        } else {
-            mMainActivity.login(userId.replace("@", "_").replace(".", "_").toLowerCase());
-            btnLogout.setText(userId);
-        }
         mMainActivity.registerDeviceChangedListener(this);
         mMainActivity.registerDroneStatusChangedListener(this);
-
     }
 
     @Override
@@ -126,17 +116,15 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onDeviceAdded(final DroneDevice droneDevice) {
-        if (mDroneDevices.contains(droneDevice)) {
+        if (mDeviceAdapter.contains(droneDevice)) {
             return;
         }
-        mDroneDevices.add(droneDevice);
-        mDeviceAdapter.notifyDataSetChanged();
+        mDeviceAdapter.add(droneDevice);
     }
 
     @Override
     public void onDeviceRemoved(final DroneDevice droneDevice) {
-        mDroneDevices.remove(droneDevice);
-        mDeviceAdapter.notifyDataSetChanged();
+        mDeviceAdapter.remove(droneDevice);
         if (droneDevice.equals(mMainActivity.getConnectedDroneDevice())) {
             mDroneDeviceSpinner.setSelection(0);
             mStatusView.onDisconnect();
@@ -164,7 +152,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-        final DroneDevice droneDevice = mDroneDevices.get(position);
+        final DroneDevice droneDevice = mDeviceAdapter.getItem(position);
         Log.d(TAG, "onItemSelected: " + droneDevice.getName());
 
         if (droneDevice == mMainActivity.getConnectedDroneDevice()) {
@@ -180,8 +168,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         mMainActivity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
             @Override
             public void onConnected() {
-                Toast.makeText(getActivity().getApplicationContext(), "Init controller" + droneDevice.getName(),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Init controller" + droneDevice.getName(), Toast.LENGTH_LONG).show();
                 mMainActivity.setConnectedDroneDevice(droneDevice);
                 mMainActivity.initialSetting();
                 mMainActivity.readParameter();
@@ -190,7 +177,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             @Override
             public void onConnectFail() {
                 mDroneDeviceSpinner.setSelection(0);
-                Toast.makeText(getActivity().getApplicationContext(), "Init controller error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Init controller error", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -201,23 +188,28 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     }
 
+    private void clearUserInfo() {
+
+        mSharedPreferences.edit()
+                .putString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "")
+                .putString(AppConfig.SHARED_PREFERENCE_USER_PASSWORD_KEY, "")
+                .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, false)
+                .apply();
+    }
+
     @Override
     public void onClick(View v) {
         Fragment fragment = null;
         switch (v.getId()) {
             case R.id.btn_logout:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
                 Dialog dialog = builder.setTitle("Log Out")
                         .setMessage("Do you want to log out?")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mSharedPreferences.edit()
-                                        .putString(LoginFragment.ARG_USER_ID, "")
-                                        .putString(LoginFragment.ARG_USER_PW, "")
-                                        .putBoolean(LoginFragment.ARG_STAY_LOGGED, false)
-                                        .apply();
-                                getFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+                                clearUserInfo();
+                                mMainActivity.switchToLoginFragment();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -236,7 +228,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_HISTORY);
                 break;
             case R.id.btn_flight_setting:
-                fragment = new SettingViewPagerFragment();
+                fragment = new SettingFragment();
                 break;
         }
         if (fragment != null) {
@@ -266,22 +258,22 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
     public class DeviceAdapter extends ArrayAdapter<DroneDevice> {
 
-        private Activity context;
-        List<DroneDevice> deer;
+        private List<DroneDevice> droneDevices;
 
-        public DeviceAdapter(Activity context, int resource, List<DroneDevice> deer) {
+        public DeviceAdapter(Activity context, int resource, List<DroneDevice> droneDevices) {
+            super(context, resource, droneDevices);
+            this.droneDevices = droneDevices;
+        }
 
-            super(context, resource, deer);
-            this.context = context;
-            this.deer = deer;
-
+        public boolean contains(DroneDevice droneDevice) {
+            return droneDevices.contains(droneDevice);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.spinner_style_main, parent, false);
+                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.spinner_style_main, parent, false);
                 holder = new ViewHolder();
                 holder.textView = (TextView) convertView.findViewById(R.id.spinner_title_tv);
                 convertView.setTag(holder);
@@ -294,9 +286,9 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
+            ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false);
+                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.spinner_item, parent, false);
                 holder = new ViewHolder();
                 holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
                 convertView.setTag(holder);

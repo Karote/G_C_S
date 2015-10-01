@@ -85,7 +85,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="12dp"
-                    android:background="@drawable/icon_main_setting_button"
+                    android:background="@drawable/main_fragment_main_setting_button_icon"
                     android:gravity="center"/>
             </RelativeLayout>
 

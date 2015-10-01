@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.R;
@@ -17,7 +16,6 @@ import com.coretronic.drone.model.Mission;
 public class TapAndGoFragment extends MavInfoFragment {
 
     private final static int DEFAULT_ALTITUDE = 8;
-    private FrameLayout layout_tapAndGoDialog = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +29,8 @@ public class TapAndGoFragment extends MavInfoFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Go & Stop & Location Button Panel
+        view.findViewById(R.id.plan_stop_button_divider).setVisibility(View.GONE);
+        view.findViewById(R.id.plan_stop_button).setVisibility(View.GONE);
         view.findViewById(R.id.drone_landing_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.my_location_button).setOnClickListener(onPlanningBtnClickListener);
@@ -38,8 +38,6 @@ public class TapAndGoFragment extends MavInfoFragment {
         view.findViewById(R.id.fit_map_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.map_type_button).setOnClickListener(onPlanningBtnClickListener);
         // Tap and Go
-        layout_tapAndGoDialog = (FrameLayout) view.findViewById(R.id.tap_and_go_container);
-         layout_tapAndGoDialog.setVisibility(View.GONE);
     }
 
     private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -73,12 +71,7 @@ public class TapAndGoFragment extends MavInfoFragment {
         }
     };
 
-    public void hideTapAndGoDialogFragment(boolean isGo, int alt, float lat, float lng) {
-        layout_tapAndGoDialog.setVisibility(View.GONE);
-        if (!isGo) {
-            mMapViewFragment.clearTapMarker();
-            return;
-        }
+    public void executeTapAndGoMission(int alt, float lat, float lng) {
         DroneController droneController = mMapViewFragment.getDroneController();
 
         if (droneController != null) {
@@ -88,13 +81,11 @@ public class TapAndGoFragment extends MavInfoFragment {
     }
 
     @Override
-    public void onClick(float lat, float lon) {
+    public void onMapClickEvent(float lat, float lon) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         TapAndGoDialogFragment tapAndGoDialogFragment = TapAndGoDialogFragment.newInstance(DEFAULT_ALTITUDE, lat, lon);
         fragmentTransaction
                 .replace(R.id.tap_and_go_container, tapAndGoDialogFragment, TapAndGoDialogFragment.class.getSimpleName())
                 .commit();
-        layout_tapAndGoDialog.setVisibility(View.VISIBLE);
-
     }
 }

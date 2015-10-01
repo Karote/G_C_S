@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="168dp">
+
+    <View
+        android:id="@+id/background_view"
+        android:layout_width="match_parent"
+        android:layout_height="108dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/instrument_bg" />
+
+
+    <TextView
+        android:id="@+id/from_me_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/from_me"
+        android:textColor="@color/drone_info_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/from_me_distance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@id/from_me_title"
+        android:layout_toRightOf="@id/from_me_title"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/from_me_hint"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/target_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_toEndOf="@id/from_me_distance_text"
+        android:layout_toRightOf="@id/from_me_distance_text"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/target"
+        android:textColor="@color/drone_info_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/target_distance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@id/target_title"
+        android:layout_toRightOf="@id/target_title"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/target_hint"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
+    <include
+        android:id="@+id/aircraft_compass"
+        layout="@layout/aircraft_compass"
+        android:layout_width="@dimen/aircraft_compass_size"
+        android:layout_height="@dimen/aircraft_compass_size"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp" />
+
+    <com.coretronic.drone.ui.SeekArc
+        android:id="@+id/altitude_progress_bar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignTop="@id/background_view"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="18dp"
+        android:layout_toLeftOf="@id/aircraft_compass"
+        android:layout_toStartOf="@id/aircraft_compass"
+        android:padding="15dp"
+        app:arcColor="@color/white_transparent_40"
+        app:arcWidth="15dp"
+        app:max="500"
+        app:progressColor="@color/blue_sky"
+        app:rotation="180"
+        app:startAngle="0"
+        app:sweepAngle="270" />
+
+    <com.coretronic.drone.ui.TextViewWithoutPaddings
+        android:id="@+id/altitude_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/altitude_progress_bar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/altitude_progress_bar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="44dp"
+        android:layout_marginStart="44dp"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/altitude"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <com.coretronic.drone.ui.TextViewWithoutPaddings
+        android:id="@+id/altitude_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/altitude_title"
+        android:layout_alignLeft="@id/altitude_progress_bar"
+        android:layout_alignStart="@id/altitude_progress_bar"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="44dp"
+        android:layout_marginStart="44dp"
+        android:fontFamily="@string/font_roboto_condensed"
+        android:text="@string/altitude_hint"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <com.coretronic.drone.ui.TextViewWithoutPaddings
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/altitude_title"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@id/altitude_text"
+        android:layout_toRightOf="@id/altitude_text"
+        android:fontFamily="@string/font_roboto_condensed"
+        android:text="@string/unit_in_meter"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+
+    <com.coretronic.drone.ui.SeekArc
+        android:id="@+id/speed_progress_bar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignTop="@id/background_view"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:layout_toEndOf="@id/aircraft_compass"
+        android:layout_toRightOf="@id/aircraft_compass"
+        android:padding="15dp"
+        app:arcColor="@color/white_transparent_40"
+        app:arcWidth="15dp"
+        app:max="500"
+        app:progressColor="@color/blue_sky"
+        app:rotation="180"
+        app:startAngle="0"
+        app:sweepAngle="270" />
+
+    <com.coretronic.drone.ui.TextViewWithoutPaddings
+        android:id="@+id/speed_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/speed_progress_bar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/speed_progress_bar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="44dp"
+        android:layout_marginStart="44dp"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/speed"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <com.coretronic.drone.ui.TextViewWithoutPaddings
+        android:id="@+id/speed_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/altitude_title"
+        android:layout_alignLeft="@id/speed_progress_bar"
+        android:layout_alignStart="@id/speed_progress_bar"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="44dp"
+        android:layout_marginStart="44dp"
+        android:fontFamily="@string/font_roboto_condensed"
+        android:text="@string/speed_hint"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <com.coretronic.drone.ui.TextViewWithoutPaddings
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/speed_title"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@id/speed_text"
+        android:layout_toRightOf="@id/speed_text"
+        android:fontFamily="@string/font_roboto_condensed"
+        android:text="@string/speed_unit"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/location_lng_text"
+        android:layout_width="@dimen/mav_info_location_text_width"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="@string/font_roboto_regular"
+        android:gravity="end"
+        android:text="@string/longitude_hint"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/location_lat_text"
+        android:layout_width="@dimen/mav_info_location_text_width"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_toLeftOf="@id/location_lng_text"
+        android:layout_toStartOf="@id/location_lng_text"
+        android:fontFamily="@string/font_roboto_regular"
+        android:gravity="end"
+        android:text="@string/latitude_hint"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@id/location_lat_text"
+        android:layout_toStartOf="@id/location_lat_text"
+        android:background="@color/white_transparent_15" />
+
+    <TextView
+        android:id="@+id/flight_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@id/divider"
+        android:layout_toStartOf="@id/divider"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/duration_hint"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/from_me_title"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="2dp"
+        android:layout_toLeftOf="@id/flight_time_text"
+        android:layout_toStartOf="@id/flight_time_text"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/flight_duration"
+        android:textColor="@color/drone_info_text"
+        android:textSize="12sp" />
+
+</RelativeLayout>

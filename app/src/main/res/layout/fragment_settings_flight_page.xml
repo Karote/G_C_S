@@ -49,22 +49,22 @@
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_altitude_max"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"/>
+                android:layout_height="wrap_content"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_rotation_max"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"/>
+                android:layout_height="wrap_content"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_tilt_angle_max"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"/>
+                android:layout_height="wrap_content"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_vertical_speed_max"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"/>
+                android:layout_height="wrap_content"/>
 
 
         </LinearLayout>
@@ -91,7 +91,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
@@ -120,13 +120,13 @@
                 <com.coretronic.drone.ui.SeekBarTextView
                     android:id="@+id/setting_bar_low_power_flash"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
@@ -154,7 +154,7 @@
                 <com.coretronic.drone.ui.SeekBarTextView
                     android:id="@+id/setting_bar_low_power_rtl"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"/>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -178,7 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="28dp"
             android:layout_gravity="left|center"
-            android:background="@drawable/bg_setting_button"
+            android:background="@drawable/setting_fragment_setting_button_bg"
             android:gravity="center"
             android:text="@string/execute"
             android:textColor="@color/white"

@@ -76,6 +76,11 @@ function initMap() {
             draggable : true
         });
     });
+
+    google.maps.event.addListener(map, 'bounds_changed', function(){
+        initializeNoWayPointZone(map.getBounds());
+    });
+
 }
 
 function initPlanningDroneMarker() {
@@ -144,7 +149,7 @@ function mapClickListener(event) {
         return;
     }
     if (mapClickable) {
-        AndroidFunction.onClick(event.latLng.lat(), event.latLng.lng());
+        AndroidFunction.onMapClickEvent(event.latLng.lat(), event.latLng.lng());
         // addMissionMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
     }
     if (isTapAndGoMode) {
