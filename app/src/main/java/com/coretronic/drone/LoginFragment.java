@@ -21,6 +21,7 @@ public class LoginFragment extends Fragment {
     private EditText mUserPasswordEditText;
     private CheckBox mIsStayLoginCheckBox;
     private SharedPreferences mSharedPreferences;
+    private MainActivity mMainActivity;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -35,6 +36,7 @@ public class LoginFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mMainActivity = (MainActivity) activity;
     }
 
     @Override
@@ -46,9 +48,6 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUserMailEditText = (EditText) view.findViewById(R.id.ed_user_id);
-        if (mSharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, false)) {
-            switchToMainFragment();
-        }
         mUserPasswordEditText = (EditText) view.findViewById(R.id.ed_user_pwd);
         mIsStayLoginCheckBox = (CheckBox) view.findViewById(R.id.chk_stay_logged);
         view.findViewById(R.id.login_ok_button).setOnClickListener(new OnClickListener() {
@@ -62,14 +61,10 @@ public class LoginFragment extends Fragment {
                             .putString(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, userPassword)
                             .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mIsStayLoginCheckBox.isChecked())
                             .apply();
-                    switchToMainFragment();
+                    mMainActivity.switchToMainFragment();
                 }
             }
         });
-    }
-
-    private void switchToMainFragment() {
-        getFragmentManager().beginTransaction().replace(R.id.frame_view, new MainFragment(), LoginFragment.class.getSimpleName()).commit();
     }
 
     private boolean checkInputDataValid(String mail, String password) {

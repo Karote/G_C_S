@@ -1,19 +1,20 @@
 package com.coretronic.drone;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
-import com.coretronic.drone.settings.Setting;
 import com.coretronic.drone.service.Parameter;
+import com.coretronic.drone.settings.Setting;
+import com.coretronic.drone.util.AppConfig;
 import com.coretronic.drone.util.ViewManager;
 
 import org.json.JSONArray;
@@ -38,7 +39,12 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        switchToLoginFragment();
+
+        if (isUserLoginCorrect()) {
+            switchToMainFragment();
+        } else {
+            switchToLoginFragment();
+        }
         initialSetting();
     }
 
@@ -91,10 +97,12 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         }
     }
 
-    public void switchToLoginFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName());
-        transaction.commit();
+    void switchToLoginFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_view, new LoginFragment(), LoginFragment.class.getSimpleName()).commit();
+    }
+
+    void switchToMainFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_view, new MainFragment(), MainFragment.class.getSimpleName()).commit();
     }
 
     public void registerDeviceChangedListener(DroneDevice.OnDeviceChangedListener deviceChangedListener) {
@@ -262,5 +270,19 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public boolean isUserLoginCorrect() {
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+
+        if (!sharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, false)) {
+            return false;
+        }
+
+        if (sharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "").trim().length() == 0) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -83,11 +83,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         super.onAttach(activity);
         mMainActivity = (MainActivity) activity;
         mSharedPreferences = mMainActivity.getPreferences(Context.MODE_PRIVATE);
-        if (!initCloudStorage()) {
-            Toast.makeText(mMainActivity, "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
-            mMainActivity.switchToLoginFragment();
-        }
-        checkTTS();
     }
 
     private boolean initCloudStorage() {
@@ -104,6 +99,11 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         super.onActivityCreated(savedInstanceState);
         mMainActivity.registerDeviceChangedListener(this);
         mMainActivity.registerDroneStatusChangedListener(this);
+        if (!initCloudStorage()) {
+            Toast.makeText(mMainActivity, "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
+            mMainActivity.switchToLoginFragment();
+        }
+        checkTTS();
     }
 
     @Override
