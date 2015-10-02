@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="settings_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">@dimen/settings_title_size</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
     <style name="mav_info_panel_layout_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">168dp</item>
         <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+    <style name="mav_info_value_text_view">
+        <item name="android:fontFamily">@string/font_roboto_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold|italic</item>
     </style>
 
     <style name="drone_control_button_group_layout_style">
@@ -15,5 +33,12 @@
     <style name="map_control_button_group_layout_style">
         <item name="android:layout_marginLeft">@dimen/map_control_button_group_left_margin</item>
         <item name="android:layout_marginTop">@dimen/map_control_button_group_top_margin</item>
+    </style>
+
+    <style name="mav_info_title_text_view">
+        <item name="android:fontFamily">@string/font_roboto_medium</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/drone_info_text</item>
+        <item name="android:layout_marginRight">2dp</item>
     </style>
 </resources>

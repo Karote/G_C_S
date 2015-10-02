@@ -33,11 +33,11 @@
     <string name="font_roboto_light">sans-serif-light</string>
     <string name="font_roboto_condensed">sans-serif-condensed</string>
     <!--API 17-->
-    <string name="font_roboto_thin">sans-serif-thin</string>
+    <string name="font_roboto_thin">sans-serif</string>
     <!-- API 21-->
-    <string name="font_roboto_medium">sans-serif-medium</string>
-    <string name="font_roboto_black">sans-serif-black</string>
-    <string name="font_roboto_condensed_light">sans-serif-condensed-light</string>
+    <string name="font_roboto_medium">sans-serif</string>
+    <string name="font_roboto_black">sans-serif</string>
+    <string name="font_roboto_condensed_light">sans-serif-condensed</string>
 
     <!-- mission common-->
     <string name="latitude">Latitude</string>

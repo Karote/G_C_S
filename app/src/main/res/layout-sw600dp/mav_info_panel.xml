@@ -11,37 +11,30 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/instrument_bg" />
 
-
     <TextView
         android:id="@+id/from_me_title"
+        style="@style/mav_info_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:fontFamily="@string/font_roboto_medium"
-        android:text="@string/from_me"
-        android:textColor="@color/drone_info_text"
-        android:textSize="12sp" />
+        android:text="@string/from_me"/>
 
     <TextView
         android:id="@+id/from_me_distance_text"
+        style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/from_me_title"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
         android:layout_toEndOf="@id/from_me_title"
         android:layout_toRightOf="@id/from_me_title"
-        android:fontFamily="@string/font_roboto_regular"
-        android:text="@string/from_me_hint"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:text="@string/from_me_hint"/>
 
     <TextView
         android:id="@+id/target_title"
+        style="@style/mav_info_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/from_me_title"
@@ -49,25 +42,17 @@
         android:layout_marginStart="28dp"
         android:layout_toEndOf="@id/from_me_distance_text"
         android:layout_toRightOf="@id/from_me_distance_text"
-        android:fontFamily="@string/font_roboto_medium"
-        android:text="@string/target"
-        android:textColor="@color/drone_info_text"
-        android:textSize="12sp" />
+        android:text="@string/target"/>
 
     <TextView
         android:id="@+id/target_distance_text"
+        style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/from_me_title"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
         android:layout_toEndOf="@id/target_title"
         android:layout_toRightOf="@id/target_title"
-        android:fontFamily="@string/font_roboto_regular"
-        android:text="@string/target_hint"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:text="@string/target_hint"/>
 
     <include
         android:id="@+id/aircraft_compass"
@@ -98,6 +83,7 @@
         app:sweepAngle="270" />
 
     <com.coretronic.drone.ui.TextViewWithoutPaddings
+        style="@style/mav_info_title_text_view"
         android:id="@+id/altitude_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -195,6 +181,7 @@
         android:textStyle="bold" />
 
     <com.coretronic.drone.ui.TextViewWithoutPaddings
+        style="@style/mav_info_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/speed_title"
@@ -211,7 +198,8 @@
 
     <TextView
         android:id="@+id/location_lng_text"
-        android:layout_width="@dimen/mav_info_location_text_width"
+        style="@style/mav_info_value_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/from_me_title"
         android:layout_alignParentEnd="true"
@@ -220,24 +208,17 @@
         android:layout_marginRight="8dp"
         android:fontFamily="@string/font_roboto_regular"
         android:gravity="end"
-        android:text="@string/longitude_hint"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:text="@string/longitude_hint"/>
 
     <TextView
         android:id="@+id/location_lat_text"
-        android:layout_width="@dimen/mav_info_location_text_width"
+        style="@style/mav_info_value_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/from_me_title"
         android:layout_toLeftOf="@id/location_lng_text"
         android:layout_toStartOf="@id/location_lng_text"
-        android:fontFamily="@string/font_roboto_regular"
-        android:gravity="end"
-        android:text="@string/latitude_hint"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:text="@string/latitude_hint"/>
 
     <View
         android:id="@+id/divider"
@@ -252,6 +233,7 @@
 
     <TextView
         android:id="@+id/flight_time_text"
+        style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/from_me_title"
@@ -259,11 +241,7 @@
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@id/divider"
         android:layout_toStartOf="@id/divider"
-        android:fontFamily="@string/font_roboto_regular"
-        android:text="@string/duration_hint"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:text="@string/duration_hint"/>
 
     <TextView
         android:layout_width="wrap_content"
