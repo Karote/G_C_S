@@ -42,6 +42,7 @@
     <dimen name="status_bar_battery_progress_left_margin">12dp</dimen>
     <dimen name="status_bar_battery_text_left_margin">2dp</dimen>
     <dimen name="status_bar_battery_text_size">12sp</dimen>
+    <dimen name="status_bar_communication_light_left_margin">0dp</dimen>
 
     <dimen name="instrument_compass_ruler_height">145dp</dimen>
     <dimen name="instrument_compass_level_width">64dp</dimen>
