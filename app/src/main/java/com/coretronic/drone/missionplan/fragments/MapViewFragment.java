@@ -150,6 +150,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         super.onStart();
         mGoogleApiClient.connect();
         mSaveFlag = true;
+        mDroneMap.onStart();
+
     }
 
     @Override
@@ -159,6 +161,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             mFusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
+        mDroneMap.onStop();
         mSaveFlag = false;
     }
 

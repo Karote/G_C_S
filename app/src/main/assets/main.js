@@ -83,6 +83,18 @@ function initMap() {
 
 }
 
+
+function enableGeoLocation(enable){
+    if(!GeoMarker){
+        return ;
+    }
+    if(enable){
+        GeoMarker.setMap(map);
+    }else{
+        GeoMarker.setMap(null);
+    }
+}
+
 function initPlanningDroneMarker() {
     var planning_drone_marker_outerOption = {
         icon : {

@@ -195,4 +195,11 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:setMapClickable(" + isAddMarkerEnable + ")");
     }
 
+    public void onStart() {
+        mMapWebView.loadUrl("javascript:enableGeoLocation(true)");
+    }
+
+    public void onStop() {
+        mMapWebView.loadUrl("javascript:enableGeoLocation(false)");
+    }
 }
