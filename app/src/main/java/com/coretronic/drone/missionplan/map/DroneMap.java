@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
+import com.coretronic.ibs.log.Logger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 
@@ -24,6 +27,7 @@ public class DroneMap implements OnMapEventCallback {
     private final Context mContext;
     private final Handler mHandler;
     private final WebView mMapWebView;
+    private final Gson mGson;
     private OnMapEventCallback mOnMapEventCallback;
 
     private boolean mIsTapAndGoMode = true;
@@ -120,15 +124,12 @@ public class DroneMap implements OnMapEventCallback {
         });
         mMapWebView.getSettings().setGeolocationEnabled(true);
         mMapWebView.loadUrl("file:///android_asset/GoogleMap.html");
+        mGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     }
 
     public void updateMissions(List<Mission> missions) {
-        mMapWebView.loadUrl("javascript:clearMissionPlanningMarkers()");
-        for (Mission mission : missions) {
-            int sn = missions.indexOf(mission) + 1;
-            mMapWebView.loadUrl("javascript:addMissionMarker(" + mission.getLatitude() + "," + mission.getLongitude() + "," + sn + ")");
-        }
+        mMapWebView.loadUrl("javascript:updateMissionMarkers(" + transMissionToJson(missions) + ")");
     }
 
     public void setMapToMyLocation() {
@@ -201,5 +202,9 @@ public class DroneMap implements OnMapEventCallback {
 
     public void onStop() {
         mMapWebView.loadUrl("javascript:enableGeoLocation(false)");
+    }
+    private String transMissionToJson(List<Mission> missions) {
+        Logger.debug(mGson.toJson(missions));
+        return mGson.toJson(missions);
     }
 }

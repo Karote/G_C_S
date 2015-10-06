@@ -11,7 +11,24 @@ function initPlanningMissionPolyline() {
     mission_plan_polyline = new google.maps.Polyline(mission_plan_polyline_options);
 }
 
+
+function updateMissionMarkers(missionInJson){
+    var missions = JSON.parse(JSON.stringify(missionInJson));
+
+    if(planning_mission_marker_array.length > missions.length){
+        clearMissionPlanningMarkers();
+    }
+
+    for (var i = 0; i < missions.length; i++) {
+        addMissionMarker(missions[i].latitude , missions[i].longitude , i + 1);
+    }
+}
+
 function addMissionMarker(lat, lng, serial_number) {
+
+    if(planning_mission_marker_array.length > serial_number){
+            return;
+    }
     var label_anchor_point_x = 4;
     if (serial_number > 9) {
         label_anchor_point_x = 8;
