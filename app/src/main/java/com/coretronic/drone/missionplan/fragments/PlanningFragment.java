@@ -62,7 +62,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             return;
         }
         mMissionItemAdapter.update(missionList);
-        mMapViewFragment.updateMissions(mMissionItemAdapter.cloneMissionList());
+        updateMissionToMap();
         mMapViewFragment.fitMapShowAllMission();
     }
 
@@ -90,7 +90,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
             @Override
             public void onItemDeleted(int position) {
-                mMapViewFragment.updateMissions(mMissionItemAdapter.cloneMissionList());
+                updateMissionToMap();
             }
 
             @Override
@@ -130,9 +130,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             DroneController droneController = mMapViewFragment.getDroneController();
             switch (v.getId()) {
                 case R.id.plan_go_button:
-                    List<Mission> droneMissionList = mMissionItemAdapter.cloneMissionList();
+                    List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                     if (droneMissionList == null || droneMissionList.size() == 0) {
-                        Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
+                        showToashMessage("There is no mission existed");
                         return;
                     }
                     if (droneController == null) {
@@ -176,6 +176,10 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         }
     };
 
+    private void showToashMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
     private DroneController.MissionLoaderListener missionLoaderListener = new DroneController.MissionLoaderListener() {
         @Override
         public void onLoadCompleted(final List<Mission> missions) {
@@ -183,7 +187,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 @Override
                 public void run() {
                     if (missions == null || missions.size() == 0) {
-                        Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
+                        showToashMessage("There is no mission existed");
                     } else {
                         DroneController droneController = mMapViewFragment.getDroneController();
                         if (droneController != null) {
@@ -198,16 +202,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         }
     };
 
-    public void missionAdapterSetData(List<Mission> missions) {
-        mMissionItemAdapter.update(missions);
-    }
-
-    public void missionAdapterClearData() {
-        mMissionItemAdapter.clearMission();
-        mMissionItemAdapter.notifyDataSetChanged();
-    }
-
-    public void missionAdapterShowDelete(boolean isShow) {
+    private void missionAdapterShowDelete(boolean isShow) {
         if (isShow) {
             mMissionItemAdapter.setDeleteLayoutVisible(true);
         } else {
@@ -239,7 +234,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     }
 
     private void updateMissionToMap() {
-        mMapViewFragment.updateMissions(mMissionItemAdapter.cloneMissionList());
+        mMapViewFragment.updateMissions(mMissionItemAdapter.getMissions());
     }
 
     @Override
@@ -254,10 +249,14 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.undo_button:
-                loadMissionFromDrone();
+                if (mMissionItemAdapter.undo()) {
+                    updateMissionToMap();
+                }else{
+                    showToashMessage("There is no undo item existed");
+                }
                 break;
             case R.id.delete_all_button:
-                missionAdapterClearData();
+                mMissionItemAdapter.clearMission();
                 missionAdapterShowDelete(false);
                 updateMissionToMap();
                 break;
@@ -290,10 +289,10 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                     mLoadMissionProgressDialog.dismiss();
                 }
                 if (missions == null || missions.size() == 0) {
-                    Toast.makeText(getActivity(), "There is no mission existed", Toast.LENGTH_LONG).show();
+                    showToashMessage("There is no mission existed");
                 } else {
-                    missionAdapterSetData(missions);
-                    mMapViewFragment.updateMissions(missions);
+                    mMissionItemAdapter.update(missions);
+                    updateMissionToMap();
                 }
             }
         });
@@ -319,9 +318,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     @Override
     public void onMapDragEndEvent(int index, float lat, float lon) {
-        mMissionItemAdapter.getMission(index).setLatitude(lat);
-        mMissionItemAdapter.getMission(index).setLongitude(lon);
-        mMissionItemAdapter.notifyDataSetChanged();
+        mMissionItemAdapter.updateMissionItemLocation(index , lat ,lon);
     }
 
     @Override
@@ -336,7 +333,5 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mMissionItemAdapter.onNothingSelected();
         mWayPointDetailPanel.setVisibility(View.GONE);
     }
-
-
 
 }

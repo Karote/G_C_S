@@ -16,19 +16,23 @@ import com.coretronic.drone.model.Mission.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by karot.chuang on 2015/5/15.
  */
 public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
 
+    private final static int UNDO_LIST_MAX_SIZE = 64;
     private List<Mission> mMissionList = null;
     private OnItemSelectedListener mItemClickListener = null;
     private boolean mIsDeleteLayoutVisible = false;
     private int mFocusIndex = -1;
+    private LimitedStack<List<Mission>> mUndoLists;
 
     public MissionItemListAdapter() {
         this.mMissionList = new ArrayList<>();
+        this.mUndoLists = new LimitedStack<>(UNDO_LIST_MAX_SIZE);
     }
 
     public Mission getSelectedItem() {
@@ -39,8 +43,20 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         if (mFocusIndex == -1) {
             return;
         }
+        mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.remove(mFocusIndex);
         mFocusIndex = -1;
+        notifyDataSetChanged();
+    }
+
+    public void updateMissionItemLocation(int index, float lat, float lon) {
+
+        List<Mission> missions = new ArrayList<>(mMissionList);
+        missions.set(index, missions.get(index).clone());
+        mUndoLists.push(missions);
+        Mission mission = getMission(index);
+        mission.setLatitude(lat);
+        mission.setLongitude(lon);
         notifyDataSetChanged();
     }
 
@@ -106,8 +122,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         viewHolder.deleteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMissionList.remove(position);
-                notifyDataSetChanged();
+                remove(position);
                 if (mItemClickListener != null) {
                     mItemClickListener.onItemDeleted(position);
                 }
@@ -166,29 +181,40 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     public void add(Mission mission) {
+        mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.add(mission);
         notifyDataSetChanged();
     }
 
-    public void addAt(Mission mission, int position) {
-        mMissionList.add(position, mission);
-    }
-
-    public void remove(int position) {
-        mMissionList.remove(position);
-    }
-
     public void clearMission() {
+        mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.clear();
+        notifyDataSetChanged();
     }
 
     public void update(List<Mission> missions) {
+        mUndoLists.clear();
         mMissionList = missions;
         notifyDataSetChanged();
     }
 
-    public List<Mission> cloneMissionList() {
-        return new ArrayList<>(mMissionList);
+    private void remove(int position) {
+        mUndoLists.push(new ArrayList<>(mMissionList));
+        mMissionList.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public List<Mission> getMissions() {
+        return mMissionList;
+    }
+
+    public boolean undo() {
+        if (mUndoLists.size() <= 0) {
+            return false;
+        }
+        mMissionList = mUndoLists.pop();
+        notifyDataSetChanged();
+        return true;
     }
 
     public Mission getMission(int position) {
@@ -203,6 +229,32 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     public void onNothingSelected() {
         mFocusIndex = -1;
         notifyDataSetChanged();
+    }
+
+    private List<Mission> deepCopyMissionList() {
+        List<Mission> missions = new ArrayList<>();
+        for (Mission mission : mMissionList) {
+            missions.add(mission.clone());
+        }
+        return missions;
+    }
+
+    private class LimitedStack<E> extends Stack<E> {
+
+        private int maxSize = 50;
+
+        public LimitedStack(int undoListMaxSize) {
+            this.maxSize = undoListMaxSize;
+        }
+
+        @Override
+        public E push(E object) {
+            while (size() >= maxSize) {
+                remove(0);
+            }
+            super.push(object);
+            return object;
+        }
     }
 
 }
