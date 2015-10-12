@@ -51,13 +51,19 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void updateMissionItemLocation(int index, float lat, float lon) {
 
-        List<Mission> missions = new ArrayList<>(mMissionList);
-        missions.set(index, missions.get(index).clone());
-        mUndoLists.push(missions);
+        mUndoLists.push(cloneMissions());
         Mission mission = getMission(index);
         mission.setLatitude(lat);
         mission.setLongitude(lon);
         notifyDataSetChanged();
+    }
+
+    private List<Mission> cloneMissions() {
+        List<Mission> clonedMissions = new ArrayList<>();
+        for (Mission mission : mMissionList) {
+            clonedMissions.add(mission.clone());
+        }
+        return clonedMissions;
     }
 
     public interface OnItemSelectedListener {
