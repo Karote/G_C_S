@@ -667,21 +667,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updateDroneLocation(droneStatus.getLatitude(), droneStatus.getLongitude(), droneStatus.getYaw());
     }
 
-    public static Mission createNewMission(float latitude, float longitude, float altitude,
-                                           int waitSeconds, boolean autoContinue, int radius, Mission.Type type) {
-        Mission.Builder builder = new Mission.Builder();
-
-        builder.setLatitude(latitude);
-        builder.setLongitude(longitude);
-        builder.setAltitude(altitude);
-        builder.setWaitSeconds(waitSeconds);
-        builder.setAutoContinue(autoContinue);
-        builder.setRadius(radius);
-        builder.setType(type);
-
-        return builder.create();
-    }
-
     @Override
     public void onDeviceAdded(DroneDevice droneDevice) {
 

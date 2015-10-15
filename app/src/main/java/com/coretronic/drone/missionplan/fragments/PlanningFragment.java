@@ -18,6 +18,7 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter.OnItemSelectedListener;
 import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.Mission.Builder;
 import com.coretronic.drone.model.Mission.Type;
 
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
 public class PlanningFragment extends MavInfoFragment implements MissionLoaderListener {
 
     private final static String ARG_From_History = "argFromHistory";
-    private final static boolean DEFAULT_AUTO_CONTINUE = false;
+    private final static boolean DEFAULT_AUTO_CONTINUE = true;
     private final static int DEFAULT_ALTITUDE = 8;
     private final static int DEFAULT_WAIT_SECONDS = 0;
     private final static int DEFAULT_RADIUS = 0;
@@ -40,6 +41,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     private ProgressDialog mLoadMissionProgressDialog;
     private Button mPlanGoButton = null;
     private Button mDroneLandingButton = null;
+    private Mission.Builder mMissionBuilder;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -52,6 +54,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mMissionBuilder = new Builder();
+        mMissionBuilder.setAltitude(DEFAULT_ALTITUDE).setType(DEFAULT_TYPE).setAutoContinue(DEFAULT_AUTO_CONTINUE)
+                .setWaitSeconds(DEFAULT_WAIT_SECONDS).setRadius(DEFAULT_RADIUS);
         Bundle arguments = getArguments();
         if (arguments == null || !arguments.getBoolean(ARG_From_History)) {
             loadMissionFromDrone();
@@ -132,7 +137,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 case R.id.plan_go_button:
                     List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                     if (droneMissionList == null || droneMissionList.size() == 0) {
-                        showToashMessage("There is no mission existed");
+                        showToastMessage("There is no mission existed");
                         return;
                     }
                     if (droneController == null) {
@@ -176,7 +181,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         }
     };
 
-    private void showToashMessage(String message) {
+    private void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
@@ -187,7 +192,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 @Override
                 public void run() {
                     if (missions == null || missions.size() == 0) {
-                        showToashMessage("There is no mission existed");
+                        showToastMessage("There is no mission existed");
                     } else {
                         DroneController droneController = mMapViewFragment.getDroneController();
                         if (droneController != null) {
@@ -251,8 +256,8 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             case R.id.undo_button:
                 if (mMissionItemAdapter.undo()) {
                     updateMissionToMap();
-                }else{
-                    showToashMessage("There is no undo item existed");
+                } else {
+                    showToastMessage("There is no undo item existed");
                 }
                 break;
             case R.id.delete_all_button:
@@ -289,7 +294,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                     mLoadMissionProgressDialog.dismiss();
                 }
                 if (missions == null || missions.size() == 0) {
-                    showToashMessage("There is no mission existed");
+                    showToastMessage("There is no mission existed");
                 } else {
                     mMissionItemAdapter.update(missions);
                     updateMissionToMap();
@@ -318,13 +323,12 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     @Override
     public void onMapDragEndEvent(int index, float lat, float lon) {
-        mMissionItemAdapter.updateMissionItemLocation(index , lat ,lon);
+        mMissionItemAdapter.updateMissionItemLocation(index, lat, lon);
     }
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
-        mMissionItemAdapter.add(MapViewFragment.createNewMission(lat, lon, DEFAULT_ALTITUDE, DEFAULT_WAIT_SECONDS, DEFAULT_AUTO_CONTINUE,
-                DEFAULT_RADIUS, DEFAULT_TYPE));
+        mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).create());
         updateMissionToMap();
     }
 
