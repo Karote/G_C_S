@@ -2,14 +2,18 @@ package com.coretronic.drone.missionplan.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
@@ -17,8 +21,6 @@ import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
-
-import org.mavlink.messages.MAV_CMD;
 
 /**
  * Created by karot.chuang on 2015/6/23.
@@ -42,8 +44,8 @@ public class MissionItemDetailFragment extends Fragment {
     private final static int RTL_INDEX = 3;
 
     private TextView mSerialNumberTextView = null;
-    private TextView mLatitudeTextView = null;
-    private TextView mLongitudeTextView = null;
+    private EditText mLatitudeTextView = null;
+    private EditText mLongitudeTextView = null;
     private Spinner mType = null;
     private ImageView mTypeImageView = null;
     private AbstractWheel mAltitudeWheel = null;
@@ -54,7 +56,7 @@ public class MissionItemDetailFragment extends Fragment {
         MissionItemDetailFragment fragment = new MissionItemDetailFragment();
         Bundle args = new Bundle();
         args.putInt(ARGUMENT_INDEX, index);
-        args.putInt(ARGUMENT_TYPE, mission.getType() == null ? Type.WAY_POINT.getId() : mission.getType().getId());
+        args.putSerializable(ARGUMENT_TYPE, mission.getType() == null ? Type.WAY_POINT : mission.getType());
         args.putFloat(ARGUMENT_ALTITUDE, mission.getAltitude());
         args.putInt(ARGUMENT_DELAY, mission.getWaitSeconds());
         args.putFloat(ARGUMENT_LATITUDE, mission.getLatitude());
@@ -72,8 +74,27 @@ public class MissionItemDetailFragment extends Fragment {
 
     private void findViews(View fragmentView) {
         mSerialNumberTextView = (TextView) fragmentView.findViewById(R.id.way_point_detail_name_text);
-        mLatitudeTextView = (TextView) fragmentView.findViewById(R.id.way_point_detail_lat_text);
-        mLongitudeTextView = (TextView) fragmentView.findViewById(R.id.way_point_detail_lng_text);
+        mLatitudeTextView = (EditText) fragmentView.findViewById(R.id.way_point_detail_lat_text);
+        mLongitudeTextView = (EditText) fragmentView.findViewById(R.id.way_point_detail_lng_text);
+        mLatitudeTextView.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    mPlanningFragment.setItemMissionLatitude(Float.parseFloat(v.getText().toString()));
+                }
+                return false;
+            }
+        });
+
+        mLongitudeTextView.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    mPlanningFragment.setItemMissionLongitude(Float.parseFloat(v.getText().toString()));
+                }
+                return false;
+            }
+        });
         mType = (Spinner) fragmentView.findViewById(R.id.way_point_detail_type_spinner);
         mTypeImageView = (ImageView) fragmentView.findViewById(R.id.way_point_detail_type_icon);
         fragmentView.findViewById(R.id.btn_detail_delete).setOnClickListener(new View.OnClickListener() {
@@ -152,15 +173,17 @@ public class MissionItemDetailFragment extends Fragment {
             mSerialNumberTextView.setText(String.valueOf(arguments.getInt(ARGUMENT_INDEX)));
             mLatitudeTextView.setText(String.valueOf(arguments.getFloat(ARGUMENT_LATITUDE)));
             mLongitudeTextView.setText(String.valueOf(arguments.getFloat(ARGUMENT_LONGITUDE)));
-            mType.setSelection(typeToIndex(arguments.getInt(ARGUMENT_TYPE)));
-            switch (arguments.getInt(ARGUMENT_TYPE)) {
-                case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
+
+            Mission.Type missionType = (Mission.Type) arguments.getSerializable(ARGUMENT_TYPE);
+            mType.setSelection(typeToIndex(missionType));
+            switch (missionType) {
+                case TAKEOFF:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                     break;
-                case MAV_CMD.MAV_CMD_NAV_LAND:
+                case LAND:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_land);
                     break;
-                case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
+                case RTL:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                     break;
                 default:
@@ -172,15 +195,15 @@ public class MissionItemDetailFragment extends Fragment {
         }
     }
 
-    private int typeToIndex(int type) {
+    private int typeToIndex(Mission.Type type) {
         switch (type) {
-            case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
+            case TAKEOFF:
                 return TAKEOFF_INDEX;
-            case MAV_CMD.MAV_CMD_NAV_LAND:
+            case LAND:
                 return LAND_INDEX;
-            case MAV_CMD.MAV_CMD_NAV_RETURN_TO_LAUNCH:
+            case RTL:
                 return RTL_INDEX;
-            case MAV_CMD.MAV_CMD_NAV_WAYPOINT:
+            case WAY_POINT:
             default:
                 return WAYPOINT_INDEX;
         }

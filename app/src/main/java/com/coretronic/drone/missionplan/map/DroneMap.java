@@ -207,4 +207,7 @@ public class DroneMap implements OnMapEventCallback {
         Logger.debug(mGson.toJson(missions));
         return mGson.toJson(missions);
     }
+    public void clearMap() {
+        mMapWebView.loadUrl("javascript:mapClean()");
+    }
 }

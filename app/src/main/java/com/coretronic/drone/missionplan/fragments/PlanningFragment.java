@@ -334,4 +334,17 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         mWayPointDetailPanel.setVisibility(View.GONE);
     }
 
+    public void setItemMissionLatitude(float latitude) {
+        mMissionItemAdapter.getSelectedItem().setLatitude(latitude);
+        mMissionItemAdapter.notifyDataSetChanged();
+        mMapViewFragment.clearMap();
+        updateMissionToMap();
+    }
+
+    public void setItemMissionLongitude(float longitude) {
+        mMissionItemAdapter.getSelectedItem().setLongitude(longitude);
+        mMissionItemAdapter.notifyDataSetChanged();
+        mMapViewFragment.clearMap();
+        updateMissionToMap();
+    }
 }

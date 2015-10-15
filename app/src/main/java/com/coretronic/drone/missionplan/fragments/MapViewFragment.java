@@ -693,4 +693,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             mStatusView.onDisconnect();
         }
     }
+
+    public void clearMap() {
+        mDroneMap.clearMap();
+    }
 }

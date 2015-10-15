@@ -148,14 +148,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/latitude" />
 
-                <TextView
+                <EditText
                     android:id="@+id/way_point_detail_lat_text"
                     style="@style/way_point_detail_location_text_style"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/way_point_detail_location_text_height"
                     android:layout_marginTop="@dimen/way_point_detail_location_text_top_margin"
                     android:background="@color/mission_item_location_field_bg"
-                    android:text="@string/location_format" />
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:text="@string/location_format"/>
 
             </LinearLayout>
 
@@ -173,14 +175,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/longitude" />
 
-                <TextView
+                <EditText
                     android:id="@+id/way_point_detail_lng_text"
                     style="@style/way_point_detail_location_text_style"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/way_point_detail_location_text_height"
                     android:layout_marginTop="@dimen/way_point_detail_location_text_top_margin"
                     android:background="@color/mission_item_location_field_bg"
-                    android:text="@string/location_format" />
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:text="@string/location_format"/>
 
             </LinearLayout>
         </LinearLayout>
