@@ -1,10 +1,6 @@
 var map;
-var GeoMarker,
-    planning_drone_marker_outer,
-    planning_drone_marker_inner,
-    planning_drone_marker_arrow;
-var mapClickable,
-    isTapAndGoMode;
+var GeoMarker, planning_drone_marker_outer, planning_drone_marker_inner, planning_drone_marker_arrow;
+var mapClickable, isTapAndGoMode;
 var mission_plan_polyline;
 var droneHeading_old = 0;
 var onLabel = false;
@@ -16,26 +12,6 @@ function initialize() {
     initPlanningMissionPolyline();
     initHistoryMarkerPolyline();
     initTapGoMarkerPolyline();
-
-    var GeoMarkerOption = {
-        icon : {
-            path : google.maps.SymbolPath.CIRCLE,
-            scale : 10,
-            strokeColor : '#34a7ff',
-            strokeOpacity : 1,
-            fillColor : '#34a7ff',
-            fillOpacity : 1
-        }
-    }
-
-    GeoMarker = new GeolocationMarker(map, GeoMarkerOption);
-    GeoMarker.setCircleOptions({
-        fillColor : '#34a7ff',
-        strokeColor : '#34a7ff',
-        strokeOpacity : 1,
-        strokeWeight : 2
-    });
-
     AndroidFunction.onMapLoaded();
 
     // updateDroneLocation(247122990, 1209164080, 0);
@@ -77,20 +53,34 @@ function initMap() {
         });
     });
 
-    google.maps.event.addListener(map, 'bounds_changed', function(){
+    google.maps.event.addListener(map, 'bounds_changed', function() {
         initializeNoWayPointZone(map.getBounds());
+    });
+    var GeoMarkerOption = {
+        icon : {
+            path : google.maps.SymbolPath.CIRCLE,
+            scale : 10,
+            strokeColor : '#34a7ff',
+            strokeOpacity : 1,
+            fillColor : '#34a7ff',
+            fillOpacity : 1
+        }
+    }
+    GeoMarker = new GeolocationMarker(map, GeoMarkerOption);
+    GeoMarker.setCircleOptions({
+        fillColor : '#34a7ff',
+        strokeColor : '#34a7ff',
+        strokeOpacity : 1,
+        strokeWeight : 2
     });
 
 }
 
-
-function enableGeoLocation(enable){
-    if(!GeoMarker){
-        return ;
-    }
-    if(enable){
+function enableGeoLocation(enable) {
+    if (!GeoMarker) { return; }
+    if (enable) {
         GeoMarker.setMap(map);
-    }else{
+    } else {
         GeoMarker.setMap(null);
     }
 }
@@ -205,7 +195,7 @@ function setMapTo(setToLat, setToLng) {
 
 function updateDroneLocation(droneLat, droneLng, heading) {
     var dronePos = transLatLngToPosition(droneLat, droneLng);
-    
+
     planning_drone_marker_outer.setPosition(dronePos);
     planning_drone_marker_inner.setPosition(dronePos);
     planning_drone_marker_arrow.setPosition(dronePos);
@@ -234,4 +224,3 @@ function mapClean() {
     clearTapGoSetMarker();
     clearHistoryMarkerPath();
 }
-

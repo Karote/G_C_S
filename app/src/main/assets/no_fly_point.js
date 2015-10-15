@@ -5,18 +5,18 @@ opened_info = null;
 loadedLatLngBounds = new google.maps.LatLngBounds();
 
 category_a_icon = {
-        url : 'category_a_marker.png',
-        scaledSize : new google.maps.Size(40, 68),
-        origin : new google.maps.Point(0, 0),
-        anchor : new google.maps.Point(20, 68)
-    };
+    url : 'category_a_marker.png',
+    scaledSize : new google.maps.Size(40, 68),
+    origin : new google.maps.Point(0, 0),
+    anchor : new google.maps.Point(20, 68)
+};
 
 category_b_icon = {
-        url : 'category_b_marker.png',
-        scaledSize : new google.maps.Size(40, 68),
-        origin : new google.maps.Point(0, 0),
-        anchor : new google.maps.Point(20, 68)
-    };
+    url : 'category_b_marker.png',
+    scaledSize : new google.maps.Size(40, 68),
+    origin : new google.maps.Point(0, 0),
+    anchor : new google.maps.Point(20, 68)
+};
 
 function isCategoryA(category_code) {
     return category_code == 'A';
@@ -43,17 +43,17 @@ function categoryName(category_code) {
 function showCityLimitCircle(map, item, infowindow) {
 
     var options = {
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.6,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.2,
-        map: map,
-        center: marker_latlng,
-        radius: item[5] * 1000
+        strokeColor : '#FF0000',
+        strokeOpacity : 0.6,
+        strokeWeight : 2,
+        fillColor : '#FF0000',
+        fillOpacity : 0.2,
+        map : map,
+        center : marker_latlng,
+        radius : item[5] * 1000
     };
     var cityCircle = new google.maps.Circle(options);
-    google.maps.event.addListener(cityCircle, 'click', function () {
+    google.maps.event.addListener(cityCircle, 'click', function() {
         if (opened_info) {
             opened_info.close();
         }
@@ -62,7 +62,6 @@ function showCityLimitCircle(map, item, infowindow) {
     });
 
 }
-
 
 function show(map, item, category) {
 
@@ -73,7 +72,7 @@ function show(map, item, category) {
         title += "<br/><small>[Red circle] No Fly Zone</small>"
     }
     var infowindow = new google.maps.InfoWindow({
-        content: title
+        content : title
     });
 
     if (isCategoryCityLimit()) {
@@ -92,38 +91,38 @@ function show(map, item, category) {
 
     var marker_latlng = new google.maps.LatLng(item[0], item[1]);
     var marker = new google.maps.Marker({
-        position: marker_latlng,
-        popup: true,
-        icon: image,
-        map: map
+        position : marker_latlng,
+        popup : true,
+        icon : image,
+        map : map
     });
 
     // Add the circle for this city to the map.
     new google.maps.Circle({
-        strokeColor: color,
-        strokeOpacity: 0.6,
-        strokeWeight: 2,
-        fillColor: color,
-        fillOpacity: 0.4,
-        map: map,
-        center: marker.position,
-        radius: mile * 1609.344
+        strokeColor : color,
+        strokeOpacity : 0.6,
+        strokeWeight : 2,
+        fillColor : color,
+        fillOpacity : 0.4,
+        map : map,
+        center : marker.position,
+        radius : mile * 1609.344
     });
 
     if (isCategoryA(category)) { // Category A
         new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.6,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.2,
-            map: map,
-            center: marker.position,
-            radius: 1.5 * 1609.344
+            strokeColor : '#FF0000',
+            strokeOpacity : 0.6,
+            strokeWeight : 2,
+            fillColor : '#FF0000',
+            fillOpacity : 0.2,
+            map : map,
+            center : marker.position,
+            radius : 1.5 * 1609.344
         });
     }
 
-    google.maps.event.addListener(marker, 'click', function () {
+    google.maps.event.addListener(marker, 'click', function() {
         if (opened_info) {
             opened_info.close();
         }
@@ -132,21 +131,17 @@ function show(map, item, category) {
     });
 }
 
-function isNeedToShowItem(item , latlngBounds){
+function isNeedToShowItem(item, latlngBounds) {
 
-    if(item['show']){
-        return false;
-    }
+    if (item['show']) { return false; }
 
     return latlngBounds.contains(new google.maps.LatLng(item[0], item[1]));
 }
 
-function checkNoFlyZone(pointList, pointCategory , latlngBounds) {
+function checkNoFlyZone(pointList, pointCategory, latlngBounds) {
 
-    pointList.forEach(function (item) {
-        if (!isNeedToShowItem(item, latlngBounds)) {
-            return;
-        }
+    pointList.forEach(function(item) {
+        if (!isNeedToShowItem(item, latlngBounds)) { return; }
         item['show'] = true;
         show(map, item, pointCategory)
     });
@@ -154,12 +149,10 @@ function checkNoFlyZone(pointList, pointCategory , latlngBounds) {
 }
 
 function initializeNoWayPointZone(latlngBounds) {
-    if(loadedLatLngBounds.contains(latlngBounds.getNorthEast())&&loadedLatLngBounds.contains(latlngBounds.getSouthWest())){
-        return ;
-    }
+    if (loadedLatLngBounds.contains(latlngBounds.getNorthEast()) && loadedLatLngBounds.contains(latlngBounds.getSouthWest())) { return; }
     loadedLatLngBounds = loadedLatLngBounds.union(latlngBounds);
-    checkNoFlyZone(mc_category_city_limit, 'city_limit' , loadedLatLngBounds);
-    checkNoFlyZone(mc_category_a, 'A',loadedLatLngBounds);
-    checkNoFlyZone(mc_category_b, 'B',loadedLatLngBounds);
+    checkNoFlyZone(mc_category_city_limit, 'city_limit', loadedLatLngBounds);
+    checkNoFlyZone(mc_category_a, 'A', loadedLatLngBounds);
+    checkNoFlyZone(mc_category_b, 'B', loadedLatLngBounds);
 
 }

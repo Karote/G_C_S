@@ -11,24 +11,21 @@ function initPlanningMissionPolyline() {
     mission_plan_polyline = new google.maps.Polyline(mission_plan_polyline_options);
 }
 
-
-function updateMissionMarkers(missionInJson){
+function updateMissionMarkers(missionInJson) {
     var missions = JSON.parse(JSON.stringify(missionInJson));
 
-    if(planning_mission_marker_array.length > missions.length){
+    if (planning_mission_marker_array.length > missions.length) {
         clearMissionPlanningMarkers();
     }
 
     for (var i = 0; i < missions.length; i++) {
-        addMissionMarker(missions[i].latitude , missions[i].longitude , i + 1);
+        addMissionMarker(missions[i].latitude, missions[i].longitude, i + 1);
     }
 }
 
 function addMissionMarker(lat, lng, serial_number) {
 
-    if(planning_mission_marker_array.length > serial_number){
-            return;
-    }
+    if (planning_mission_marker_array.length > serial_number) { return; }
     var label_anchor_point_x = 4;
     if (serial_number > 9) {
         label_anchor_point_x = 8;
@@ -73,9 +70,7 @@ function addMissionMarker(lat, lng, serial_number) {
         mission_plan_polyline.getPath().setAt(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition());
     });
     google.maps.event.addListener(planning_mission_marker, 'dragend', function(e) {
-        AndroidFunction.onMapDragEndEvent(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition().lat(),
-        planning_mission_marker
-        .getPosition().lng());
+        AndroidFunction.onMapDragEndEvent(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition().lat(), planning_mission_marker.getPosition().lng());
     });
 
     var path = mission_plan_polyline.getPath();
@@ -84,10 +79,8 @@ function addMissionMarker(lat, lng, serial_number) {
 }
 
 function clearMissionPlanningMarkers() {
-    var i,
-        j;
-    for ( i = 0,
-    j = planning_mission_marker_array.length; i < j; i++) {
+    var i, j;
+    for (i = 0, j = planning_mission_marker_array.length; i < j; i++) {
         planning_mission_marker_array[i].setMap(null);
     }
     planning_mission_marker_array = [];
@@ -97,11 +90,9 @@ function clearMissionPlanningMarkers() {
 }
 
 function fitMapShowAllMissionPlanning() {
-    var i,
-        j;
+    var i, j;
     var bounds = new google.maps.LatLngBounds();
-    for ( i = 0,
-    j = planning_mission_marker_array.length; i < j; i++) {
+    for (i = 0, j = planning_mission_marker_array.length; i < j; i++) {
         bounds.extend(planning_mission_marker_array[i].position);
     }
     map.fitBounds(bounds);
