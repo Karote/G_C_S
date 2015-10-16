@@ -52,7 +52,6 @@
     <dimen name="map_control_button_group_left_margin">12dp</dimen>
     <dimen name="map_control_button_group_top_margin">12dp</dimen>
 
-
     <dimen name="history_fragment_activate_button_width">144dp</dimen>
     <dimen name="history_fragment_activate_button_height">60dp</dimen>
     <dimen name="history_fragment_activate_button_left_margin">12dp</dimen>
@@ -71,4 +70,6 @@
 
     <dimen name="control_progress_circle_thumb_size">48dp</dimen>
     <dimen name="aircraft_compass_ruler_outer_padding">16dp</dimen>
+    <dimen name="mission_item_recycle_view_bottom_margin">56dp</dimen>
+    <dimen name="mission_item_recycle_view_top_margin">8dp</dimen>
 </resources>

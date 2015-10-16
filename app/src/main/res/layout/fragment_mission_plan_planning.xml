@@ -16,13 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mission_item_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/mission_item_recycle_view_top_margin"
+        android:layout_marginBottom="@dimen/mission_item_recycle_view_bottom_margin"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
 

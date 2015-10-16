@@ -153,5 +153,7 @@
     <dimen name="history_fragment_log_listitem_time_text_size">12sp</dimen>
     <dimen name="control_progress_circle_thumb_size">38dp</dimen>
     <dimen name="aircraft_compass_ruler_outer_padding">4dp</dimen>
+    <dimen name="mission_item_recycle_view_bottom_margin">0dp</dimen>
+    <dimen name="mission_item_recycle_view_top_margin">0dp</dimen>
 
 </resources>
