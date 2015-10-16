@@ -102,8 +102,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
         if (mIsDeleteLayoutVisible) {
             viewHolder.deletePanel.setVisibility(View.VISIBLE);
+            viewHolder.rowItemLayout.setEnabled(false);
         } else {
             viewHolder.deletePanel.setVisibility(View.GONE);
+            viewHolder.rowItemLayout.setEnabled(true);
         }
 
         viewHolder.rowItemLayout.setOnClickListener(new OnClickListener() {
