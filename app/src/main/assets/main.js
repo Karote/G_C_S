@@ -12,6 +12,7 @@ function initialize() {
     initPlanningMissionPolyline();
     initHistoryMarkerPolyline();
     initTapGoMarkerPolyline();
+    initSurvey();
     AndroidFunction.onMapLoaded();
 
     // updateDroneLocation(247122990, 1209164080, 0);
