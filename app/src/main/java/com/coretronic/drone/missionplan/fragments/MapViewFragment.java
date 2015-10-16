@@ -55,7 +55,7 @@ import java.util.List;
 public class MapViewFragment extends Fragment implements OnClickListener, LocationListener, ConnectionCallbacks,
         OnConnectionFailedListener, StatusChangedListener, OnDeviceChangedListener {
 
-    private static final String ARGUMENT_INDEX_KEY = "fragment_index_index";
+    private static final String ARGUMENT_INDEX_KEY = "fragment_index";
 
     public static final int FRAGMENT_TYPE_PLANNING = 0;
     public static final int FRAGMENT_TYPE_HISTORY = 1;
@@ -69,8 +69,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private int mCurrentFragmentType = 0;
     private StatusView mStatusView = null;
 
-    private LinearLayout markerEditorControlPanel_layout = null;
-    private LinearLayout deleteOption_layout = null;
+    private LinearLayout mMarkerEditorControlPanel = null;
+    private LinearLayout mDeleteOptionPanel = null;
 
     private View mUndoButton = null;
     private View mDeleteButton = null;
@@ -421,8 +421,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void setUpEditMarkerLayout(View view) {
-        markerEditorControlPanel_layout = (LinearLayout) view.findViewById(R.id.marker_editor_control_panel);
-        deleteOption_layout = (LinearLayout) view.findViewById(R.id.delete_option_layout);
+        mMarkerEditorControlPanel = (LinearLayout) view.findViewById(R.id.marker_editor_control_panel);
+        mDeleteOptionPanel = (LinearLayout) view.findViewById(R.id.delete_option_layout);
 
         mUndoButton = view.findViewById(R.id.undo_button);
         mUndoButton.setOnClickListener(this);
@@ -476,19 +476,19 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case FRAGMENT_TYPE_ACTIVATE:
             case FRAGMENT_TYPE_PLANNING:
                 mDroneMap.init(false, true);
-                markerEditorControlPanel_layout.setVisibility(View.VISIBLE);
+                mMarkerEditorControlPanel.setVisibility(View.VISIBLE);
                 mUndoButton.setVisibility(View.VISIBLE);
                 mDeleteButton.setVisibility(View.VISIBLE);
                 break;
             case FRAGMENT_TYPE_HISTORY:
                 mDroneMap.init(false, false);
-                markerEditorControlPanel_layout.setVisibility(View.GONE);
+                mMarkerEditorControlPanel.setVisibility(View.GONE);
                 setDeleteOptionShow(false);
                 break;
             default:
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mDroneMap.init(true, true);
-                markerEditorControlPanel_layout.setVisibility(View.VISIBLE);
+                mMarkerEditorControlPanel.setVisibility(View.VISIBLE);
                 mUndoButton.setVisibility(View.GONE);
                 mDeleteButton.setVisibility(View.GONE);
                 break;
@@ -602,12 +602,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     private void setDeleteOptionShow(boolean isShow) {
         if (isShow) {
-            deleteOption_layout.setVisibility(View.VISIBLE);
+            mDeleteOptionPanel.setVisibility(View.VISIBLE);
             mMissionPlanTypeRadioGroup.setVisibility(View.GONE);
             mDeleteButton.setVisibility(View.GONE);
             mUndoButton.setVisibility(View.GONE);
         } else {
-            deleteOption_layout.setVisibility(View.GONE);
+            mDeleteOptionPanel.setVisibility(View.GONE);
             mMissionPlanTypeRadioGroup.setVisibility(View.VISIBLE);
             mDeleteButton.setVisibility(View.VISIBLE);
             mUndoButton.setVisibility(View.VISIBLE);
