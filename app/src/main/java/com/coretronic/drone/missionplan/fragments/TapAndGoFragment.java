@@ -9,13 +9,28 @@ import android.view.ViewGroup;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.Mission.Builder;
+import com.coretronic.drone.model.Mission.Type;
 
 /**
  * Created by karot.chuang on 2015/7/21.
  */
 public class TapAndGoFragment extends MavInfoFragment {
 
+    private final static boolean DEFAULT_AUTO_CONTINUE = true;
     private final static int DEFAULT_ALTITUDE = 8;
+    private final static int DEFAULT_WAIT_SECONDS = 0;
+    private final static int DEFAULT_RADIUS = 0;
+    private final static Type DEFAULT_TYPE = Type.WAY_POINT;
+    private Mission.Builder mMissionBuilder;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mMissionBuilder = new Builder();
+        mMissionBuilder.setAltitude(DEFAULT_ALTITUDE).setType(DEFAULT_TYPE).setAutoContinue(DEFAULT_AUTO_CONTINUE)
+                .setWaitSeconds(DEFAULT_WAIT_SECONDS).setRadius(DEFAULT_RADIUS);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +90,7 @@ public class TapAndGoFragment extends MavInfoFragment {
         DroneController droneController = mMapViewFragment.getDroneController();
 
         if (droneController != null) {
-            droneController.moveToLocation(MapViewFragment.createNewMission(lat, lng, alt, 0, false, 0, Mission.Type.WAY_POINT));
+            droneController.moveToLocation(mMissionBuilder.setAltitude(alt).setLatitude(lat).setLongitude(lng).create());
             mMapViewFragment.setTapGoPath();
         }
     }
