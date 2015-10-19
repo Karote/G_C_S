@@ -95,10 +95,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:text="H.S" />
+                android:text="@string/groundSpeed" />
 
             <TextView
-                android:id="@+id/speed_text"
+                android:id="@+id/ground_speed_text"
                 style="@style/mav_info_content_text_style"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
@@ -119,10 +119,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:text="V.S" />
+                android:text="@string/climbSpeed" />
 
             <TextView
-                android:id="@+id/v_speed_text"
+                android:id="@+id/climb_speed_text"
                 style="@style/mav_info_content_text_style"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"

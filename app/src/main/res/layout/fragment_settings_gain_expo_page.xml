@@ -40,7 +40,7 @@
 
         <TextView
             style="@style/settings_title"
-            android:text="@string/attitude_gain"/>
+            android:text="@string/altitude_gain"/>
 
     </LinearLayout>
 
