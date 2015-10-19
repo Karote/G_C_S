@@ -69,7 +69,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mission_plan_planning, container, false);
-        initMavInfoView(view, R.id.altitude_text, R.id.speed_text, R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
+        initAltitudeView(view, R.id.altitude_text, R.id.altitude_progress_bar);
+        initGroundSpeedView(view, R.id.ground_speed_text, R.id.ground_speed_progress_bar);
+        initMavInfoView(view, R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
         return view;
     }
 
@@ -251,7 +253,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             case R.id.undo_button:
                 if (mMissionItemAdapter.undo()) {
                     updateMissionToMap();
-                }else{
+                } else {
                     showToashMessage("There is no undo item existed");
                 }
                 break;
@@ -318,7 +320,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     @Override
     public void onMapDragEndEvent(int index, float lat, float lon) {
-        mMissionItemAdapter.updateMissionItemLocation(index , lat ,lon);
+        mMissionItemAdapter.updateMissionItemLocation(index, lat, lon);
     }
 
     @Override

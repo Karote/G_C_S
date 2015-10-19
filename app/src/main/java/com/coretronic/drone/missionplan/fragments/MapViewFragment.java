@@ -211,7 +211,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_ALTITUDE_UPDATE:
                 if (mCurrentFragment != null) {
-                    mCurrentFragment.onAltitdueUpdate(droneStatus.getAltitude());
+                    mCurrentFragment.onAltitudeUpdate(droneStatus.getAltitude());
                 }
                 mRecordItemBuilder.setAltitude(droneStatus.getAltitude());
                 break;

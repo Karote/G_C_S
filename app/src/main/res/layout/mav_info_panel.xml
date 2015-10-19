@@ -103,7 +103,7 @@
                 android:text="@string/groundSpeed" />
 
             <TextView
-                android:id="@+id/speed_text"
+                android:id="@+id/ground_speed_text"
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
