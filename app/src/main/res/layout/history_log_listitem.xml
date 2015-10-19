@@ -15,7 +15,7 @@
         <View
             android:id="@+id/view_focusbar"
             android:layout_width="8dp"
-            android:layout_height="@dimen/history_fragment_log_listitem_focus_bar_height"
+            android:layout_height="match_parent"
             android:background="@color/blue_sky"
             android:visibility="gone" />
 

@@ -1,10 +1,6 @@
 var map;
-var GeoMarker,
-    planning_drone_marker_outer,
-    planning_drone_marker_inner,
-    planning_drone_marker_arrow;
-var mapClickable,
-    isTapAndGoMode;
+var GeoMarker, planning_drone_marker_outer, planning_drone_marker_inner, planning_drone_marker_arrow;
+var mapClickable, isTapAndGoMode;
 var mission_plan_polyline;
 var droneHeading_old = 0;
 var onLabel = false;
@@ -77,20 +73,19 @@ function initMap() {
         });
     });
 
-    google.maps.event.addListener(map, 'bounds_changed', function(){
+    google.maps.event.addListener(map, 'bounds_changed', function() {
         initializeNoWayPointZone(map.getBounds());
     });
 
 }
 
-
-function enableGeoLocation(enable){
-    if(!GeoMarker){
-        return ;
+function enableGeoLocation(enable) {
+    if (!GeoMarker) {
+        return;
     }
-    if(enable){
+    if (enable) {
         GeoMarker.setMap(map);
-    }else{
+    } else {
         GeoMarker.setMap(null);
     }
 }
@@ -170,13 +165,7 @@ function mapClickListener(event) {
 }
 
 function transLatLngToPosition(lat, lng) {
-    var latStr = lat.toString();
-    var lngStr = lng.toString();
-    var new_latStr = latStr.slice(0, latStr.length - 7) + "." + latStr.slice(latStr.length - 7);
-    var new_lngStr = lngStr.slice(0, lngStr.length - 7) + "." + lngStr.slice(lngStr.length - 7);
-    var ret_lat = Number(new_latStr);
-    var ret_lng = Number(new_lngStr);
-    var pos = new google.maps.LatLng(ret_lat, ret_lng);
+    var pos = new google.maps.LatLng(lat / 10000000, lng / 10000000, true);
     return pos;
 }
 
@@ -205,7 +194,7 @@ function setMapTo(setToLat, setToLng) {
 
 function updateDroneLocation(droneLat, droneLng, heading) {
     var dronePos = transLatLngToPosition(droneLat, droneLng);
-    
+
     planning_drone_marker_outer.setPosition(dronePos);
     planning_drone_marker_inner.setPosition(dronePos);
     planning_drone_marker_arrow.setPosition(dronePos);

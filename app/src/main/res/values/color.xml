@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="light_gray">#ffc8c8c8</color>-->
-    <!--<color name="blue_sky">#34a7ff</color>-->
-    <!--<color name="blue_sky_light">#59c3f6</color>-->
-    <!--<color name="gray">#c6c9cd</color>-->
     <color name="gray_half_translucent">#7fc6c9cd</color>
-    <!--<color name="btn_login_press">#94d5f4</color>-->
-    <!--<color name="btn_sign_up_normal">#ebebeb</color>-->
-    <!--<color name="btn_sign_up_text">#9a9a9a</color>-->
-    <!--<color name="ed_login_bg_normal">#f0f0f0</color>-->
-    <!--<color name="seekbar_off_tv_color">#383838</color>-->
 
     <color name="blue_sky">#34A7FF</color>
-    <color name="blue_sky_light">#59C3F6</color>
     <color name="blue_light">#94D5F4</color>
     <color name="red">#FF0000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="gray">#383838</color>
     <color name="light_gray">#C8C8C8</color>
-    <color name="dark_gray">#AAA</color>
     <color name="transparent">#00000000</color>
 
     <color name="black_transparent_95">#F2000000</color>
@@ -36,26 +25,14 @@
     <color name="input_field_hint">#CDCDCD</color>
     <color name="input_field_text">#727272</color>
     <color name="input_filed_border_focus">#B1B1B1</color>
-    <color name="sign_up_btn_text">#9A9A9A</color>
-    <color name="sign_up_btn_border">#EBEBEB</color>
-    <color name="mission_item_dialog_title_info">#787878</color>
     <color name="mission_item_location_field_bg">#C9C9C9</color>
-    <color name="mission_item_bg">#E6000000</color>
-    <color name="mission_item_bg_p">#5C5C5C</color>
-    <color name="aircraft_arrow">#FF8800</color>
     <color name="control_button_group_divider_background">#D1D1D1</color>
-    <color name="location_info_field">#C9C9C9</color>
-    <color name="delete_btn_bg_n">#757575</color>
     <color name="drone_info_text">#D2D2D2</color>
-    <color name="spinner_bg_p">#CEEAFF</color>
-    <color name="go_btn_bg">#CC669900</color>
-    <color name="go_location_info_text">#6D6D6D</color>
     <color name="go_dialog_cancel">#929292</color>
     <color name="go_dialog_unit">#BDBDBD</color>
-    <color name="altitude_picker_bg_n">#C4E5FF</color>
-    <color name="activate_btn_bg_n">#E634A7FF</color>
-    <color name="activate_btn_border">#99787878</color>
 
     <color name="white_transparent_40">#66FFFFFF</color>
     <color name="white_transparent_15">#26FFFFFF</color>
+
+    <color name="point_list_item_row_name_unselected">#858585</color>
 </resources>

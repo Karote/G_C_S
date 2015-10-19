@@ -18,7 +18,7 @@
 
         <View
             android:layout_width="1dp"
-            android:layout_height="@dimen/map_control_button_group_divider_height"
+            android:layout_height="44dp"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             android:background="@color/control_button_group_divider_background" />
@@ -31,7 +31,7 @@
 
         <View
             android:layout_width="1dp"
-            android:layout_height="@dimen/map_control_button_group_divider_height"
+            android:layout_height="44dp"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             android:background="@color/control_button_group_divider_background" />
@@ -48,6 +48,8 @@
         android:id="@+id/map_type_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:background="@drawable/btn_plan_white"
         android:src="@drawable/map_control_group_map_type_button_icon" />
 

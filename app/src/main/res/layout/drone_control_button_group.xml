@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:background="@drawable/btn_plan_white"
-              android:gravity="center_vertical"
-              android:orientation="horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_plan_white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <FrameLayout
+    <Button
+        android:id="@+id/plan_go_button"
         android:layout_width="@dimen/drone_control_button_group_landing_button_width"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/btn_go"
+        android:textColor="#669900"
+        android:textSize="@dimen/control_button_group_landing_button_text_size"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-        <Button
-            android:id="@+id/plan_go_button"
-            style="@style/drone_go_text_style"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:text="@string/btn_go"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/drone_landing_button"
-            style="@style/drone_landing_text_style"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:text="@string/drone_landing_button_text"/>
-    </FrameLayout>
+    <Button
+        android:id="@+id/drone_landing_button"
+        android:layout_width="@dimen/drone_control_button_group_landing_button_width"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/drone_landing_button_text"
+        android:textColor="@drawable/primary_color_selector"
+        android:textSize="@dimen/control_button_group_landing_button_text_size"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="@dimen/drone_control_button_group_divider_height"
-        android:background="@color/control_button_group_divider_background"/>
+        android:background="@color/control_button_group_divider_background" />
 
     <ImageView
         android:id="@+id/drone_rtl_button"
@@ -41,15 +42,16 @@
         android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
         android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
         android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
-        android:src="@drawable/drone_control_group_drone_rtl_button_icon"/>
+        android:src="@drawable/drone_control_group_drone_rtl_button_icon" />
 
 
-    <LinearLayout android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginEnd="@dimen/drone_control_button_group_right_padding"
-                  android:layout_marginRight="@dimen/drone_control_button_group_right_padding"
-                  android:gravity="center"
-                  android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/drone_control_button_group_right_padding"
+        android:layout_marginRight="@dimen/drone_control_button_group_right_padding"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <View
             android:id="@+id/plan_stop_button_divider"
@@ -59,7 +61,7 @@
             android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
-            android:background="@color/control_button_group_divider_background"/>
+            android:background="@color/control_button_group_divider_background" />
 
         <ImageView
             android:id="@+id/plan_stop_button"
@@ -67,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/drone_control_button_group_btn_v_margin"
             android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
-            android:src="@drawable/drone_control_group_drone_stop_button_icon"/>
+            android:src="@drawable/drone_control_group_drone_stop_button_icon" />
 
     </LinearLayout>
 </LinearLayout>

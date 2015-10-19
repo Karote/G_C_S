@@ -11,28 +11,11 @@
         <item name="android:textColor">#ffffff</item>
     </style>
 
-    <style name="mav_info_panel_layout_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">168dp</item>
-        <item name="android:layout_alignParentBottom">true</item>
-    </style>
-
     <style name="mav_info_value_text_view">
         <item name="android:fontFamily">@string/font_roboto_regular</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold|italic</item>
-    </style>
-
-    <style name="drone_control_button_group_layout_style">
-        <item name="android:layout_marginLeft">@dimen/drone_control_button_group_left_margin</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_marginBottom">@dimen/drone_control_button_group_bottom_margin</item>
-    </style>
-
-    <style name="map_control_button_group_layout_style">
-        <item name="android:layout_marginLeft">@dimen/map_control_button_group_left_margin</item>
-        <item name="android:layout_marginTop">@dimen/map_control_button_group_top_margin</item>
     </style>
 
     <style name="mav_info_title_text_view">

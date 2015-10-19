@@ -1,6 +1,5 @@
 var tapgo_path_polyline;
-var tapgo_tap_marker,
-    tapgo_set_marker;
+var tapgo_tap_marker, tapgo_set_marker;
 
 function initTapGoMarkerPolyline() {
     tapgo_path_polyline = new google.maps.Polyline({

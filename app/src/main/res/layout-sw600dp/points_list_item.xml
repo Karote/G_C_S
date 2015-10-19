@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="62dp"
+    android:layout_alignParentEnd="true"
     android:layout_alignParentRight="true">
 
     <RelativeLayout
         android:id="@+id/rowItemLayout"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true">
 
         <ImageView
@@ -26,7 +28,7 @@
             android:background="@color/black_transparent_80"
             android:fontFamily="@string/font_roboto_black"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/point_list_item_row_name_unselected"
             android:textSize="18sp"
             tools:text="44" />
 

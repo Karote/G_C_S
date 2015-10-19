@@ -16,7 +16,6 @@
             style="@style/mav_info_title_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
             android:layout_marginLeft="@dimen/history_fragment_info_text_left_margin"
             android:layout_marginStart="@dimen/history_fragment_info_text_left_margin"
             android:text="@string/flight_distance" />
@@ -26,7 +25,6 @@
             style="@style/mav_info_content_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
             android:layout_marginEnd="10dp"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="10dp"
@@ -38,7 +36,6 @@
             style="@style/mav_info_title_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
             android:text="@string/flight_duration" />
 
         <TextView
@@ -46,7 +43,6 @@
             style="@style/mav_info_content_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/history_fragment_info_text_bottom_margin"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="8dp"
@@ -61,6 +57,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/flight_history_recycler_view_right_margin"
+        android:layout_marginRight="@dimen/flight_history_recycler_view_right_margin"
+        android:layout_marginTop="@dimen/flight_history_recycler_view_top_margin"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
 
@@ -84,9 +83,9 @@
         android:id="@+id/map_type_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/map_control_button_group_left_margin"
-        android:layout_marginStart="@dimen/map_control_button_group_left_margin"
-        android:layout_marginTop="@dimen/map_control_button_group_top_margin"
+        android:layout_marginLeft="@dimen/map_type_control_button_left_margin"
+        android:layout_marginStart="@dimen/map_type_control_button_left_margin"
+        android:layout_marginTop="@dimen/map_type_control_button_top_margin"
         android:background="@drawable/btn_plan_white"
         android:padding="@dimen/control_button_group_background_padding"
         android:src="@drawable/map_control_group_map_type_button_icon" />
