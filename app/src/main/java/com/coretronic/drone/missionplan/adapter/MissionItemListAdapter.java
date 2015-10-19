@@ -1,5 +1,6 @@
 package com.coretronic.drone.missionplan.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     private boolean mIsDeleteLayoutVisible = false;
     private int mFocusIndex = -1;
     private LimitedStack<List<Mission>> mUndoLists;
+    private Context mContext;
 
     public MissionItemListAdapter() {
         this.mMissionList = new ArrayList<>();
@@ -82,6 +84,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     @Override
     public MissionItemListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.points_list_item, viewGroup, false);
+        mContext = viewGroup.getContext();
         return new MissionItemListViewHolder(v);
     }
 
@@ -96,8 +99,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
         if (position == mFocusIndex) {
             viewHolder.focusBar.setVisibility(View.VISIBLE);
+            viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.white));
         } else {
             viewHolder.focusBar.setVisibility(View.INVISIBLE);
+            viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.point_list_item_row_name_unselected));
         }
 
         if (mIsDeleteLayoutVisible) {
@@ -113,12 +118,14 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             public void onClick(View v) {
                 if (mFocusIndex == position) {
                     viewHolder.focusBar.setVisibility(View.INVISIBLE);
+                    viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.point_list_item_row_name_unselected));
                     mFocusIndex = -1;
                     if (mItemClickListener != null) {
                         mItemClickListener.onNothingSelected();
                     }
                 } else {
                     viewHolder.focusBar.setVisibility(View.VISIBLE);
+                    viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.white));
                     mFocusIndex = position;
                     if (mItemClickListener != null) {
                         mItemClickListener.onItemSelected(mission, mFocusIndex);

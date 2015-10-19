@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/way_point_detail_fragment_width"
     android:layout_height="wrap_content"
+    android:background="@drawable/plan_point_detail_bg"
+    android:padding="0dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/way_point_detail_title_layout_height"
-        android:background="@color/black"
         android:orientation="horizontal">
 
         <TextView
@@ -16,9 +17,9 @@
             style="@style/way_point_detail_name_text_style"
             android:layout_width="@dimen/way_point_detail_name_text_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/way_point_detail_name_text_left_margin"
             android:layout_marginStart="@dimen/way_point_detail_name_text_left_margin"
-            android:layout_marginTop="@dimen/way_point_detail_name_text_top_margin"
             android:text="@string/mission_id_hint" />
 
         <View
@@ -26,7 +27,7 @@
             android:layout_height="@dimen/way_point_detail_divider_height"
             android:layout_marginLeft="@dimen/way_point_detail_divider_left_margin"
             android:layout_marginStart="@dimen/way_point_detail_divider_left_margin"
-            android:layout_marginTop="@dimen/way_point_detail_divider_top_margin"
+            android:layout_marginTop="4dp"
             android:background="@color/white" />
 
         <ImageView
@@ -42,11 +43,11 @@
             android:id="@+id/way_point_detail_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/way_point_detail_type_spinner_right_margin"
             android:layout_marginLeft="@dimen/way_point_detail_type_spinner_left_margin"
             android:layout_marginRight="@dimen/way_point_detail_type_spinner_right_margin"
             android:layout_marginStart="@dimen/way_point_detail_type_spinner_left_margin"
-            android:layout_marginTop="@dimen/way_point_detail_type_spinner_top_margin"
             android:background="@drawable/way_point_detail_type_spinner_bg" />
 
     </LinearLayout>
@@ -54,7 +55,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
         android:paddingBottom="@dimen/way_point_detail_content_layout_bottom_padding"
         android:paddingEnd="@dimen/way_point_detail_content_layout_right_padding"
@@ -74,6 +74,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:drawableEnd="@drawable/ico_indicator_waypoint_arrow"
+                android:drawablePadding="@dimen/ico_indicator_waypoint_arrow_padding"
                 android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
                 android:text="@string/flight_altitude" />
 
@@ -92,8 +93,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/way_point_detail_spinner_wheel_height"
             android:layout_marginTop="@dimen/way_point_detail_spinner_wheel_top_margin"
+            android:background="@drawable/way_point_detail_spinner_wheel_bg"
             app:isAllVisible="false"
             app:isCyclic="false"
+            app:itemsDimmedAlpha="100"
             app:visibleItems="5" />
 
         <RelativeLayout
@@ -108,6 +111,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:drawableEnd="@drawable/ico_indicator_waypoint_arrow"
+                android:drawablePadding="@dimen/ico_indicator_waypoint_arrow_padding"
                 android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
                 android:text="@string/delay" />
 
@@ -126,8 +130,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/way_point_detail_spinner_wheel_height"
             android:layout_marginTop="@dimen/way_point_detail_spinner_wheel_top_margin"
+            android:background="@drawable/way_point_detail_spinner_wheel_bg"
             app:isAllVisible="false"
             app:isCyclic="false"
+            app:itemsDimmedAlpha="100"
             app:visibleItems="5" />
 
         <LinearLayout
@@ -194,9 +200,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/way_point_detail_delete_button_height"
             android:layout_marginTop="@dimen/way_point_detail_delete_button_top_margin"
-            android:background="@drawable/way_point_detail_dialog_delete_button_bg"
+            android:background="#757575"
+            android:fontFamily="@string/font_roboto_medium"
             android:text="@string/delete"
-            android:textColor="@color/red"
+            android:textColor="#ed0000"
             android:textSize="@dimen/way_point_detail_delete_button_text_size" />
     </LinearLayout>
 

@@ -5,27 +5,16 @@
         <item>MISSION PLAN</item>
         <item>FLIGHT HISTORY</item>
     </string-array>
-    <string-array name="waypoint_type">
-        <item>Waypoint</item>
-        <item>Take Off</item>
-        <item>Land</item>
-        <item>Return to Launch</item>
-        <item>Spline waypoint</item>
-        <item>Circle</item>
-    </string-array>
     <string name="delete_all">DELETE ALL</string>
     <string name="delete_done">DONE</string>
     <string name="btn_cancel">CANCEL</string>
-    <string name="btn_ok">OK</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
 
     <!-- Login in fragment-->
-    <string name="tv_txt_email">Email</string>
     <string name="tv_txt_welcome">Welcome</string>
     <string name="tv_txt_passwd">Password</string>
     <string name="chk_txt_login">Stay logged in</string>
     <string name="btn_txt_login">Log in</string>
-    <string name="btn_txt_sign_up">Sign Up</string>
     <string name="email_hint">abc@coretronic.com</string>
 
     <!-- API 16-->

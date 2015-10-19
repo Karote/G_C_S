@@ -5,29 +5,34 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:clickable="true"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/tap_and_go_dialog_fragment_bottom_padding"
-    android:paddingEnd="@dimen/tap_and_go_dialog_fragment_right_padding"
-    android:paddingLeft="@dimen/tap_and_go_dialog_fragment_left_padding"
-    android:paddingRight="@dimen/tap_and_go_dialog_fragment_right_padding"
-    android:paddingStart="@dimen/tap_and_go_dialog_fragment_left_padding"
-    android:paddingTop="@dimen/tap_and_go_dialog_fragment_top_padding">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tap_and_go_cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
-        android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
-        android:text="@string/btn_cancel"
-        android:textColor="@color/go_dialog_cancel" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tap_and_go_dialog_top_bar_height"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/tap_and_go_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
+            android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="@string/btn_cancel"
+            android:textColor="@color/go_dialog_cancel"
+            android:textSize="@dimen/tap_and_go_dialog_cancel_text_size" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/tap_and_go_dialog_divider_top_margin"
-        android:background="@color/dialog_divider" />
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="12dp"
+        android:background="#dddddd" />
 
     <TextView
         android:id="@+id/tap_and_go_location_text"
@@ -41,7 +46,7 @@
         android:fontFamily="@string/font_roboto_medium"
         android:gravity="center"
         android:text="@string/location_format"
-        android:textColor="@color/go_location_info_text"
+        android:textColor="@color/go_dialog_unit"
         android:textSize="@dimen/tap_and_go_dialog_location_text_size" />
 
     <RelativeLayout
@@ -64,14 +69,12 @@
             android:text="@string/flight_altitude" />
 
         <TextView
+            style="@style/way_point_detail_unit_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:fontFamily="@string/font_roboto_medium"
-            android:text="@string/unit_in_meter"
-            android:textColor="@color/go_dialog_unit"
-            android:textSize="@dimen/tap_and_go_dialog_unit_text_size" />
+            android:text="@string/unit_in_meter" />
 
     </RelativeLayout>
 
@@ -83,26 +86,29 @@
         android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
         android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
         android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
-        android:layout_marginTop="@dimen/tap_and_go_altitude_wheel_top_margin"
+        android:background="@drawable/tap_and_go_altitude_spinner_wheel_bg"
         app:isAllVisible="false"
         app:isCyclic="false"
-        app:visibleItems="5" />
+        app:itemsDimmedAlpha="100"
+        app:visibleItems="3" />
+
 
     <Button
         android:id="@+id/tap_and_go_start_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tap_and_go_start_button_height"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/tap_and_go_start_button_bottom_margin"
         android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
         android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
         android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
         android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
         android:layout_marginTop="@dimen/tap_and_go_start_button_top_margin"
-        android:background="@color/go_btn_bg"
+        android:background="@drawable/tap_and_go_dialog_go_button_bg"
         android:fontFamily="@string/font_roboto_regular"
         android:gravity="center"
         android:text="@string/btn_go"
-        android:textColor="#FFFEFE"
+        android:textColor="@color/white"
         android:textSize="@dimen/tap_and_go_start_button_text_size"
         android:textStyle="bold" />
 

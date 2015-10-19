@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="joypad_size">168dp</dimen>
-    <dimen name="stick_size">56dp</dimen>
-    <dimen name="joypad_rim_width">1dp</dimen>
-    <dimen name="joypad_indicator_size">30dp</dimen>
-    <dimen name="settings_margin">10dp</dimen>
     <dimen name="settings_title_size">18sp</dimen>
-    <dimen name="recyclerview_item_width">78dp</dimen>
-    <dimen name="recyclerview_deleteitem_width">107dp</dimen>
     <dimen name="login_editview_height">40dp</dimen>
     <dimen name="setting_low_power_tv_width">28dp</dimen>
 
@@ -20,11 +13,8 @@
     <dimen name="drone_control_button_group_divider_h_margin">0dp</dimen>
     <dimen name="drone_control_button_group_landing_button_width">120dp</dimen>
     <dimen name="drone_control_button_group_btn_v_margin">0dp</dimen>
-    <dimen name="drone_control_button_group_left_margin">8dp</dimen>
-    <dimen name="drone_control_button_group_top_margin">8dp</dimen>
-    <dimen name="map_control_button_group_divider_height">44dp</dimen>
-    <dimen name="map_control_button_group_left_margin">4dp</dimen>
-    <dimen name="map_control_button_group_top_margin">8dp</dimen>
+    <dimen name="map_type_control_button_top_margin">8dp</dimen>
+    <dimen name="map_type_control_button_left_margin">8dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_height">44dp</dimen>
     <dimen name="fragment_mission_plan_action_bar_status_left_margin">0dp</dimen>
@@ -46,86 +36,65 @@
 
     <dimen name="instrument_compass_ruler_height">145dp</dimen>
     <dimen name="instrument_compass_level_width">64dp</dimen>
-    <dimen name="instrument_compass_level_height">32dp</dimen>
     <dimen name="instrument_compass_level_radius">32dp</dimen>
-    <dimen name="aircraft_compass_size">76dp</dimen>
+    <dimen name="aircraft_compass_size">88dp</dimen>
 
-    <dimen name="mav_info_background_height">20dp</dimen>
     <dimen name="mav_info_location_text_width">80dp</dimen>
-    <dimen name="mav_info_title_text_size">10sp</dimen>
-    <dimen name="mav_info_content_text_size">14sp</dimen>
+    <dimen name="mav_info_panel_height">92dp</dimen>
 
     <!-- way_point_detail -->
+    <dimen name="way_point_detail_container_top_margin">4dp</dimen>
     <dimen name="way_point_detail_fragment_width">240dp</dimen>
-
-    <dimen name="way_point_detail_title_layout_height">40dp</dimen>
-
+    <dimen name="way_point_detail_title_layout_height">44dp</dimen>
     <dimen name="way_point_detail_content_layout_bottom_padding">20dp</dimen>
-    <dimen name="way_point_detail_content_layout_left_padding">16dp</dimen>
-    <dimen name="way_point_detail_content_layout_right_padding">16dp</dimen>
-    <dimen name="way_point_detail_content_layout_top_padding">4dp</dimen>
-
+    <dimen name="way_point_detail_content_layout_left_padding">12dp</dimen>
+    <dimen name="way_point_detail_content_layout_right_padding">12dp</dimen>
+    <dimen name="way_point_detail_content_layout_top_padding">8dp</dimen>
     <dimen name="way_point_detail_name_text_width">28dp</dimen>
     <dimen name="way_point_detail_name_text_left_margin">16dp</dimen>
-    <dimen name="way_point_detail_name_text_top_margin">12dp</dimen>
     <dimen name="way_point_detail_name_text_size">20sp</dimen>
-
     <dimen name="way_point_detail_divider_width">1dp</dimen>
-    <dimen name="way_point_detail_divider_height">32dp</dimen>
+    <dimen name="way_point_detail_divider_height">36dp</dimen>
     <dimen name="way_point_detail_divider_left_margin">4dp</dimen>
-    <dimen name="way_point_detail_divider_top_margin">4dp</dimen>
-
-    <dimen name="way_point_detail_type_spinner_width">149dp</dimen>
-    <dimen name="way_point_detail_type_spinner_right_margin">16dp</dimen>
-    <dimen name="way_point_detail_type_spinner_left_margin">8dp</dimen>
-    <dimen name="way_point_detail_type_spinner_top_margin">8dp</dimen>
-    <dimen name="way_point_detail_type_spinner_text_size">18sp</dimen>
-
-    <dimen name="way_point_detail_spinner_wheel_height">28dp</dimen>
-    <dimen name="way_point_detail_spinner_wheel_top_margin">4dp</dimen>
-
-    <dimen name="way_point_detail_location_layout_top_margin">16dp</dimen>
-    <dimen name="way_point_detail_location_text_height">28dp</dimen>
-    <dimen name="way_point_detail_location_text_size">14sp</dimen>
+    <dimen name="way_point_detail_type_spinner_right_margin">12dp</dimen>
+    <dimen name="way_point_detail_type_spinner_left_margin">4dp</dimen>
+    <dimen name="way_point_detail_type_spinner_text_size">20sp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_height">32dp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
+    <dimen name="way_point_detail_location_layout_top_margin">10dp</dimen>
+    <dimen name="way_point_detail_location_text_height">32dp</dimen>
+    <dimen name="way_point_detail_location_text_size">16sp</dimen>
     <dimen name="way_point_detail_location_text_top_margin">2dp</dimen>
     <dimen name="way_point_detail_longitude_layout_left_margin">8dp</dimen>
-
-    <dimen name="way_point_detail_delete_button_height">28dp</dimen>
-    <dimen name="way_point_detail_delete_button_top_margin">6dp</dimen>
-    <dimen name="way_point_detail_delete_button_text_size">14sp</dimen>
-
+    <dimen name="way_point_detail_delete_button_height">40dp</dimen>
+    <dimen name="way_point_detail_delete_button_top_margin">12dp</dimen>
+    <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
     <dimen name="way_point_detail_unit_text_size">12sp</dimen>
-    <dimen name="way_point_detail_delay_unit_layout_top_margin">10dp</dimen>
-
+    <dimen name="way_point_detail_delay_unit_layout_top_margin">12dp</dimen>
     <dimen name="way_point_detail_type_icon_left_margin">12dp</dimen>
-    <dimen name="way_point_detail_type_icon_top_margin">8dp</dimen>
+    <dimen name="way_point_detail_type_icon_top_margin">14dp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_text_size">20sp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_width">208dp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_focus_padding">75dp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_focus_width">50dp</dimen>
+
 
     <dimen name="mission_plan_detail_text_size">14sp</dimen>
 
     <!-- tap_and_go_dialog -->
-    <dimen name="tap_and_go_dialog_fragment_width">188dp</dimen>
-    <dimen name="tap_and_go_dialog_fragment_bottom_padding">16dp</dimen>
-    <dimen name="tap_and_go_dialog_fragment_left_padding">12dp</dimen>
-    <dimen name="tap_and_go_dialog_fragment_right_padding">12dp</dimen>
-    <dimen name="tap_and_go_dialog_fragment_top_padding">10dp</dimen>
-
-    <dimen name="tap_and_go_dialog_content_left_margin">8dp</dimen>
-    <dimen name="tap_and_go_dialog_content_right_margin">8dp</dimen>
-
-    <dimen name="tap_and_go_dialog_divider_top_margin">10dp</dimen>
-
-    <dimen name="tap_and_go_dialog_location_text_top_margin">6dp</dimen>
-    <dimen name="tap_and_go_dialog_location_text_size">12sp</dimen>
-
-    <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">6dp</dimen>
-    <dimen name="tap_and_go_dialog_unit_text_size">12sp</dimen>
-
+    <dimen name="tap_and_go_dialog_fragment_width">220dp</dimen>
+    <dimen name="tap_and_go_dialog_content_left_margin">12dp</dimen>
+    <dimen name="tap_and_go_dialog_content_right_margin">12dp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_top_margin">12dp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_size">16sp</dimen>
+    <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">12dp</dimen>
+    <dimen name="tap_and_go_dialog_top_bar_height">40dp</dimen>
+    <dimen name="tap_and_go_dialog_cancel_text_size">16sp</dimen>
     <dimen name="tap_and_go_altitude_wheel_height">32dp</dimen>
-    <dimen name="tap_and_go_altitude_wheel_top_margin">6dp</dimen>
-
-    <dimen name="tap_and_go_start_button_height">32dp</dimen>
+    <dimen name="tap_and_go_start_button_height">44dp</dimen>
+    <dimen name="tap_and_go_start_button_bottom_margin">16dp</dimen>
     <dimen name="tap_and_go_start_button_top_margin">12dp</dimen>
-    <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
+    <dimen name="tap_and_go_start_button_text_size">22sp</dimen>
 
     <!-- marker_editor_control_panel -->
     <dimen name="marker_editor_control_panel_undo_button_right_margin">1dp</dimen>
@@ -134,14 +103,15 @@
     <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_delete_option_button_margin">1dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_option_text_size">12sp</dimen>
-    <dimen name="marker_editor_control_panel_delete_option_button_text_padding">6dp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_text_size">14sp</dimen>
+    <dimen name="marker_editor_control_panel_delete_option_button_text_padding">8dp</dimen>
+
+    <!-- history_fragment -->
     <dimen name="history_fragment_activate_button_width">136dp</dimen>
     <dimen name="history_fragment_activate_button_height">56dp</dimen>
     <dimen name="history_fragment_activate_button_left_margin">8dp</dimen>
     <dimen name="history_fragment_activate_button_bottom_margin">6dp</dimen>
     <dimen name="history_fragment_info_layout_height">22dp</dimen>
-    <dimen name="history_fragment_info_text_bottom_margin">4dp</dimen>
     <dimen name="history_fragment_info_text_left_margin">8dp</dimen>
     <dimen name="history_fragment_log_listitem_width">96dp</dimen>
     <dimen name="history_fragment_log_listitem_height">49dp</dimen>
@@ -151,7 +121,15 @@
     <dimen name="history_fragment_log_listitem_date_text_size">16sp</dimen>
     <dimen name="history_fragment_log_listitem_time_text_bottom_margin">8dp</dimen>
     <dimen name="history_fragment_log_listitem_time_text_size">12sp</dimen>
+    <dimen name="flight_history_recycler_view_right_margin">4dp</dimen>
+    <dimen name="flight_history_recycler_view_top_margin">4dp</dimen>
+
     <dimen name="control_progress_circle_thumb_size">38dp</dimen>
     <dimen name="aircraft_compass_ruler_outer_padding">4dp</dimen>
+
+    <dimen name="mission_item_recycler_view_bottom_margin">32dp</dimen>
+    <dimen name="mission_item_recycler_view_top_margin">4dp</dimen>
+    <dimen name="mission_item_recycler_view_right_margin">4dp</dimen>
+    <dimen name="ico_indicator_waypoint_arrow_padding">2dp</dimen>
 
 </resources>
