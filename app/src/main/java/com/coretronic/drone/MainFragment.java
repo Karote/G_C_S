@@ -233,7 +233,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         }
         if (fragment != null) {
             getFragmentManager().beginTransaction().replace(R.id.frame_view, fragment, fragment.getClass().getSimpleName())
-                    .addToBackStack(fragment.getClass().getSimpleName()).commit();
+                    .addToBackStack(fragment.getClass().getSimpleName()).commitAllowingStateLoss();
         }
     }
 
