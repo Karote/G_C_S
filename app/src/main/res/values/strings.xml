@@ -82,7 +82,7 @@
     <string name="attitude_gps_aileron_gain">Attitude/GPS Aileron Gain</string>
     <string name="attitude_gps_elevator_gain">Attitude/GPS Elevator Gain</string>
     <string name="attitude_gps_rudder_gain">Attitude/GPS Rudder Gain</string>
-    <string name="attitude_gain">Attitude Gain</string>
+    <string name="altitude_gain">Altitude Gain</string>
 
     <!-- main -->
     <string name="version">version</string>
@@ -93,7 +93,7 @@
     <string name="switch_btn_on">ON</string>
     <string name="reset">RESET</string>
     <string name="altitude_hint">5</string>
-    <string name="speed">SPEED</string>
+    <string name="groundSpeed">SPEED</string>
     <string name="speed_hint">300.3</string>
     <string name="speed_unit">km/h</string>
     <string name="target">TARGET</string>

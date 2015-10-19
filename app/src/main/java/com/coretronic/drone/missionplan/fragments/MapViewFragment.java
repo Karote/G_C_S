@@ -236,11 +236,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 updateOnMapDrone(droneStatus);
                 mRecordItemBuilder.setHeading((int) droneStatus.getYaw());
                 break;
-            case ON_SPEED_UPDATE:
+            case ON_GROUND_SPEED_UPDATE:
                 if (mCurrentFragment != null) {
-                    mCurrentFragment.onSpeedUpdate(droneStatus.getSpeed());
+                    mCurrentFragment.onGroundSpeedUpdate(droneStatus.getGroundSpeed());
                 }
-                mRecordItemBuilder.setSpeed(droneStatus.getSpeed());
+                mRecordItemBuilder.setGroundSpeed(droneStatus.getGroundSpeed());
                 break;
             case ON_FLIGHT_DURATION_UPDATE:
                 if (mCurrentFragment != null) {
