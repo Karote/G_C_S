@@ -95,7 +95,7 @@
     <string name="altitude_hint">5</string>
     <string name="groundSpeed">SPEED</string>
     <string name="speed_hint">300.3</string>
-    <string name="speed_unit">km/h</string>
+    <string name="speed_unit">m/s</string>
     <string name="target">TARGET</string>
     <string name="target_hint">600m</string>
     <string name="from_me">FROM ME</string>
