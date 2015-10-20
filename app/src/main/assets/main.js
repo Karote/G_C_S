@@ -80,9 +80,7 @@ function initMap() {
 }
 
 function enableGeoLocation(enable) {
-    if (!GeoMarker) {
-        return;
-    }
+    if (!GeoMarker) { return; }
     if (enable) {
         GeoMarker.setMap(map);
     } else {
@@ -193,12 +191,13 @@ function setMapTo(setToLat, setToLng) {
 }
 
 function updateDroneLocation(droneLat, droneLng, heading) {
-    var dronePos = transLatLngToPosition(droneLat, droneLng);
 
+    var dronePos = transLatLngToPosition(droneLat, droneLng);
     planning_drone_marker_outer.setPosition(dronePos);
     planning_drone_marker_inner.setPosition(dronePos);
     planning_drone_marker_arrow.setPosition(dronePos);
     planning_drone_marker_arrow.icon.rotation = heading;
+    planning_drone_marker_arrow.setMap(map);
 
     tapgo_path_polyline.getPath().setAt(0, dronePos);
 }
@@ -223,4 +222,3 @@ function mapClean() {
     clearTapGoSetMarker();
     clearHistoryMarkerPath();
 }
-
