@@ -11,24 +11,60 @@ function initPlanningMissionPolyline() {
     mission_plan_polyline = new google.maps.Polyline(mission_plan_polyline_options);
 }
 
-
-function updateMissionMarkers(missionInJson){
+function updateMissionMarkers(missionInJson) {
     var missions = JSON.parse(JSON.stringify(missionInJson));
-
-    if(planning_mission_marker_array.length > missions.length){
+    if (missions.length == 0) {
         clearMissionPlanningMarkers();
+        return;
+    }
+
+    while (planning_mission_marker_array.length > missions.length) {
+        planning_mission_marker_array.pop().setMap(null);
+        mission_plan_polyline.getPath().pop();
     }
 
     for (var i = 0; i < missions.length; i++) {
-        addMissionMarker(missions[i].latitude , missions[i].longitude , i + 1);
+        addMarkerAndPath(missions[i], i + 1);
     }
 }
 
-function addMissionMarker(lat, lng, serial_number) {
-
-    if(planning_mission_marker_array.length > serial_number){
-            return;
+function addMarkerAndPath(mission, index) {
+    if (tryToAddMarker(mission, index)) {
+        addPath(mission, index);
     }
+}
+
+function addPath(mission_marker_to, index) {
+    if (!mission_marker_to) { return; }
+
+    if (!mission_plan_polyline.getMap()) {
+        mission_plan_polyline.setMap(map);
+    }
+    var path = mission_plan_polyline.getPath();
+
+    if (path.length >= index) {
+        path.setAt(index - 1, new google.maps.LatLng(mission_marker_to.latitude, mission_marker_to.longitude))
+    } else {
+        path.push(new google.maps.LatLng(mission_marker_to.latitude, mission_marker_to.longitude));
+    }
+}
+
+function tryToAddMarker(mission, index) {
+    if (!mission) { return false; }
+    if (planning_mission_marker_array.length < index) {
+        addMissionMarker(mission.latitude, mission.longitude, index);
+        return true;
+    }
+    var existed_mission = planning_mission_marker_array[index - 1];
+    var googleLanLng = new google.maps.LatLng(mission.latitude, mission.longitude);
+    if (existed_mission.position.lat() == googleLanLng.lat() && existed_mission.position.lng() == googleLanLng.lng()) { return false; }
+    existed_mission.position = new google.maps.LatLng(mission.latitude, mission.longitude);
+    existed_mission.setMap(null);
+    existed_mission.setMap(map);
+    return true;
+}
+
+function addMissionMarker(lat, lng, serial_number) {
     var label_anchor_point_x = 4;
     if (serial_number > 9) {
         label_anchor_point_x = 8;
@@ -73,35 +109,27 @@ function addMissionMarker(lat, lng, serial_number) {
         mission_plan_polyline.getPath().setAt(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition());
     });
     google.maps.event.addListener(planning_mission_marker, 'dragend', function(e) {
-        AndroidFunction.onMapDragEndEvent(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition().lat(),
-        planning_mission_marker
-        .getPosition().lng());
+        AndroidFunction.onMapDragEndEvent(planning_mission_marker.labelContent - 1, planning_mission_marker.getPosition().lat(), planning_mission_marker.getPosition().lng());
     });
 
-    var path = mission_plan_polyline.getPath();
-    path.push(new google.maps.LatLng(lat, lng));
-    mission_plan_polyline.setMap(map);
 }
 
 function clearMissionPlanningMarkers() {
-    var i,
-        j;
-    for ( i = 0,
-    j = planning_mission_marker_array.length; i < j; i++) {
+    var i, j;
+    for (i = 0, j = planning_mission_marker_array.length; i < j; i++) {
         planning_mission_marker_array[i].setMap(null);
     }
     planning_mission_marker_array = [];
-
-    mission_plan_polyline.setMap(null);
-    mission_plan_polyline.setPath([]);
+    if (mission_plan_polyline) {
+        mission_plan_polyline.setMap(null);
+        mission_plan_polyline.setPath([]);
+    }
 }
 
 function fitMapShowAllMissionPlanning() {
-    var i,
-        j;
+    var i, j;
     var bounds = new google.maps.LatLngBounds();
-    for ( i = 0,
-    j = planning_mission_marker_array.length; i < j; i++) {
+    for (i = 0, j = planning_mission_marker_array.length; i < j; i++) {
         bounds.extend(planning_mission_marker_array[i].position);
     }
     map.fitBounds(bounds);
