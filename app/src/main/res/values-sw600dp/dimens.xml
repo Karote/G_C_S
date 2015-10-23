@@ -72,4 +72,10 @@
     <dimen name="aircraft_compass_ruler_outer_padding">16dp</dimen>
     <dimen name="mission_item_recycle_view_bottom_margin">56dp</dimen>
     <dimen name="mission_item_recycle_view_top_margin">8dp</dimen>
+
+    <dimen name="dialog_content_right_margin">16dp</dimen>
+    <dimen name="dialog_content_left_margin">16dp</dimen>
+    <dimen name="dialog_item_title_and_content_margin">2dp</dimen>
+    <dimen name="dialog_item_title_top_margin">8dp</dimen>
+    <dimen name="dialog_spinner_wheel_height">36dp</dimen>
 </resources>

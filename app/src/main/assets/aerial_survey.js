@@ -101,25 +101,33 @@ function updatePolygon(polygonsInJson) {
 
 function addPolygonVertex(lat, lng, index) {
 
-    var planning_mission_marker_image = {
-        url : 'ico_indicator_waypoint_circle.png',
-        scaledSize : new google.maps.Size(40, 40),
-        origin : new google.maps.Point(0, 0),
-        anchor : new google.maps.Point(20, 20)
+    var polygon_vertex_marker_option = {
+        position : new google.maps.LatLng(lat, lng),
+        icon : {
+            path : 'M26,7c10.5,0,19,8.5,19,19c0,10.5-8.5,19-19,19C15.5,45,7,36.5,7,26C7,15.5,15.5,7,26,7L26,7z',
+            strokeColor : '#59c1ed',
+            fillColor : '#59c1ed',
+            fillOpacity : 1,
+            anchor : new google.maps.Point(26, 26),
+            scale : 1
+        },
+        clickable : true,
+        crossOnDrag : false,
+        draggable : true,
+        opacity : 1,
+        index : index,
+        map : map
     };
 
-    var polygon_vertex_marker = new MarkerWithLabel({
-        position : new google.maps.LatLng(lat, lng),
-        icon : planning_mission_marker_image,
-        labelContent : index,
-        labelAnchor : new google.maps.Point(index > 9 ? 8 : 4, 8),
-        labelClass : "mapIconLabel",
-        labelInBackground : false,
-        draggable : false,
-        raiseOnDrag : false,
-        zIndex : index,
-        map : map
+    var polygon_vertex_marker = new google.maps.Marker(polygon_vertex_marker_option);
+    
+    google.maps.event.addListener(polygon_vertex_marker, 'drag', function(e) {
+        polygon_polyline.getPath().setAt(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition());
     });
+    google.maps.event.addListener(polygon_vertex_marker, 'dragend', function(e) {
+        AndroidFunction.onMapDragEndEvent(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition().lat(), polygon_vertex_marker.getPosition().lng());
+    });
+
     polygon_vertices.push(polygon_vertex_marker);
     polygon_polyline.getPath().push(new google.maps.LatLng(lat, lng));
     if (!polygon_polyline.getMap()) {
@@ -130,7 +138,7 @@ function addPolygonVertex(lat, lng, index) {
 function updateFootprint(footprintsInJson) {
     var footprints = JSON.parse(JSON.stringify(footprintsInJson));
     clearFootprint();
-    for ( var index in footprints) {
+    for (var index in footprints) {
         addFootprint(footprints[index].latitude, footprints[index].longitude);
     }
 }
@@ -174,7 +182,7 @@ function clearSurvey() {
 }
 
 function clearPolygon() {
-    for ( var index in polygon_vertices) {
+    for (var index in polygon_vertices) {
         polygon_vertices[index].setMap(null);
     }
     polygon_vertices = [];
@@ -183,7 +191,7 @@ function clearPolygon() {
 }
 
 function clearFootprint() {
-    for ( var index in footprints) {
+    for (var index in footprints) {
         footprints[index].setMap(null);
     }
     footprints = [];

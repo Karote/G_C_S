@@ -36,12 +36,14 @@ public class MissionItemDetailFragment extends Fragment {
     private final static String TXT_TAKEOFF = "Take Off";
     private final static String TXT_LAND = "Land";
     private final static String TXT_RTL = "RTL";
-    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL};
+    private final static String TXT_CAMERA = "Camera";
+    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL, TXT_CAMERA};
 
     private final static int WAYPOINT_INDEX = 0;
     private final static int TAKEOFF_INDEX = 1;
     private final static int LAND_INDEX = 2;
     private final static int RTL_INDEX = 3;
+    private final static int CAMERA_INDEX = 4;
 
     private TextView mSerialNumberTextView = null;
     private EditText mLatitudeTextView = null;
@@ -127,6 +129,9 @@ public class MissionItemDetailFragment extends Fragment {
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.RTL);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                         break;
+                    case CAMERA_INDEX:
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.CAMERA_TRIGGER_DISTANCE);
+                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
                     default:
                         break;
                 }
@@ -186,6 +191,9 @@ public class MissionItemDetailFragment extends Fragment {
                 case RTL:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                     break;
+                case CAMERA_TRIGGER_DISTANCE:
+                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
+                    break;
                 default:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                     break;
@@ -203,6 +211,8 @@ public class MissionItemDetailFragment extends Fragment {
                 return LAND_INDEX;
             case RTL:
                 return RTL_INDEX;
+            case CAMERA_TRIGGER_DISTANCE:
+                return CAMERA_INDEX;
             case WAY_POINT:
             default:
                 return WAYPOINT_INDEX;

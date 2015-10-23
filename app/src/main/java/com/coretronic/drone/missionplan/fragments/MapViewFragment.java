@@ -700,6 +700,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.clearSurvey();
     }
 
+    public void clearFootprint() {
+        mDroneMap.clearFootprint();
+    }
+
     public void updateFootprints(SurveyRouter routerGrid) {
         mDroneMap.updateFootprints(routerGrid);
     }

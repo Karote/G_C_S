@@ -10,18 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/create_route_button"
-        style="@style/drone_go_text_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/drone_control_button_group"
-        android:layout_alignTop="@id/drone_control_button_group"
-        android:layout_toRightOf="@id/drone_control_button_group"
-        android:background="@drawable/btn_plan_white"
-        android:text="CREATE ROUTE"
-        android:visibility="visible"/>
-
     <include
         style="@style/map_control_button_group_layout_style"
         layout="@layout/map_control_button_group"

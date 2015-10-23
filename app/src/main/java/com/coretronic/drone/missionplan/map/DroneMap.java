@@ -221,6 +221,10 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:clearSurvey()");
     }
 
+    public void clearFootprint() {
+        mMapWebView.loadUrl("javascript:clearFootprint()");
+    }
+
     public void clearMap() {
         mMapWebView.loadUrl("javascript:mapClean()");
     }

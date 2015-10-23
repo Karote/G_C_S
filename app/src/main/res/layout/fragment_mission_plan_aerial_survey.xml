@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/mav_info_panel"
+        style="@style/mav_info_panel_layout_style"
+        layout="@layout/mav_info_panel" />
+
+    <include layout="@layout/control_button_group" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mission_item_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/mission_item_recycle_view_bottom_margin"
+        android:layout_marginTop="@dimen/mission_item_recycle_view_top_margin"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical" />
+
+    <FrameLayout
+        android:id="@+id/way_point_detail_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/mission_item_recycler_view"
+        android:layout_toStartOf="@id/mission_item_recycler_view"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/create_route_button"
+        android:layout_width="224dp"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="52dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/create_route_button_bg"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="CREATE ROUTE"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <include
+        android:id="@+id/route_properties_dialog"
+        layout="@layout/fragment_aerial_survey_route_properties_dialog"
+        android:layout_width="258dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp" />
+
+</RelativeLayout>
