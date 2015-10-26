@@ -134,7 +134,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 case R.id.plan_go_button:
                     List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                     if (droneMissionList == null || droneMissionList.size() == 0) {
-                        showToashMessage("There is no mission existed");
+                        showToastMessage("There is no mission existed");
                         return;
                     }
                     if (droneController == null) {
@@ -178,7 +178,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
         }
     };
 
-    private void showToashMessage(String message) {
+    private void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
@@ -189,7 +189,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 @Override
                 public void run() {
                     if (missions == null || missions.size() == 0) {
-                        showToashMessage("There is no mission existed");
+                        showToastMessage("There is no mission existed");
                     } else {
                         DroneController droneController = mMapViewFragment.getDroneController();
                         if (droneController != null) {
@@ -254,7 +254,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 if (mMissionItemAdapter.undo()) {
                     updateMissionToMap();
                 } else {
-                    showToashMessage("There is no undo item existed");
+                    showToastMessage("There is no undo item existed");
                 }
                 break;
             case R.id.delete_all_button:
@@ -291,7 +291,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                     mLoadMissionProgressDialog.dismiss();
                 }
                 if (missions == null || missions.size() == 0) {
-                    showToashMessage("There is no mission existed");
+                    showToastMessage("There is no mission existed");
                 } else {
                     mMissionItemAdapter.update(missions);
                     updateMissionToMap();
