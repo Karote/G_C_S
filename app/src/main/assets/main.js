@@ -153,7 +153,7 @@ function mapClickListener(event) {
     }
     if (mapClickable) {
         AndroidFunction.onMapClickEvent(event.latLng.lat(), event.latLng.lng());
-        // addMissionMarker(event.latLng.lat(), event.latLng.lng(), poly.getPath().getLength() + 1);
+        // addMissionMarker(event.latLng.lat(), event.latLng.lng(), mission_plan_polyline.getPath().getLength() + 1, 'LAND');
     }
     if (isTapAndGoMode) {
         setTapGoMarker(event.latLng);
