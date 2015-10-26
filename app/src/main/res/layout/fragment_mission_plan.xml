@@ -5,7 +5,7 @@
     android:keepScreenOn="true">
 
     <WebView
-        android:id="@+id/waypoint_webview"
+        android:id="@+id/map_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
