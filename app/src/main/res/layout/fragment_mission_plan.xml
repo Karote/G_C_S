@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:keepScreenOn="true">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:keepScreenOn="true">
 
     <WebView
         android:id="@+id/map_webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:id="@+id/action_bar_layout"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/mission_plan_fragment_back_to_main_button_icon" />
+            android:src="@drawable/mission_plan_fragment_back_to_main_button_icon"/>
 
         <com.coretronic.drone.ui.StatusView
             android:id="@+id/status"
@@ -33,7 +33,7 @@
             android:layout_marginLeft="@dimen/fragment_mission_plan_action_bar_status_left_margin"
             android:layout_marginStart="@dimen/fragment_mission_plan_action_bar_status_left_margin"
             android:layout_toEndOf="@id/back_to_main_button"
-            android:layout_toRightOf="@id/back_to_main_button" />
+            android:layout_toRightOf="@id/back_to_main_button"/>
 
         <Spinner
             android:id="@+id/mission_plan_spinner"
@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:background="@drawable/spinner_menu_bg"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <include
             android:id="@+id/marker_editor_control_panel"
@@ -49,12 +49,27 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/mission_plan_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/action_bar_layout" />
+        android:layout_below="@id/action_bar_layout"/>
+
+    <include
+        android:id="@+id/mav_info_panel"
+        layout="@layout/mav_info_panel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mav_info_panel_height"
+        android:layout_alignParentBottom="true"/>
+
+    <include
+        android:id="@+id/control_button_bar"
+        layout="@layout/control_button_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/action_bar_layout"/>
+
 </RelativeLayout>

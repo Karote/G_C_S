@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by karot.chuang on 2015/7/22.
  */
-public class HistoryFragment extends MavInfoFragment {
+public class HistoryFragment extends MapChildFragment {
     private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("mm:ss");
 
     private View mDroneHistoryInfoPanel = null;

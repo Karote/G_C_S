@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <include
-        layout="@layout/mav_info_panel"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mav_info_panel_height"
-        android:layout_alignParentBottom="true" />
-
-    <include layout="@layout/control_button_group" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/tap_and_go_container"
@@ -18,5 +10,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:clickable="true" />
+        android:clickable="true"/>
+
 </RelativeLayout>
