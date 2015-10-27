@@ -1,2 +1,2 @@
 apply from: 'DroneControlLibrary/settings.gradle'
-include ':app', ':ControlCoreLib', ':TTSLib'
+include ':app', ':ControlCoreLib', ':TTSLib', ':libuvccamera'
