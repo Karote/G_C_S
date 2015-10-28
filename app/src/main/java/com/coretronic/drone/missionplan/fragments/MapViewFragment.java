@@ -14,8 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -34,6 +32,7 @@ import com.coretronic.drone.missionplan.map.DroneMap;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.RecordItem;
+import com.coretronic.drone.ui.ControlBarView;
 import com.coretronic.drone.ui.MavInfoView;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.ttslib.Speaker;
@@ -70,19 +69,16 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     private int mCurrentFragmentType = 0;
     private StatusView mStatusView = null;
+    private MavInfoView mMavInfoView;
+    private ControlBarView mControlBarView;
 
-    private LinearLayout mMarkerEditorControlPanel = null;
-    private LinearLayout mDeleteOptionPanel = null;
-
+    private View mMissionModeControlPanel = null;
+    private View mDeleteOptionPanel = null;
     private View mUndoButton = null;
     private View mDeleteButton = null;
-    private View mControlButtionBar;
+
     private RadioGroup mMissionPlanTypeRadioGroup = null;
     private Spinner mSpinnerView = null;
-    private MavInfoView mMavInfoView;
-    private Button mPlanGoButton;
-    private Button mDroneLandingButton;
-    private View mMissionStopButtonLayout;
 
     private GoogleApiClient mGoogleApiClient = null;
     private FusedLocationProviderApi mFusedLocationProviderApi = LocationServices.FusedLocationApi;
@@ -142,32 +138,19 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mission_plan, container, false);
 
-        view.findViewById(R.id.drone_rtl_button).setOnClickListener(this);
-        view.findViewById(R.id.plan_stop_button).setOnClickListener(this);
+        initStatusBar(view);
+        initSpinner(view);
 
-        view.findViewById(R.id.my_location_button).setOnClickListener(this);
-        view.findViewById(R.id.drone_location_button).setOnClickListener(this);
-        view.findViewById(R.id.fit_map_button).setOnClickListener(this);
-        view.findViewById(R.id.map_type_button).setOnClickListener(this);
-
-        mPlanGoButton = (Button) view.findViewById(R.id.plan_go_button);
-        mPlanGoButton.setOnClickListener(this);
-        mDroneLandingButton = (Button) view.findViewById(R.id.drone_landing_button);
-        mDroneLandingButton.setOnClickListener(this);
-        mMissionStopButtonLayout = view.findViewById(R.id.plan_stop_layout);
         mMavInfoView = new MavInfoView(view, R.id.mav_info_panel);
+        mControlBarView = new ControlBarView(view, R.id.control_button_bar, this);
 
-        mControlButtionBar = view.findViewById(R.id.control_button_bar);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpEditMarkerLayout(view);
-        setUpTopBarButton(view);
         mDroneMap = new DroneMap(getActivity(), view, mHandler);
-        mStatusView = (StatusView) view.findViewById(R.id.status);
         mMavInfoView.onViewCreated(view, savedInstanceState);
     }
 
@@ -266,6 +249,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_MISSION_STATE_UPDATE:
                 notificationWithTTS(droneStatus.getMissionPlanState());
+                if (MissionStatus.START == droneStatus.getMissionPlanState()) {
+                    mControlBarView.showLandingButton();
+                }
                 if (!isMultiMissionPlanMode()) {
                     return;
                 }
@@ -393,8 +379,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         return mCurrentMissionList;
     }
 
-    private void setUpTopBarButton(View view) {
-        view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
+    private void initSpinner(View view) {
 
         mSpinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
@@ -434,21 +419,23 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         });
     }
 
-    private void setUpEditMarkerLayout(View view) {
-        mMarkerEditorControlPanel = (LinearLayout) view.findViewById(R.id.marker_editor_control_panel);
-        mDeleteOptionPanel = (LinearLayout) view.findViewById(R.id.delete_option_layout);
+    private void initStatusBar(View view) {
+
+        mStatusView = (StatusView) view.findViewById(R.id.status);
+        mMissionModeControlPanel = view.findViewById(R.id.marker_editor_control_panel);
+        mDeleteOptionPanel = view.findViewById(R.id.delete_option_layout);
+        mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);
 
         mUndoButton = view.findViewById(R.id.undo_button);
         mUndoButton.setOnClickListener(this);
         mDeleteButton = view.findViewById(R.id.delete_button);
         mDeleteButton.setOnClickListener(this);
-
-        mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);
-
         view.findViewById(R.id.delete_done_button).setOnClickListener(this);
         view.findViewById(R.id.delete_all_button).setOnClickListener(this);
         view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
         view.findViewById(R.id.tap_and_go_button).setOnClickListener(this);
+        view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
+
     }
 
     private void setFragmentTransaction(int fragmentType) {
@@ -497,15 +484,18 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
-
         mDroneMap.init(isTapAndGoMode, canAddMarker);
         setDeleteOptionShow(false);
-        mMissionStopButtonLayout.setVisibility(missionStopButtonVisibility);
-        mMarkerEditorControlPanel.setVisibility(modeControlPanelVisibility);
-        mMavInfoView.setVisibility(mavInfoPanelVisibility);
         setDeleteAndUndoButtonVisibility(deleteAndUndoButtonVisibility);
-        mControlButtionBar.setVisibility(controlButtonBarVisibility);
-
+        mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
+        mMavInfoView.setVisibility(mavInfoPanelVisibility);
+        mControlBarView.setMissionStopButtonVisibility(missionStopButtonVisibility);
+        if (isTapAndGoMode) {
+            mControlBarView.showLandingButton();
+        } else {
+            mControlBarView.showGoButton();
+        }
+        mControlBarView.setVisibility(controlButtonBarVisibility);
     }
 
     private void setDeleteAndUndoButtonVisibility(int visibility) {
@@ -609,15 +599,15 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 if (getDroneController() == null) {
                     return;
                 }
-                mDroneLandingButton.setVisibility(View.VISIBLE);
-                mPlanGoButton.setVisibility(View.GONE);
+                mControlBarView.showLandingButton();
                 break;
             case R.id.drone_landing_button:
                 if (getDroneController() != null) {
                     getDroneController().land();
                 }
-                mDroneLandingButton.setVisibility(View.GONE);
-                mPlanGoButton.setVisibility(View.VISIBLE);
+                if (isMultiMissionPlanMode()) {
+                    mControlBarView.showGoButton();
+                }
                 return;
             case R.id.drone_rtl_button:
                 if (getDroneController() != null) {
@@ -747,10 +737,5 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public void clearMap() {
         mDroneMap.clearMap();
-    }
-
-    public void showLandingButton() {
-        mPlanGoButton.setVisibility(View.GONE);
-        mDroneLandingButton.setVisibility(View.VISIBLE);
     }
 }

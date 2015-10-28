@@ -122,7 +122,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                             droneController.startMission();
                         }
                         mLoadMissionProgressDialog.dismiss();
-                        mMapViewFragment.showLandingButton();
                     }
                 }
             });
