@@ -15,6 +15,7 @@ public class ControlBarView {
     private final View mPlanGoButton;
     private final View mDroneLandingButton;
     private final View mMissionStopButtonLayout;
+    private final View mFPVAndMapSwitchButton;
 
     public ControlBarView(View view, int controlBarId, OnClickListener onClickListener) {
 
@@ -34,6 +35,9 @@ public class ControlBarView {
         mMapControlBar.findViewById(R.id.drone_location_button).setOnClickListener(onClickListener);
         mMapControlBar.findViewById(R.id.fit_map_button).setOnClickListener(onClickListener);
         mMapControlBar.findViewById(R.id.map_type_button).setOnClickListener(onClickListener);
+
+        mFPVAndMapSwitchButton = mControlMainPanel.findViewById(R.id.map_fpv_switch_btn);
+        mFPVAndMapSwitchButton.setOnClickListener(onClickListener);
 
     }
 
@@ -55,4 +59,15 @@ public class ControlBarView {
         mPlanGoButton.setVisibility(View.VISIBLE);
     }
 
+    public void onFPVHided() {
+        mFPVAndMapSwitchButton.setSelected(false);
+        mMapControlBar.setVisibility(View.VISIBLE);
+        mDroneControlBar.setVisibility(View.VISIBLE);
+    }
+
+    public void onFPVShowed() {
+        mFPVAndMapSwitchButton.setSelected(true);
+        mMapControlBar.setVisibility(View.GONE);
+        mDroneControlBar.setVisibility(View.GONE);
+    }
 }
