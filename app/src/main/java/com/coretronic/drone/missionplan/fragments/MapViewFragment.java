@@ -35,6 +35,7 @@ import com.coretronic.drone.model.RecordItem;
 import com.coretronic.drone.ui.ControlBarView;
 import com.coretronic.drone.ui.MavInfoView;
 import com.coretronic.drone.ui.StatusView;
+import com.coretronic.drone.uvc.USBCameraMonitor;
 import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -96,9 +97,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     private List<Mission> mCurrentMissionList;
     private MapChildFragment mCurrentFragment = null;
+    private FirstPersonVisionFragment mFPVFragment;
     private long mDroneLat;
     private long mDroneLon;
     private boolean mIsSpinnerTriggerByUser = true;
+    private View mFPVView;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -116,6 +119,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mTtsSpeaker = new Speaker(getActivity());
         mHandler = new Handler();
         mRecordItemBuilder = new RecordItem.Builder();
+        USBCameraMonitor.init(getActivity());
     }
 
     @Override
@@ -143,6 +147,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         mMavInfoView = new MavInfoView(view, R.id.mav_info_panel);
         mControlBarView = new ControlBarView(view, R.id.control_button_bar, this);
+        mFPVView = view.findViewById(R.id.fpv_container);
 
         return view;
     }
@@ -184,6 +189,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             mHandler.removeCallbacks(mFlightRecordRunnable);
             mFlightRecordRunnable = null;
         }
+        USBCameraMonitor.onDestroy();
     }
 
     // Implement GoogleApiClient.ConnectionCallbacks
@@ -628,6 +634,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case R.id.map_type_button:
                 changeMapType();
                 return;
+            case R.id.map_fpv_switch_btn:
+                if (v.isSelected()) {
+                    hideFPVFragment();
+                } else {
+                    showFPVFragment();
+                }
+                return;
         }
 
         if (mCurrentFragment == null) {
@@ -635,6 +648,26 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
         mCurrentFragment.onClick(v);
 
+    }
+
+    public void hideFPVFragment() {
+        if (mFPVFragment != null) {
+            getChildFragmentManager().beginTransaction().remove(mFPVFragment).commit();
+            mFPVFragment = null;
+        }
+        mFPVView.setVisibility(View.GONE);
+        mMissionModeControlPanel.setVisibility(View.VISIBLE);
+        mControlBarView.onFPVHided();
+    }
+
+    public void showFPVFragment() {
+        if (mFPVFragment == null) {
+            mFPVFragment = new FirstPersonVisionFragment();
+            getChildFragmentManager().beginTransaction().replace(R.id.fpv_container, mFPVFragment, null).commitAllowingStateLoss();
+        }
+        mFPVView.setVisibility(View.VISIBLE);
+        mMissionModeControlPanel.setVisibility(View.GONE);
+        mControlBarView.onFPVShowed();
     }
 
     public DroneController getDroneController() {

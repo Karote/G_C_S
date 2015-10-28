@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <FrameLayout
+        android:id="@+id/fpv_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:id="@+id/action_bar_layout"
         android:layout_width="match_parent"
