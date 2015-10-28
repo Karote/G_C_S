@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * Created by karot.chuang on 2015/7/21.
  */
-public class PlanningFragment extends MavInfoFragment implements MissionLoaderListener {
+public class PlanningFragment extends MapChildFragment implements MissionLoaderListener {
 
     private final static String ARG_From_History = "argFromHistory";
     private final static boolean DEFAULT_AUTO_CONTINUE = false;
@@ -38,8 +37,6 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
-    private Button mPlanGoButton = null;
-    private Button mDroneLandingButton = null;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -68,11 +65,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mission_plan_planning, container, false);
-        initAltitudeView(view, R.id.altitude_text, R.id.altitude_progress_bar);
-        initGroundSpeedView(view, R.id.ground_speed_text, R.id.ground_speed_progress_bar);
-        initMavInfoView(view, R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
-        return view;
+        return inflater.inflate(R.layout.fragment_mission_plan_planning, container, false);
     }
 
     @Override
@@ -109,76 +102,9 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
             }
         });
 
-        // Go & Stop & Location Button Panel
-        mPlanGoButton = (Button) view.findViewById(R.id.plan_go_button);
-        mPlanGoButton.setOnClickListener(onPlanningBtnClickListener);
-        mPlanGoButton.setVisibility(View.VISIBLE);
-        mDroneLandingButton = (Button) view.findViewById(R.id.drone_landing_button);
-        mDroneLandingButton.setOnClickListener(onPlanningBtnClickListener);
-        mDroneLandingButton.setVisibility(View.GONE);
-        view.findViewById(R.id.drone_rtl_button).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.plan_stop_button).setOnClickListener(onPlanningBtnClickListener);
-
-        view.findViewById(R.id.my_location_button).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.drone_location_button).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.fit_map_button).setOnClickListener(onPlanningBtnClickListener);
-        view.findViewById(R.id.map_type_button).setOnClickListener(onPlanningBtnClickListener);
     }
 
-    private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            DroneController droneController = mMapViewFragment.getDroneController();
-            switch (v.getId()) {
-                case R.id.plan_go_button:
-                    List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
-                    if (droneMissionList == null || droneMissionList.size() == 0) {
-                        showToashMessage("There is no mission existed");
-                        return;
-                    }
-                    if (droneController == null) {
-                        return;
-                    }
-                    droneController.writeMissions(droneMissionList, missionLoaderListener);
-                    showLoadProgressDialog("Loading", "Please wait...");
-                    break;
-                case R.id.drone_landing_button:
-                    if (droneController != null) {
-                        droneController.land();
-                        mDroneLandingButton.setVisibility(View.GONE);
-                        mPlanGoButton.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case R.id.drone_rtl_button:
-                    if (droneController != null) {
-                        droneController.returnToLaunch();
-                    }
-                    break;
-                case R.id.plan_stop_button:
-                    if (droneController != null) {
-                        droneController.pauseMission();
-                    }
-                    break;
-                case R.id.my_location_button:
-                    mMapViewFragment.setMapToMyLocation();
-                    break;
-                case R.id.drone_location_button:
-                    mMapViewFragment.setMapToDrone();
-                    break;
-                case R.id.fit_map_button:
-                    if (mMissionItemAdapter.getItemCount() > 0) {
-                        mMapViewFragment.fitMapShowAllMission();
-                    }
-                    break;
-                case R.id.map_type_button:
-                    mMapViewFragment.changeMapType();
-                    break;
-            }
-        }
-    };
-
-    private void showToashMessage(String message) {
+    private void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
@@ -189,15 +115,13 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 @Override
                 public void run() {
                     if (missions == null || missions.size() == 0) {
-                        showToashMessage("There is no mission existed");
+                        showToastMessage("There is no mission existed");
                     } else {
                         DroneController droneController = mMapViewFragment.getDroneController();
                         if (droneController != null) {
                             droneController.startMission();
                         }
                         mLoadMissionProgressDialog.dismiss();
-                        mPlanGoButton.setVisibility(View.GONE);
-                        mDroneLandingButton.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -254,7 +178,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 if (mMissionItemAdapter.undo()) {
                     updateMissionToMap();
                 } else {
-                    showToashMessage("There is no undo item existed");
+                    showToastMessage("There is no undo item existed");
                 }
                 break;
             case R.id.delete_all_button:
@@ -267,6 +191,20 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                 break;
             case R.id.delete_button:
                 missionAdapterShowDelete(true);
+                break;
+            case R.id.plan_go_button:
+                List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
+                if (droneMissionList == null || droneMissionList.size() == 0) {
+                    showToastMessage("There is no mission existed");
+                    return;
+                }
+                mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
+                showLoadProgressDialog("Writing Mission", "Please wait...");
+                break;
+            case R.id.fit_map_button:
+                if (mMissionItemAdapter.getItemCount() > 0) {
+                    mMapViewFragment.fitMapShowAllMission();
+                }
                 break;
         }
     }
@@ -291,7 +229,7 @@ public class PlanningFragment extends MavInfoFragment implements MissionLoaderLi
                     mLoadMissionProgressDialog.dismiss();
                 }
                 if (missions == null || missions.size() == 0) {
-                    showToashMessage("There is no mission existed");
+                    showToastMessage("There is no mission existed");
                 } else {
                     mMissionItemAdapter.update(missions);
                     updateMissionToMap();

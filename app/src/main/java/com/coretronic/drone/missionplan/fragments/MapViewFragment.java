@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -33,6 +32,8 @@ import com.coretronic.drone.missionplan.map.DroneMap;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.RecordItem;
+import com.coretronic.drone.ui.ControlBarView;
+import com.coretronic.drone.ui.MavInfoView;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
@@ -68,16 +69,16 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     private int mCurrentFragmentType = 0;
     private StatusView mStatusView = null;
+    private MavInfoView mMavInfoView;
+    private ControlBarView mControlBarView;
 
-    private LinearLayout mMarkerEditorControlPanel = null;
-    private LinearLayout mDeleteOptionPanel = null;
-
+    private View mMissionModeControlPanel = null;
+    private View mDeleteOptionPanel = null;
     private View mUndoButton = null;
     private View mDeleteButton = null;
+
     private RadioGroup mMissionPlanTypeRadioGroup = null;
     private Spinner mSpinnerView = null;
-    private List<Mission> mCurrentMissionList;
-    private MavInfoFragment mCurrentFragment = null;
 
     private GoogleApiClient mGoogleApiClient = null;
     private FusedLocationProviderApi mFusedLocationProviderApi = LocationServices.FusedLocationApi;
@@ -93,6 +94,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private Runnable mFlightRecordRunnable = null;
     private DroneMap mDroneMap;
 
+    private List<Mission> mCurrentMissionList;
+    private MapChildFragment mCurrentFragment = null;
     private long mDroneLat;
     private long mDroneLon;
     private boolean mIsSpinnerTriggerByUser = true;
@@ -133,16 +136,22 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mission_plan, container, false);
+        View view = inflater.inflate(R.layout.fragment_mission_plan, container, false);
+
+        initStatusBar(view);
+        initSpinner(view);
+
+        mMavInfoView = new MavInfoView(view, R.id.mav_info_panel);
+        mControlBarView = new ControlBarView(view, R.id.control_button_bar, this);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpEditMarkerLayout(view);
-        setUpTopBarButton(view);
         mDroneMap = new DroneMap(getActivity(), view, mHandler);
-        mStatusView = (StatusView) view.findViewById(R.id.status);
+        mMavInfoView.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -151,7 +160,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mGoogleApiClient.connect();
         mSaveFlag = true;
         mDroneMap.onStart();
-
     }
 
     @Override
@@ -204,21 +212,19 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onStatusUpdate(Event event, DroneStatus droneStatus) {
 
+        if (mMavInfoView != null) {
+            mMavInfoView.onStatusUpdate(event, droneStatus);
+        }
+
         switch (event) {
             case ON_BATTERY_UPDATE:
                 mStatusView.setBatteryStatus(droneStatus.getBattery());
                 mRecordItemBuilder.setBattery(droneStatus.getBattery());
                 break;
             case ON_ALTITUDE_UPDATE:
-                if (mCurrentFragment != null) {
-                    mCurrentFragment.onAltitudeUpdate(droneStatus.getAltitude());
-                }
                 mRecordItemBuilder.setAltitude(droneStatus.getAltitude());
                 break;
             case ON_LOCATION_UPDATE:
-                if (mCurrentFragment != null) {
-                    mCurrentFragment.onLocationUpdate(droneStatus.getLatitude(), droneStatus.getLongitude());
-                }
                 mDroneLat = droneStatus.getLatitude();
                 mDroneLon = droneStatus.getLongitude();
                 updateOnMapDrone(droneStatus);
@@ -230,28 +236,22 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mRecordItemBuilder.setSatellites(droneStatus.getSatellites());
                 break;
             case ON_ATTITUDE_UPDATE:
-                if (mCurrentFragment != null) {
-                    mCurrentFragment.onAttitudeUpdate(droneStatus.getYaw(), droneStatus.getRoll(), droneStatus.getPitch());
-                }
                 updateOnMapDrone(droneStatus);
                 mRecordItemBuilder.setHeading((int) droneStatus.getYaw());
                 break;
             case ON_GROUND_SPEED_UPDATE:
-                if (mCurrentFragment != null) {
-                    mCurrentFragment.onGroundSpeedUpdate(droneStatus.getGroundSpeed());
-                }
                 mRecordItemBuilder.setGroundSpeed(droneStatus.getGroundSpeed());
                 break;
             case ON_FLIGHT_DURATION_UPDATE:
-                if (mCurrentFragment != null) {
-                    mCurrentFragment.onFlightTimeUpdate(droneStatus.getDuration());
-                }
                 break;
             case ON_RADIO_SIGNAL_UPDATE:
                 mStatusView.setGpsStatus(droneStatus.getRadioSignal());
                 break;
             case ON_MISSION_STATE_UPDATE:
                 notificationWithTTS(droneStatus.getMissionPlanState());
+                if (MissionStatus.START == droneStatus.getMissionPlanState()) {
+                    mControlBarView.showLandingButton();
+                }
                 if (!isMultiMissionPlanMode()) {
                     return;
                 }
@@ -379,8 +379,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         return mCurrentMissionList;
     }
 
-    private void setUpTopBarButton(View view) {
-        view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
+    private void initSpinner(View view) {
 
         mSpinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.mission_plan_menu, R.layout.spinner_style);
@@ -420,21 +419,23 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         });
     }
 
-    private void setUpEditMarkerLayout(View view) {
-        mMarkerEditorControlPanel = (LinearLayout) view.findViewById(R.id.marker_editor_control_panel);
-        mDeleteOptionPanel = (LinearLayout) view.findViewById(R.id.delete_option_layout);
+    private void initStatusBar(View view) {
+
+        mStatusView = (StatusView) view.findViewById(R.id.status);
+        mMissionModeControlPanel = view.findViewById(R.id.marker_editor_control_panel);
+        mDeleteOptionPanel = view.findViewById(R.id.delete_option_layout);
+        mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);
 
         mUndoButton = view.findViewById(R.id.undo_button);
         mUndoButton.setOnClickListener(this);
         mDeleteButton = view.findViewById(R.id.delete_button);
         mDeleteButton.setOnClickListener(this);
-
-        mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);
-
         view.findViewById(R.id.delete_done_button).setOnClickListener(this);
         view.findViewById(R.id.delete_all_button).setOnClickListener(this);
         view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
         view.findViewById(R.id.tap_and_go_button).setOnClickListener(this);
+        view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
+
     }
 
     private void setFragmentTransaction(int fragmentType) {
@@ -472,27 +473,34 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void onChildFragmentChanged(int fragmentType) {
-        switch (fragmentType) {
-            case FRAGMENT_TYPE_ACTIVATE:
-            case FRAGMENT_TYPE_PLANNING:
-                mDroneMap.init(false, true);
-                mMarkerEditorControlPanel.setVisibility(View.VISIBLE);
-                mUndoButton.setVisibility(View.VISIBLE);
-                mDeleteButton.setVisibility(View.VISIBLE);
-                break;
-            case FRAGMENT_TYPE_HISTORY:
-                mDroneMap.init(false, false);
-                mMarkerEditorControlPanel.setVisibility(View.GONE);
-                setDeleteOptionShow(false);
-                break;
-            default:
-            case FRAGMENT_TYPE_TAP_AND_GO:
-                mDroneMap.init(true, true);
-                mMarkerEditorControlPanel.setVisibility(View.VISIBLE);
-                mUndoButton.setVisibility(View.GONE);
-                mDeleteButton.setVisibility(View.GONE);
-                break;
+        if (fragmentType == FRAGMENT_TYPE_ACTIVATE) {
+            fragmentType = FRAGMENT_TYPE_PLANNING;
         }
+
+        boolean isTapAndGoMode = fragmentType == FRAGMENT_TYPE_TAP_AND_GO;
+        boolean canAddMarker = fragmentType != FRAGMENT_TYPE_HISTORY;
+        int deleteAndUndoButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
+        int missionStopButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
+        int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
+        int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
+        int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
+        mDroneMap.init(isTapAndGoMode, canAddMarker);
+        setDeleteOptionShow(false);
+        setDeleteAndUndoButtonVisibility(deleteAndUndoButtonVisibility);
+        mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
+        mMavInfoView.setVisibility(mavInfoPanelVisibility);
+        mControlBarView.setMissionStopButtonVisibility(missionStopButtonVisibility);
+        if (isTapAndGoMode) {
+            mControlBarView.showLandingButton();
+        } else {
+            mControlBarView.showGoButton();
+        }
+        mControlBarView.setVisibility(controlButtonBarVisibility);
+    }
+
+    private void setDeleteAndUndoButtonVisibility(int visibility) {
+        mUndoButton.setVisibility(visibility);
+        mDeleteButton.setVisibility(visibility);
     }
 
     private void setUpLocationService() {
@@ -587,6 +595,39 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case R.id.tap_and_go_button:
                 setFragmentTransaction(FRAGMENT_TYPE_TAP_AND_GO);
                 return;
+            case R.id.plan_go_button:
+                if (getDroneController() == null) {
+                    return;
+                }
+                mControlBarView.showLandingButton();
+                break;
+            case R.id.drone_landing_button:
+                if (getDroneController() != null) {
+                    getDroneController().land();
+                }
+                if (isMultiMissionPlanMode()) {
+                    mControlBarView.showGoButton();
+                }
+                return;
+            case R.id.drone_rtl_button:
+                if (getDroneController() != null) {
+                    getDroneController().returnToLaunch();
+                }
+                return;
+            case R.id.plan_stop_button:
+                if (getDroneController() != null) {
+                    getDroneController().pauseMission();
+                }
+                return;
+            case R.id.my_location_button:
+                setMapToMyLocation();
+                return;
+            case R.id.drone_location_button:
+                setMapToDrone();
+                return;
+            case R.id.map_type_button:
+                changeMapType();
+                return;
         }
 
         if (mCurrentFragment == null) {
@@ -635,7 +676,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.setMapToMyLocation();
     }
 
-    public void setMapToDrone() {
+    private void setMapToDrone() {
         mDroneMap.setMapToDroneLocation(mDroneLat, mDroneLon);
     }
 

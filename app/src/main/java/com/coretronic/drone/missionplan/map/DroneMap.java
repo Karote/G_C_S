@@ -113,7 +113,7 @@ public class DroneMap implements OnMapEventCallback {
         mContext = context;
         mHandler = handler;
 
-        mMapWebView = (WebView) view.findViewById(R.id.waypoint_webview);
+        mMapWebView = (WebView) view.findViewById(R.id.map_webview);
         mMapWebView.addJavascriptInterface(this, "AndroidFunction");
         mMapWebView.getSettings().setJavaScriptEnabled(true);
         // permission to disclose the user's location to JavaScript.
