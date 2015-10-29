@@ -171,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="@string/unit_in_meter" />
+            android:text="%" />
 
     </RelativeLayout>
 
@@ -213,7 +213,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="@string/unit_in_meter" />
+            android:text="%" />
 
     </RelativeLayout>
 

@@ -19,12 +19,14 @@ import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter.OnItemSelectedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
 import com.coretronic.drone.survey.RouterBuilder;
 import com.coretronic.drone.survey.RouterBuilder.SurveyBuilderException;
 import com.coretronic.drone.survey.SurveyRouter;
+import com.coretronic.ibs.log.Logger;
 
 import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
 
@@ -36,12 +38,27 @@ import java.util.List;
  */
 public class AerialSurveyFragment extends MavInfoFragment implements SelectedMissionUpdatedCallback {
 
+    private static final int INIT_STATUS = 1;
+    private static final int SCOPE_STATUS = 2;
+    private static final int FOOTPRINT_STATUS = 3;
+    private static final int ROUTE_CREATED_STATUS = 4;
+    private static final int PLAN_GO_STATUS = 5;
+    private static final int HATCH_ANGLE_MIN_VALUE = 0;
+    private static final int HATCH_ANGLE_MAX_VALUE = 180;
+    private static final int ALTITUDE_MIN_VALUE = 1;
+    private static final int ALTITUDE_MAX_VALUE = 20;
+    private static final int ALTITUDE_GAP = 10;
+    private static final int OVERLAP_MIN_VALUE = 50;
+    private static final int OVERLAP_MAX_VALUE = 90;
+    private static final int SIDELAP_MIN_VALUE = 15;
+    private static final int SIDELAP_MAX_VALUE = 90;
     private MissionItemListAdapter mMissionItemAdapter;
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
     private View mDroneControlButtonGroup = null;
     private View mRoutePropertiesDialog = null;
+    private View mMavInfoPanel = null;
     private Button mPlanGoButton = null;
     private Button mDroneLandingButton = null;
     private Button mCreateRouteButton = null;
@@ -50,7 +67,11 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
     private SurveyRouter mAerialSurveyRouter;
 
     private AbstractWheel mHatchAngleWheel, mAltitudeWheel, mOverlapWheel, mSidelapWheel;
-    private int mHatchAngle, mAltitude, mOverlap, mSidelap;
+    private int mHatchAngleValue, mAltitudeValue, mOverlapValue, mSidelapValue;
+    private boolean mAngleWheelScrolled = false;
+    private boolean mAltitudeWheelScrolled = false;
+    private boolean mOverlapWheelScrolled = false;
+    private boolean mSidelapWheelScrolled = false;
 
     public static AerialSurveyFragment newInstance() {
         AerialSurveyFragment fragment = new AerialSurveyFragment();
@@ -124,8 +145,9 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
         mCreateRouteButton.setOnClickListener(onPlanningBtnClickListener);
         mRoutePropertiesDialog = view.findViewById(R.id.route_properties_dialog);
         initRoutePropertiesDialog(view);
+        mMavInfoPanel = view.findViewById(R.id.mav_info_panel);
 
-        layoutStatusMachine(1);
+        changeLayoutStatus(INIT_STATUS);
     }
 
     private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -199,7 +221,8 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
                     break;
                 case R.id.create_route_button:
                     updateFootprints();
-                    layoutStatusMachine(3);
+                    initRoutePropertiesValue();
+                    changeLayoutStatus(FOOTPRINT_STATUS);
                     break;
                 case R.id.route_properties_ok_button:
                     if (mAerialSurveyRouter == null) {
@@ -207,11 +230,11 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
                         return;
                     }
                     onAerialSurveyMissionCreated();
-                    layoutStatusMachine(4);
+                    changeLayoutStatus(ROUTE_CREATED_STATUS);
                     break;
                 case R.id.route_properties_back_button:
                     mMapViewFragment.clearFootprint();
-                    layoutStatusMachine(2);
+                    changeLayoutStatus(SCOPE_STATUS);
                     break;
             }
         }
@@ -232,7 +255,6 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
 
     private void updatePolygon() {
         mMapViewFragment.updatePolygon(mPolygonPoints);
-//        updateFootprints();
     }
 
     private void updateFootprints() {
@@ -266,7 +288,7 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
                 mMapViewFragment.clearSurvey();
                 mPolygonPoints.clear();
                 mAerialSurveyRouter = null;
-                layoutStatusMachine(1);
+                changeLayoutStatus(INIT_STATUS);
                 break;
             case R.id.undo_button:
                 if (mMissionItemAdapter.undo()) {
@@ -311,15 +333,18 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
 
     @Override
     public void onMapDragEndEvent(int index, float lat, float lon) {
-
-        mMissionItemAdapter.updateMissionItemLocation(index, lat, lon);
+        if (mMissionItemAdapter.getItemCount() > 0) {
+            mMissionItemAdapter.updateMissionItemLocation(index, lat, lon);
+        } else {
+            mPolygonPoints.set(index, new Coord2D(lat, lon));
+        }
     }
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
         mPolygonPoints.add(new Coord2D(lat, lon));
         if (mPolygonPoints.size() > 2) {
-            layoutStatusMachine(2);
+            changeLayoutStatus(SCOPE_STATUS);
         }
         updatePolygon();
     }
@@ -375,29 +400,32 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
         mMapViewFragment.updateMissions(mMissionItemAdapter.getMissions());
     }
 
-    private void layoutStatusMachine(int status) {
+    private void changeLayoutStatus(int status) {
         switch (status) {
-            case 1:
+            case INIT_STATUS:
                 mDroneControlButtonGroup.setVisibility(View.GONE);
                 mCreateRouteButton.setVisibility(View.VISIBLE);
                 mCreateRouteButton.setEnabled(false);
                 mRoutePropertiesDialog.setVisibility(View.GONE);
+                mMavInfoPanel.setVisibility(View.GONE);
                 break;
-            case 2:
+            case SCOPE_STATUS:
                 mCreateRouteButton.setVisibility(View.VISIBLE);
                 mCreateRouteButton.setEnabled(true);
                 mRoutePropertiesDialog.setVisibility(View.GONE);
                 break;
-            case 3:
+            case FOOTPRINT_STATUS:
                 mDroneControlButtonGroup.setVisibility(View.GONE);
                 mCreateRouteButton.setVisibility(View.GONE);
                 mRoutePropertiesDialog.setVisibility(View.VISIBLE);
+                mMavInfoPanel.setVisibility(View.GONE);
                 break;
-            case 4:
+            case ROUTE_CREATED_STATUS:
                 mDroneControlButtonGroup.setVisibility(View.VISIBLE);
                 mRoutePropertiesDialog.setVisibility(View.GONE);
+                mMavInfoPanel.setVisibility(View.VISIBLE);
                 break;
-            case 5:
+            case PLAN_GO_STATUS:
                 break;
         }
     }
@@ -407,46 +435,149 @@ public class AerialSurveyFragment extends MavInfoFragment implements SelectedMis
         view.findViewById(R.id.route_properties_back_button).setOnClickListener(onPlanningBtnClickListener);
 
         mHatchAngleWheel = (AbstractWheel) view.findViewById(R.id.route_properties_hatch_angle_wheel);
-        mHatchAngleWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, 0, 180, "%01d"));
+        mHatchAngleWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, HATCH_ANGLE_MIN_VALUE, HATCH_ANGLE_MAX_VALUE, "%01d"));
         mHatchAngleWheel.setCyclic(false);
+        mHatchAngleWheel.addScrollingListener(new OnWheelScrollListener() {
+            @Override
+            public void onScrollingStarted(AbstractWheel wheel) {
+                mAngleWheelScrolled = true;
+            }
+
+            @Override
+            public void onScrollingFinished(AbstractWheel wheel) {
+                mAngleWheelScrolled = false;
+                updateAngleValue();
+
+            }
+        });
         mHatchAngleWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mHatchAngle = newValue;
+                if (!mAngleWheelScrolled) {
+                    updateAngleValue();
+                }
             }
         });
 
         mAltitudeWheel = (AbstractWheel) view.findViewById(R.id.route_properties_altitude_wheel);
-        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, 1, 20, "%01d0"));
+        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, ALTITUDE_MIN_VALUE, ALTITUDE_MAX_VALUE, "%01d0"));
         mAltitudeWheel.setCurrentItem(4);
         mAltitudeWheel.setCyclic(false);
+        mAltitudeWheel.addScrollingListener(new OnWheelScrollListener() {
+            @Override
+            public void onScrollingStarted(AbstractWheel wheel) {
+                mAltitudeWheelScrolled = true;
+            }
+
+            @Override
+            public void onScrollingFinished(AbstractWheel wheel) {
+                mAltitudeWheelScrolled = false;
+                updateAltitudeValue();
+
+            }
+        });
         mAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mAltitude = newValue;
+                if (!mAltitudeWheelScrolled) {
+                    updateAltitudeValue();
+                }
             }
         });
 
         mOverlapWheel = (AbstractWheel) view.findViewById(R.id.route_properties_overlap_wheel);
-        mOverlapWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, 50, 90, "%01d"));
+        mOverlapWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, OVERLAP_MIN_VALUE, OVERLAP_MAX_VALUE, "%01d"));
         mOverlapWheel.setCurrentItem(20);
         mOverlapWheel.setCyclic(false);
+        mOverlapWheel.addScrollingListener(new OnWheelScrollListener() {
+            @Override
+            public void onScrollingStarted(AbstractWheel wheel) {
+                mOverlapWheelScrolled = true;
+            }
+
+            @Override
+            public void onScrollingFinished(AbstractWheel wheel) {
+                mOverlapWheelScrolled = false;
+                updateOverlapValue();
+
+            }
+        });
         mOverlapWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mOverlap = newValue;
+                if (!mOverlapWheelScrolled) {
+                    updateOverlapValue();
+                }
             }
         });
 
         mSidelapWheel = (AbstractWheel) view.findViewById(R.id.route_properties_sidelap_wheel);
-        mSidelapWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, 15, 90, "%01d"));
+        mSidelapWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, SIDELAP_MIN_VALUE, SIDELAP_MAX_VALUE, "%01d"));
         mSidelapWheel.setCurrentItem(55);
         mSidelapWheel.setCyclic(false);
+        mSidelapWheel.addScrollingListener(new OnWheelScrollListener() {
+            @Override
+            public void onScrollingStarted(AbstractWheel wheel) {
+                mSidelapWheelScrolled = true;
+            }
+
+            @Override
+            public void onScrollingFinished(AbstractWheel wheel) {
+                mSidelapWheelScrolled = false;
+                updateSidelapValue();
+
+            }
+        });
         mSidelapWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mSidelap = newValue;
+                if (!mSidelapWheelScrolled) {
+                    updateSidelapValue();
+                }
             }
         });
+    }
+
+    private void updateAngleValue() {
+        mHatchAngleValue = mHatchAngleWheel.getCurrentItem();
+        Logger.d("Angle newValue:" + mHatchAngleValue);
+        mRouterBuilder.setAngle(mHatchAngleValue);
+        updateFootprints();
+    }
+
+    private void updateAltitudeValue() {
+        mAltitudeValue = (ALTITUDE_MIN_VALUE + mAltitudeWheel.getCurrentItem()) * ALTITUDE_GAP;
+        Logger.d("Altitude newValue:" + mAltitudeValue);
+        mRouterBuilder.setAltitude(mAltitudeValue);
+        updateFootprints();
+    }
+
+    private void updateOverlapValue() {
+        mOverlapValue = OVERLAP_MIN_VALUE + mOverlapWheel.getCurrentItem();
+        Logger.d("Overlap newValue:" + mOverlapValue);
+        mRouterBuilder.setOverlap(mOverlapValue);
+        updateFootprints();
+    }
+
+    private void updateSidelapValue() {
+        mSidelapValue = SIDELAP_MIN_VALUE + mSidelapWheel.getCurrentItem();
+        Logger.d("Sidelap newValue:" + mSidelapValue);
+        mRouterBuilder.setSidelap(mSidelapValue);
+        updateFootprints();
+    }
+
+    private void initRoutePropertiesValue() {
+        mHatchAngleValue = ((int) mAerialSurveyRouter.getSurveyData().getAngle() + HATCH_ANGLE_MAX_VALUE) % HATCH_ANGLE_MAX_VALUE;
+        mAltitudeValue = (int) mAerialSurveyRouter.getSurveyData().getAltitude();
+        mOverlapValue = (int) mAerialSurveyRouter.getSurveyData().getOverlap();
+        mSidelapValue = (int) mAerialSurveyRouter.getSurveyData().getSidelap();
+        Logger.d("getAngle:" + mHatchAngleValue);
+        Logger.d("getAltitude:" + mAltitudeValue);
+        Logger.d("getOverlap:" + mOverlapValue);
+        Logger.d("getSidelap:" + mSidelapValue);
+        mHatchAngleWheel.setCurrentItem(mHatchAngleValue);
+        mAltitudeWheel.setCurrentItem((mAltitudeValue / ALTITUDE_GAP) - ALTITUDE_MIN_VALUE);
+        mOverlapWheel.setCurrentItem(mOverlapValue - OVERLAP_MIN_VALUE);
+        mSidelapWheel.setCurrentItem(mSidelapValue - SIDELAP_MIN_VALUE);
     }
 }

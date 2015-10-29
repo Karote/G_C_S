@@ -135,6 +135,17 @@ public class RouterBuilder {
         return this;
     }
 
+    public RouterBuilder setSidelap(int sidelap) {
+        mSurveyData.setSidelap(sidelap);
+        return this;
+    }
+
+
+    public RouterBuilder setOverlap(int overlap) {
+        mSurveyData.setSidelap(overlap);
+        return this;
+    }
+
     public SurveyRouter generate(boolean sort) throws GridTooManyLinesException, CameraPointTooManyException {
 
         double angle = mSurveyData.getAngle();
