@@ -9,7 +9,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.coretronic.drone.MainActivity;
-import com.coretronic.drone.R;
 import com.coretronic.drone.settings.Setting;
 import com.coretronic.drone.settings.SwitchEvent;
 import com.coretronic.drone.ui.SeekBarTextView;
@@ -109,19 +108,11 @@ public class ViewManager {
 
             @Override
             public void onStopTrackingTouch(int value) {
-                Log.d(TAG, "onStopTrackingTouch");
                 activity.setSettingValue(settingType, value);
                 if (setting.getParameterType() != null && activity.getDroneController() != null) {
                     activity.getDroneController().setParameters(setting.getParameterType(), setting.getParameter());
                 }
             }
         });
-        switch (id) {
-            case R.id.setting_bar_low_power_flash:
-            case R.id.setting_bar_low_power_rtl:
-                float width = activity.getResources().getDimension(R.dimen.setting_low_power_tv_width);
-                seekBarTextView.setTvWidth((int)width);
-                break;
-        }
     }
 }

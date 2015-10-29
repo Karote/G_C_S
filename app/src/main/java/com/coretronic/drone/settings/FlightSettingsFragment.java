@@ -55,13 +55,14 @@ public class FlightSettingsFragment extends UnBindDrawablesFragment {
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_tilt_angle_max, Setting.SettingType.TILT_ANGLE_MAX);
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_vertical_speed_max, Setting.SettingType.VERTICAL_SPEED_MAX);
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_altitude_max, Setting.SettingType.ALTITUDE_LIMIT);
-        ViewManager.assignSwitchView(mMainActivity, view, R.id.switch_low_power_level_1, Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_ENABLE);
+        ViewManager.assignSwitchView(mMainActivity, view, R.id.switch_low_power_level_one, Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_ENABLE);
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_low_power_flash, Setting.SettingType.LOW_BATTERY_PROTECTION_WARN_VALUE);
-        ViewManager.assignSwitchView(mMainActivity, view, R.id.switch_low_power_level_2, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_ENABLE);
+        ViewManager.assignSwitchView(mMainActivity, view, R.id.switch_low_power_level_two, Setting.SettingType
+                .LOW_BATTERY_PROTECTION_CRITICAL_ENABLE);
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_low_power_rtl, Setting.SettingType.LOW_BATTERY_PROTECTION_CRITICAL_VALUE);
 
-        Switch mLowPowerLevelOneSwitch = (Switch) view.findViewById(R.id.switch_low_power_level_1);
-        Switch mLowPowerLevelTwoSwitch = (Switch) view.findViewById(R.id.switch_low_power_level_2);
+        Switch mLowPowerLevelOneSwitch = (Switch) view.findViewById(R.id.switch_low_power_level_one);
+        Switch mLowPowerLevelTwoSwitch = (Switch) view.findViewById(R.id.switch_low_power_level_two);
 
         mLowPowerLevelOneSeekBarTextView = (SeekBarTextView) view.findViewById(R.id.setting_bar_low_power_flash);
         mLowPowerLevelTwoSeekBarTextView = (SeekBarTextView) view.findViewById(R.id.setting_bar_low_power_rtl);
@@ -114,10 +115,10 @@ public class FlightSettingsFragment extends UnBindDrawablesFragment {
             return;
         }
         switch (switchEvent.getId()) {
-            case R.id.switch_low_power_level_1:
+            case R.id.switch_low_power_level_one:
                 mLowPowerLevelOneSeekBarTextView.setViewEnabled(switchEvent.isChecked());
                 break;
-            case R.id.switch_low_power_level_2:
+            case R.id.switch_low_power_level_two:
                 mLowPowerLevelTwoSeekBarTextView.setViewEnabled(switchEvent.isChecked());
                 break;
         }

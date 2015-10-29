@@ -55,23 +55,23 @@
     <string name="time_hint">09:26</string>
 
     <!-- Setting-->
-    <string name="altitude_max">Altitude Max</string>
-    <string name="vertical_speed_max">Vertical Speed Max</string>
-    <string name="rotation_speed_max">Rotation Speed Max</string>
-    <string name="tilt_angle_max">Tilt Angle Max</string>
-    <string name="low_power_protection">Low Power Protection</string>
-    <string name="level_one">Level 1</string>
-    <string name="level_two">Level 2</string>
-    <string name="flat_trim">Flat Trim</string>
+    <string name="altitude_max">ALTITUDE MAX</string>
+    <string name="vertical_speed_max">VERTICAL SPEED MAX</string>
+    <string name="rotation_speed_max">ROTATION SPEED MAX</string>
+    <string name="tilt_angle_max">TILT ANGLE MAX</string>
+    <string name="low_power_protection">LOW POWER PROTECT</string>
+    <string name="low_power_protection_level_1">LEVEL1</string>
+    <string name="low_power_protection_level_2">LEVEL2</string>
+    <string name="flat_trim">FLAT TRIM</string>
     <string name="execute">EXECUTE</string>
     <string name="last_execution">Last Execution:</string>
-    <string name="basic_aileron_gain">Basic Aileron Gain</string>
-    <string name="basic_elevator_gain">Basic Elevator Gain</string>
-    <string name="basic_rudder_gain">Basic Rudder Gain</string>
-    <string name="attitude_gps_aileron_gain">Attitude/GPS Aileron Gain</string>
-    <string name="attitude_gps_elevator_gain">Attitude/GPS Elevator Gain</string>
-    <string name="attitude_gps_rudder_gain">Attitude/GPS Rudder Gain</string>
-    <string name="altitude_gain">Altitude Gain</string>
+    <string name="basic_aileron_gain">BASIC AILERON GAIN</string>
+    <string name="basic_elevator_gain">BASIC ELEVATOR GAIN</string>
+    <string name="basic_rudder_gain">BASIC RUDDER GAIN</string>
+    <string name="attitude_gps_aileron_gain">ATTITUDE/GPS AILERON GAIN</string>
+    <string name="attitude_gps_elevator_gain">ATTITUDE/GPS ELEVATOR GAIN</string>
+    <string name="attitude_gps_rudder_gain">ATTITUDE/GPS RUDDER GAIN</string>
+    <string name="altitude_gain">ALTITUDE GAIN</string>
 
     <!-- main -->
     <string name="version">version</string>

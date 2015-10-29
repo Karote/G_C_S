@@ -38,7 +38,7 @@ public class GainExpoSettingFragment extends UnBindDrawablesFragment {
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_aileron_gain, Setting.SettingType.ATTITUDE_AILERON_GAIN);
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_elevator_gain, Setting.SettingType.ATTITUDE_ELEVATOR_GAIN);
         ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_rudder_gain, Setting.SettingType.ATTITUDE_RUDDER_GAIN);
-        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_attitude_gain, Setting.SettingType.ATTITUDE_GAIN);
+        ViewManager.assignSettingSeekBarTextView(mMainActivity, view, R.id.setting_bar_altitude_gain, Setting.SettingType.ATTITUDE_GAIN);
 
     }
 }

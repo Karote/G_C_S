@@ -2,18 +2,14 @@
 <resources>
 
     <style name="settings_title">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">38dp</item>
-        <item name="android:layout_gravity">left</item>
-        <item name="android:gravity">center</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">@dimen/setting_item_title_width</item>
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:fontFamily">@string/font_roboto_condensed</item>
         <item name="android:textSize">@dimen/settings_title_size</item>
-        <item name="android:textColor">#ffffff</item>
-    </style>
-
-    <style name="progress_style">
-        <item name="android:progressDrawable">@drawable/custom_seek_bar_progress_drawable</item>
-        <item name="android:thumb">@drawable/thumb</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
     </style>
 
     <style name="mav_info_title_text_style">

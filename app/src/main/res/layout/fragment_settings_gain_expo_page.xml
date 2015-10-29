@@ -1,91 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:baselineAligned="false"
-    android:orientation="horizontal">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp">
 
     <LinearLayout
-        android:layout_width="226dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="36dp"
+        android:layout_marginLeft="@dimen/setting_item_margin_left"
+        android:layout_marginRight="@dimen/setting_item_margin_right"
+        android:baselineAligned="false"
         android:orientation="vertical">
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/basic_aileron_gain"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/basic_elevator_gain"/>
+            <TextView
+                style="@style/settings_title"
+                android:text="@string/basic_aileron_gain"/>
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/basic_rudder_gain"/>
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_basic_aileron_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/attitude_gps_aileron_gain"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/attitude_gps_elevator_gain"/>
+            <TextView
+                style="@style/settings_title"
+                android:text="@string/basic_elevator_gain"/>
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/attitude_gps_rudder_gain"/>
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_basic_elevator_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
 
-        <TextView
-            style="@style/settings_title"
-            android:text="@string/altitude_gain"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title"
+                android:text="@string/basic_rudder_gain"/>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_basic_rudder_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title"
+                android:text="@string/attitude_gps_aileron_gain"/>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_attitude_aileron_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title"
+                android:text="@string/attitude_gps_elevator_gain"/>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_attitude_elevator_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title"
+                android:text="@string/attitude_gps_rudder_gain"/>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_attitude_rudder_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title"
+                android:layout_gravity="center_vertical" android:text="@string/altitude_gain"/>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/setting_bar_altitude_gain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginRight="68dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_basic_aileron_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_basic_elevator_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_basic_rudder_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_attitude_aileron_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_attitude_elevator_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_attitude_rudder_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.coretronic.drone.ui.SeekBarTextView
-            android:id="@+id/setting_bar_attitude_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-</LinearLayout>
+</ScrollView>

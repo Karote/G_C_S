@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="settings_title">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_gravity">left</item>
-        <item name="android:gravity">center</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textSize">@dimen/settings_title_size</item>
-        <item name="android:textColor">#ffffff</item>
-    </style>
-
     <style name="mav_info_value_text_view">
         <item name="android:fontFamily">@string/font_roboto_regular</item>
         <item name="android:textSize">16sp</item>

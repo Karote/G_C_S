@@ -3,6 +3,8 @@
          (such as screen margins) for screens with more than 820dp of available width. This
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
 
+    <dimen name="settings_title_size">22sp</dimen>
+
     <dimen name="status_bar_gps_left_margin">12dp</dimen>
     <dimen name="status_bar_gps_text_size">12sp</dimen>
     <dimen name="status_bar_rf_left_margin">8dp</dimen>
@@ -113,4 +115,26 @@
     <dimen name="mission_plan_detail_text_size">18sp</dimen>
     <dimen name="flight_history_recycler_view_right_margin">8dp</dimen>
     <dimen name="flight_history_recycler_view_top_margin">8dp</dimen>
+
+    <dimen name="setting_item_height">54dp</dimen>
+    <dimen name="setting_item_title_width">264dp</dimen>
+    <dimen name="setting_progress_text_width">68dp</dimen>
+    <dimen name="setting_progress_text_margin_right">8dp</dimen>
+    <dimen name="setting_progress_text_size">18sp</dimen>
+    <dimen name="setting_item_margin_right">40dp</dimen>
+    <dimen name="setting_item_margin_left">40dp</dimen>
+    <dimen name="setting_progress_bar_height">12dp</dimen>
+    <dimen name="setting_item_margin_bottom">4dp</dimen>
+    <dimen name="setting_fragment_title_height">48dp</dimen>
+    <dimen name="setting_fragment_title_text_size">22sp</dimen>
+    <dimen name="setting_fragment_reset_text_size">20sp</dimen>
+    <dimen name="setting_fragment_reset_padding_left">16dp</dimen>
+    <dimen name="setting_fragment_reset_padding_right">16dp</dimen>
+    <dimen name="setting_fragment_reset_drawable_padding">8dp</dimen>
+    <dimen name="setting_switch_text_size">16sp</dimen>
+    <dimen name="setting_switch_height">28dp</dimen>
+    <dimen name="setting_flight_page_execute_button_width">136dp</dimen>
+    <dimen name="setting_flight_page_execute_text_size">18sp</dimen>
+    <dimen name="setting_flight_page_execute_margin">12dp</dimen>
+
 </resources>
