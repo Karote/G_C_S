@@ -1,25 +1,15 @@
 var polygon_vertices = [];
 var polygon_polyline;
 var polygon_polyline_end;
-var polygon_vertex_marker_image;
 var footprints = [];
 var footprint_rectangle;
 var footprint_polyline;
 var footprint_properties;
-var aerial_survey_missions = [];
-var aerial_survey_missions_polyline;
 
 function initSurvey() {
 
-    polygon_vertex_marker_image = {
-        url : 'ico_indicator_waypoint_circle.png',
-        scaledSize : new google.maps.Size(40, 40),
-        origin : new google.maps.Point(0, 0),
-        anchor : new google.maps.Point(20, 20)
-    };
-
     var polygon_polyline_options = {
-        strokeColor : '#4EC3F5',
+        strokeColor : '#5ea1c7',
         strokeOpacity : 1.0,
         strokeWeight : 3,
         clickable : false,
@@ -29,10 +19,10 @@ function initSurvey() {
     polygon_polyline = new google.maps.Polyline(polygon_polyline_options);
 
     var lineSymbol = {
+        strokeColor : '#5ea1c7', 
         path : 'M 0,-1 0,1',
         strokeOpacity : 1,
-        scale : 4,
-        fillColor : '#4EC3F5'
+        scale : 4
     };
 
     var polygon_polyline_end_options = {
@@ -47,26 +37,15 @@ function initSurvey() {
     };
     polygon_polyline_end = new google.maps.Polyline(polygon_polyline_end_options);
 
-    aerial_survey_missions_polyline = new google.maps.Polyline(polygon_polyline_options);
-
     var footprint_polyline_options = {
-        strokeColor : '#000000',
-        strokeOpacity : 0.8,
-        strokeWeight : 3,
+        strokeColor : '#17415c',
+        strokeOpacity : 1,
+        strokeWeight : 4,
         clickable : false,
         map : map,
         zIndex : 255,
     };
     footprint_polyline = new google.maps.Polyline(footprint_polyline_options);
-
-    footprint_rectangle = new google.maps.Polygon({
-        strokeColor : '#333333',
-        strokeOpacity : 0.3,
-        strokeWeight : 2,
-        fillColor : '#FF0000',
-        fillOpacity : 0.35
-    });
-
 }
 
 function initFootprintProperties(top_offset, left_offset, bottom_offset, right_offset) {
@@ -84,17 +63,23 @@ function updatePolygon(polygonsInJson) {
         console.log("123");
         clearPolygon();
     } else {
-        if (polygon_polyline.getPath().length > 0) {
-            polygon_polyline.getPath().pop();
+        if (polygon_polyline_end.getMap()) {
+            polygon_polyline_end.setMap(null);
+            polygon_polyline_end.setPath([]);
         }
     }
     for (var i = polygon_vertices.length; i < vertices.length; i++) {
         addPolygonVertex(vertices[i].latitude, vertices[i].longitude, i + 1);
     }
 
-    polygon_polyline.getPath().push(new google.maps.LatLng(vertices[0].latitude, vertices[0].longitude));
     if (!polygon_polyline.getMap()) {
         polygon_polyline.setMap(map);
+    }
+
+    if (vertices.length > 2) {
+        polygon_polyline_end.getPath().push(new google.maps.LatLng(vertices[vertices.length - 1].latitude, vertices[vertices.length - 1].longitude));
+        polygon_polyline_end.getPath().push(new google.maps.LatLng(vertices[0].latitude, vertices[0].longitude));
+        polygon_polyline_end.setMap(map);
     }
 
 }
@@ -120,9 +105,19 @@ function addPolygonVertex(lat, lng, index) {
     };
 
     var polygon_vertex_marker = new google.maps.Marker(polygon_vertex_marker_option);
-    
+
     google.maps.event.addListener(polygon_vertex_marker, 'drag', function(e) {
         polygon_polyline.getPath().setAt(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition());
+        if (polygon_vertex_marker.index == 1) {
+            if (polygon_polyline_end.getMap()) {
+                polygon_polyline_end.getPath().setAt(1, polygon_vertex_marker.getPosition());
+            }
+        }
+        if (polygon_vertex_marker.index == polygon_vertices.length) {
+            if (polygon_polyline_end.getMap()) {
+                polygon_polyline_end.getPath().setAt(0, polygon_vertex_marker.getPosition());
+            }
+        }
     });
     google.maps.event.addListener(polygon_vertex_marker, 'dragend', function(e) {
         AndroidFunction.onMapDragEndEvent(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition().lat(), polygon_vertex_marker.getPosition().lng());
@@ -147,11 +142,9 @@ function addFootprint(lat, lng) {
 
     if (footprint_properties) {
         var footprint = new google.maps.Polygon({
-            strokeColor : '#00CCCC',
-            strokeOpacity : 0.8,
-            strokeWeight : 2,
-            fillColor : '#009999',
-            fillOpacity : 0.35,
+            strokeWeight : 0,
+            fillColor : '#3978a9',
+            fillOpacity : 0.3,
             paths : [{
                 lat : lat + footprint_properties.top_left_lat_offset,
                 lng : lng + footprint_properties.top_left_lng_offset
@@ -188,6 +181,8 @@ function clearPolygon() {
     polygon_vertices = [];
     polygon_polyline.setMap(null);
     polygon_polyline.setPath([]);
+    polygon_polyline_end.setMap(null);
+    polygon_polyline_end.setPath([]);
 }
 
 function clearFootprint() {
