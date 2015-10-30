@@ -107,29 +107,19 @@
 
             <Switch
                 android:id="@+id/switch_low_power_level_one"
+                style="@style/setting_power_protect_switch"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/setting_switch_height"
+                android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/setting_low_power_title"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/setting_low_power_title"
-                android:layout_gravity="left|center"
                 android:layout_marginLeft="6dp"
-                android:layout_marginRight="18dp"
-                android:checked="false"
-                android:textColor="@color/white"
-                android:textOff="OFF"
-                android:textOn="ON"
-                android:textSize="@dimen/setting_switch_text_size"
-                android:textStyle="bold"
-                android:thumb="@drawable/switch_selector_custom"
-                android:track="@drawable/switch_track_custom"/>
+                android:layout_marginRight="18dp"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_low_power_flash"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/setting_low_power_title"
-                android:layout_alignTop="@+id/setting_low_power_title"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_toLeftOf="@+id/switch_low_power_level_one"
                 android:layout_toRightOf="@+id/setting_low_power_level_1_title"/>
@@ -145,31 +135,24 @@
 
             <Switch
                 android:id="@+id/switch_low_power_level_two"
+                style="@style/setting_power_protect_switch"
                 android:layout_width="wrap_content"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/setting_low_power_level_2_title"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/setting_low_power_level_2_title"
-                android:layout_gravity="left|center"
                 android:layout_marginLeft="6dp"
-                android:layout_marginRight="18dp"
-                android:textColor="@color/white"
-                android:textOff="OFF"
-                android:textOn="ON"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:thumb="@drawable/switch_selector_custom"
-                android:track="@drawable/switch_track_custom"/>
+                android:layout_marginRight="18dp"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
                 android:id="@+id/setting_bar_low_power_rtl"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/setting_low_power_level_2_title"
-                android:layout_alignTop="@+id/setting_low_power_level_2_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/switch_low_power_level_two"
+                android:layout_alignTop="@+id/switch_low_power_level_two"
                 android:layout_marginLeft="8dp"
-                android:layout_toLeftOf="@+id/switch_low_power_level_one"
-                android:layout_toRightOf="@+id/setting_low_power_level_1_title"/>
+                android:layout_toLeftOf="@+id/switch_low_power_level_two"
+                android:layout_toRightOf="@+id/setting_low_power_level_2_title"/>
 
         </RelativeLayout>
         <LinearLayout

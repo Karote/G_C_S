@@ -5,6 +5,6 @@
     android:useLevel="false"
     android:visible="true">
     <solid android:color="@color/gray_half_translucent" />
-    <corners android:radius="11dp" />
-    <size android:height="22dp" />
+    <corners android:radius="@dimen/setting_switch_height_half" />
+    <size android:height="@dimen/setting_switch_height" />
 </shape>

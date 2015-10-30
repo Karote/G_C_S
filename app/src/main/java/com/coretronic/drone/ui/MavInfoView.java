@@ -55,10 +55,10 @@ public class MavInfoView implements StatusChangedListener {
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        onAltitudeUpdate(10);
-        onGroundSpeedUpdate(10);
-        onLocationUpdate(10, 10);
-        onFlightTimeUpdate(10);
+        onAltitudeUpdate(0);
+        onGroundSpeedUpdate(0);
+        onLocationUpdate(0, 0);
+        onFlightTimeUpdate(0);
     }
 
     final private void onAltitudeUpdate(float altitude) {

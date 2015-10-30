@@ -149,6 +149,7 @@
     <dimen name="setting_fragment_reset_drawable_padding">4dp</dimen>
     <dimen name="setting_switch_text_size">16sp</dimen>
     <dimen name="setting_switch_height">22dp</dimen>
+    <dimen name="setting_switch_height_half">11dp</dimen>
     <dimen name="setting_flight_page_execute_button_width">96dp</dimen>
     <dimen name="setting_flight_page_execute_text_size">16sp</dimen>
     <dimen name="setting_flight_page_execute_margin">8dp</dimen>

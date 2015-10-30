@@ -251,7 +251,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case ON_FLIGHT_DURATION_UPDATE:
                 break;
             case ON_RADIO_SIGNAL_UPDATE:
-                mStatusView.setGpsStatus(droneStatus.getRadioSignal());
+                mStatusView.setRFStatus(droneStatus.getRadioSignal());
                 break;
             case ON_MISSION_STATE_UPDATE:
                 notificationWithTTS(droneStatus.getMissionPlanState());
