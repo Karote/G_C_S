@@ -32,6 +32,7 @@ import com.coretronic.drone.missionplan.map.DroneMap;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.RecordItem;
+import com.coretronic.drone.survey.SurveyRouter;
 import com.coretronic.drone.ui.ControlBarView;
 import com.coretronic.drone.ui.MavInfoView;
 import com.coretronic.drone.ui.StatusView;
@@ -52,6 +53,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
+
 import java.util.List;
 
 public class MapViewFragment extends Fragment implements OnClickListener, LocationListener, ConnectionCallbacks,
@@ -63,6 +66,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     public static final int FRAGMENT_TYPE_HISTORY = 1;
     private static final int FRAGMENT_TYPE_ACTIVATE = 2;
     private static final int FRAGMENT_TYPE_TAP_AND_GO = 3;
+    private static final int FRAGMENT_TYPE_AERIAL_SURVEY = 4;
 
     public static final int GOOGLE_LOCATION_REQUEST_CODE = 1000;
     private static final long LOCATION_UPDATE_MIN_TIME = 1000;
@@ -438,6 +442,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDeleteButton.setOnClickListener(this);
         view.findViewById(R.id.delete_done_button).setOnClickListener(this);
         view.findViewById(R.id.delete_all_button).setOnClickListener(this);
+        view.findViewById(R.id.aerial_survey_button).setOnClickListener(this);
         view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
         view.findViewById(R.id.tap_and_go_button).setOnClickListener(this);
         view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
@@ -461,6 +466,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
+                break;
+            case FRAGMENT_TYPE_AERIAL_SURVEY:
+                mCurrentFragment = AerialSurveyFragment.newInstance();
                 break;
         }
 
@@ -601,6 +609,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case R.id.tap_and_go_button:
                 setFragmentTransaction(FRAGMENT_TYPE_TAP_AND_GO);
                 return;
+            case R.id.aerial_survey_button:
+                setFragmentTransaction(FRAGMENT_TYPE_AERIAL_SURVEY);
+                return;
             case R.id.plan_go_button:
                 if (getDroneController() == null) {
                     return;
@@ -640,7 +651,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 } else {
                     showFPVFragment();
                 }
-                return;
         }
 
         if (mCurrentFragment == null) {
@@ -741,21 +751,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updateDroneLocation(droneStatus.getLatitude(), droneStatus.getLongitude(), droneStatus.getYaw());
     }
 
-    public static Mission createNewMission(float latitude, float longitude, float altitude,
-                                           int waitSeconds, boolean autoContinue, int radius, Mission.Type type) {
-        Mission.Builder builder = new Mission.Builder();
-
-        builder.setLatitude(latitude);
-        builder.setLongitude(longitude);
-        builder.setAltitude(altitude);
-        builder.setWaitSeconds(waitSeconds);
-        builder.setAutoContinue(autoContinue);
-        builder.setRadius(radius);
-        builder.setType(type);
-
-        return builder.create();
-    }
-
     @Override
     public void onDeviceAdded(DroneDevice droneDevice) {
 
@@ -768,7 +763,27 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
     }
 
+    public void clearSurvey() {
+        mDroneMap.clearSurvey();
+    }
+
+    public void clearFootprint() {
+        mDroneMap.clearFootprint();
+    }
+
+    public void updateFootprints(SurveyRouter routerGrid) {
+        mDroneMap.updateFootprints(routerGrid);
+    }
+
     public void clearMap() {
         mDroneMap.clearMap();
+    }
+
+    public void updatePolygon(List<Coord2D> polygonPoints) {
+        mDroneMap.updatePolygon(polygonPoints);
+    }
+
+    public void setMavInfoViewVisibility(int mavInfoViewVisibility) {
+        mMavInfoView.setVisibility(mavInfoViewVisibility);
     }
 }

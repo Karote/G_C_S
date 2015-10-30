@@ -30,13 +30,22 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/multi_way_point_button"
+            android:id="@+id/aerial_survey_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marker_editor_control_panel_multi_way_point_button_right_margin"
             android:layout_marginLeft="@dimen/marker_editor_control_panel_multi_way_point_button_left_margin"
             android:layout_marginRight="@dimen/marker_editor_control_panel_multi_way_point_button_right_margin"
             android:layout_marginStart="@dimen/marker_editor_control_panel_multi_way_point_button_left_margin"
+            android:background="@drawable/marker_editor_aerial_survey_button_icon"
+            android:button="@android:color/transparent" />
+
+        <RadioButton
+            android:id="@+id/multi_way_point_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/marker_editor_control_panel_multi_way_point_button_right_margin"
+            android:layout_marginRight="@dimen/marker_editor_control_panel_multi_way_point_button_right_margin"
             android:background="@drawable/marker_editor_multi_way_point_button_icon"
             android:button="@android:color/transparent" />
 

@@ -36,12 +36,14 @@ public class MissionItemDetailFragment extends Fragment {
     private final static String TXT_TAKEOFF = "Take Off";
     private final static String TXT_LAND = "Land";
     private final static String TXT_RTL = "RTL";
-    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL};
+    private final static String TXT_CAMERA = "Camera";
+    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL, TXT_CAMERA};
 
     private final static int WAYPOINT_INDEX = 0;
     private final static int TAKEOFF_INDEX = 1;
     private final static int LAND_INDEX = 2;
     private final static int RTL_INDEX = 3;
+    private final static int CAMERA_INDEX = 4;
 
     private TextView mSerialNumberTextView = null;
     private EditText mLatitudeTextView = null;
@@ -50,7 +52,7 @@ public class MissionItemDetailFragment extends Fragment {
     private ImageView mTypeImageView = null;
     private AbstractWheel mAltitudeWheel = null;
     private AbstractWheel mDelayWheel = null;
-    private PlanningFragment mPlanningFragment;
+    private SelectedMissionUpdatedCallback mSelectedMissionUpdatedCallback;
 
     public static MissionItemDetailFragment newInstance(int index, Mission mission) {
         MissionItemDetailFragment fragment = new MissionItemDetailFragment();
@@ -80,7 +82,7 @@ public class MissionItemDetailFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    mPlanningFragment.setItemMissionLatitude(Float.parseFloat(v.getText().toString()));
+                    mSelectedMissionUpdatedCallback.onMissionLatitudeUpdate(Float.parseFloat(v.getText().toString()));
                 }
                 return false;
             }
@@ -90,7 +92,7 @@ public class MissionItemDetailFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    mPlanningFragment.setItemMissionLongitude(Float.parseFloat(v.getText().toString()));
+                    mSelectedMissionUpdatedCallback.onMissionLongitudeUpdate(Float.parseFloat(v.getText().toString()));
                 }
                 return false;
             }
@@ -100,7 +102,7 @@ public class MissionItemDetailFragment extends Fragment {
         fragmentView.findViewById(R.id.btn_detail_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((PlanningFragment) getParentFragment()).deleteSelectedMission();
+                mSelectedMissionUpdatedCallback.onMissionDeleted();
             }
         });
 
@@ -112,21 +114,24 @@ public class MissionItemDetailFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case WAYPOINT_INDEX: // Waypoint
-                        mPlanningFragment.setItemMissionType(Mission.Type.WAY_POINT);
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.WAY_POINT);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                         break;
                     case TAKEOFF_INDEX: // Take Off
-                        mPlanningFragment.setItemMissionType(Mission.Type.TAKEOFF);
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.TAKEOFF);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                         break;
                     case LAND_INDEX: // Land
-                        mPlanningFragment.setItemMissionType(Mission.Type.LAND);
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.LAND);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_land);
                         break;
                     case RTL_INDEX: // RTL_INDEX
-                        mPlanningFragment.setItemMissionType(Mission.Type.RTL);
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.RTL);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                         break;
+                    case CAMERA_INDEX:
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.CAMERA_TRIGGER_DISTANCE);
+                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
                     default:
                         break;
                 }
@@ -139,12 +144,12 @@ public class MissionItemDetailFragment extends Fragment {
         });
 
         mAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.altitude_wheel);
-        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 20, "%01d"));
+        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 100, "%01d"));
         mAltitudeWheel.setCyclic(false);
         mAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mPlanningFragment.setItemMissionAltitude((float) newValue);
+                mSelectedMissionUpdatedCallback.onMissionAltitudeUpdate((float) newValue);
             }
         });
 
@@ -154,7 +159,7 @@ public class MissionItemDetailFragment extends Fragment {
         mDelayWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mPlanningFragment.setItemMissionDelay(newValue);
+                mSelectedMissionUpdatedCallback.onMissionDelayUpdate(newValue);
             }
         });
     }
@@ -162,7 +167,7 @@ public class MissionItemDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPlanningFragment = (PlanningFragment) getParentFragment();
+        mSelectedMissionUpdatedCallback = (SelectedMissionUpdatedCallback) getParentFragment();
         initView();
     }
 
@@ -186,6 +191,9 @@ public class MissionItemDetailFragment extends Fragment {
                 case RTL:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                     break;
+                case CAMERA_TRIGGER_DISTANCE:
+                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
+                    break;
                 default:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                     break;
@@ -203,6 +211,8 @@ public class MissionItemDetailFragment extends Fragment {
                 return LAND_INDEX;
             case RTL:
                 return RTL_INDEX;
+            case CAMERA_TRIGGER_DISTANCE:
+                return CAMERA_INDEX;
             case WAY_POINT:
             default:
                 return WAYPOINT_INDEX;

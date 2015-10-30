@@ -2,6 +2,7 @@ package com.coretronic.drone.missionplan.map;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Pair;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -11,10 +12,11 @@ import android.widget.Toast;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
-import com.coretronic.ibs.log.Logger;
+import com.coretronic.drone.survey.SurveyRouter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
 import org.json.JSONArray;
 
 import java.util.List;
@@ -90,7 +92,7 @@ public class DroneMap implements OnMapEventCallback {
     }
 
     @JavascriptInterface
-    public void onMapWarningMessage(final String message) {
+    public void onWarningMessage(final String message) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -203,11 +205,32 @@ public class DroneMap implements OnMapEventCallback {
     public void onStop() {
         mMapWebView.loadUrl("javascript:enableGeoLocation(false)");
     }
-    private String transMissionToJson(List<Mission> missions) {
-        Logger.debug(mGson.toJson(missions));
+
+    private String transMissionToJson(List missions) {
         return mGson.toJson(missions);
     }
+
+    public void updateFootprints(SurveyRouter surveyRouter) {
+        Pair<Coord2D, Coord2D> cameraOffset = surveyRouter.getCameraOffset();
+        mMapWebView.loadUrl(String.format("javascript:initFootprintProperties(%f , %f, %f, %f)",
+                cameraOffset.first.getX(), cameraOffset.first.getY(), cameraOffset.second.getX(), cameraOffset.second.getY()));
+        mMapWebView.loadUrl("javascript:updateFootprint(" + transMissionToJson(surveyRouter.getCameraShutterPoints()) + ")");
+    }
+
+    public void clearSurvey() {
+        mMapWebView.loadUrl("javascript:clearSurvey()");
+    }
+
+    public void clearFootprint() {
+        mMapWebView.loadUrl("javascript:clearFootprint()");
+    }
+
     public void clearMap() {
         mMapWebView.loadUrl("javascript:mapClean()");
     }
+
+    public void updatePolygon(List<Coord2D> polygonPoints) {
+        mMapWebView.loadUrl("javascript:updatePolygon(" + transMissionToJson(polygonPoints) + ")");
+    }
+
 }

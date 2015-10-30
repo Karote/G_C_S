@@ -48,6 +48,7 @@
     <dimen name="drone_control_button_group_divider_h_margin">4dp</dimen>
     <dimen name="drone_control_button_group_divider_height">56dp</dimen>
     <dimen name="drone_control_button_group_btn_v_margin">6dp</dimen>
+
     <dimen name="map_type_control_button_top_margin">12dp</dimen>
     <dimen name="map_type_control_button_left_margin">12dp</dimen>
 
@@ -67,11 +68,11 @@
     <dimen name="history_fragment_log_listitem_time_text_size">16sp</dimen>
 
     <dimen name="control_progress_circle_thumb_size">48dp</dimen>
-    <dimen name="aircraft_compass_ruler_outer_padding">16dp</dimen>
 
-    <dimen name="mission_item_recycler_view_bottom_margin">56dp</dimen>
-    <dimen name="mission_item_recycler_view_top_margin">8dp</dimen>
-    <dimen name="mission_item_recycler_view_right_margin">8dp</dimen>
+    <dimen name="aircraft_compass_ruler_outer_padding">16dp</dimen>
+    <dimen name="mission_item_recycle_view_bottom_margin">56dp</dimen>
+    <dimen name="mission_item_recycle_view_top_margin">8dp</dimen>
+    <dimen name="mission_item_recycle_view_right_margin">8dp</dimen>
 
     <dimen name="way_point_detail_container_top_margin">8dp</dimen>
     <dimen name="way_point_detail_location_text_size">18sp</dimen>
@@ -138,4 +139,9 @@
     <dimen name="setting_flight_page_execute_text_size">18sp</dimen>
     <dimen name="setting_flight_page_execute_margin">12dp</dimen>
 
+    <dimen name="dialog_content_right_margin">16dp</dimen>
+    <dimen name="dialog_content_left_margin">16dp</dimen>
+    <dimen name="dialog_item_title_and_content_margin">2dp</dimen>
+    <dimen name="dialog_item_title_top_margin">8dp</dimen>
+    <dimen name="dialog_spinner_wheel_height">36dp</dimen>
 </resources>

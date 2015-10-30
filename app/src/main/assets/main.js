@@ -12,26 +12,7 @@ function initialize() {
     initPlanningMissionPolyline();
     initHistoryMarkerPolyline();
     initTapGoMarkerPolyline();
-
-    var GeoMarkerOption = {
-        icon : {
-            path : google.maps.SymbolPath.CIRCLE,
-            scale : 10,
-            strokeColor : '#34a7ff',
-            strokeOpacity : 1,
-            fillColor : '#34a7ff',
-            fillOpacity : 1
-        }
-    }
-
-    GeoMarker = new GeolocationMarker(map, GeoMarkerOption);
-    GeoMarker.setCircleOptions({
-        fillColor : '#34a7ff',
-        strokeColor : '#34a7ff',
-        strokeOpacity : 1,
-        strokeWeight : 2
-    });
-
+    initSurvey();
     AndroidFunction.onMapLoaded();
 
     // updateDroneLocation(247122990, 1209164080, 0);
@@ -75,6 +56,23 @@ function initMap() {
 
     google.maps.event.addListener(map, 'bounds_changed', function() {
         initializeNoWayPointZone(map.getBounds());
+    });
+    var GeoMarkerOption = {
+        icon : {
+            path : google.maps.SymbolPath.CIRCLE,
+            scale : 10,
+            strokeColor : '#34a7ff',
+            strokeOpacity : 1,
+            fillColor : '#34a7ff',
+            fillOpacity : 1
+        }
+    }
+    GeoMarker = new GeolocationMarker(map, GeoMarkerOption);
+    GeoMarker.setCircleOptions({
+        fillColor : '#34a7ff',
+        strokeColor : '#34a7ff',
+        strokeOpacity : 1,
+        strokeWeight : 2
     });
 
 }

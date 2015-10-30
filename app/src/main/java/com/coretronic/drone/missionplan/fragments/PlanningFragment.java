@@ -17,6 +17,7 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter.OnItemSelectedListener;
 import com.coretronic.drone.model.Mission;
+import com.coretronic.drone.model.Mission.Builder;
 import com.coretronic.drone.model.Mission.Type;
 
 import java.util.List;
@@ -24,10 +25,9 @@ import java.util.List;
 /**
  * Created by karot.chuang on 2015/7/21.
  */
-public class PlanningFragment extends MapChildFragment implements MissionLoaderListener {
-
+public class PlanningFragment extends MapChildFragment implements MissionLoaderListener, SelectedMissionUpdatedCallback {
     private final static String ARG_From_History = "argFromHistory";
-    private final static boolean DEFAULT_AUTO_CONTINUE = false;
+    private final static boolean DEFAULT_AUTO_CONTINUE = true;
     private final static int DEFAULT_ALTITUDE = 8;
     private final static int DEFAULT_WAIT_SECONDS = 0;
     private final static int DEFAULT_RADIUS = 0;
@@ -37,6 +37,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
+    private Mission.Builder mMissionBuilder;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -49,6 +50,9 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mMissionBuilder = new Builder();
+        mMissionBuilder.setAltitude(DEFAULT_ALTITUDE).setType(DEFAULT_TYPE).setAutoContinue(DEFAULT_AUTO_CONTINUE)
+                .setWaitSeconds(DEFAULT_WAIT_SECONDS).setRadius(DEFAULT_RADIUS);
         Bundle arguments = getArguments();
         if (arguments == null || !arguments.getBoolean(ARG_From_History)) {
             loadMissionFromDrone();
@@ -135,28 +139,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             mMissionItemAdapter.setDeleteLayoutVisible(false);
         }
         mWayPointDetailPanel.setVisibility(View.GONE);
-    }
-
-    // methods for DetailFragment
-    public void setItemMissionType(Mission.Type missionType) {
-        mMissionItemAdapter.getSelectedItem().setType(missionType);
-        mMissionItemAdapter.notifyDataSetChanged();
-    }
-
-    public void setItemMissionAltitude(float missionAltidude) {
-        mMissionItemAdapter.getSelectedItem().setAltitude(missionAltidude);
-        mMissionItemAdapter.notifyDataSetChanged();
-    }
-
-    public void setItemMissionDelay(int missionDelay) {
-        mMissionItemAdapter.getSelectedItem().setWaitSeconds(missionDelay);
-        mMissionItemAdapter.notifyDataSetChanged();
-    }
-
-    public void deleteSelectedMission() {
-        mMissionItemAdapter.removeSelected();
-        mWayPointDetailPanel.setVisibility(View.GONE);
-        updateMissionToMap();
     }
 
     private void updateMissionToMap() {
@@ -263,8 +245,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
-        mMissionItemAdapter.add(MapViewFragment.createNewMission(lat, lon, DEFAULT_ALTITUDE, DEFAULT_WAIT_SECONDS, DEFAULT_AUTO_CONTINUE,
-                DEFAULT_RADIUS, DEFAULT_TYPE));
+        mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).create());
         updateMissionToMap();
     }
 
@@ -274,17 +255,45 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mWayPointDetailPanel.setVisibility(View.GONE);
     }
 
-    public void setItemMissionLatitude(float latitude) {
+    @Override
+    public void onMissionLatitudeUpdate(float latitude) {
         mMissionItemAdapter.getSelectedItem().setLatitude(latitude);
         mMissionItemAdapter.notifyDataSetChanged();
         mMapViewFragment.clearMap();
         updateMissionToMap();
     }
 
-    public void setItemMissionLongitude(float longitude) {
+    @Override
+    public void onMissionLongitudeUpdate(float longitude) {
         mMissionItemAdapter.getSelectedItem().setLongitude(longitude);
         mMissionItemAdapter.notifyDataSetChanged();
         mMapViewFragment.clearMap();
         updateMissionToMap();
     }
+
+    @Override
+    public void onMissionTypeUpdate(Mission.Type missionType) {
+        mMissionItemAdapter.getSelectedItem().setType(missionType);
+        mMissionItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMissionAltitudeUpdate(float missionAltidude) {
+        mMissionItemAdapter.getSelectedItem().setAltitude(missionAltidude);
+        mMissionItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMissionDelayUpdate(int seconds) {
+        mMissionItemAdapter.getSelectedItem().setWaitSeconds(seconds);
+        mMissionItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMissionDeleted() {
+        mMissionItemAdapter.removeSelected();
+        mWayPointDetailPanel.setVisibility(View.GONE);
+        updateMissionToMap();
+    }
+
 }

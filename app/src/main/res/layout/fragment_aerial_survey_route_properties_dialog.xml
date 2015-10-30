@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="258dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/plan_route_detail_bg"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/route_properties_back_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="2"
+            android:background="@drawable/route_properties_back_button_bg"
+            android:fontFamily="@string/font_roboto_regular"
+            android:text="BACK"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/route_properties_ok_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/route_properties_ok_button_bg"
+            android:fontFamily="@string/font_roboto_regular"
+            android:text="OK"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
+        android:background="#dddddd" />
+
+    <TextView
+        style="@style/dialog_item_title_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_item_title_and_content_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:layout_marginTop="@dimen/dialog_item_title_top_margin"
+        android:text="Camera" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:background="#f0f0f0"
+        android:fontFamily="@string/font_roboto_medium"
+        android:gravity="center_vertical"
+        android:text="Canon SX260"
+        android:textColor="#727272"
+        android:textSize="18sp" />
+
+    <TextView
+        style="@style/dialog_item_title_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_item_title_and_content_margin"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:layout_marginTop="@dimen/dialog_item_title_top_margin"
+        android:text="Hatch Angle" />
+
+    <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+        android:id="@+id/route_properties_hatch_angle_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_spinner_wheel_height"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:background="@drawable/spinner_wheel_3_items_bg"
+        app:isAllVisible="false"
+        app:isCyclic="false"
+        app:itemsDimmedAlpha="100"
+        app:visibleItems="3" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_item_title_and_content_margin"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:layout_marginTop="@dimen/dialog_item_title_top_margin">
+
+        <TextView
+            style="@style/dialog_item_title_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/flight_altitude" />
+
+        <TextView
+            style="@style/dialog_item_unit_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/unit_in_meter" />
+
+    </RelativeLayout>
+
+    <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+        android:id="@+id/route_properties_altitude_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_spinner_wheel_height"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:background="@drawable/spinner_wheel_3_items_bg"
+        app:isAllVisible="false"
+        app:isCyclic="false"
+        app:itemsDimmedAlpha="100"
+        app:visibleItems="3" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_item_title_and_content_margin"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:layout_marginTop="@dimen/dialog_item_title_top_margin">
+
+        <TextView
+            style="@style/dialog_item_title_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Overlap" />
+
+        <TextView
+            style="@style/dialog_item_unit_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="%" />
+
+    </RelativeLayout>
+
+    <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+        android:id="@+id/route_properties_overlap_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_spinner_wheel_height"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:background="@drawable/spinner_wheel_3_items_bg"
+        app:isAllVisible="false"
+        app:isCyclic="false"
+        app:itemsDimmedAlpha="100"
+        app:visibleItems="3" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_item_title_and_content_margin"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:layout_marginTop="@dimen/dialog_item_title_top_margin">
+
+        <TextView
+            style="@style/dialog_item_title_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Sidelap" />
+
+        <TextView
+            style="@style/dialog_item_unit_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="%" />
+
+    </RelativeLayout>
+
+    <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+        android:id="@+id/route_properties_sidelap_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_spinner_wheel_height"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="@dimen/dialog_content_right_margin"
+        android:layout_marginLeft="@dimen/dialog_content_left_margin"
+        android:layout_marginRight="@dimen/dialog_content_right_margin"
+        android:layout_marginStart="@dimen/dialog_content_left_margin"
+        android:background="@drawable/spinner_wheel_3_items_bg"
+        app:isAllVisible="false"
+        app:isCyclic="false"
+        app:itemsDimmedAlpha="100"
+        app:visibleItems="3" />
+
+</LinearLayout>

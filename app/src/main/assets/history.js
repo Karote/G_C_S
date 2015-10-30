@@ -53,8 +53,7 @@ function initHistoryMarkerPolyline() {
 }
 
 function loadHistory(markerJson, pathJson) {
-    var i,
-        j;
+    var i, j;
 
     var history_mission_marker_data = JSON.parse("[" + markerJson + "]");
     var history_flight_path_data = JSON.parse("[" + pathJson + "]");
@@ -68,8 +67,7 @@ function loadHistory(markerJson, pathJson) {
 
     clearHistoryMarkerPath();
 
-    for ( i = 0,
-    j = history_flight_path_data.length; i < j; i += 2) {
+    for (i = 0, j = history_flight_path_data.length; i < j; i += 2) {
         history_flight_path.push(transLatLngToPosition(history_flight_path_data[i], history_flight_path_data[i + 1]));
     }
 
@@ -109,8 +107,7 @@ function loadHistory(markerJson, pathJson) {
         history_mission_markers_array.push(endMarker);
     }
 
-    for ( i = 0,
-    j = history_mission_marker_data.length; i < j; i += 2) {
+    for (i = 0, j = history_mission_marker_data.length; i < j; i += 2) {
 
         var x = 4;
         if (i > 18) {
@@ -134,8 +131,7 @@ function loadHistory(markerJson, pathJson) {
     history_flight_path_polyline.setMap(map);
 
     var flightbounds = new google.maps.LatLngBounds();
-    for ( i = 0,
-    j = history_flight_path.length; i < j; i++) {
+    for (i = 0, j = history_flight_path.length; i < j; i++) {
         flightbounds.extend(history_flight_path[i]);
     }
     map.fitBounds(flightbounds);
@@ -167,12 +163,9 @@ function clearHistoryMarkerPath() {
     history_flight_path_polyline.setPath([]);
     history_flight_path = [];
 
-    var i,
-        j;
-    for ( i = 0,
-    j = history_mission_markers_array.length; i < j; i++) {
+    var i, j;
+    for (i = 0, j = history_mission_markers_array.length; i < j; i++) {
         history_mission_markers_array[i].setMap(null);
     }
     history_mission_markers_array = [];
 }
-
