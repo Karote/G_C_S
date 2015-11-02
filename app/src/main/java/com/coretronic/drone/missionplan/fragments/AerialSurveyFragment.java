@@ -148,6 +148,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                     changeLayoutStatus(ROUTE_CREATED_STATUS);
                     break;
                 case R.id.route_properties_back_button:
+                    mAerialSurveyRouter = null;
                     mMapViewFragment.clearFootprint();
                     changeLayoutStatus(SCOPE_STATUS);
                     break;
@@ -286,6 +287,8 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
+        if(mAerialSurveyRouter != null)
+            return;
         mPolygonPoints.add(new Coord2D(lat, lon));
         if (mPolygonPoints.size() > 2) {
             changeLayoutStatus(SCOPE_STATUS);
@@ -363,6 +366,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
+                mMapViewFragment.setScopeMarkerDraggable(true);
                 break;
             case FOOTPRINT_STATUS:
                 mCreateRouteButton.setVisibility(View.GONE);
@@ -372,6 +376,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.VISIBLE);
                 mDistanceAndTimeInfo.setVisibility(View.VISIBLE);
+                mMapViewFragment.setScopeMarkerDraggable(false);
                 break;
             case ROUTE_CREATED_STATUS:
                 mRoutePropertiesDialog.setVisibility(View.GONE);

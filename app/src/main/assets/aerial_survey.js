@@ -193,3 +193,9 @@ function clearFootprint() {
     footprint_polyline.setMap(null);
     footprint_polyline.setPath([]);
 }
+
+function setScopeMarkerDraggable(draggable){
+    for (var index in polygon_vertices) {
+        polygon_vertices[index].setDraggable(draggable);
+    }
+}
