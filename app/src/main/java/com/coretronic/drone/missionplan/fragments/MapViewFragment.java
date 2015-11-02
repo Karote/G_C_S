@@ -442,10 +442,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDeleteButton.setOnClickListener(this);
         view.findViewById(R.id.delete_done_button).setOnClickListener(this);
         view.findViewById(R.id.delete_all_button).setOnClickListener(this);
-        view.findViewById(R.id.aerial_survey_button).setOnClickListener(this);
         view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
         view.findViewById(R.id.tap_and_go_button).setOnClickListener(this);
         view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
+
+        View aerialSurveyButton = view.findViewById(R.id.aerial_survey_button);
+        if (aerialSurveyButton != null) {
+            aerialSurveyButton.setOnClickListener(this);
+        }
 
     }
 
