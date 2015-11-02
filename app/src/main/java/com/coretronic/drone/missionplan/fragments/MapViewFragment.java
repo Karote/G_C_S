@@ -457,6 +457,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         if (mCurrentFragmentType == fragmentType) {
             return;
         }
+        hideFPVFragment();
         mCurrentFragmentType = fragmentType;
         switch (fragmentType) {
             case FRAGMENT_TYPE_ACTIVATE:
