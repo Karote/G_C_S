@@ -517,7 +517,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mControlBarView.setVisibility(controlButtonBarVisibility);
     }
 
-    private void setDeleteAndUndoButtonVisibility(int visibility) {
+    void setDeleteAndUndoButtonVisibility(int visibility) {
         mUndoButton.setVisibility(visibility);
         mDeleteButton.setVisibility(visibility);
     }
@@ -788,7 +788,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updatePolygon(polygonPoints);
     }
 
-    public void setMavInfoViewVisibility(int mavInfoViewVisibility) {
+    void setMavInfoViewVisibility(int mavInfoViewVisibility) {
         mMavInfoView.setVisibility(mavInfoViewVisibility);
+    }
+
+    void setDroneControlBarVisibility(int visibility) {
+        mControlBarView.setVisibility(visibility);
     }
 }
