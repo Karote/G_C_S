@@ -42,4 +42,9 @@ public class MapChildFragment extends Fragment implements OnMapEventCallback {
 
     }
 
+    @Override
+    public void onMapDeleteMarker(int index) {
+
+    }
+
 }

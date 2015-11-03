@@ -19,7 +19,7 @@ function initSurvey() {
     polygon_polyline = new google.maps.Polyline(polygon_polyline_options);
 
     var lineSymbol = {
-        strokeColor : '#5ea1c7', 
+        strokeColor : '#5ea1c7',
         path : 'M 0,-1 0,1',
         strokeOpacity : 1,
         scale : 4
@@ -123,6 +123,17 @@ function addPolygonVertex(lat, lng, index) {
         AndroidFunction.onMapDragEndEvent(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition().lat(), polygon_vertex_marker.getPosition().lng());
     });
 
+    var contentString = '<button type="button" onclick="AndroidFunction.onMapDeleteMarker('+ index + ')">Delete</button>'+
+                        '<button type="button" onclick="AndroidFunction.onMapDeleteMarker(-1)">Clear All</button>';
+    
+    var infowindow = new google.maps.InfoWindow({
+        content : contentString
+    });
+
+    google.maps.event.addListener(polygon_vertex_marker, 'click', function(e) {
+        infowindow.open(map, polygon_vertex_marker);
+    });
+
     polygon_vertices.push(polygon_vertex_marker);
     polygon_polyline.getPath().push(new google.maps.LatLng(lat, lng));
     if (!polygon_polyline.getMap()) {
@@ -194,7 +205,7 @@ function clearFootprint() {
     footprint_polyline.setPath([]);
 }
 
-function setScopeMarkerDraggable(draggable){
+function setScopeMarkerDraggable(draggable) {
     for (var index in polygon_vertices) {
         polygon_vertices[index].setDraggable(draggable);
     }

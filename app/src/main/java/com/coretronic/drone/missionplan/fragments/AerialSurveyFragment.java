@@ -287,7 +287,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
-        if(mAerialSurveyRouter != null)
+        if (mAerialSurveyRouter != null)
             return;
         mPolygonPoints.add(new Coord2D(lat, lon));
         if (mPolygonPoints.size() > 2) {
@@ -300,6 +300,20 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     public void onMapDragStartEvent() {
         mMissionItemAdapter.onNothingSelected();
         mWayPointDetailPanel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onMapDeleteMarker(int index) {
+        index--;
+        if (index < 0) {
+            mPolygonPoints.clear();
+        } else {
+            mPolygonPoints.remove(index);
+        }
+        if (mPolygonPoints.size() < 3) {
+            changeLayoutStatus(INIT_STATUS);
+        }
+        updatePolygon();
     }
 
     @Override
