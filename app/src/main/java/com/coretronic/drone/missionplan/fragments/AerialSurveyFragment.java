@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
@@ -57,6 +59,9 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
     private View mRoutePropertiesDialog = null;
+    private View mDistanceAndTimeInfo = null;
+    private View mRouteDetailInfo = null;
+    private TextView mDistanceValue, mTimeValue, mFootprintValue, mGSDValue, mLongitudinalValue, mLateralValue, mAreaValue, mGridLengthValue, mPictureValue, mStripsValue;
     private Button mCreateRouteButton = null;
     private RouterBuilder mRouterBuilder;
     private List<Coord2D> mPolygonPoints;
@@ -121,6 +126,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         mCreateRouteButton.setOnClickListener(onPlanningBtnClickListener);
         mRoutePropertiesDialog = view.findViewById(R.id.route_properties_dialog);
         initRoutePropertiesDialog(view);
+        initRouteInfo(view);
     }
 
     private View.OnClickListener onPlanningBtnClickListener = new View.OnClickListener() {
@@ -142,6 +148,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                     changeLayoutStatus(ROUTE_CREATED_STATUS);
                     break;
                 case R.id.route_properties_back_button:
+                    mAerialSurveyRouter = null;
                     mMapViewFragment.clearFootprint();
                     changeLayoutStatus(SCOPE_STATUS);
                     break;
@@ -174,6 +181,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             showToastMessage(e.getMessage());
             throw e;
         }
+        updateRouteInfoValue();
     }
 
     @Override
@@ -279,6 +287,8 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
+        if(mAerialSurveyRouter != null)
+            return;
         mPolygonPoints.add(new Coord2D(lat, lon));
         if (mPolygonPoints.size() > 2) {
             changeLayoutStatus(SCOPE_STATUS);
@@ -346,12 +356,17 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMapViewFragment.setMavInfoViewVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.GONE);
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mRouteDetailInfo.setVisibility(View.GONE);
+                mDistanceAndTimeInfo.setVisibility(View.GONE);
                 break;
             case SCOPE_STATUS:
                 mCreateRouteButton.setVisibility(View.VISIBLE);
                 mCreateRouteButton.setEnabled(true);
                 mRoutePropertiesDialog.setVisibility(View.GONE);
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mRouteDetailInfo.setVisibility(View.GONE);
+                mDistanceAndTimeInfo.setVisibility(View.GONE);
+                mMapViewFragment.setScopeMarkerDraggable(true);
                 break;
             case FOOTPRINT_STATUS:
                 mCreateRouteButton.setVisibility(View.GONE);
@@ -359,12 +374,17 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMapViewFragment.setMavInfoViewVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.GONE);
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mRouteDetailInfo.setVisibility(View.VISIBLE);
+                mDistanceAndTimeInfo.setVisibility(View.VISIBLE);
+                mMapViewFragment.setScopeMarkerDraggable(false);
                 break;
             case ROUTE_CREATED_STATUS:
                 mRoutePropertiesDialog.setVisibility(View.GONE);
                 mMapViewFragment.setMavInfoViewVisibility(View.VISIBLE);
                 mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.VISIBLE);
+                mRouteDetailInfo.setVisibility(View.GONE);
+                mDistanceAndTimeInfo.setVisibility(View.GONE);
                 break;
             case PLAN_GO_STATUS:
                 break;
@@ -479,5 +499,36 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 wheel.setCurrentItem(oldValue);
             }
         }
+    }
+
+    private void initRouteInfo(View view) {
+        mDistanceAndTimeInfo = view.findViewById(R.id.distance_and_time_info);
+        mRouteDetailInfo = view.findViewById(R.id.route_detail_info);
+
+        mDistanceValue = (TextView) view.findViewById(R.id.distance_value_text_view);
+        mTimeValue = (TextView) view.findViewById(R.id.time_value_text_view);
+        mFootprintValue = (TextView) view.findViewById(R.id.footprint_value_text_view);
+        mGSDValue = (TextView) view.findViewById(R.id.gsd_value_text_view);
+        ((TextView) view.findViewById(R.id.gsd_unit_text_view)).setText(Html.fromHtml("mm<sup><small>2</small></sup>/px"));
+        mLongitudinalValue = (TextView) view.findViewById(R.id.longitudinal_value_text_view);
+        mLateralValue = (TextView) view.findViewById(R.id.lateral_value_text_view);
+        mAreaValue = (TextView) view.findViewById(R.id.area_value_text_view);
+        ((TextView) view.findViewById(R.id.area_unit_text_view)).setText(Html.fromHtml("m<sup><small>2</small></sup>"));
+        mGridLengthValue = (TextView) view.findViewById(R.id.grid_length_value_text_view);
+        mPictureValue = (TextView) view.findViewById(R.id.picture_value_text_view);
+        mStripsValue = (TextView) view.findViewById(R.id.strips_value_text_view);
+    }
+
+    private void updateRouteInfoValue() {
+        mDistanceValue.setText("0");
+        mTimeValue.setText("0");
+        mFootprintValue.setText("0");
+        mGSDValue.setText("" + mAerialSurveyRouter.getSurveyData().getGSD());
+        mLongitudinalValue.setText("0");
+        mLateralValue.setText("0");
+        mAreaValue.setText("0");
+        mGridLengthValue.setText("0");
+        mPictureValue.setText("" + mAerialSurveyRouter.getCameraShutterCount());
+        mStripsValue.setText("" + mAerialSurveyRouter.getNumberOfLines());
     }
 }

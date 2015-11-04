@@ -788,6 +788,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updatePolygon(polygonPoints);
     }
 
+    public void setScopeMarkerDraggable(boolean draggable){
+        mDroneMap.setScopeMarkerDraggable(draggable);
+    }
+
     void setMavInfoViewVisibility(int mavInfoViewVisibility) {
         mMavInfoView.setVisibility(mavInfoViewVisibility);
     }

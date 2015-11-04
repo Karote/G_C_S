@@ -219,4 +219,5 @@ function mapClean() {
     clearTapMarker();
     clearTapGoSetMarker();
     clearHistoryMarkerPath();
+    clearSurvey();
 }
