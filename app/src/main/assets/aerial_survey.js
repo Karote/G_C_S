@@ -105,13 +105,6 @@ function addPolygonVertex(lat, lng, index) {
     };
 
     var polygon_vertex_marker = new google.maps.Marker(polygon_vertex_marker_option);
-    
-    google.maps.event.addListener(polygon_vertex_marker, 'dragstart', function(e) {
-        if (infowindow.getContent()) {
-            infowindow.close();
-            infowindow.setContent(null);
-        }
-    });
 
     google.maps.event.addListener(polygon_vertex_marker, 'drag', function(e) {
         polygon_polyline.getPath().setAt(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition());
@@ -130,9 +123,15 @@ function addPolygonVertex(lat, lng, index) {
         AndroidFunction.onMapDragEndEvent(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition().lat(), polygon_vertex_marker.getPosition().lng());
     });
 
-    google.maps.event.addListener(polygon_vertex_marker, 'click', function(e) {
-        showInfo(polygon_vertex_marker);
+    var contentString = '<button type="button" onclick="AndroidFunction.onMapDeleteMarker('+ index + ')">Delete</button>'+
+                        '<button type="button" onclick="AndroidFunction.onMapDeleteMarker(-1)">Clear All</button>';
+    
+    var infowindow = new google.maps.InfoWindow({
+        content : contentString
     });
+
+    google.maps.event.addListener(polygon_vertex_marker, 'click', function(e) {
+        infowindow.open(map, polygon_vertex_marker);
     });
 
     polygon_vertices.push(polygon_vertex_marker);
@@ -210,22 +209,4 @@ function setScopeMarkerDraggable(draggable) {
     for (var index in polygon_vertices) {
         polygon_vertices[index].setDraggable(draggable);
     }
-}
-
-function showInfo(markerObj) {
-    if (infowindow.getContent()) {
-        infowindow.close();
-        infowindow.setContent(null);
-        if (infowindow.getPosition() == markerObj.getPosition()) {
-            return;
-        }
-    }
-    infowindow.setContent(infoContent(markerObj));
-    infowindow.open(map, markerObj);
-}
-
-function infoContent(markerObj) {
-    html = '<button  onclick="AndroidFunction.onMapDeleteMarker(' + markerObj.index + ')">Delete</button>' 
-        + '<button onclick="AndroidFunction.onMapDeleteMarker(-1)">Clear All</button>';
-    return boxText;
 }

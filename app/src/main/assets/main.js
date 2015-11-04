@@ -158,11 +158,6 @@ function mapClickListener(event) {
     if (isTapAndGoMode) {
         setTapGoMarker(event.latLng);
     }
-    
-    if (infowindow.getContent()) {
-        infowindow.close();
-        infowindow.setContent(null);
-    }
 }
 
 function transLatLngToPosition(lat, lng) {
