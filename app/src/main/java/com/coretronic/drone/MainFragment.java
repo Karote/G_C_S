@@ -158,7 +158,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         if (droneDevice == mMainActivity.getConnectedDroneDevice()) {
             return;
         }
-
+        mStatusView.onDisconnect();
         if (droneDevice.getDroneType() == DroneDevice.DRONE_TYPE_FAKE) {
             if (ADD_NEW_DEVICE_TITLE.equals(droneDevice.getName())) {
                 showAddNewDroneDialog();

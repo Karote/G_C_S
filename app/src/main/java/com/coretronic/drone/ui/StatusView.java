@@ -24,8 +24,9 @@ public class StatusView extends LinearLayout {
     private final static int GPS_LEVEL_2_SATELLITE_COUNT = 6;
     private final static int GPS_LEVEL_3_SATELLITE_COUNT = 8;
     private final static int GPS_LEVEL_4_SATELLITE_COUNT = 10;
+    private final static int GPS_LEVEL_5_SATELLITE_COUNT = 12;
 
-    private final static int MAX_LEVEL_RF_STATUS = 5;
+    private final static int MAX_LEVEL_RF_STATUS = 6;
     private final static int MIN_VALUE_RF = -100;
 
     private ImageView mGpsStatus;
@@ -62,6 +63,7 @@ public class StatusView extends LinearLayout {
         addView(view);
     }
 
+//    (RSSI / 1.9) - 127
     public void setRFStatus(int rssi) {
         mRfStatusImageView.setImageLevel(WifiManager.calculateSignalLevel(rssi, MAX_LEVEL_RF_STATUS));
     }
@@ -86,10 +88,10 @@ public class StatusView extends LinearLayout {
     }
 
     public void onDisconnect() {
+        mCommunicateLightState.onDisconnect();
         setBatteryStatus(0);
         setGpsStatus(-1);
         setRFStatus(MIN_VALUE_RF);
-        mCommunicateLightState.onDisconnect();
     }
 
     private int calculateGpsLevel(int satellites) {
@@ -97,7 +99,6 @@ public class StatusView extends LinearLayout {
         if (satellites < GPS_LEVEL_1_SATELLITE_COUNT) {
             return 0;
         }
-
         if (satellites < GPS_LEVEL_2_SATELLITE_COUNT) {
             return 1;
         }
@@ -107,7 +108,10 @@ public class StatusView extends LinearLayout {
         if (satellites < GPS_LEVEL_4_SATELLITE_COUNT) {
             return 3;
         }
-        return 4;
+        if (satellites < GPS_LEVEL_5_SATELLITE_COUNT) {
+            return 4;
+        }
+        return 5;
     }
 
     private class CommunicateLightState {
@@ -131,12 +135,12 @@ public class StatusView extends LinearLayout {
         }
 
         private void onDisconnect() {
-            mCommunicateLightImageView.setImageLevel(LEVEL_NO_CONNECT);
             if (mTranslateRunnable != null) {
                 mTranslateHandler.removeCallbacks(mTranslateRunnable);
                 mTranslateRunnable = null;
             }
             mCommunicateLightImageView.clearAnimation();
+            mCommunicateLightImageView.setImageLevel(LEVEL_NO_CONNECT);
         }
 
         private void update() {
