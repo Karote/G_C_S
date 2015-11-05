@@ -111,6 +111,7 @@ public class RouterBuilder {
         for (Coord2D point : points) {
             mPolygon.addPoint(point);
         }
+        mSurveyData.setPolygon(mPolygon);
         return this;
     }
 
@@ -142,7 +143,7 @@ public class RouterBuilder {
 
 
     public RouterBuilder setOverlap(int overlap) {
-        mSurveyData.setSidelap(overlap);
+        mSurveyData.setOverlap(overlap);
         return this;
     }
 

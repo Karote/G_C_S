@@ -60,7 +60,6 @@ function initFootprintProperties(top_offset, left_offset, bottom_offset, right_o
 function updatePolygon(polygonsInJson) {
     var vertices = JSON.parse(JSON.stringify(polygonsInJson));
     if (polygon_vertices.length > vertices.length) {
-        console.log("123");
         clearPolygon();
     } else {
         if (polygon_polyline_end.getMap()) {
