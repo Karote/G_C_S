@@ -5,6 +5,7 @@ var footprints = [];
 var footprint_rectangle;
 var footprint_polyline;
 var footprint_properties;
+var infobubble;
 
 function initSurvey() {
 
@@ -46,6 +47,22 @@ function initSurvey() {
         zIndex : 255,
     };
     footprint_polyline = new google.maps.Polyline(footprint_polyline_options);
+    
+    var infoOptions = {
+        map: map,
+        shadowStyle: 0,
+        maxHeight: 72,
+        padding: 6,
+        backgroundColor: 'rgb(197,40,40)',
+        borderRadius: 0,
+        arrowSize: 10,
+        borderWidth: 0,
+        disableAutoPan: true,
+        hideCloseButton: true,
+        arrowPosition: 50,
+        arrowStyle: 0
+    };
+    infobubble = new InfoBubble(infoOptions);
 }
 
 function initFootprintProperties(top_offset, left_offset, bottom_offset, right_offset) {
@@ -105,6 +122,13 @@ function addPolygonVertex(lat, lng, index) {
     };
 
     var polygon_vertex_marker = new google.maps.Marker(polygon_vertex_marker_option);
+    
+    google.maps.event.addListener(polygon_vertex_marker, 'dragstart', function(e) {
+        if (infobubble.getContent()) {
+            infobubble.close();
+            infobubble.setContent(null);
+        }
+    });
 
     google.maps.event.addListener(polygon_vertex_marker, 'drag', function(e) {
         polygon_polyline.getPath().setAt(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition());
@@ -123,15 +147,8 @@ function addPolygonVertex(lat, lng, index) {
         AndroidFunction.onMapDragEndEvent(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition().lat(), polygon_vertex_marker.getPosition().lng());
     });
 
-    var contentString = '<button type="button" onclick="AndroidFunction.onMapDeleteMarker('+ index + ')">Delete</button>'+
-                        '<button type="button" onclick="AndroidFunction.onMapDeleteMarker(-1)">Clear All</button>';
-    
-    var infowindow = new google.maps.InfoWindow({
-        content : contentString
-    });
-
     google.maps.event.addListener(polygon_vertex_marker, 'click', function(e) {
-        infowindow.open(map, polygon_vertex_marker);
+        showInfo(polygon_vertex_marker);
     });
 
     polygon_vertices.push(polygon_vertex_marker);
@@ -209,4 +226,28 @@ function setScopeMarkerDraggable(draggable) {
     for (var index in polygon_vertices) {
         polygon_vertices[index].setDraggable(draggable);
     }
+}
+
+function showInfo(markerObj) {
+    if (infobubble.getContent()) {
+        infobubble.close();
+        infobubble.setContent(null);
+        if (infobubble.getPosition() == markerObj.getPosition()) {
+            return;
+        }
+    }
+    infobubble.setContent(infoContent(markerObj));
+    infobubble.open(map, markerObj);
+}
+
+function infoContent(markerObj) {
+    var html = '<div class="infoSub_left" onclick="onClickInfoBubble(-1)">CLEAR ALL</div>' 
+        + '<div class="infoSub_right" onclick="onClickInfoBubble(' + markerObj.index + ')">DELETE</div>';
+    return html;
+}
+
+function onClickInfoBubble(deleteIndex){
+    infobubble.close();
+    infobubble.setContent(null);
+    AndroidFunction.onMapDeleteMarker(deleteIndex);
 }
