@@ -243,8 +243,4 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:updatePolygon(" + transMissionToJson(polygonPoints) + ")");
     }
 
-    public void setScopeMarkerDraggable(boolean draggable){
-        mMapWebView.loadUrl("javascript:setScopeMarkerDraggable(" + draggable + ")");
-    }
-
 }

@@ -164,6 +164,7 @@ function updateFootprint(footprintsInJson) {
     for (var index in footprints) {
         addFootprint(footprints[index].latitude, footprints[index].longitude);
     }
+    setScopeMarkerEditable(false);
 }
 
 function addFootprint(lat, lng) {
@@ -220,11 +221,17 @@ function clearFootprint() {
     footprints = [];
     footprint_polyline.setMap(null);
     footprint_polyline.setPath([]);
+    setScopeMarkerEditable(true);
 }
 
-function setScopeMarkerDraggable(draggable) {
+function setScopeMarkerEditable(editable) {
+    if (infobubble.getContent()) {
+        infobubble.close();
+        infobubble.setContent(null);
+    }
     for (var index in polygon_vertices) {
-        polygon_vertices[index].setDraggable(draggable);
+        polygon_vertices[index].setDraggable(editable);
+        polygon_vertices[index].setClickable(editable);
     }
 }
 
