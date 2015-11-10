@@ -37,7 +37,7 @@ public class MissionItemDetailFragment extends Fragment {
     private final static String TXT_LAND = "Land";
     private final static String TXT_RTL = "RTL";
     private final static String TXT_CAMERA = "Camera";
-    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL, TXT_CAMERA};
+    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL};
 
     private final static int WAYPOINT_INDEX = 0;
     private final static int TAKEOFF_INDEX = 1;

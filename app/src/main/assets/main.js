@@ -39,7 +39,7 @@ function initMap() {
 
     var map_options = {
         center : initial_location,
-        zoom : 15,
+        zoom : 17,
         mapTypeId : google.maps.MapTypeId.ROADMAP,
         disableDefaultUI : true,
         styles : map_style_array
@@ -178,8 +178,8 @@ function setMapToMyLocation() {
     } else {
         AndroidFunction.onWarningMessage("無法取得現在位置");
     }
-    if (map.getZoom() < 15) {
-        map.setZoom(15);
+    if (map.getZoom() < 17) {
+        map.setZoom(17);
     }
 }
 
