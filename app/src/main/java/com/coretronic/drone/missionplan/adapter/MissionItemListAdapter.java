@@ -159,8 +159,8 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
                 return R.drawable.ico_indicator_plan_land;
             case RTL:
                 return R.drawable.ico_indicator_plan_home;
-            case CAMERA_TRIGGER_DISTANCE:
-                return R.drawable.ico_indicator_plan_camera;
+//            case CAMERA_TRIGGER_DISTANCE:
+//                return R.drawable.ico_indicator_plan_camera;
             case WAY_POINT:
             default:
                 return R.drawable.ico_indicator_plan_waypoint;

@@ -20,7 +20,8 @@
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:text="@string/from_me"/>
+        android:text="@string/from_me"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/from_me_distance_text"
@@ -30,7 +31,8 @@
         android:layout_alignBaseline="@id/from_me_title"
         android:layout_toEndOf="@id/from_me_title"
         android:layout_toRightOf="@id/from_me_title"
-        android:text="@string/from_me_hint"/>
+        android:text="@string/from_me_hint"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/target_title"
@@ -42,7 +44,8 @@
         android:layout_marginStart="28dp"
         android:layout_toEndOf="@id/from_me_distance_text"
         android:layout_toRightOf="@id/from_me_distance_text"
-        android:text="@string/target"/>
+        android:text="@string/target"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/target_distance_text"
@@ -52,7 +55,8 @@
         android:layout_alignBaseline="@id/from_me_title"
         android:layout_toEndOf="@id/target_title"
         android:layout_toRightOf="@id/target_title"
-        android:text="@string/target_hint"/>
+        android:text="@string/target_hint"
+        android:visibility="invisible"/>
 
     <include
         android:id="@+id/aircraft_compass"
