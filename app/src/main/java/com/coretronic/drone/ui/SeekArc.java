@@ -1,5 +1,6 @@
 package com.coretronic.drone.ui;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -8,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.coretronic.drone.R;
 
@@ -16,6 +18,8 @@ public class SeekArc extends View {
     private static int INVALID_PROGRESS_VALUE = -1;
     // The initial rotational offset -90 means we start at 12 o'clock
     private final int mAngleOffset = -90;
+    private final static int UPDATE_PROGRESS_ANIMATION_DURATION = 1 * 1000;
+    private final static String UPDATE_PROGRESS_INDEX = "progress";
 
     /**
      * The Maximum value that this SeekArc can be set to
@@ -89,7 +93,6 @@ public class SeekArc extends View {
         // Convert progress width to pixels for current density
         mProgressWidth = (int) (mProgressWidth * density);
 
-
         if (attrs != null) {
             // Attribute initialization
             final TypedArray a = context.obtainStyledAttributes(attrs,
@@ -151,7 +154,6 @@ public class SeekArc extends View {
                 mProgressPaint);
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -178,8 +180,18 @@ public class SeekArc extends View {
         invalidate();
     }
 
-    private void updateProgress(int progress) {
+    public void updateProgress(int progress) {
+        ObjectAnimator animation = ObjectAnimator.ofInt(this, UPDATE_PROGRESS_INDEX, progress);
+        animation.setDuration(UPDATE_PROGRESS_ANIMATION_DURATION);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
+    }
 
+    public int getProgress() {
+        return mProgress;
+    }
+
+    public void setProgress(int progress) {
         if (progress == INVALID_PROGRESS_VALUE) {
             return;
         }
@@ -191,11 +203,7 @@ public class SeekArc extends View {
         mProgressSweep = (float) progress / mMax * mSweepAngle;
 
         invalidate();
-    }
 
-
-    public void setProgress(int progress) {
-        updateProgress(progress);
     }
 
 }
