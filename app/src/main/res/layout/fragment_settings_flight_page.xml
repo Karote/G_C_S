@@ -41,7 +41,7 @@
                 android:text="@string/vertical_speed_max"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_rotation_max"
+                android:id="@+id/setting_bar_vertical_speed_max"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"/>
@@ -58,7 +58,7 @@
                 android:text="@string/rotation_speed_max"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_tilt_angle_max"
+                android:id="@+id/setting_bar_rotation_max"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"/>
@@ -75,7 +75,7 @@
                 android:text="@string/tilt_angle_max"/>
 
             <com.coretronic.drone.ui.SeekBarTextView
-                android:id="@+id/setting_bar_vertical_speed_max"
+                android:id="@+id/setting_bar_tilt_angle_max"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"/>
