@@ -144,4 +144,20 @@
     <dimen name="dialog_item_title_and_content_margin">2dp</dimen>
     <dimen name="dialog_item_title_top_margin">8dp</dimen>
     <dimen name="dialog_spinner_wheel_height">36dp</dimen>
+    <dimen name="main_fragment_status_bar_height">32dp</dimen>
+    <dimen name="main_fragment_status_bar_clock_text_size">18sp</dimen>
+    <dimen name="main_fragment_app_version_text_size">16sp</dimen>
+    <dimen name="main_fragment_view_margin_left_right">16dp</dimen>
+    <dimen name="main_fragment_view_margin_top">16dp</dimen>
+    <dimen name="main_fragment_select_device_width">240dp</dimen>
+    <dimen name="main_fragment_select_device_height">48dp</dimen>
+    <dimen name="main_fragment_setting_btn_margin_bottom">16dp</dimen>
+    <dimen name="main_fragment_setting_btn_margin_right">11dp</dimen>
+    <dimen name="main_fragment_main_button_width">384dp</dimen>
+    <dimen name="main_fragment_main_button_height">180dp</dimen>
+    <dimen name="main_fragment_main_button_text_size">42sp</dimen>
+    <dimen name="main_fragment_select_device_spinner_text_size">22sp</dimen>
+    <dimen name="main_fragment_select_device_spinner_padding_left">16dp</dimen>
+    <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
+
 </resources>

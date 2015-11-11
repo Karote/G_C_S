@@ -69,7 +69,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         mStatusView = (StatusView) view.findViewById(R.id.status);
 
-        mDeviceAdapter = new DeviceAdapter(mMainActivity, R.layout.spinner_item, new ArrayList<DroneDevice>());
+        mDeviceAdapter = new DeviceAdapter(mMainActivity, R.layout.main_fragment_select_device_spinner_item, new ArrayList<DroneDevice>());
         mDeviceAdapter.add(DroneDevice.FAKE_DRONE_DEVICE);
 //        mDeviceAdapter.add(new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, ADD_NEW_DEVICE_TITLE, 88));
 
@@ -273,9 +273,9 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.spinner_style_main, parent, false);
+                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.main_fragment_select_device_spinner, parent, false);
                 holder = new ViewHolder();
-                holder.textView = (TextView) convertView.findViewById(R.id.spinner_title_tv);
+                holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -288,7 +288,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.spinner_item, parent, false);
+                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.main_fragment_select_device_spinner_item, parent, false);
                 holder = new ViewHolder();
                 holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
                 convertView.setTag(holder);
