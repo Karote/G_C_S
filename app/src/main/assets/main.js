@@ -196,8 +196,9 @@ function updateDroneLocation(droneLat, droneLng, heading) {
     planning_drone_marker_arrow.setPosition(dronePos);
     planning_drone_marker_arrow.icon.rotation = heading;
     planning_drone_marker_arrow.setMap(map);
-
-    tapgo_path_polyline.getPath().setAt(0, dronePos);
+    if (tapgo_path_polyline) {
+        tapgo_path_polyline.getPath().setAt(0, dronePos);
+    }
 }
 
 function clearDroneMarker() {
