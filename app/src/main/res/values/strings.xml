@@ -88,7 +88,7 @@
     <string name="speed_unit">m/s</string>
     <string name="target">TARGET</string>
     <string name="target_hint">600m</string>
-    <string name="from_me">FROM ME</string>
+    <string name="from_home">FROM HOME</string>
     <string name="from_me_hint">300.3m</string>
     <string name="latitude_hint">-90.0000000,</string>
     <string name="longitude_hint">-180.0000000</string>

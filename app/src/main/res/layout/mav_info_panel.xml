@@ -164,7 +164,7 @@
                 android:text="FROM HOME" />
 
             <TextView
-                android:id="@+id/from_me_distance_text"
+                android:id="@+id/from_home_distance_text"
                 style="@style/mav_info_content_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

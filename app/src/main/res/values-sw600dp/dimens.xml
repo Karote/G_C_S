@@ -16,13 +16,13 @@
     <dimen name="status_bar_communication_light_left_margin">4dp</dimen>
 
     <dimen name="compass_ruler_height">2.58dp</dimen>
-    <dimen name="instrument_compass_ruler_height">310dp</dimen>
-    <dimen name="instrument_compass_level_width">148dp</dimen>
-    <dimen name="instrument_compass_level_radius">74dp</dimen>
-    <dimen name="aircraft_compass_size">160dp</dimen>
+    <dimen name="instrument_compass_ruler_height">258dp</dimen>
+    <dimen name="instrument_compass_level_width">124dp</dimen>
+    <dimen name="instrument_compass_level_radius">62dp</dimen>
+    <dimen name="aircraft_compass_size">136dp</dimen>
 
     <dimen name="mav_info_location_text_width">124dp</dimen>
-    <dimen name="mav_info_panel_height">168dp</dimen>
+    <dimen name="mav_info_panel_height">144dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_height">48dp</dimen>
 
