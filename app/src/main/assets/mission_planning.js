@@ -139,31 +139,47 @@ function fitMapShowAllMissionPlanning() {
 }
 
 function generatePlanningMissionMarkerIcon(markerType, number, callback) {
-    var fontSize = 16, imageWidth = imageHeight = 52;
+    var fontSize = 48, imageWidth = imageHeight = 120;
 
-    var svg = d3.select(document.createElement('div')).append('svg').attr('viewBox', '0 0 52 52').append('g');
+    var svg = d3.select(document.createElement('div')).append('svg').attr('viewBox', '0 0 120 120').append('g');
+
+    var defs = svg.append('svg:defs');
+    var svg_1_blur = defs.append('filter').attr('id', 'svg_1_blur');
+    var feGaussianBlur = svg_1_blur.append('feGaussianBlur').attr('stdDeviation', '2');
+    var gradient = defs.append("svg:linearGradient").attr("id", "gradient").attr("x1", "0").attr("y1", "0").attr("x2", "0").attr("y2", "1");
+    gradient.append("svg:stop").attr("offset", "0").attr("stop-color", "#ABDCFD");
+    gradient.append("svg:stop").attr("offset", "1").attr("stop-color", "#3AB7E9");
 
     var dy;
     switch(markerType) {
     case 'TAKEOFF':
-        var SVGID_1 = svg.append('path').attr('d', 'M4,45c-0.4,0-0.7-0.2-0.9-0.5C3,44.3,3,44.2,3,44c0-0.2,0-0.3,0.1-0.5l22-38C25.3,5.2,25.6,5,26,5c0.4,0,0.7,0.2,0.9,0.5l22,38C49,43.7,49,43.8,49,44c0,0.2,0,0.3-0.1,0.5C48.7,44.8,48.4,45,48,45H4').attr('fill', '#FFFFFF');
-        var SVGID_2 = svg.append('polygon').attr('points', '26,6 48,44 4,44 26,6').attr('fill', '#59c1ed');
-        dy = 34;
+        var svg_1 = svg.append('path').attr('d', 'm4,45c-0.4,0 -0.7,-0.2 -0.9,-0.5c-0.1,-0.2 -0.1,-0.3 -0.1,-0.5c0,-0.2 0,-0.3 0.1,-0.5l22,-38c0.2,-0.3 0.5,-0.5 0.9,-0.5c0.4,0 0.7,0.2 0.9,0.5l22,38c0.1,0.2 0.1,0.3 0.1,0.5c0,0.2 0,0.3 -0.1,0.5c-0.2,0.3 -0.5,0.5 -0.9,0.5h-44').attr('transform', 'scale(2.2) translate(3,3)').attr('filter', 'url(#svg_1_blur)');
+        var svg_2 = svg.append('path').attr('d', 'm4,45c-0.4,0 -0.7,-0.2 -0.9,-0.5c-0.1,-0.2 -0.1,-0.3 -0.1,-0.5c0,-0.2 0,-0.3 0.1,-0.5l22,-38c0.2,-0.3 0.5,-0.5 0.9,-0.5c0.4,0 0.7,0.2 0.9,0.5l22,38c0.1,0.2 0.1,0.3 0.1,0.5c0,0.2 0,0.3 -0.1,0.5c-0.2,0.3 -0.5,0.5 -0.9,0.5h-44').attr('transform', 'scale(2.3)').attr('fill', '#fff');
+        var svg_3 = svg.append('polygon').attr('points', '26,6 48,44 4,44 26,6').attr('transform', 'scale(2.3)').attr('fill', 'url(#gradient)');
+        dy = 88;
         break;
     case 'LAND':
-        var SVGID_1 = svg.append('path').attr('d', 'M25.1,45.5l-22-38C3,7.4,3,7.2,3,7c0-0.2,0-0.3,0.1-0.5C3.3,6.2,3.6,6,4,6h44c0.4,0,0.7,0.2,0.9,0.5C49,6.7,49,6.8,49,7c0,0.2,0,0.3-0.1,0.5l-22,38C26.7,45.8,26.4,46,26,46C25.6,46,25.3,45.8,25.1,45.5').attr('fill', '#FFFFFF');
-        var SVGID_2 = svg.append('polygon').attr('points', '26,45 4,7 48,7 26,45').attr('fill', '#59c1ed');
-        dy = 26;
+        var svg_1 = svg.append('path').attr('d', 'm25.1,45.5l-22,-38c-0.1,-0.1 -0.1,-0.3 -0.1,-0.5c0,-0.2 0,-0.3 0.1,-0.5c0.2,-0.3 0.5,-0.5 0.9,-0.5h44c0.4,0 0.7,0.2 0.9,0.5c0.1,0.2 0.1,0.3 0.1,0.5c0,0.2 0,0.3 -0.1,0.5l-22,38c-0.2,0.3 -0.5,0.5 -0.9,0.5c-0.4,0 -0.7,-0.2 -0.9,-0.5').attr('transform', 'scale(2.2) translate(3,3)').attr('filter', 'url(#svg_1_blur)');
+        var svg_2 = svg.append('path').attr('d', 'm25.1,45.5l-22,-38c-0.1,-0.1 -0.1,-0.3 -0.1,-0.5c0,-0.2 0,-0.3 0.1,-0.5c0.2,-0.3 0.5,-0.5 0.9,-0.5h44c0.4,0 0.7,0.2 0.9,0.5c0.1,0.2 0.1,0.3 0.1,0.5c0,0.2 0,0.3 -0.1,0.5l-22,38c-0.2,0.3 -0.5,0.5 -0.9,0.5c-0.4,0 -0.7,-0.2 -0.9,-0.5').attr('transform', 'scale(2.3)').attr('fill', '#fff');
+        var svg_3 = svg.append('polygon').attr('points', '26,45 4,7 48,7 26,45').attr('transform', 'scale(2.3)').attr('fill', 'url(#gradient)');
+        dy = 62;
+        break;
+    case 'CAMERA_TRIGGER_DISTANCE':
+        var svg_1 = svg.append('path').attr('d', 'm23.5,105c-9.1,0 -16.5,-7.4 -16.5,-16.5v-42.6c0,-9.1 7.4,-16.5 16.5,-16.5h3.5c1.1,0 2,-0.9 2,-2v-6.2c0,-0.6 0.5,-1.1 1.1,-1.1h27.8c0.6,0 1.1,0.5 1.1,1.1v6.2c0,1.1 0.9,2 2,2h39.5c9.1,0 16.5,7.4 16.5,16.5v42.7c0,9.1 -7.4,16.5 -16.5,16.5h-77').attr('filter', 'url(#svg_1_blur)');
+        var svg_2 = svg.append('path').attr('d', 'm96.5,103h-77c-10.2,0 -18.5,-8.3 -18.5,-18.5v-42.6c0,-10.2 8.3,-18.5 18.5,-18.5h77c10.2,0 18.5,8.3 18.5,18.5v42.7c-0.1,10.2 -8.3,18.4 -18.5,18.4l0,0zm-42.6,-67.8h-27.8c-1.7,0 -3.1,-1.4 -3.1,-3.1v-14.9c0,-1.7 1.4,-3.1 3.1,-3.1h27.8c1.7,0 3.1,1.4 3.1,3.1v14.8c0,1.8 -1.4,3.2 -3.1,3.2l0,0z').attr('fill', '#fff');
+        var svg_3 = svg.append('path').attr('d', 'm19.5,101c-9.1,0 -16.5,-7.4 -16.5,-16.5v-42.6c0,-9.1 7.4,-16.5 16.5,-16.5h3.5c1.1,0 2,-0.9 2,-2v-6.2c0,-0.6 0.5,-1.1 1.1,-1.1h27.8c0.6,0 1.1,0.5 1.1,1.1v6.2c0,1.1 0.9,2 2,2h39.5c9.1,0 16.5,7.4 16.5,16.5v42.7c0,9.1 -7.4,16.5 -16.5,16.5h-77').attr('fill', 'url(#gradient)');
+        dy = 80;
         break;
     case 'WAY_POINT':
     default:
-        var SVGID_1 = svg.append('path').attr('d', 'M6.8,25.8C6.8,14.9,15.6,6,26.4,6c10.9,0,19.7,8.9,19.7,19.8c0,10.9-8.8,19.8-19.7,19.8C15.6,45.6,6.8,36.7,6.8,25.8').attr('fill', '#FFFFFF');
-        var SVGID_2 = svg.append('path').attr('d', 'M26.4,7c10.3,0,18.7,8.4,18.7,18.8c0,10.4-8.4,18.8-18.7,18.8c-10.3,0-18.7-8.4-18.7-18.8C7.7,15.4,16.1,7,26.4,7L26.4,7z').attr('fill', '#59c1ed');
-        dy = 30;
+        var svg_1 = svg.append('circle').attr('cx', '64').attr('cy', '64').attr('r', '46').attr('filter', 'url(#svg_1_blur)');
+        var svg_2 = svg.append('circle').attr('cx', '60').attr('cy', '60').attr('r', '46').attr('fill', '#fff');
+        var svg_3 = svg.append('circle').attr('cx', '60').attr('cy', '60').attr('r', '44').attr('fill', 'url(#gradient)');
+        dy = 76;
         break;
     }
 
-    var text = svg.append('text').attr('dx', 26).attr('dy', dy).attr('text-anchor', 'middle').attr('style', 'font-size:' + fontSize + 'px; fill: #FFFFFF; font-family: Arial, Verdana; font-weight: bold').text(number);
+    var text = svg.append('text').attr('dx', 60).attr('dy', dy).attr('text-anchor', 'middle').attr('style', 'font-size:' + fontSize + 'px; fill: #FFFFFF; font-family: sans-serif; font-weight: bold').text(number);
 
     var svgNode = svg.node().parentNode.cloneNode(true), image = new Image();
 
