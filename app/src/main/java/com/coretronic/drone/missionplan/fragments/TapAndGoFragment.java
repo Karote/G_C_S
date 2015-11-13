@@ -42,6 +42,7 @@ public class TapAndGoFragment extends MapChildFragment {
         if (droneController != null) {
             droneController.moveToLocation(mMissionBuilder.setAltitude(alt).setLatitude(lat).setLongitude(lng).create());
             mMapViewFragment.setTapGoPath();
+            mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
         }
     }
 

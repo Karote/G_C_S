@@ -260,7 +260,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case ON_MISSION_STATE_UPDATE:
                 notificationWithTTS(droneStatus.getMissionPlanState());
                 if (MissionStatus.START == droneStatus.getMissionPlanState()) {
-                    mControlBarView.showLandingButton();
+                    mControlBarView.showStopButton();
                 }
                 if (!isMultiMissionPlanMode()) {
                     return;
@@ -499,21 +499,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         boolean isTapAndGoMode = fragmentType == FRAGMENT_TYPE_TAP_AND_GO;
         boolean canAddMarker = fragmentType != FRAGMENT_TYPE_HISTORY;
         int deleteAndUndoButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
-        int missionStopButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
         int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
-        int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
+        int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? (isTapAndGoMode ? View.GONE : View.VISIBLE) : View.GONE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
         setDeleteOptionShow(false);
         setDeleteAndUndoButtonVisibility(deleteAndUndoButtonVisibility);
         mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
         mMavInfoView.setVisibility(mavInfoPanelVisibility);
-        mControlBarView.setMissionStopButtonVisibility(missionStopButtonVisibility);
-        if (isTapAndGoMode) {
-            mControlBarView.showLandingButton();
-        } else {
-            mControlBarView.showGoButton();
-        }
         mControlBarView.setVisibility(controlButtonBarVisibility);
     }
 
@@ -621,25 +614,41 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 if (getDroneController() == null) {
                     return;
                 }
-                mControlBarView.showLandingButton();
+                mControlBarView.showStopButton();
                 break;
+            case R.id.plan_stop_button:
+                if (getDroneController() == null) {
+                    return;
+                }
+                mControlBarView.showGoButton();
+                break;
+            case R.id.drone_takeoff_button:
+                if (getDroneController() != null) {
+//                    getDroneController().takeOff();
+                }
+                mControlBarView.showLandingButton();
+                return;
             case R.id.drone_landing_button:
                 if (getDroneController() != null) {
                     getDroneController().land();
                 }
-                if (isMultiMissionPlanMode()) {
-                    mControlBarView.showGoButton();
-                }
+                mControlBarView.showTakeoffButton();
                 return;
             case R.id.drone_rtl_button:
                 if (getDroneController() != null) {
                     getDroneController().returnToLaunch();
                 }
                 return;
-            case R.id.plan_stop_button:
+            case R.id.plan_play_button:
+//                if (getDroneController() != null) {
+//                    getDroneController().resumeMission();
+//                }
+                mControlBarView.showPauseButton();
+            case R.id.plan_pause_button:
                 if (getDroneController() != null) {
                     getDroneController().pauseMission();
                 }
+                mControlBarView.showPlayButton();
                 return;
             case R.id.my_location_button:
                 setMapToMyLocation();
@@ -788,7 +797,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updatePolygon(polygonPoints);
     }
 
-    public void setScopeMarkerDraggable(boolean draggable){
+    public void setScopeMarkerDraggable(boolean draggable) {
         mDroneMap.setScopeMarkerDraggable(draggable);
     }
 

@@ -13,8 +13,11 @@ public class ControlBarView {
     private final View mDroneControlBar;
     private final View mMapControlBar;
     private final View mPlanGoButton;
+    private final View mPlanStopButton;
+    private final View mDroneTakeoffButton;
     private final View mDroneLandingButton;
-    private final View mMissionStopButtonLayout;
+    private final View mPlanPlayButton;
+    private final View mPlanPauseButton;
     private final View mFPVAndMapSwitchButton;
 
     public ControlBarView(View view, int controlBarId, OnClickListener onClickListener) {
@@ -24,11 +27,17 @@ public class ControlBarView {
         mDroneControlBar = mControlMainPanel.findViewById(R.id.drone_control_bar);
         mPlanGoButton = mDroneControlBar.findViewById(R.id.plan_go_button);
         mPlanGoButton.setOnClickListener(onClickListener);
+        mPlanStopButton = mDroneControlBar.findViewById(R.id.plan_stop_button);
+        mPlanStopButton.setOnClickListener(onClickListener);
+        mDroneTakeoffButton = mDroneControlBar.findViewById(R.id.drone_takeoff_button);
+        mDroneTakeoffButton.setOnClickListener(onClickListener);
         mDroneLandingButton = mDroneControlBar.findViewById(R.id.drone_landing_button);
         mDroneLandingButton.setOnClickListener(onClickListener);
+        mPlanPlayButton = mDroneControlBar.findViewById(R.id.plan_play_button);
+        mPlanPlayButton.setOnClickListener(onClickListener);
+        mPlanPauseButton = mDroneControlBar.findViewById(R.id.plan_pause_button);
+        mPlanPauseButton.setOnClickListener(onClickListener);
         mDroneControlBar.findViewById(R.id.drone_rtl_button).setOnClickListener(onClickListener);
-        mDroneControlBar.findViewById(R.id.plan_stop_button).setOnClickListener(onClickListener);
-        mMissionStopButtonLayout = mDroneControlBar.findViewById(R.id.plan_stop_layout);
 
         mMapControlBar = mControlMainPanel.findViewById(R.id.map_control_bar);
         mMapControlBar.findViewById(R.id.my_location_button).setOnClickListener(onClickListener);
@@ -41,22 +50,38 @@ public class ControlBarView {
 
     }
 
-    public void setMissionStopButtonVisibility(int visibility) {
-        mMissionStopButtonLayout.setVisibility(visibility);
-    }
-
     public void setVisibility(int visibility) {
         mControlMainPanel.setVisibility(visibility);
     }
 
-    public void showLandingButton() {
-        mDroneLandingButton.setVisibility(View.VISIBLE);
+    public void showStopButton() {
+        mPlanStopButton.setVisibility(View.VISIBLE);
         mPlanGoButton.setVisibility(View.GONE);
     }
 
     public void showGoButton() {
-        mDroneLandingButton.setVisibility(View.GONE);
+        mPlanStopButton.setVisibility(View.GONE);
         mPlanGoButton.setVisibility(View.VISIBLE);
+    }
+
+    public void showLandingButton() {
+        mDroneLandingButton.setVisibility(View.VISIBLE);
+        mDroneTakeoffButton.setVisibility(View.GONE);
+    }
+
+    public void showTakeoffButton() {
+        mDroneLandingButton.setVisibility(View.GONE);
+        mDroneTakeoffButton.setVisibility(View.VISIBLE);
+    }
+
+    public void showPauseButton() {
+        mPlanPauseButton.setVisibility(View.VISIBLE);
+        mPlanPlayButton.setVisibility(View.GONE);
+    }
+
+    public void showPlayButton() {
+        mPlanPauseButton.setVisibility(View.GONE);
+        mPlanPlayButton.setVisibility(View.VISIBLE);
     }
 
     public void onFPVHided() {
