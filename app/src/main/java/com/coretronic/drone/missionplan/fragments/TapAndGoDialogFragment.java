@@ -67,6 +67,7 @@ public class TapAndGoDialogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dismiss();
+                ((TapAndGoFragment) getParentFragment()).clearTapMarker();
             }
         });
     }

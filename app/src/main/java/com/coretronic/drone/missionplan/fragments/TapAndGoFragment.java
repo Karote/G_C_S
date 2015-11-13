@@ -53,4 +53,8 @@ public class TapAndGoFragment extends MapChildFragment {
                 .replace(R.id.tap_and_go_container, tapAndGoDialogFragment, TapAndGoDialogFragment.class.getSimpleName())
                 .commit();
     }
+
+    public void clearTapMarker() {
+        mMapViewFragment.clearTapMarker();
+    }
 }
