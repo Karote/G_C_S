@@ -212,6 +212,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 case R.id.route_edit_button:
                     mMapViewFragment.clearMap();
                     mMissionItemAdapter.clearMission();
+                    mMissionItemAdapter.onNothingSelected();
                     updatePolygon();
                     try {
                         updateFootprints();
@@ -459,6 +460,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mRouteDetailInfo.setVisibility(View.VISIBLE);
                 mDistanceAndTimeInfo.setVisibility(View.VISIBLE);
                 mGoEditPanel.setVisibility(View.GONE);
+                mWayPointDetailPanel.setVisibility(View.GONE);
                 break;
             case ROUTE_CREATED_STATUS:
                 mRoutePropertiesDialog.setVisibility(View.GONE);
