@@ -143,8 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:text="@string/target"
-                android:visibility="invisible"/>
+                android:text="@string/target" />
 
             <TextView
                 android:id="@+id/target_distance_text"
@@ -154,8 +153,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
                 android:gravity="end"
-                android:text="@string/target_hint"
-                android:visibility="invisible"/>
+                android:text="@string/target_hint" />
 
             <TextView
                 style="@style/mav_info_title_text_style"
@@ -163,8 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:text="FROM HOME"
-                android:visibility="invisible"/>
+                android:text="FROM HOME" />
 
             <TextView
                 android:id="@+id/from_home_distance_text"
@@ -173,8 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="@string/from_me_hint"
-                android:visibility="invisible"/>
+                android:text="@string/from_me_hint" />
 
         </LinearLayout>
 

@@ -129,9 +129,9 @@ public class MissionItemDetailFragment extends Fragment {
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.RTL);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                         break;
-//                    case CAMERA_INDEX:
-//                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.CAMERA_TRIGGER_DISTANCE);
-//                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
+                    case CAMERA_INDEX:
+                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.CAMERA_TRIGGER_DISTANCE);
+                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
                     default:
                         break;
                 }
@@ -191,9 +191,9 @@ public class MissionItemDetailFragment extends Fragment {
                 case RTL:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
                     break;
-//                case CAMERA_TRIGGER_DISTANCE:
-//                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
-//                    break;
+                case CAMERA_TRIGGER_DISTANCE:
+                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_camera);
+                    break;
                 default:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                     break;
@@ -211,8 +211,8 @@ public class MissionItemDetailFragment extends Fragment {
                 return LAND_INDEX;
             case RTL:
                 return RTL_INDEX;
-//            case CAMERA_TRIGGER_DISTANCE:
-//                return CAMERA_INDEX;
+            case CAMERA_TRIGGER_DISTANCE:
+                return CAMERA_INDEX;
             case WAY_POINT:
             default:
                 return WAYPOINT_INDEX;
