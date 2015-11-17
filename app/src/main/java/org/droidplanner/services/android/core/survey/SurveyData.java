@@ -3,7 +3,7 @@ package org.droidplanner.services.android.core.survey;
 import android.util.Pair;
 
 import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
-import org.droidplanner.services.android.core.helpers.units.Area;
+import org.droidplanner.services.android.core.polygon.Polygon;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +21,7 @@ public class SurveyData {
     private double mOverlap;
     private double mSidelap;
     private Footprint mFootprint;
+    private Polygon mPolygon;
 
     public SurveyData() {
         mCameraInfo = new CameraInfo();
@@ -63,6 +64,11 @@ public class SurveyData {
         return this;
     }
 
+    public SurveyData setPolygon(Polygon polygon) {
+        mPolygon = polygon;
+        return this;
+    }
+
     private void updateFootprint() {
         mFootprint = new Footprint(mCameraInfo, this.mAltitude, mAngle);
     }
@@ -96,27 +102,27 @@ public class SurveyData {
     }
 
     public double getLateralFootPrint() {
-        return mFootprint.getLateralSize();
+        return mAltitude * mCameraInfo.getSensorLateralSize() / mCameraInfo.getFocalLength();
     }
 
     public double getLongitudinalFootPrint() {
-        return mFootprint.getLongitudinalSize();
+        return mAltitude * mCameraInfo.getSensorLongitudinalSize() / mCameraInfo.getFocalLength();
     }
 
     public List<Coord2D> getFootPrintFrame() {
         return mFootprint.getVertexInGlobalFrame();
     }
 
-    public Area getGroundResolution() {
-        return new Area(mFootprint.getGSD() * 0.01);
+    public double getGroundResolution() {
+        return getLongitudinalFootPrint() * 1000 * getLateralFootPrint() * 1000 / (mCameraInfo.getSensorResolution() * 1000000);
+    }
+
+    public double getArea(){
+        return mPolygon.getArea().valueInSqMeters();
     }
 
     public Pair<Coord2D, Coord2D> getCameraOffset() {
         return new Pair<>(mFootprint.getVertexInGlobalFrame().get(0), mFootprint.getVertexInGlobalFrame().get(1));
-    }
-
-    public double getGSD() {
-        return mFootprint.getGSD();
     }
 
     @Override

@@ -16,13 +16,13 @@
     <dimen name="status_bar_communication_light_left_margin">4dp</dimen>
 
     <dimen name="compass_ruler_height">2.58dp</dimen>
-    <dimen name="instrument_compass_ruler_height">310dp</dimen>
-    <dimen name="instrument_compass_level_width">148dp</dimen>
-    <dimen name="instrument_compass_level_radius">74dp</dimen>
-    <dimen name="aircraft_compass_size">160dp</dimen>
+    <dimen name="instrument_compass_ruler_height">258dp</dimen>
+    <dimen name="instrument_compass_level_width">124dp</dimen>
+    <dimen name="instrument_compass_level_radius">62dp</dimen>
+    <dimen name="aircraft_compass_size">136dp</dimen>
 
     <dimen name="mav_info_location_text_width">124dp</dimen>
-    <dimen name="mav_info_panel_height">168dp</dimen>
+    <dimen name="mav_info_panel_height">144dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_height">48dp</dimen>
 
@@ -144,4 +144,20 @@
     <dimen name="dialog_item_title_and_content_margin">2dp</dimen>
     <dimen name="dialog_item_title_top_margin">8dp</dimen>
     <dimen name="dialog_spinner_wheel_height">36dp</dimen>
+    <dimen name="main_fragment_status_bar_height">32dp</dimen>
+    <dimen name="main_fragment_status_bar_clock_text_size">18sp</dimen>
+    <dimen name="main_fragment_app_version_text_size">16sp</dimen>
+    <dimen name="main_fragment_view_margin_left_right">16dp</dimen>
+    <dimen name="main_fragment_view_margin_top">16dp</dimen>
+    <dimen name="main_fragment_select_device_width">240dp</dimen>
+    <dimen name="main_fragment_select_device_height">48dp</dimen>
+    <dimen name="main_fragment_setting_btn_margin_bottom">16dp</dimen>
+    <dimen name="main_fragment_setting_btn_margin_right">11dp</dimen>
+    <dimen name="main_fragment_main_button_width">384dp</dimen>
+    <dimen name="main_fragment_main_button_height">180dp</dimen>
+    <dimen name="main_fragment_main_button_text_size">42sp</dimen>
+    <dimen name="main_fragment_select_device_spinner_text_size">22sp</dimen>
+    <dimen name="main_fragment_select_device_spinner_padding_left">16dp</dimen>
+    <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
+
 </resources>

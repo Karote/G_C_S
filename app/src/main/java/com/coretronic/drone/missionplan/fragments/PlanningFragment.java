@@ -180,6 +180,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     showToastMessage("There is no mission existed");
                     return;
                 }
+                mMapViewFragment.getDroneController().clearMission();
                 mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
                 showLoadProgressDialog("Writing Mission", "Please wait...");
                 break;

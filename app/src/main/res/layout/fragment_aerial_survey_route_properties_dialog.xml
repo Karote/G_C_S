@@ -27,7 +27,7 @@
             android:layout_weight="2"
             android:background="@drawable/route_properties_back_button_bg"
             android:fontFamily="@string/font_roboto_regular"
-            android:text="BACK"
+            android:text="@string/aerial_survey_dialog_back"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:background="@drawable/route_properties_ok_button_bg"
             android:fontFamily="@string/font_roboto_regular"
-            android:text="OK"
+            android:text="@string/aerial_survey_dialog_ok"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -63,9 +63,10 @@
         android:layout_marginLeft="@dimen/dialog_content_left_margin"
         android:layout_marginStart="@dimen/dialog_content_left_margin"
         android:layout_marginTop="@dimen/dialog_item_title_top_margin"
-        android:text="Camera" />
+        android:text="@string/aerial_survey_dialog_camera" />
 
     <TextView
+        android:id="@+id/route_properties_camera"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginEnd="@dimen/dialog_content_right_margin"
@@ -75,7 +76,7 @@
         android:background="#f0f0f0"
         android:fontFamily="@string/font_roboto_medium"
         android:gravity="center_vertical"
-        android:text="Canon SX260"
+        android:text="@string/aerial_survey_dialog_camera_hint"
         android:textColor="#727272"
         android:textSize="18sp" />
 

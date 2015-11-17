@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/main_fragment_select_device_spinner_padding_left"
+    android:paddingRight="@dimen/main_fragment_select_device_spinner_padding_right">
+
+
+    <TextView android:id="@+id/spinner_item_tv"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_centerVertical="true"
+              android:fontFamily="@string/font_roboto_medium"
+              android:textColor="@color/device_chooser_text"
+              android:textSize="@dimen/main_fragment_select_device_spinner_text_size"/>
+
+</RelativeLayout>

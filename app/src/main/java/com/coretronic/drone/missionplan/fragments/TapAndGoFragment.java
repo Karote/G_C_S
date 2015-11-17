@@ -42,6 +42,7 @@ public class TapAndGoFragment extends MapChildFragment {
         if (droneController != null) {
             droneController.moveToLocation(mMissionBuilder.setAltitude(alt).setLatitude(lat).setLongitude(lng).create());
             mMapViewFragment.setTapGoPath();
+            mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
         }
     }
 
@@ -52,5 +53,9 @@ public class TapAndGoFragment extends MapChildFragment {
         fragmentTransaction
                 .replace(R.id.tap_and_go_container, tapAndGoDialogFragment, TapAndGoDialogFragment.class.getSimpleName())
                 .commit();
+    }
+
+    public void clearTapMarker() {
+        mMapViewFragment.clearTapMarker();
     }
 }

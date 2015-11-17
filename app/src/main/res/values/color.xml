@@ -43,4 +43,7 @@
     <color name="route_properties_back_button_pressed_color">#aaaaaa</color>
     <color name="route_properties_ok_button_normal_color">#4c4c4c</color>
     <color name="route_properties_ok_button_pressed_color">#363636</color>
+
+    <color name="plan_go_button">#669900</color>
+    <color name="plan_stop_button">#e23b3b</color>
 </resources>

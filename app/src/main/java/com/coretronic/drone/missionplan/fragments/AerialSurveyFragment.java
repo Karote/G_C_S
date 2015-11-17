@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,9 @@ import com.coretronic.drone.survey.RouterBuilder.SurveyBuilderException;
 import com.coretronic.drone.survey.SurveyRouter;
 
 import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
+import org.droidplanner.services.android.core.survey.SurveyData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,14 @@ import java.util.List;
  * Created by karot.chuang on 2015/7/21.
  */
 public class AerialSurveyFragment extends MapChildFragment implements SelectedMissionUpdatedCallback {
+
+    private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("mm:ss");
+    private final static String SQUARE_SYMBOL = "\u00B2";
+    private final static String GSD_FORMAT = "%.03f mm" + SQUARE_SYMBOL + "/px";
+    private final static String LENGTH_FORMAT = "%.03f";
+    private final static String FOOTPRINT_FORMAT = "%.03fm X %.03fm";
+    private final static String AREA_FORMAT = "%.03fm" + SQUARE_SYMBOL;
+    private final static double DEFAULT_DRONE_SPEED = 3;
 
     private static final int INIT_STATUS = 1;
     private static final int SCOPE_STATUS = 2;
@@ -61,13 +70,26 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     private View mRoutePropertiesDialog = null;
     private View mDistanceAndTimeInfo = null;
     private View mRouteDetailInfo = null;
-    private TextView mDistanceValue, mTimeValue, mFootprintValue, mGSDValue, mLongitudinalValue, mLateralValue, mAreaValue, mGridLengthValue, mPictureValue, mStripsValue;
+    private TextView mDistanceValue;
+    private TextView mTimeValue;
+    private TextView mFootprintValue;
+    private TextView mGSDValue;
+    private TextView mLongitudinalValue;
+    private TextView mLateralValue;
+    private TextView mAreaValue;
+    private TextView mPictureValue;
+    private TextView mStripsValue;
     private Button mCreateRouteButton = null;
     private RouterBuilder mRouterBuilder;
     private List<Coord2D> mPolygonPoints;
     private SurveyRouter mAerialSurveyRouter;
 
-    private AbstractWheel mHatchAngleWheel, mAltitudeWheel, mOverlapWheel, mSidelapWheel;
+    private AbstractWheel mHatchAngleWheel;
+    private AbstractWheel mAltitudeWheel;
+    private AbstractWheel mOverlapWheel;
+    private AbstractWheel mSidelapWheel;
+    private TextView mCameraTextView;
+
     private int mWheelScrollingCount;
 
     public static AerialSurveyFragment newInstance() {
@@ -425,6 +447,8 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         view.findViewById(R.id.route_properties_ok_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.route_properties_back_button).setOnClickListener(onPlanningBtnClickListener);
 
+        mCameraTextView = (TextView) view.findViewById(R.id.route_properties_camera);
+
         mHatchAngleWheel = (AbstractWheel) view.findViewById(R.id.route_properties_hatch_angle_wheel);
         mHatchAngleWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.spinner_wheel_text_layout, HATCH_ANGLE_MIN_VALUE, HATCH_ANGLE_MAX_VALUE, "%01d"));
         mHatchAngleWheel.setCyclic(false);
@@ -470,10 +494,13 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     }
 
     private void initRoutePropertiesValue() {
-        mHatchAngleWheel.setCurrentItem(((int) mAerialSurveyRouter.getSurveyData().getAngle() + HATCH_ANGLE_MAX_VALUE) % HATCH_ANGLE_MAX_VALUE);
-        mAltitudeWheel.setCurrentItem(((int) mAerialSurveyRouter.getSurveyData().getAltitude() / ALTITUDE_GAP) - ALTITUDE_MIN_VALUE);
-        mOverlapWheel.setCurrentItem((int) mAerialSurveyRouter.getSurveyData().getOverlap() - OVERLAP_MIN_VALUE);
-        mSidelapWheel.setCurrentItem((int) mAerialSurveyRouter.getSurveyData().getSidelap() - SIDELAP_MIN_VALUE);
+        SurveyData surveyData = mAerialSurveyRouter.getSurveyData();
+        mCameraTextView.setText(surveyData.getCameraInfo().getName());
+        mHatchAngleWheel.setCurrentItem(((int) surveyData.getAngle() + HATCH_ANGLE_MAX_VALUE) % HATCH_ANGLE_MAX_VALUE);
+        mAltitudeWheel.setCurrentItem(((int) surveyData.getAltitude() / ALTITUDE_GAP) - ALTITUDE_MIN_VALUE);
+        mOverlapWheel.setCurrentItem((int) surveyData.getOverlap() - OVERLAP_MIN_VALUE);
+        mSidelapWheel.setCurrentItem((int) surveyData.getSidelap() - SIDELAP_MIN_VALUE);
+
     }
 
     private class LockedWheelScrollingListener implements OnWheelScrollListener {
@@ -521,26 +548,29 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         mTimeValue = (TextView) view.findViewById(R.id.time_value_text_view);
         mFootprintValue = (TextView) view.findViewById(R.id.footprint_value_text_view);
         mGSDValue = (TextView) view.findViewById(R.id.gsd_value_text_view);
-        ((TextView) view.findViewById(R.id.gsd_unit_text_view)).setText(Html.fromHtml("mm<sup><small>2</small></sup>/px"));
         mLongitudinalValue = (TextView) view.findViewById(R.id.longitudinal_value_text_view);
         mLateralValue = (TextView) view.findViewById(R.id.lateral_value_text_view);
         mAreaValue = (TextView) view.findViewById(R.id.area_value_text_view);
-        ((TextView) view.findViewById(R.id.area_unit_text_view)).setText(Html.fromHtml("m<sup><small>2</small></sup>"));
-        mGridLengthValue = (TextView) view.findViewById(R.id.grid_length_value_text_view);
         mPictureValue = (TextView) view.findViewById(R.id.picture_value_text_view);
         mStripsValue = (TextView) view.findViewById(R.id.strips_value_text_view);
     }
 
     private void updateRouteInfoValue() {
-        mDistanceValue.setText("0");
-        mTimeValue.setText("0");
-        mFootprintValue.setText("0");
-        mGSDValue.setText("" + mAerialSurveyRouter.getSurveyData().getGSD());
-        mLongitudinalValue.setText("0");
-        mLateralValue.setText("0");
-        mAreaValue.setText("0");
-        mGridLengthValue.setText("0");
+
+        SurveyData surveyData = mAerialSurveyRouter.getSurveyData();
+        double flightDistance = mAerialSurveyRouter.getLength();
+        mDistanceValue.setText(String.format(LENGTH_FORMAT, flightDistance));
+        mTimeValue.setText(TIME_FORMAT.format(flightDistance / DEFAULT_DRONE_SPEED * 1000));
+
+        mFootprintValue.setText(String.format(FOOTPRINT_FORMAT, surveyData.getLongitudinalFootPrint(), surveyData.getLateralFootPrint()));
+
+        mGSDValue.setText(String.format(GSD_FORMAT, surveyData.getGroundResolution()));
+        mLongitudinalValue.setText(String.format(LENGTH_FORMAT, mAerialSurveyRouter.getSurveyData().getLongitudinalPictureDistance()));
+        mLateralValue.setText(String.format(LENGTH_FORMAT, mAerialSurveyRouter.getSurveyData().getLateralPictureDistance()));
+        mAreaValue.setText(String.format(AREA_FORMAT, surveyData.getArea()));
+
         mPictureValue.setText("" + mAerialSurveyRouter.getCameraShutterCount());
         mStripsValue.setText("" + mAerialSurveyRouter.getNumberOfLines());
     }
+
 }

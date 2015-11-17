@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mission_item_recycler_view"
@@ -12,7 +12,7 @@
         android:layout_marginBottom="@dimen/mission_item_recycle_view_bottom_margin"
         android:layout_marginTop="@dimen/mission_item_recycle_view_top_margin"
         android:fadeScrollbars="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
 
     <FrameLayout
         android:id="@+id/way_point_detail_container"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:layout_toStartOf="@id/mission_item_recycler_view"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <Button
         android:id="@+id/create_route_button"
@@ -32,10 +32,10 @@
         android:layout_marginStart="12dp"
         android:background="@drawable/create_route_button_bg"
         android:fontFamily="@string/font_roboto_regular"
-        android:text="CREATE ROUTE"
+        android:text="@string/aerial_survey_create_route"
         android:textColor="@color/white"
         android:textSize="22sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:id="@+id/distance_and_time_info"
@@ -50,21 +50,21 @@
             style="@style/mav_info_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/flight_distance" />
+            android:text="@string/flight_distance"/>
 
         <TextView
             android:id="@+id/distance_value_text_view"
             style="@style/mav_info_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20.0" />
+            android:text="20.0"/>
 
         <TextView
             android:id="@+id/distance_unit_text_view"
             style="@style/mav_info_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="m" />
+            android:text="@string/unit_in_meter"/>
 
         <TextView
             style="@style/mav_info_title_text_view"
@@ -72,14 +72,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
-            android:text="TIME" />
+            android:text="@string/flight_duration"/>
 
         <TextView
             android:id="@+id/time_value_text_view"
             style="@style/mav_info_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/time_hint" />
+            android:text="@string/time_hint"/>
 
     </LinearLayout>
 
@@ -108,7 +108,7 @@
                 style="@style/mav_info_title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FOOTPRINT" />
+                android:text="@string/aerial_survey_footprint"/>
 
             <TextView
                 android:id="@+id/footprint_value_text_view"
@@ -117,17 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="16.20x42.2" />
-
-            <TextView
-                android:id="@+id/footprint_unit_text_view"
-                style="@style/mav_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
-                android:text="m" />
-
+                android:text="@string/aerial_survey_footprint_hint"/>
 
             <TextView
                 style="@style/mav_info_title_text_view"
@@ -135,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
-                android:text="GSD" />
+                android:text="@string/aerial_survey_gsd"/>
 
             <TextView
                 android:id="@+id/gsd_value_text_view"
@@ -144,14 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="21.3" />
-
-            <TextView
-                android:id="@+id/gsd_unit_text_view"
-                style="@style/mav_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="mm2/px" />
+                android:text="@string/aerial_survey_gsd_hint"/>
 
             <TextView
                 style="@style/mav_info_title_text_view"
@@ -159,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
-                android:text="LONGITUDINAL" />
+                android:text="@string/aerial_survey_longitudinal"/>
 
             <TextView
                 android:id="@+id/longitudinal_value_text_view"
@@ -168,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="21.3" />
+                android:text="@string/aerial_survey_longitudinal_hint"/>
 
             <TextView
                 android:id="@+id/longitudinal_unit_text_view"
@@ -177,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="m" />
+                android:text="@string/unit_in_meter"/>
 
             <TextView
                 style="@style/mav_info_title_text_view"
@@ -185,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
-                android:text="LATERAL" />
+                android:text="@string/aerial_survey_lateral"/>
 
             <TextView
                 android:id="@+id/lateral_value_text_view"
@@ -194,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="24.5" />
+                android:text="@string/aerial_survey_lateral_hint"/>
 
             <TextView
                 android:id="@+id/lateral_unit_text_view"
@@ -203,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="m" />
+                android:text="@string/unit_in_meter"/>
 
         </LinearLayout>
 
@@ -217,7 +200,7 @@
                 style="@style/mav_info_title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Area" />
+                android:text="@string/aerial_survey_area"/>
 
             <TextView
                 android:id="@+id/area_value_text_view"
@@ -226,14 +209,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="28933" />
-
-            <TextView
-                android:id="@+id/area_unit_text_view"
-                style="@style/mav_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="m2" />
+                android:text="@string/aerial_survey_area_hint"/>
 
             <TextView
                 style="@style/mav_info_title_text_view"
@@ -241,31 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
-                android:text="GRID LENGTH" />
-
-            <TextView
-                android:id="@+id/grid_length_value_text_view"
-                style="@style/mav_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
-                android:text="1.5" />
-
-            <TextView
-                android:id="@+id/grid_length_unit_text_view"
-                style="@style/mav_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="km" />
-
-            <TextView
-                style="@style/mav_info_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:text="PICTURE" />
+                android:text="@string/aerial_survey_picture"/>
 
             <TextView
                 android:id="@+id/picture_value_text_view"
@@ -274,14 +226,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="64" />
+                android:text="@string/aerial_survey_picture_hint"/>
 
             <TextView
                 android:id="@+id/picture_unit_text_view"
                 style="@style/mav_info_value_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="pcs" />
+                android:text="@string/aerial_survey_picture_unit"/>
 
             <TextView
                 style="@style/mav_info_title_text_view"
@@ -289,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
-                android:text="NUMBER OF STRIPS" />
+                android:text="@string/aerial_survey_strips"/>
 
             <TextView
                 android:id="@+id/strips_value_text_view"
@@ -298,7 +250,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="8" />
+                android:text="@string/aerial_survey_strips_hint"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -313,6 +265,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp" />
+        android:layout_marginRight="12dp"/>
 
 </RelativeLayout>

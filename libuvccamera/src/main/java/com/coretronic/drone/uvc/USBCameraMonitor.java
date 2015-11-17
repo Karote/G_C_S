@@ -32,6 +32,7 @@ public class USBCameraMonitor {
     private final Activity mActivity;
     private final ConcurrentHashMap<UsbDevice, UsbCameraWrap> mCameraWrapMap = new ConcurrentHashMap<>();
     private final UsbManager mUsbManager;
+    private final DeviceFilter mUsbCameraFilter;
     private OnUVCCameraStatusChangedListener mOnUVCCameraStatusChangedListener;
     private BroadcastReceiver mUSBBroadcastReceiver;
 
@@ -51,6 +52,7 @@ public class USBCameraMonitor {
     public USBCameraMonitor(final Activity activity) {
         mActivity = activity;
         mUsbManager = (UsbManager) activity.getSystemService(Context.USB_SERVICE);
+        mUsbCameraFilter = DeviceFilter.getDeviceFilters(mActivity, R.xml.device_filter).get(0);
     }
 
     public static USBCameraMonitor getInstance() {
@@ -136,6 +138,9 @@ public class USBCameraMonitor {
     }
 
     private void onDetach(UsbDevice usbDevice) {
+        if (!mUsbCameraFilter.matches(usbDevice)) {
+            return;
+        }
         if (mOnUVCCameraStatusChangedListener != null) {
             mOnUVCCameraStatusChangedListener.onDetach(usbDevice);
         }
@@ -148,6 +153,9 @@ public class USBCameraMonitor {
     }
 
     private void onAttach(UsbDevice usbDevice) {
+        if (!mUsbCameraFilter.matches(usbDevice)) {
+            return;
+        }
         if (mOnUVCCameraStatusChangedListener != null) {
             mOnUVCCameraStatusChangedListener.onAttach(usbDevice);
         }
@@ -168,7 +176,7 @@ public class USBCameraMonitor {
     }
 
     public List<UsbDevice> getUVCCamera() {
-        return getDeviceList(DeviceFilter.getDeviceFilters(mActivity, R.xml.device_filter).get(0));
+        return getDeviceList(mUsbCameraFilter);
     }
 
     private List<UsbDevice> getDeviceList(final DeviceFilter filter) {

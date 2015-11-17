@@ -88,13 +88,34 @@
     <string name="speed_unit">m/s</string>
     <string name="target">TARGET</string>
     <string name="target_hint">600m</string>
-    <string name="from_me">FROM ME</string>
-    <string name="from_me_hint">300.3m</string>
+    <string name="from_home">FROM HOME</string>
+    <string name="from_home_hint">300.3m</string>
     <string name="latitude_hint">-90.0000000,</string>
     <string name="longitude_hint">-180.0000000</string>
     <string name="mission_id_hint">44</string>
     <string name="wheel_text_hint">22</string>
-    <string name="drone_landing_button_text">LANDING</string>
+    <string name="drone_stop_button_text">STOP</string>
+
+    <string name="aerial_survey_create_route">CREATE ROUTE</string>
+    <string name="aerial_survey_footprint">FOOTPRINT</string>
+    <string name="aerial_survey_footprint_hint">16.20mx42.2,</string>
+    <string name="aerial_survey_gsd">GSD</string>
+    <string name="aerial_survey_gsd_hint">21.3mm2/px</string>
+    <string name="aerial_survey_longitudinal">LONGITUDINAL</string>
+    <string name="aerial_survey_longitudinal_hint">21.3</string>
+    <string name="aerial_survey_lateral">LATERAL</string>
+    <string name="aerial_survey_lateral_hint">24.5</string>
+    <string name="aerial_survey_area">Area</string>
+    <string name="aerial_survey_area_hint">28933m2</string>
+    <string name="aerial_survey_picture">PICTURE</string>
+    <string name="aerial_survey_picture_hint">64</string>
+    <string name="aerial_survey_picture_unit">pcs</string>
+    <string name="aerial_survey_strips">NUMBER OF STRIPS</string>
+    <string name="aerial_survey_strips_hint">8</string>
+    <string name="aerial_survey_dialog_back">BACK</string>
+    <string name="aerial_survey_dialog_ok">OK</string>
+    <string name="aerial_survey_dialog_camera">Camera</string>
+    <string name="aerial_survey_dialog_camera_hint">Canon SX260</string>
 
 
 </resources>

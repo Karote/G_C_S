@@ -18,6 +18,7 @@ public class MavInfoView implements StatusChangedListener {
 
     private ProgressWithTextWrap mDroneAltitudeTextWrap;
     private ProgressWithTextWrap mDroneGroundSpeedTextWrap;
+    private ProgressWithTextWrap mDroneClimbSpeedTextWrap;
 
     private TextView mDroneLatitudeTextView;
     private TextView mDroneLongitudeTextView;
@@ -29,6 +30,7 @@ public class MavInfoView implements StatusChangedListener {
         mMavInfoView = view.findViewById(mavInfoPanelId);
         initAltitudeView(R.id.altitude_text, R.id.altitude_progress_bar);
         initGroundSpeedView(R.id.ground_speed_text, R.id.ground_speed_progress_bar);
+        initClimbSpeedView(R.id.climb_speed_text, R.id.climb_speed_progress_bar);
         initMavInfoView(R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
     }
 
@@ -48,15 +50,22 @@ public class MavInfoView implements StatusChangedListener {
         mDroneAltitudeTextWrap = new ProgressWithTextWrap(textView, seekArc);
     }
 
-    private void initGroundSpeedView(int verticalSpeedTextViewId, int verticalSpeedProgressId) {
+    private void initGroundSpeedView(int horizontalSpeedTextViewId, int horizontalSpeedProgressId) {
+        TextView textView = (TextView) mMavInfoView.findViewById(horizontalSpeedTextViewId);
+        SeekArc seekArc = (SeekArc) mMavInfoView.findViewById(horizontalSpeedProgressId);
+        mDroneGroundSpeedTextWrap = new ProgressWithTextWrap(textView, seekArc);
+    }
+
+    private void initClimbSpeedView(int verticalSpeedTextViewId, int verticalSpeedProgressId) {
         TextView textView = (TextView) mMavInfoView.findViewById(verticalSpeedTextViewId);
         SeekArc seekArc = (SeekArc) mMavInfoView.findViewById(verticalSpeedProgressId);
-        mDroneGroundSpeedTextWrap = new ProgressWithTextWrap(textView, seekArc);
+        mDroneClimbSpeedTextWrap = new ProgressWithTextWrap(textView, seekArc);
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         onAltitudeUpdate(0);
         onGroundSpeedUpdate(0);
+        onClimbSpeedUpdate(0);
         onLocationUpdate(0, 0);
         onFlightTimeUpdate(0);
     }
@@ -65,7 +74,7 @@ public class MavInfoView implements StatusChangedListener {
         if (mDroneAltitudeTextWrap == null) {
             return;
         }
-        mDroneAltitudeTextWrap.setValue((int) altitude);
+        mDroneAltitudeTextWrap.setValue(altitude);
     }
 
     final private void onGroundSpeedUpdate(float groundSpeed) {
@@ -73,6 +82,13 @@ public class MavInfoView implements StatusChangedListener {
             return;
         }
         mDroneGroundSpeedTextWrap.setValue(groundSpeed);
+    }
+
+    final private void onClimbSpeedUpdate(float climbSpeed) {
+        if (mDroneClimbSpeedTextWrap == null) {
+            return;
+        }
+        mDroneClimbSpeedTextWrap.setValue(climbSpeed);
     }
 
     final private void onLocationUpdate(long droneLat, long droneLng) {
@@ -117,6 +133,9 @@ public class MavInfoView implements StatusChangedListener {
             case ON_GROUND_SPEED_UPDATE:
                 onGroundSpeedUpdate(droneStatus.getGroundSpeed());
                 break;
+            case ON_CLIMB_SPEED_UPDATE:
+                onClimbSpeedUpdate(droneStatus.getClimbSpeed());
+                break;
             case ON_FLIGHT_DURATION_UPDATE:
                 onFlightTimeUpdate(droneStatus.getDuration());
                 break;
@@ -140,10 +159,10 @@ public class MavInfoView implements StatusChangedListener {
         private void setValue(float value) {
 
             if (mTextView != null) {
-                mTextView.setText(value + "");
+                mTextView.setText(String.format("%.1f", value));
             }
             if (mSeekArc != null) {
-                mSeekArc.setProgress((int) value);
+                mSeekArc.updateProgress((int) (value * 10));
             }
         }
     }

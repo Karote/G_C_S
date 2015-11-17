@@ -31,7 +31,6 @@ public class TextViewWithoutPaddings extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         final String text = calculateTextParams();
-
         final int left = mBounds.left;
         final int bottom = mBounds.bottom;
         mBounds.offset(-mBounds.left, -mBounds.top);
@@ -52,5 +51,12 @@ public class TextViewWithoutPaddings extends TextView {
         mPaint.setTypeface(getTypeface());
         mPaint.getTextBounds(text, 0, text.length(), mBounds);
         return text;
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(text, type);
+        requestLayout();
+        invalidate();
     }
 }

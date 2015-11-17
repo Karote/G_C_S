@@ -127,6 +127,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     }
 
     public void selectDrone(DroneDevice droneDevice, OnDroneConnectedListener onDroneConnectedListener) {
+        mConnectedDroneDevice = DroneDevice.FAKE_DRONE_DEVICE;
         selectControl(droneDevice, onDroneConnectedListener);
     }
 
