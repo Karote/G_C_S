@@ -276,6 +276,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     public void onMissionTypeUpdate(Mission.Type missionType) {
         mMissionItemAdapter.getSelectedItem().setType(missionType);
         mMissionItemAdapter.notifyDataSetChanged();
+        updateMissionToMap();
     }
 
     @Override
