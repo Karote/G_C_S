@@ -44,6 +44,10 @@ public class MissionItemDetailFragment extends Fragment {
     private final static int LAND_INDEX = 2;
     private final static int RTL_INDEX = 3;
     private final static int CAMERA_INDEX = 4;
+    public static final int ALTITUDE_MIN_VALUE = 1;
+    public static final int ALTITUDE_MAX_VALUE = 500;
+    public static final int DELAY_MIN_VALUE = 0;
+    public static final int DELAY_MAX_VALUE = 30;
 
     private TextView mSerialNumberTextView = null;
     private EditText mLatitudeTextView = null;
@@ -144,17 +148,17 @@ public class MissionItemDetailFragment extends Fragment {
         });
 
         mAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.altitude_wheel);
-        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 100, "%01d"));
+        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, ALTITUDE_MIN_VALUE, ALTITUDE_MAX_VALUE, "%01d"));
         mAltitudeWheel.setCyclic(false);
         mAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mSelectedMissionUpdatedCallback.onMissionAltitudeUpdate((float) newValue);
+                mSelectedMissionUpdatedCallback.onMissionAltitudeUpdate((float) newValue + ALTITUDE_MIN_VALUE);
             }
         });
 
         mDelayWheel = (AbstractWheel) fragmentView.findViewById(R.id.delay_wheel);
-        mDelayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, 0, 99, "%01d"));
+        mDelayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, DELAY_MIN_VALUE, DELAY_MAX_VALUE, "%01d"));
         mDelayWheel.setCyclic(false);
         mDelayWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
@@ -198,7 +202,7 @@ public class MissionItemDetailFragment extends Fragment {
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_waypoint);
                     break;
             }
-            mAltitudeWheel.setCurrentItem((int) arguments.getFloat(ARGUMENT_ALTITUDE));
+            mAltitudeWheel.setCurrentItem((int) arguments.getFloat(ARGUMENT_ALTITUDE) - ALTITUDE_MIN_VALUE);
             mDelayWheel.setCurrentItem(arguments.getInt(ARGUMENT_DELAY));
         }
     }

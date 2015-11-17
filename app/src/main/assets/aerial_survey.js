@@ -5,6 +5,7 @@ var footprints = [];
 var footprint_rectangle;
 var footprint_polyline;
 var footprint_properties;
+var infobubble;
 
 function initSurvey() {
 
@@ -19,7 +20,7 @@ function initSurvey() {
     polygon_polyline = new google.maps.Polyline(polygon_polyline_options);
 
     var lineSymbol = {
-        strokeColor : '#5ea1c7', 
+        strokeColor : '#5ea1c7',
         path : 'M 0,-1 0,1',
         strokeOpacity : 1,
         scale : 4
@@ -46,6 +47,22 @@ function initSurvey() {
         zIndex : 255,
     };
     footprint_polyline = new google.maps.Polyline(footprint_polyline_options);
+    
+    var infoOptions = {
+        map: map,
+        shadowStyle: 0,
+        maxHeight: 72,
+        padding: 6,
+        backgroundColor: 'rgb(197,40,40)',
+        borderRadius: 0,
+        arrowSize: 10,
+        borderWidth: 0,
+        disableAutoPan: true,
+        hideCloseButton: true,
+        arrowPosition: 50,
+        arrowStyle: 0
+    };
+    infobubble = new InfoBubble(infoOptions);
 }
 
 function initFootprintProperties(top_offset, left_offset, bottom_offset, right_offset) {
@@ -104,6 +121,13 @@ function addPolygonVertex(lat, lng, index) {
     };
 
     var polygon_vertex_marker = new google.maps.Marker(polygon_vertex_marker_option);
+    
+    google.maps.event.addListener(polygon_vertex_marker, 'dragstart', function(e) {
+        if (infobubble.getContent()) {
+            infobubble.close();
+            infobubble.setContent(null);
+        }
+    });
 
     google.maps.event.addListener(polygon_vertex_marker, 'drag', function(e) {
         polygon_polyline.getPath().setAt(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition());
@@ -122,6 +146,10 @@ function addPolygonVertex(lat, lng, index) {
         AndroidFunction.onMapDragEndEvent(polygon_vertex_marker.index - 1, polygon_vertex_marker.getPosition().lat(), polygon_vertex_marker.getPosition().lng());
     });
 
+    google.maps.event.addListener(polygon_vertex_marker, 'click', function(e) {
+        showInfo(polygon_vertex_marker);
+    });
+
     polygon_vertices.push(polygon_vertex_marker);
     polygon_polyline.getPath().push(new google.maps.LatLng(lat, lng));
     if (!polygon_polyline.getMap()) {
@@ -135,6 +163,7 @@ function updateFootprint(footprintsInJson) {
     for (var index in footprints) {
         addFootprint(footprints[index].latitude, footprints[index].longitude);
     }
+    setScopeMarkerEditable(false);
 }
 
 function addFootprint(lat, lng) {
@@ -191,10 +220,40 @@ function clearFootprint() {
     footprints = [];
     footprint_polyline.setMap(null);
     footprint_polyline.setPath([]);
+    setScopeMarkerEditable(true);
 }
 
-function setScopeMarkerDraggable(draggable){
-    for (var index in polygon_vertices) {
-        polygon_vertices[index].setDraggable(draggable);
+function setScopeMarkerEditable(editable) {
+    if (infobubble.getContent()) {
+        infobubble.close();
+        infobubble.setContent(null);
     }
+    for (var index in polygon_vertices) {
+        polygon_vertices[index].setDraggable(editable);
+        polygon_vertices[index].setClickable(editable);
+    }
+}
+
+function showInfo(markerObj) {
+    if (infobubble.getContent()) {
+        infobubble.close();
+        infobubble.setContent(null);
+        if (infobubble.getPosition() == markerObj.getPosition()) {
+            return;
+        }
+    }
+    infobubble.setContent(infoContent(markerObj));
+    infobubble.open(map, markerObj);
+}
+
+function infoContent(markerObj) {
+    var html = '<div class="infoSub_left" onclick="onClickInfoBubble(-1)">CLEAR ALL</div>' 
+        + '<div class="infoSub_right" onclick="onClickInfoBubble(' + markerObj.index + ')">DELETE</div>';
+    return html;
+}
+
+function onClickInfoBubble(deleteIndex){
+    infobubble.close();
+    infobubble.setContent(null);
+    AndroidFunction.onMapDeleteMarker(deleteIndex);
 }

@@ -38,6 +38,45 @@
         android:textStyle="bold"/>
 
     <LinearLayout
+        android:id="@+id/go_edit_button_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="52dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/btn_plan_white">
+
+        <Button
+            android:id="@+id/route_go_button"
+            android:layout_width="@dimen/drone_control_button_group_landing_button_width"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="@string/btn_go"
+            android:textColor="#669900"
+            android:textSize="@dimen/control_button_group_landing_button_text_size"
+            android:textStyle="bold"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/drone_control_button_group_divider_height"
+            android:background="@color/control_button_group_divider_background"/>
+
+        <Button
+            android:id="@+id/route_edit_button"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="EDIT"
+            android:textColor="#5c5c5c"
+            android:textSize="@dimen/control_button_group_landing_button_text_size"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/distance_and_time_info"
         android:layout_width="wrap_content"
         android:layout_height="40dp"

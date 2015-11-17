@@ -80,6 +80,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     private TextView mPictureValue;
     private TextView mStripsValue;
     private Button mCreateRouteButton = null;
+    private View mGoEditPanel = null;
     private RouterBuilder mRouterBuilder;
     private List<Coord2D> mPolygonPoints;
     private SurveyRouter mAerialSurveyRouter;
@@ -123,6 +124,10 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
         mWayPointDetailPanel = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
         mWayPointDetailPanel.setVisibility(View.GONE);
+        mGoEditPanel = view.findViewById(R.id.go_edit_button_layout);
+        mGoEditPanel.setVisibility(View.GONE);
+        view.findViewById(R.id.route_go_button).setOnClickListener(onPlanningBtnClickListener);
+        view.findViewById(R.id.route_edit_button).setOnClickListener(onPlanningBtnClickListener);
 
         mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
             @Override
@@ -173,6 +178,49 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                     mAerialSurveyRouter = null;
                     mMapViewFragment.clearFootprint();
                     changeLayoutStatus(SCOPE_STATUS);
+                    break;
+                case R.id.route_go_button:
+                    List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
+                    if (droneMissionList == null || droneMissionList.size() == 0) {
+                        showToastMessage("There is no mission existed");
+                        return;
+                    }
+                    if (mMapViewFragment.getDroneController() == null) {
+                        return;
+                    }
+                    mMapViewFragment.getDroneController().writeMissions(droneMissionList, new MissionLoaderListener() {
+                        @Override
+                        public void onLoadCompleted(final List<Mission> missions) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (missions == null || missions.size() == 0) {
+                                        showToastMessage("There is no mission existed");
+                                    } else {
+                                        DroneController droneController = mMapViewFragment.getDroneController();
+                                        if (droneController != null) {
+                                            droneController.startMission();
+                                        }
+                                        mLoadMissionProgressDialog.dismiss();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    showLoadProgressDialog("Loading", "Please wait...");
+                    break;
+                case R.id.route_edit_button:
+                    mMapViewFragment.clearMap();
+                    mMissionItemAdapter.clearMission();
+                    mMissionItemAdapter.onNothingSelected();
+                    updatePolygon();
+                    try {
+                        updateFootprints();
+                    } catch (SurveyBuilderException e) {
+                        return;
+                    }
+                    initRoutePropertiesValue();
+                    changeLayoutStatus(FOOTPRINT_STATUS);
                     break;
             }
         }
@@ -325,6 +373,20 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     }
 
     @Override
+    public void onMapDeleteMarker(int index) {
+        index--;
+        if (index < 0) {
+            mPolygonPoints.clear();
+        } else {
+            mPolygonPoints.remove(index);
+        }
+        if (mPolygonPoints.size() < 3) {
+            changeLayoutStatus(INIT_STATUS);
+        }
+        updatePolygon();
+    }
+
+    @Override
     public void onMissionLatitudeUpdate(float latitude) {
         mMissionItemAdapter.getSelectedItem().setLatitude(latitude);
         mMissionItemAdapter.notifyDataSetChanged();
@@ -388,7 +450,6 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
-                mMapViewFragment.setScopeMarkerDraggable(true);
                 break;
             case FOOTPRINT_STATUS:
                 mCreateRouteButton.setVisibility(View.GONE);
@@ -398,17 +459,20 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.VISIBLE);
                 mDistanceAndTimeInfo.setVisibility(View.VISIBLE);
-                mMapViewFragment.setScopeMarkerDraggable(false);
+                mGoEditPanel.setVisibility(View.GONE);
+                mWayPointDetailPanel.setVisibility(View.GONE);
                 break;
             case ROUTE_CREATED_STATUS:
                 mRoutePropertiesDialog.setVisibility(View.GONE);
                 mMapViewFragment.setMavInfoViewVisibility(View.VISIBLE);
-                mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.VISIBLE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
+                mGoEditPanel.setVisibility(View.VISIBLE);
                 break;
             case PLAN_GO_STATUS:
+                mGoEditPanel.setVisibility(View.GONE);
+                mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
+                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.VISIBLE);
                 break;
         }
     }

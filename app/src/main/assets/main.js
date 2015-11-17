@@ -14,8 +14,6 @@ function initialize() {
     initTapGoMarkerPolyline();
     initSurvey();
     AndroidFunction.onMapLoaded();
-
-    // updateDroneLocation(247122990, 1209164080, 0);
 }
 
 function initMap() {
@@ -157,6 +155,11 @@ function mapClickListener(event) {
     }
     if (isTapAndGoMode) {
         setTapGoMarker(event.latLng);
+    }
+    
+    if (infobubble.getContent()) {
+        infobubble.close();
+        infobubble.setContent(null);
     }
 }
 

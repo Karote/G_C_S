@@ -111,6 +111,16 @@ public class DroneMap implements OnMapEventCallback {
         });
     }
 
+    @JavascriptInterface
+    public void onMapDeleteMarker(final int index) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mOnMapEventCallback.onMapDeleteMarker(index);
+            }
+        });
+    }
+
     public DroneMap(Context context, View view, Handler handler) {
         mContext = context;
         mHandler = handler;
@@ -231,10 +241,6 @@ public class DroneMap implements OnMapEventCallback {
 
     public void updatePolygon(List<Coord2D> polygonPoints) {
         mMapWebView.loadUrl("javascript:updatePolygon(" + transMissionToJson(polygonPoints) + ")");
-    }
-
-    public void setScopeMarkerDraggable(boolean draggable){
-        mMapWebView.loadUrl("javascript:setScopeMarkerDraggable(" + draggable + ")");
     }
 
 }

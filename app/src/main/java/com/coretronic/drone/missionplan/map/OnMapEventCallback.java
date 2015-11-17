@@ -9,4 +9,6 @@ public interface OnMapEventCallback {
     void onMapPolylineLengthCalculated(int lengthInMeters);
 
     void onMapDragStartEvent();
+
+    void onMapDeleteMarker(int index);
 }
