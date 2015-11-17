@@ -74,7 +74,7 @@ public class MavInfoView implements StatusChangedListener {
         if (mDroneAltitudeTextWrap == null) {
             return;
         }
-        mDroneAltitudeTextWrap.setValue((int) altitude);
+        mDroneAltitudeTextWrap.setValue(altitude);
     }
 
     final private void onGroundSpeedUpdate(float groundSpeed) {
@@ -159,10 +159,10 @@ public class MavInfoView implements StatusChangedListener {
         private void setValue(float value) {
 
             if (mTextView != null) {
-                mTextView.setText(value + "");
+                mTextView.setText(String.format("%.1f", value));
             }
             if (mSeekArc != null) {
-                mSeekArc.setProgress((int) value);
+                mSeekArc.updateProgress((int) (value * 10));
             }
         }
     }

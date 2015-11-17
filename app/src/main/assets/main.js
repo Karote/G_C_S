@@ -39,7 +39,7 @@ function initMap() {
 
     var map_options = {
         center : initial_location,
-        zoom : 15,
+        zoom : 17,
         mapTypeId : google.maps.MapTypeId.ROADMAP,
         disableDefaultUI : true,
         styles : map_style_array
@@ -178,8 +178,8 @@ function setMapToMyLocation() {
     } else {
         AndroidFunction.onWarningMessage("無法取得現在位置");
     }
-    if (map.getZoom() < 15) {
-        map.setZoom(15);
+    if (map.getZoom() < 17) {
+        map.setZoom(17);
     }
 }
 
@@ -196,8 +196,9 @@ function updateDroneLocation(droneLat, droneLng, heading) {
     planning_drone_marker_arrow.setPosition(dronePos);
     planning_drone_marker_arrow.icon.rotation = heading;
     planning_drone_marker_arrow.setMap(map);
-
-    tapgo_path_polyline.getPath().setAt(0, dronePos);
+    if (tapgo_path_polyline) {
+        tapgo_path_polyline.getPath().setAt(0, dronePos);
+    }
 }
 
 function clearDroneMarker() {

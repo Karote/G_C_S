@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <FrameLayout
+    <RelativeLayout
+        android:id="@+id/status_bar"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="@dimen/main_fragment_status_bar_height"
         android:alpha="0.5"
         android:background="@color/blue_sky"
         android:orientation="horizontal">
@@ -13,15 +14,18 @@
         <DigitalClock
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center|top"
+            android:layout_centerInParent="true"
+            android:fontFamily="@string/font_roboto_medium"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="@dimen/main_fragment_status_bar_clock_text_size"/>
 
         <com.coretronic.drone.ui.StatusView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="4dp"/>
 
 
@@ -29,103 +33,98 @@
             android:id="@+id/btn_logout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center|right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="4dp"
             android:background="@color/transparent"
-            android:minWidth="50dp"
             android:textColor="@color/white"
             android:textSize="14sp"/>
-    </FrameLayout>
+    </RelativeLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="37dp">
+        android:layout_below="@+id/status_bar"
+        android:layout_marginLeft="@dimen/main_fragment_view_margin_left_right"
+        android:layout_marginRight="@dimen/main_fragment_view_margin_left_right"
+        android:layout_marginTop="@dimen/main_fragment_view_margin_top">
 
         <Spinner
             android:id="@+id/spinner_drone_device"
-            android:layout_width="160dp"
-            android:layout_height="36dp"
-            android:layout_gravity="left|top"
+            android:layout_width="@dimen/main_fragment_select_device_width"
+            android:layout_height="@dimen/main_fragment_select_device_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:background="@color/field_bg"/>
 
         <TextView
             android:id="@+id/tv_app_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|top"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:fontFamily="@string/font_roboto_medium"
             android:text="@string/version"
             android:textColor="@color/version_text"
-            android:textSize="12sp"/>
+            android:textSize="@dimen/main_fragment_app_version_text_size"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="528dp"
-                android:layout_height="90dp">
+            <ImageView
+                android:id="@+id/coretronic_logo_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/main_bg"/>
 
-                <ImageView
-                    android:layout_width="528dp"
-                    android:layout_height="90dp"
-                    android:background="@drawable/main_bg"/>
-
-                <ImageButton
-                    android:id="@+id/btn_flight_setting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginRight="12dp"
-                    android:background="@drawable/main_fragment_main_setting_button_icon"
-                    android:gravity="center"/>
-            </RelativeLayout>
-
+            <ImageView
+                android:id="@+id/btn_flight_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/coretronic_logo_title"
+                android:layout_alignRight="@+id/coretronic_logo_title"
+                android:layout_marginBottom="@dimen/main_fragment_setting_btn_margin_bottom"
+                android:layout_marginRight="@dimen/main_fragment_setting_btn_margin_right"
+                android:src="@drawable/main_fragment_main_setting_button_icon"/>
 
             <LinearLayout
-                android:layout_width="528dp"
-                android:layout_height="136dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coretronic_logo_title"
+                android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_mission_plan"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/main_fragment_main_button_width"
+                    android:layout_height="@dimen/main_fragment_main_button_height"
+                    android:layout_marginRight="5dp"
                     android:background="@drawable/main_btn_larg"
                     android:fontFamily="@string/font_roboto_condensed"
                     android:gravity="center"
                     android:text="@string/mission_plan"
                     android:textColor="@color/white"
-                    android:textSize="44sp"
+                    android:textSize="@dimen/main_fragment_main_button_text_size"
                     android:textStyle="bold|italic"/>
 
                 <Button
                     android:id="@+id/btn_flight_history"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_weight="1"
+                    android:layout_width="@dimen/main_fragment_main_button_width"
+                    android:layout_height="@dimen/main_fragment_main_button_height"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/main_btn_larg"
                     android:fontFamily="@string/font_roboto_condensed"
                     android:gravity="center"
                     android:text="@string/flight_history"
                     android:textColor="@color/white"
-                    android:textSize="44sp"
+                    android:textSize="@dimen/main_fragment_main_button_text_size"
                     android:textStyle="bold|italic"/>
-
             </LinearLayout>
-        </LinearLayout>
-    </FrameLayout>
-</FrameLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

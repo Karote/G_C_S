@@ -278,7 +278,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void notificationWithTTS(DroneMode droneMode) {
-        if (mTtsSpeaker != null) {
+        if (mTtsSpeaker == null) {
             return;
         }
         String ttsStr = null;
