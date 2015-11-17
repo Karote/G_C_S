@@ -61,7 +61,7 @@
     <dimen name="way_point_detail_type_spinner_text_size">20sp</dimen>
     <dimen name="way_point_detail_spinner_wheel_height">32dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
-    <dimen name="way_point_detail_location_layout_top_margin">10dp</dimen>
+    <dimen name="way_point_detail_location_layout_top_margin">8dp</dimen>
     <dimen name="way_point_detail_location_text_height">32dp</dimen>
     <dimen name="way_point_detail_location_text_size">16sp</dimen>
     <dimen name="way_point_detail_location_text_top_margin">2dp</dimen>
@@ -70,7 +70,7 @@
     <dimen name="way_point_detail_delete_button_top_margin">12dp</dimen>
     <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
     <dimen name="way_point_detail_unit_text_size">12sp</dimen>
-    <dimen name="way_point_detail_delay_unit_layout_top_margin">12dp</dimen>
+    <dimen name="way_point_detail_delay_unit_layout_top_margin">8dp</dimen>
     <dimen name="way_point_detail_type_icon_left_margin">12dp</dimen>
     <dimen name="way_point_detail_type_icon_top_margin">14dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_text_size">20sp</dimen>

@@ -40,8 +40,9 @@
 
     <!-- mission plan-->
     <string name="delay">Delay</string>
+    <string name="speed">Speed</string>
     <string name="second">sec</string>
-    <string name="delete">Delete</string>
+    <string name="delete">DELETE</string>
 
     <!-- follow me-->
     <string name="follow_me_start">START FOLLOW</string>

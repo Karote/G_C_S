@@ -89,11 +89,11 @@
     <dimen name="way_point_detail_content_layout_right_padding">16dp</dimen>
     <dimen name="way_point_detail_content_layout_left_padding">16dp</dimen>
     <dimen name="way_point_detail_content_layout_top_padding">16dp</dimen>
-    <dimen name="way_point_detail_unit_text_size">16sp</dimen>
-    <dimen name="way_point_detail_spinner_wheel_top_margin">4dp</dimen>
+    <dimen name="way_point_detail_unit_text_size">14sp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_height">36dp</dimen>
     <dimen name="way_point_detail_longitude_layout_left_margin">4dp</dimen>
-    <dimen name="way_point_detail_delete_button_text_size">24sp</dimen>
+    <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
     <dimen name="way_point_detail_spinner_wheel_width">246dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_padding">91dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_width">64dp</dimen>
@@ -113,7 +113,7 @@
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">8dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">28sp</dimen>
 
-    <dimen name="mission_plan_detail_text_size">18sp</dimen>
+    <dimen name="mission_plan_detail_text_size">14sp</dimen>
     <dimen name="flight_history_recycler_view_right_margin">8dp</dimen>
     <dimen name="flight_history_recycler_view_top_margin">8dp</dimen>
 
