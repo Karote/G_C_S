@@ -54,6 +54,10 @@ public class ControlBarView {
         mControlMainPanel.setVisibility(visibility);
     }
 
+    public void setDroneControlBarVisibility(int visibility) {
+        mDroneControlBar.setVisibility(visibility);
+    }
+
     public void showStopButton() {
         mPlanStopButton.setVisibility(View.VISIBLE);
         mPlanGoButton.setVisibility(View.GONE);
