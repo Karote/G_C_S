@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:text="FROM HOME" />
+                android:text="@string/from_home" />
 
             <TextView
                 android:id="@+id/from_home_distance_text"
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="@string/from_me_hint" />
+                android:text="@string/from_home_hint" />
 
         </LinearLayout>
 

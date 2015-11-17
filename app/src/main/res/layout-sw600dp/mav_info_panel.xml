@@ -52,7 +52,7 @@
         android:layout_alignBaseline="@id/flight_time_text"
         android:layout_toEndOf="@id/from_home_title"
         android:layout_toRightOf="@id/from_home_title"
-        android:text="@string/from_me_hint" />
+        android:text="@string/from_home_hint" />
 
     <TextView
         android:id="@+id/target_title"
