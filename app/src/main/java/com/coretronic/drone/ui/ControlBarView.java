@@ -30,13 +30,19 @@ public class ControlBarView {
         mPlanStopButton = mDroneControlBar.findViewById(R.id.plan_stop_button);
         mPlanStopButton.setOnClickListener(onClickListener);
         mDroneTakeoffButton = mDroneControlBar.findViewById(R.id.drone_takeoff_button);
-        mDroneTakeoffButton.setOnClickListener(onClickListener);
+        if (mDroneTakeoffButton != null) {
+            mDroneTakeoffButton.setOnClickListener(onClickListener);
+        }
         mDroneLandingButton = mDroneControlBar.findViewById(R.id.drone_landing_button);
         mDroneLandingButton.setOnClickListener(onClickListener);
         mPlanPlayButton = mDroneControlBar.findViewById(R.id.plan_play_button);
-        mPlanPlayButton.setOnClickListener(onClickListener);
+        if (mPlanPlayButton != null) {
+            mPlanPlayButton.setOnClickListener(onClickListener);
+        }
         mPlanPauseButton = mDroneControlBar.findViewById(R.id.plan_pause_button);
-        mPlanPauseButton.setOnClickListener(onClickListener);
+        if (mPlanPauseButton != null) {
+            mPlanPauseButton.setOnClickListener(onClickListener);
+        }
         mDroneControlBar.findViewById(R.id.drone_rtl_button).setOnClickListener(onClickListener);
 
         mMapControlBar = mControlMainPanel.findViewById(R.id.map_control_bar);
