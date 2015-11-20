@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="48dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="48dp">
 
     <ImageView
         android:id="@+id/map_fpv_switch_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/btn_plan_white"
-        android:src="@drawable/drone_control_group_fpv_button_icon"/>
+        android:src="@drawable/drone_control_group_fpv_button_icon" />
 
     <include
         android:id="@+id/drone_control_bar"
@@ -20,16 +21,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"/>
+        android:layout_marginStart="12dp" />
 
     <include
         android:id="@+id/map_control_bar"
         layout="@layout/map_control_button_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
-        android:layout_toRightOf="@+id/map_fpv_switch_btn"/>
+        android:layout_toEndOf="@id/map_fpv_switch_btn"
+        android:layout_toRightOf="@id/map_fpv_switch_btn" />
 
 </RelativeLayout>

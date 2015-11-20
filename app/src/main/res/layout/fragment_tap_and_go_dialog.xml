@@ -21,7 +21,7 @@
             android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
             android:fontFamily="@string/font_roboto_medium"
             android:text="@string/btn_cancel"
-            android:textColor="@color/go_dialog_cancel"
+            android:textColor="@drawable/tap_and_go_dialog_cancel_color"
             android:textSize="@dimen/tap_and_go_dialog_cancel_text_size" />
     </LinearLayout>
 
@@ -43,11 +43,12 @@
         android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
         android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
         android:layout_marginTop="@dimen/tap_and_go_dialog_location_text_top_margin"
-        android:fontFamily="@string/font_roboto_medium"
+        android:fontFamily="@string/font_roboto_condensed"
         android:gravity="center"
         android:text="@string/location_format"
         android:textColor="@color/go_dialog_unit"
-        android:textSize="@dimen/tap_and_go_dialog_location_text_size" />
+        android:textSize="@dimen/tap_and_go_dialog_location_text_size"
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -64,8 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:drawableEnd="@drawable/ico_indicator_waypoint_arrow"
-            android:drawableRight="@drawable/ico_indicator_waypoint_arrow"
             android:text="@string/flight_altitude" />
 
         <TextView
@@ -86,6 +85,7 @@
         android:layout_marginLeft="@dimen/tap_and_go_dialog_content_left_margin"
         android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
         android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
+        android:layout_marginTop="2dp"
         android:background="@drawable/tap_and_go_altitude_spinner_wheel_bg"
         app:isAllVisible="false"
         app:isCyclic="false"

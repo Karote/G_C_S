@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     android:fontFamily="@string/font_roboto_regular"
     android:textColor="@color/white"
-    android:textSize="@dimen/way_point_detail_type_spinner_text_size" />
+    android:textSize="@dimen/way_point_detail_type_spinner_text_size"
+    android:textStyle="bold" />

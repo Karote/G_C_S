@@ -406,6 +406,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     public void onMissionTypeUpdate(Type missionType) {
         mMissionItemAdapter.getSelectedItem().setType(missionType);
         mMissionItemAdapter.notifyDataSetChanged();
+        updateMissionToMap();
     }
 
     @Override

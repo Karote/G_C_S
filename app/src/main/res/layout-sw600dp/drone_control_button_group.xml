@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_plan_white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/plan_go_button"
+        android:layout_width="@dimen/drone_control_button_group_landing_button_width"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/btn_go"
+        android:textColor="#669900"
+        android:textSize="@dimen/control_button_group_landing_button_text_size"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/plan_stop_button"
+        android:layout_width="@dimen/drone_control_button_group_landing_button_width"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:fontFamily="@string/font_roboto_regular"
+        android:text="@string/drone_stop_button_text"
+        android:textColor="@color/plan_stop_button"
+        android:textSize="@dimen/control_button_group_landing_button_text_size"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="@dimen/drone_control_button_group_divider_height"
+        android:background="@color/control_button_group_divider_background" />
+
+    <ImageView
+        android:id="@+id/drone_takeoff_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/drone_control_button_group_btn_v_margin"
+        android:layout_marginEnd="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
+        android:src="@drawable/ico_plan_takeoff" />
+
+    <ImageView
+        android:id="@+id/drone_landing_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/drone_control_button_group_btn_v_margin"
+        android:layout_marginEnd="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
+        android:src="@drawable/ico_plan_landing"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="@dimen/drone_control_button_group_divider_height"
+        android:background="@color/control_button_group_divider_background" />
+
+    <ImageView
+        android:id="@+id/plan_play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/drone_control_button_group_btn_v_margin"
+        android:layout_marginEnd="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
+        android:src="@drawable/ico_plan_play" />
+
+    <ImageView
+        android:id="@+id/plan_pause_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/drone_control_button_group_btn_v_margin"
+        android:layout_marginEnd="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
+        android:src="@drawable/ico_plan_pause"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="@dimen/drone_control_button_group_divider_height"
+        android:background="@color/control_button_group_divider_background" />
+
+    <ImageView
+        android:id="@+id/drone_rtl_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/drone_control_button_group_btn_v_margin"
+        android:layout_marginEnd="6dp"
+        android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginRight="6dp"
+        android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+        android:layout_marginTop="@dimen/drone_control_button_group_btn_v_margin"
+        android:src="@drawable/drone_control_group_drone_rtl_button_icon" />
+</LinearLayout>

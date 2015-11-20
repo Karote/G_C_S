@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView android:id="@+id/spinner_waypoint_detail_dropdown_text"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:fontFamily="@string/font_roboto_regular"
-          android:textColor="@color/black"
-          android:textSize="18sp"/>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/spinner_waypoint_detail_dropdown_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="@string/font_roboto_regular"
+    android:padding="4dp"
+    android:textColor="@color/black"
+    android:textSize="20sp"
+    android:textStyle="bold" />

@@ -35,13 +35,14 @@
     <string name="unit_in_meter">m</string>
     <string name="flight_altitude">Altitude</string>
     <string name="flight_distance">DISTANCE</string>
-    <string name="location_format">0.0000000</string>
+    <string name="location_format">90.000000,180.000000</string>
     <string name="altitude">ALTITUDE</string>
 
     <!-- mission plan-->
     <string name="delay">Delay</string>
+    <string name="speed">Speed</string>
     <string name="second">sec</string>
-    <string name="delete">Delete</string>
+    <string name="delete">DELETE</string>
 
     <!-- follow me-->
     <string name="follow_me_start">START FOLLOW</string>
@@ -87,9 +88,9 @@
     <string name="speed_hint">300.3</string>
     <string name="speed_unit">m/s</string>
     <string name="target">TARGET</string>
-    <string name="target_hint">600m</string>
+    <string name="target_hint">0</string>
     <string name="from_home">FROM HOME</string>
-    <string name="from_home_hint">300.3m</string>
+    <string name="from_home_hint">0.0</string>
     <string name="latitude_hint">-90.0000000,</string>
     <string name="longitude_hint">-180.0000000</string>
     <string name="mission_id_hint">44</string>

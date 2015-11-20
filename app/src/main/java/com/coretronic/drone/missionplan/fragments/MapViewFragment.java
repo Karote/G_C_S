@@ -501,13 +501,15 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         int deleteAndUndoButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
         int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
-        int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? (isTapAndGoMode ? View.GONE : View.VISIBLE) : View.GONE;
+        int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
+        int droneControlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_PLANNING ? View.GONE : View.VISIBLE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
         setDeleteOptionShow(false);
         setDeleteAndUndoButtonVisibility(deleteAndUndoButtonVisibility);
         mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
         mMavInfoView.setVisibility(mavInfoPanelVisibility);
         mControlBarView.setVisibility(controlButtonBarVisibility);
+        mControlBarView.setDroneControlBarVisibility(droneControlButtonBarVisibility);
     }
 
     void setDeleteAndUndoButtonVisibility(int visibility) {
@@ -802,6 +804,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     void setDroneControlBarVisibility(int visibility) {
-        mControlBarView.setVisibility(visibility);
+        mControlBarView.setDroneControlBarVisibility(visibility);
     }
 }
