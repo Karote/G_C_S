@@ -32,7 +32,6 @@
     <dimen name="status_bar_battery_progress_left_margin">12dp</dimen>
     <dimen name="status_bar_battery_text_left_margin">2dp</dimen>
     <dimen name="status_bar_battery_text_size">12sp</dimen>
-    <dimen name="status_bar_communication_light_left_margin">0dp</dimen>
 
     <dimen name="instrument_compass_ruler_height">145dp</dimen>
     <dimen name="instrument_compass_level_width">80dp</dimen>
@@ -50,8 +49,8 @@
     <dimen name="way_point_detail_content_layout_left_padding">12dp</dimen>
     <dimen name="way_point_detail_content_layout_right_padding">12dp</dimen>
     <dimen name="way_point_detail_content_layout_top_padding">8dp</dimen>
-    <dimen name="way_point_detail_name_text_width">28dp</dimen>
-    <dimen name="way_point_detail_name_text_left_margin">16dp</dimen>
+    <dimen name="way_point_detail_name_text_width">32dp</dimen>
+    <dimen name="way_point_detail_name_text_left_margin">12dp</dimen>
     <dimen name="way_point_detail_name_text_size">20sp</dimen>
     <dimen name="way_point_detail_divider_width">1dp</dimen>
     <dimen name="way_point_detail_divider_height">36dp</dimen>
@@ -67,7 +66,7 @@
     <dimen name="way_point_detail_location_text_top_margin">2dp</dimen>
     <dimen name="way_point_detail_longitude_layout_left_margin">8dp</dimen>
     <dimen name="way_point_detail_delete_button_height">40dp</dimen>
-    <dimen name="way_point_detail_delete_button_top_margin">12dp</dimen>
+    <dimen name="way_point_detail_delete_button_top_margin">8dp</dimen>
     <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
     <dimen name="way_point_detail_unit_text_size">12sp</dimen>
     <dimen name="way_point_detail_delay_unit_layout_top_margin">8dp</dimen>
@@ -86,13 +85,13 @@
     <dimen name="tap_and_go_dialog_content_left_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_content_right_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_location_text_top_margin">12dp</dimen>
-    <dimen name="tap_and_go_dialog_location_text_size">16sp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_size">20sp</dimen>
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_top_bar_height">40dp</dimen>
     <dimen name="tap_and_go_dialog_cancel_text_size">16sp</dimen>
     <dimen name="tap_and_go_altitude_wheel_height">32dp</dimen>
     <dimen name="tap_and_go_start_button_height">44dp</dimen>
-    <dimen name="tap_and_go_start_button_bottom_margin">16dp</dimen>
+    <dimen name="tap_and_go_start_button_bottom_margin">20dp</dimen>
     <dimen name="tap_and_go_start_button_top_margin">12dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">22sp</dimen>
 
@@ -129,9 +128,9 @@
     <dimen name="mission_item_recycle_view_bottom_margin">0dp</dimen>
     <dimen name="mission_item_recycle_view_top_margin">0dp</dimen>
 
-    <dimen name="mission_item_recycler_view_bottom_margin">32dp</dimen>
-    <dimen name="mission_item_recycler_view_top_margin">4dp</dimen>
-    <dimen name="mission_item_recycler_view_right_margin">4dp</dimen>
+    <dimen name="mission_item_recycler_view_bottom_margin">48dp</dimen>
+    <dimen name="mission_item_recycler_view_top_margin">8dp</dimen>
+    <dimen name="mission_item_recycler_view_right_margin">8dp</dimen>
     <dimen name="ico_indicator_waypoint_arrow_padding">2dp</dimen>
 
     <dimen name="setting_item_height">48dp</dimen>

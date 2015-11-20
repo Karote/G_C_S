@@ -13,7 +13,6 @@
     <dimen name="status_bar_battery_progress_left_margin">20dp</dimen>
     <dimen name="status_bar_battery_text_left_margin">6dp</dimen>
     <dimen name="status_bar_battery_text_size">16sp</dimen>
-    <dimen name="status_bar_communication_light_left_margin">4dp</dimen>
 
     <dimen name="compass_ruler_height">2.58dp</dimen>
     <dimen name="instrument_compass_ruler_height">258dp</dimen>
@@ -44,7 +43,7 @@
     <dimen name="control_button_group_background_padding">6dp</dimen>
     <dimen name="control_button_group_landing_button_text_size">22sp</dimen>
     <dimen name="drone_control_button_group_right_padding">6dp</dimen>
-    <dimen name="drone_control_button_group_landing_button_width">132dp</dimen>
+    <dimen name="drone_control_button_group_landing_button_width">94dp</dimen>
     <dimen name="drone_control_button_group_divider_h_margin">4dp</dimen>
     <dimen name="drone_control_button_group_divider_height">56dp</dimen>
     <dimen name="drone_control_button_group_btn_v_margin">6dp</dimen>
@@ -88,7 +87,7 @@
     <dimen name="way_point_detail_type_spinner_right_margin">16dp</dimen>
     <dimen name="way_point_detail_content_layout_right_padding">16dp</dimen>
     <dimen name="way_point_detail_content_layout_left_padding">16dp</dimen>
-    <dimen name="way_point_detail_content_layout_top_padding">16dp</dimen>
+    <dimen name="way_point_detail_content_layout_top_padding">8dp</dimen>
     <dimen name="way_point_detail_unit_text_size">14sp</dimen>
     <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_height">36dp</dimen>
@@ -98,20 +97,20 @@
     <dimen name="way_point_detail_spinner_wheel_focus_padding">91dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_width">64dp</dimen>
     <dimen name="way_point_detail_name_text_size">24sp</dimen>
-    <dimen name="way_point_detail_type_spinner_text_size">22sp</dimen>
+    <dimen name="way_point_detail_type_spinner_text_size">20sp</dimen>
 
     <dimen name="ico_indicator_waypoint_arrow_padding">4dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_status_left_margin">4dp</dimen>
 
-    <dimen name="tap_and_go_dialog_content_left_margin">16dp</dimen>
+    <dimen name="tap_and_go_dialog_content_left_margin">24dp</dimen>
     <dimen name="tap_and_go_dialog_content_right_margin">16dp</dimen>
     <dimen name="tap_and_go_dialog_top_bar_height">36dp</dimen>
     <dimen name="tap_and_go_dialog_fragment_width">248dp</dimen>
     <dimen name="tap_and_go_dialog_cancel_text_size">18sp</dimen>
     <dimen name="tap_and_go_dialog_location_text_top_margin">8dp</dimen>
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">8dp</dimen>
-    <dimen name="tap_and_go_start_button_text_size">28sp</dimen>
+    <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
 
     <dimen name="mission_plan_detail_text_size">14sp</dimen>
     <dimen name="flight_history_recycler_view_right_margin">8dp</dimen>
@@ -159,5 +158,6 @@
     <dimen name="main_fragment_select_device_spinner_text_size">22sp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_left">16dp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
+    <dimen name="mav_info_panel_unit_left_margin">4dp</dimen>
 
 </resources>

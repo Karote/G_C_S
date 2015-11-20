@@ -26,10 +26,11 @@
             android:layout_toEndOf="@id/view_focusbar"
             android:layout_toRightOf="@id/view_focusbar"
             android:background="@color/black_transparent_80"
-            android:fontFamily="@string/font_roboto_black"
+            android:fontFamily="@string/font_roboto_regular"
             android:gravity="center"
             android:textColor="@color/point_list_item_row_name_unselected"
             android:textSize="18sp"
+            android:textStyle="bold"
             tools:text="44" />
 
         <RelativeLayout

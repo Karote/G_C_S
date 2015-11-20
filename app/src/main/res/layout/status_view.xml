@@ -8,8 +8,6 @@
         android:id="@+id/iv_communication_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/status_bar_communication_light_left_margin"
-        android:layout_marginStart="@dimen/status_bar_communication_light_left_margin"
         android:src="@drawable/status_bar_communicate_light_level_list" />
 
     <FrameLayout

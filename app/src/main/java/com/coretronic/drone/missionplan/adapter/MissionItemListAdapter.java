@@ -1,6 +1,7 @@
 package com.coretronic.drone.missionplan.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,9 +101,11 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         if (position == mFocusIndex) {
             viewHolder.focusBar.setVisibility(View.VISIBLE);
             viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+            viewHolder.serialNumberTextView.setTypeface(Typeface.create("sans-serif-black", Typeface.NORMAL));
         } else {
             viewHolder.focusBar.setVisibility(View.INVISIBLE);
             viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.point_list_item_row_name_unselected));
+            viewHolder.serialNumberTextView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         }
 
         if (mIsDeleteLayoutVisible) {
@@ -119,6 +122,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
                 if (mFocusIndex == position) {
                     viewHolder.focusBar.setVisibility(View.INVISIBLE);
                     viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.point_list_item_row_name_unselected));
+                    viewHolder.serialNumberTextView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
                     mFocusIndex = -1;
                     if (mItemClickListener != null) {
                         mItemClickListener.onNothingSelected();
@@ -126,6 +130,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
                 } else {
                     viewHolder.focusBar.setVisibility(View.VISIBLE);
                     viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+                    viewHolder.serialNumberTextView.setTypeface(Typeface.create("sans-serif-black", Typeface.NORMAL));
                     mFocusIndex = position;
                     if (mItemClickListener != null) {
                         mItemClickListener.onItemSelected(mission, mFocusIndex);

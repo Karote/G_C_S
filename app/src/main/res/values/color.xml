@@ -18,6 +18,7 @@
     <color name="black_transparent_55">#8C000000</color>
     <color name="black_transparent_40">#66000000</color>
     <color name="black_transparent_35">#59000000</color>
+    <color name="black_transparent_20">#33000000</color>
     <color name="field_bg">#F0F0F0</color>
     <color name="dialog_divider">#E5E5E5</color>
 
@@ -29,8 +30,7 @@
     <color name="mission_item_location_field_bg">#F0F0F0</color>
     <color name="control_button_group_divider_background">#D1D1D1</color>
     <color name="drone_info_text">#D2D2D2</color>
-    <color name="go_dialog_cancel">#929292</color>
-    <color name="go_dialog_unit">#BDBDBD</color>
+    <color name="go_dialog_unit">#6D6D6D</color>
 
     <color name="white_transparent_40">#66FFFFFF</color>
     <color name="white_transparent_15">#26FFFFFF</color>
