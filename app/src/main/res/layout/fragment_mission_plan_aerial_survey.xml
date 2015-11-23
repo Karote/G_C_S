@@ -99,14 +99,7 @@
             style="@style/mav_info_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20.0" />
-
-        <TextView
-            android:id="@+id/distance_unit_text_view"
-            style="@style/mav_info_value_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unit_in_meter" />
+            android:text="@string/distance_hint"/>
 
         <TextView
             style="@style/mav_info_title_text_view"
@@ -193,16 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="@string/aerial_survey_longitudinal_hint" />
-
-            <TextView
-                android:id="@+id/longitudinal_unit_text_view"
-                style="@style/footprint_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
-                android:text="@string/unit_in_meter" />
+                android:text="@string/aerial_survey_longitudinal_hint"/>
 
             <TextView
                 style="@style/footprint_info_title_text_view"
@@ -219,16 +203,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginStart="2dp"
-                android:text="@string/aerial_survey_lateral_hint" />
-
-            <TextView
-                android:id="@+id/lateral_unit_text_view"
-                style="@style/footprint_info_value_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
-                android:text="@string/unit_in_meter" />
+                android:text="@string/aerial_survey_lateral_hint"/>
 
         </LinearLayout>
 

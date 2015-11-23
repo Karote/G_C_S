@@ -26,11 +26,11 @@ import com.coretronic.drone.model.Mission.Type;
 import com.coretronic.drone.survey.RouterBuilder;
 import com.coretronic.drone.survey.RouterBuilder.SurveyBuilderException;
 import com.coretronic.drone.survey.SurveyRouter;
+import com.coretronic.drone.util.Utils;
 
 import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
 import org.droidplanner.services.android.core.survey.SurveyData;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +39,12 @@ import java.util.List;
  */
 public class AerialSurveyFragment extends MapChildFragment implements SelectedMissionUpdatedCallback {
 
-    private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("mm:ss");
     private final static String SQUARE_SYMBOL = "\u00B2";
-    private final static String GSD_FORMAT = "%.03f mm" + SQUARE_SYMBOL + "/px";
-    private final static String LENGTH_FORMAT = "%.03f";
-    private final static String FOOTPRINT_FORMAT = "%.03fm X %.03fm";
-    private final static String AREA_FORMAT = "%.03fm" + SQUARE_SYMBOL;
+    private final static String VALUE_FORMAT = "%.01f";
+    private final static String LENGTH_FORMAT = VALUE_FORMAT + "m";
+    private final static String GSD_FORMAT = VALUE_FORMAT + "mm" + SQUARE_SYMBOL + "/px";
+    private final static String FOOTPRINT_FORMAT = LENGTH_FORMAT + "X" + LENGTH_FORMAT;
+    private final static String AREA_FORMAT = LENGTH_FORMAT + SQUARE_SYMBOL;
     private final static double DEFAULT_DRONE_SPEED = 3;
 
     private static final int INIT_STATUS = 1;
@@ -71,7 +71,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     private View mDistanceAndTimeInfo = null;
     private View mRouteDetailInfo = null;
     private TextView mDistanceValue;
-    private TextView mTimeValue;
+    private TextView mDurationValue;
     private TextView mFootprintValue;
     private TextView mGSDValue;
     private TextView mLongitudinalValue;
@@ -598,7 +598,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         mRouteDetailInfo = view.findViewById(R.id.route_detail_info);
 
         mDistanceValue = (TextView) view.findViewById(R.id.distance_value_text_view);
-        mTimeValue = (TextView) view.findViewById(R.id.time_value_text_view);
+        mDurationValue = (TextView) view.findViewById(R.id.time_value_text_view);
         mFootprintValue = (TextView) view.findViewById(R.id.footprint_value_text_view);
         mGSDValue = (TextView) view.findViewById(R.id.gsd_value_text_view);
         mLongitudinalValue = (TextView) view.findViewById(R.id.longitudinal_value_text_view);
@@ -612,16 +612,16 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
         SurveyData surveyData = mAerialSurveyRouter.getSurveyData();
         double flightDistance = mAerialSurveyRouter.getLength();
+
         mDistanceValue.setText(String.format(LENGTH_FORMAT, flightDistance));
-        mTimeValue.setText(TIME_FORMAT.format(flightDistance / DEFAULT_DRONE_SPEED * 1000));
+        mDurationValue.setText(Utils.getDurationInHMSFormat((flightDistance / DEFAULT_DRONE_SPEED)));
 
         mFootprintValue.setText(String.format(FOOTPRINT_FORMAT, surveyData.getLongitudinalFootPrint(), surveyData.getLateralFootPrint()));
-
         mGSDValue.setText(String.format(GSD_FORMAT, surveyData.getGroundResolution()));
         mLongitudinalValue.setText(String.format(LENGTH_FORMAT, mAerialSurveyRouter.getSurveyData().getLongitudinalPictureDistance()));
         mLateralValue.setText(String.format(LENGTH_FORMAT, mAerialSurveyRouter.getSurveyData().getLateralPictureDistance()));
-        mAreaValue.setText(String.format(AREA_FORMAT, surveyData.getArea()));
 
+        mAreaValue.setText(String.format(AREA_FORMAT, surveyData.getArea()));
         mPictureValue.setText("" + mAerialSurveyRouter.getCameraShutterCount());
         mStripsValue.setText("" + mAerialSurveyRouter.getNumberOfLines());
     }

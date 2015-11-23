@@ -29,7 +29,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginRight="10dp"
             android:layout_marginStart="2dp"
-            android:text="@string/unit_in_meter" />
+            android:text="@string/distance_hint" />
 
 
         <TextView

@@ -17,8 +17,8 @@ import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.OnFlightHistoryUpdateListener;
 import com.coretronic.drone.model.RecordItem;
+import com.coretronic.drone.util.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,6 @@ import java.util.List;
  * Created by karot.chuang on 2015/7/22.
  */
 public class HistoryFragment extends MapChildFragment {
-    private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("mm:ss");
 
     private View mDroneHistoryInfoPanel = null;
     private TextView mFlightDistanceTextView = null;
@@ -83,7 +82,7 @@ public class HistoryFragment extends MapChildFragment {
                     flightRecords.add(recordItem.getLongitude());
                 }
                 mMapViewFragment.loadHistory(missionLocations, flightRecords);
-                flightDurationTextView.setText(TIME_FORMAT.format(flightHistory.getDuration()));
+                flightDurationTextView.setText(Utils.getDurationInHMSFormat(flightHistory.getDuration() / 1000));
                 mDroneHistoryInfoPanel.setVisibility(View.VISIBLE);
                 mActivatePlanButton.setVisibility(View.VISIBLE);
                 mFlightHistory = flightHistory;

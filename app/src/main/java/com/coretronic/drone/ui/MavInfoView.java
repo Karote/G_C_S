@@ -8,6 +8,7 @@ import com.coretronic.drone.DroneController.DroneStatus;
 import com.coretronic.drone.DroneController.StatusChangedListener;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
+import com.coretronic.drone.util.Utils;
 
 /**
  * Created by Poming on 2015/10/26.
@@ -99,13 +100,11 @@ public class MavInfoView implements StatusChangedListener {
         mDroneLongitudeTextView.setText(String.format("%d.%07d", droneLng / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
     }
 
-    final private void onFlightTimeUpdate(int flightTime) {
-        if (mDroneFlightTimeTextView == null || flightTime < 0) {
+    final private void onFlightTimeUpdate(int flightTimeInSeconds) {
+        if (mDroneFlightTimeTextView == null || flightTimeInSeconds < 0) {
             return;
         }
-        int minutes = Math.min(flightTime / 60, 99);
-        int seconds = flightTime % 60;
-        mDroneFlightTimeTextView.setText(String.format("%02d:%02d", minutes, seconds));
+        mDroneFlightTimeTextView.setText(Utils.getDurationInHMSFormat(flightTimeInSeconds));
     }
 
     final private void onAttitudeUpdate(float yaw, float roll, float pitch) {

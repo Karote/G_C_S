@@ -53,6 +53,7 @@
     <string name="duration_hint">00:00</string>
     <string name="activate_plan">ACTIVATE</string>
     <string name="date_hint">05.05.2015</string>
+    <string name="distance_hint">20.0m</string>
     <string name="time_hint">09:26</string>
 
     <!-- Setting-->
@@ -99,13 +100,13 @@
 
     <string name="aerial_survey_create_route">CREATE ROUTE</string>
     <string name="aerial_survey_footprint">FOOTPRINT</string>
-    <string name="aerial_survey_footprint_hint">16.20mx42.2,</string>
+    <string name="aerial_survey_footprint_hint">16.2mx42.2m</string>
     <string name="aerial_survey_gsd">GSD</string>
     <string name="aerial_survey_gsd_hint">21.3mm2/px</string>
     <string name="aerial_survey_longitudinal">LONGITUDINAL</string>
-    <string name="aerial_survey_longitudinal_hint">21.3</string>
+    <string name="aerial_survey_longitudinal_hint">21.3m</string>
     <string name="aerial_survey_lateral">LATERAL</string>
-    <string name="aerial_survey_lateral_hint">24.5</string>
+    <string name="aerial_survey_lateral_hint">24.5m</string>
     <string name="aerial_survey_area">Area</string>
     <string name="aerial_survey_area_hint">28933m2</string>
     <string name="aerial_survey_picture">PICTURE</string>
