@@ -169,5 +169,6 @@
     <dimen name="main_fragment_select_device_spinner_text_size">14sp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_left">12dp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_right">12dp</dimen>
+    <dimen name="drone_control_button_group_end_margin">0dp</dimen>
 
 </resources>

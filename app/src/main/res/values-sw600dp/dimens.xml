@@ -159,5 +159,6 @@
     <dimen name="main_fragment_select_device_spinner_padding_left">16dp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
     <dimen name="mav_info_panel_unit_left_margin">4dp</dimen>
+    <dimen name="drone_control_button_group_end_margin">6dp</dimen>
 
 </resources>
