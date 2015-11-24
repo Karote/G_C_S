@@ -127,7 +127,7 @@ public class MissionItemDetailFragment extends Fragment {
                         break;
                     case LAND_INDEX: // Land
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.LAND);
-                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_land);
+                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_landing);
                         break;
                     case RTL_INDEX: // RTL_INDEX
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.RTL);
@@ -190,7 +190,7 @@ public class MissionItemDetailFragment extends Fragment {
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                     break;
                 case LAND:
-                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_land);
+                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_landing);
                     break;
                 case RTL:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);
