@@ -125,10 +125,8 @@
 
     <dimen name="control_progress_circle_thumb_size">38dp</dimen>
     <dimen name="aircraft_compass_ruler_outer_padding">4dp</dimen>
-    <dimen name="mission_item_recycle_view_bottom_margin">0dp</dimen>
-    <dimen name="mission_item_recycle_view_top_margin">0dp</dimen>
 
-    <dimen name="mission_item_recycler_view_bottom_margin">48dp</dimen>
+    <dimen name="mission_item_recycler_view_bottom_margin">32dp</dimen>
     <dimen name="mission_item_recycler_view_top_margin">8dp</dimen>
     <dimen name="mission_item_recycler_view_right_margin">8dp</dimen>
     <dimen name="ico_indicator_waypoint_arrow_padding">2dp</dimen>
