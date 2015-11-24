@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="target">TARGET</string>
+    <string name="groundSpeed">H.SPEED</string>
+    <string name="climbSpeed">V.SPEED</string>
+    <string name="speed_unit">m/s</string>
 </resources>
