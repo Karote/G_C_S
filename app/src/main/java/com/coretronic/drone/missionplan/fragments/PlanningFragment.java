@@ -158,6 +158,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         switch (v.getId()) {
             case R.id.undo_button:
                 if (mMissionItemAdapter.undo()) {
+                    mMissionItemAdapter.onNothingSelected();
+                    mWayPointDetailPanel.setVisibility(View.GONE);
                     updateMissionToMap();
                 } else {
                     showToastMessage("There is no undo item existed");
@@ -247,6 +249,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     @Override
     public void onMapClickEvent(float lat, float lon) {
         mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).create());
+        mMissionItemAdapter.onNothingSelected();
+        mWayPointDetailPanel.setVisibility(View.GONE);
         updateMissionToMap();
     }
 
