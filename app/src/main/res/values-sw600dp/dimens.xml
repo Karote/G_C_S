@@ -6,7 +6,6 @@
     <dimen name="settings_title_size">22sp</dimen>
 
     <dimen name="status_bar_gps_left_margin">12dp</dimen>
-    <dimen name="status_bar_gps_text_size">12sp</dimen>
     <dimen name="status_bar_rf_left_margin">8dp</dimen>
     <dimen name="status_bar_battery_progress_width">80dp</dimen>
     <dimen name="status_bar_battery_progress_height">12dp</dimen>
@@ -111,6 +110,7 @@
     <dimen name="tap_and_go_dialog_location_text_top_margin">8dp</dimen>
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">8dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_size">20sp</dimen>
 
     <dimen name="mission_plan_detail_text_size">14sp</dimen>
     <dimen name="flight_history_recycler_view_right_margin">8dp</dimen>

@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_plan_white"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -19,8 +20,6 @@
         <View
             android:layout_width="1dp"
             android:layout_height="44dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
             android:background="@color/control_button_group_divider_background" />
 
         <ImageView
@@ -32,8 +31,6 @@
         <View
             android:layout_width="1dp"
             android:layout_height="44dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
             android:background="@color/control_button_group_divider_background" />
 
         <ImageView
