@@ -45,7 +45,7 @@ public class MissionItemDetailFragment extends Fragment {
     private final static int RTL_INDEX = 3;
     private final static int CAMERA_INDEX = 4;
     public static final int ALTITUDE_MIN_VALUE = 1;
-    public static final int ALTITUDE_MAX_VALUE = 500;
+    public static final int ALTITUDE_MAX_VALUE = 200;
     public static final int DELAY_MIN_VALUE = 0;
     public static final int DELAY_MAX_VALUE = 30;
 
