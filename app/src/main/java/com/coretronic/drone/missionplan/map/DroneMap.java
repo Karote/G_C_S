@@ -172,6 +172,10 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:clearTapMarker()");
     }
 
+    public void clearTapAndGoPlan() {
+        mMapWebView.loadUrl("javascript:clearTapAndGoPlan()");
+    }
+
     public void loadHistory(List<Float> markers, List<Long> path) {
         JSONArray markerJSON = new JSONArray(markers);
         JSONArray pathJson = new JSONArray(path);

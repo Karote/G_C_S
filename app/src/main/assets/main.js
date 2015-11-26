@@ -221,7 +221,7 @@ function fitMapShowDroneAndMe() {
 function mapClean() {
     clearMissionPlanningMarkers();
     clearTapMarker();
-    clearTapGoSetMarker();
+    clearTapAndGoPlan();
     clearHistoryMarkerPath();
     clearSurvey();
 }

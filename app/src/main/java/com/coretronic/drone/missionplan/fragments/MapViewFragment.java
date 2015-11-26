@@ -623,6 +623,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                     return;
                 }
                 mControlBarView.showGoButton();
+                mDroneMap.clearTapAndGoPlan();
                 break;
             case R.id.drone_takeoff_button:
                 if (getDroneController() != null) {
@@ -635,11 +636,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                     getDroneController().land();
                 }
                 mControlBarView.showTakeoffButton();
+                mDroneMap.clearTapAndGoPlan();
                 return;
             case R.id.drone_rtl_button:
                 if (getDroneController() != null) {
                     getDroneController().returnToLaunch();
                 }
+                mDroneMap.clearTapAndGoPlan();
                 return;
             case R.id.plan_play_button:
 //                if (getDroneController() != null) {
