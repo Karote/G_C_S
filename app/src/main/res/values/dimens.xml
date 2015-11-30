@@ -77,7 +77,7 @@
 
     <!-- tap_and_go_dialog -->
     <dimen name="tap_and_go_dialog_fragment_width">220dp</dimen>
-    <dimen name="tap_and_go_dialog_content_left_margin">12dp</dimen>
+    <dimen name="tap_and_go_dialog_content_left_margin">20dp</dimen>
     <dimen name="tap_and_go_dialog_content_right_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_location_text_top_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_location_text_size">16sp</dimen>
@@ -86,7 +86,7 @@
     <dimen name="tap_and_go_dialog_cancel_text_size">16sp</dimen>
     <dimen name="tap_and_go_altitude_wheel_height">32dp</dimen>
     <dimen name="tap_and_go_start_button_height">44dp</dimen>
-    <dimen name="tap_and_go_start_button_bottom_margin">20dp</dimen>
+    <dimen name="tap_and_go_start_button_bottom_margin">16dp</dimen>
     <dimen name="tap_and_go_start_button_top_margin">12dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">22sp</dimen>
     <dimen name="tap_and_go_altitude_spinner_wheel_width">188dp</dimen>
