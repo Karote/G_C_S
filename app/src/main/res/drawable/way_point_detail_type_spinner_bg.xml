@@ -3,6 +3,6 @@
     <item>
         <bitmap
             android:gravity="right"
-            android:src="@drawable/ico_action_down_arrow" />
+            android:src="@drawable/ico_action_down_arrow_light" />
     </item>
 </layer-list>

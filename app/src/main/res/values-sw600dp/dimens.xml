@@ -73,7 +73,6 @@
     <dimen name="mission_item_recycler_view_right_margin">8dp</dimen>
 
     <dimen name="way_point_detail_container_top_margin">8dp</dimen>
-    <dimen name="way_point_detail_location_text_size">18sp</dimen>
     <dimen name="way_point_detail_location_text_height">36dp</dimen>
     <dimen name="way_point_detail_delete_button_height">44dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_text_size">22sp</dimen>
@@ -88,15 +87,17 @@
     <dimen name="way_point_detail_content_layout_left_padding">16dp</dimen>
     <dimen name="way_point_detail_content_layout_top_padding">8dp</dimen>
     <dimen name="way_point_detail_unit_text_size">14sp</dimen>
+    <dimen name="way_point_detail_delay_unit_layout_top_margin">8dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_height">36dp</dimen>
     <dimen name="way_point_detail_longitude_layout_left_margin">4dp</dimen>
     <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
+    <dimen name="way_point_detail_delete_button_top_margin">8dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_width">246dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_padding">91dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_width">64dp</dimen>
     <dimen name="way_point_detail_name_text_size">24sp</dimen>
-    <dimen name="way_point_detail_type_spinner_text_size">20sp</dimen>
+    <dimen name="way_point_detail_name_text_width">54dp</dimen>
 
     <dimen name="ico_indicator_waypoint_arrow_padding">4dp</dimen>
 
@@ -160,5 +161,6 @@
     <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
     <dimen name="mav_info_panel_unit_left_margin">4dp</dimen>
     <dimen name="drone_control_button_group_end_margin">6dp</dimen>
+    <dimen name="way_point_detail_container_right_margin">2dp</dimen>
 
 </resources>
