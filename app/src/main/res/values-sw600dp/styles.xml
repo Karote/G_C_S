@@ -61,4 +61,11 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="tap_and_go_dialog_location_text_style">
+        <item name="android:fontFamily">@string/font_roboto_condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#6d6d6d</item>
+    </style>
 </resources>

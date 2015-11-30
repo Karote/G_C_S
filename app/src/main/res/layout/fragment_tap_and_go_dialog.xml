@@ -36,6 +36,7 @@
 
     <TextView
         android:id="@+id/tap_and_go_location_text"
+        style="@style/tap_and_go_dialog_location_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
@@ -43,12 +44,8 @@
         android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
         android:layout_marginStart="@dimen/tap_and_go_dialog_content_left_margin"
         android:layout_marginTop="@dimen/tap_and_go_dialog_location_text_top_margin"
-        android:fontFamily="@string/font_roboto_condensed"
         android:gravity="center"
-        android:text="@string/location_format"
-        android:textColor="@color/go_dialog_unit"
-        android:textSize="@dimen/tap_and_go_dialog_location_text_size"
-        android:textStyle="bold" />
+        android:text="@string/location_format" />
 
     <RelativeLayout
         android:layout_width="match_parent"
