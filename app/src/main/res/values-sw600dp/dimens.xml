@@ -113,6 +113,9 @@
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">8dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
     <dimen name="tap_and_go_dialog_location_text_size">20sp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_width">208dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_height">36dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_padding">58dp</dimen>
 
     <dimen name="mission_plan_detail_text_size">14sp</dimen>
     <dimen name="flight_history_recycler_view_right_margin">8dp</dimen>

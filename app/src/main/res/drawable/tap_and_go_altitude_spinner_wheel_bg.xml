@@ -4,13 +4,13 @@
         <shape android:shape="rectangle">
             <solid android:color="#c4e5ff" />
             <size
-                android:width="188dp"
-                android:height="32dp" />
+                android:width="@dimen/tap_and_go_altitude_spinner_wheel_width"
+                android:height="@dimen/tap_and_go_altitude_spinner_wheel_height" />
         </shape>
     </item>
     <item
-        android:left="58dp"
-        android:right="58dp">
+        android:left="@dimen/tap_and_go_altitude_spinner_wheel_padding"
+        android:right="@dimen/tap_and_go_altitude_spinner_wheel_padding">
         <shape android:shape="rectangle">
             <solid android:color="@color/blue_sky" />
         </shape>
