@@ -152,12 +152,8 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:setMapTo(" + droneLat + "," + dronelon + ")");
     }
 
-    public void fitMapShowAllMission() {
-        mMapWebView.loadUrl("javascript:fitMapShowAllMissionPlanning()");
-    }
-
-    public void fitMapShowDroneAndMe() {
-        mMapWebView.loadUrl("javascript:fitMapShowDroneAndMe()");
+    public void fitMapShowAll() {
+        mMapWebView.loadUrl("javascript:fitMapShowAll()");
     }
 
     public void changeMapType() {

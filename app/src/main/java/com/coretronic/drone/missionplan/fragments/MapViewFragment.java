@@ -661,6 +661,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case R.id.drone_location_button:
                 setMapToDrone();
                 return;
+            case R.id.fit_map_button:
+                fitMapShowAll();
+                return;
             case R.id.map_type_button:
                 changeMapType();
                 return;
@@ -730,8 +733,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updateMissions(missions);
     }
 
-    public void fitMapShowAllMission() {
-        mDroneMap.fitMapShowAllMission();
+    public void fitMapShowAll() {
+        mDroneMap.fitMapShowAll();
     }
 
     public void setMapToMyLocation() {
@@ -760,10 +763,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public void clearHistoryMarkerPath() {
         mDroneMap.clearHistoryMarkerPath();
-    }
-
-    public void fitMapShowDroneAndMe() {
-        mDroneMap.fitMapShowDroneAndMe();
     }
 
     private void updateOnMapDrone(DroneStatus droneStatus) {

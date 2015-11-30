@@ -65,7 +65,7 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fit_map_button:
-                mMapViewFragment.fitMapShowDroneAndMe();
+                mMapViewFragment.fitMapShowAll();
                 break;
         }
     }

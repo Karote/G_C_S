@@ -64,7 +64,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         }
         mMissionItemAdapter.update(missionList);
         updateMissionToMap();
-        mMapViewFragment.fitMapShowAllMission();
+        mMapViewFragment.fitMapShowAll();
     }
 
     @Override
@@ -185,11 +185,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 mMapViewFragment.getDroneController().clearMission();
                 mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
                 showLoadProgressDialog("Writing Mission", "Please wait...");
-                break;
-            case R.id.fit_map_button:
-                if (mMissionItemAdapter.getItemCount() > 0) {
-                    mMapViewFragment.fitMapShowAllMission();
-                }
                 break;
         }
     }
