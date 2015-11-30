@@ -24,11 +24,13 @@
 
         <TextView
             android:id="@+id/tv_gps"
-            style="status_bar_gps_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:fontFamily="@string/font_roboto_light"
             android:text="5"
+            android:textColor="@color/white"
+            android:textSize="12sp"
             android:visibility="gone" />
     </FrameLayout>
 
