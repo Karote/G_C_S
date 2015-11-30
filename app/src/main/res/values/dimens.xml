@@ -107,7 +107,7 @@
     <dimen name="history_fragment_activate_button_width">136dp</dimen>
     <dimen name="history_fragment_activate_button_height">56dp</dimen>
     <dimen name="history_fragment_activate_button_left_margin">8dp</dimen>
-    <dimen name="history_fragment_activate_button_bottom_margin">6dp</dimen>
+    <dimen name="history_fragment_activate_button_bottom_margin">8dp</dimen>
     <dimen name="history_fragment_info_layout_height">22dp</dimen>
     <dimen name="history_fragment_info_text_left_margin">8dp</dimen>
     <dimen name="history_fragment_log_listitem_width">96dp</dimen>
