@@ -52,22 +52,15 @@ function initHistoryMarkerPolyline() {
 
 }
 
-function loadHistory(markerJson, pathJson) {
+function loadHistory(historyMissionInJson, pathJson) {
     var i, j;
 
-    var history_mission_marker_data = JSON.parse("[" + markerJson + "]");
+    var history_missions_data = JSON.parse(JSON.stringify(historyMissionInJson));
     var history_flight_path_data = JSON.parse("[" + pathJson + "]");
-
-    var history_mission_markerImage = {
-        url : 'ico_indicator_waypoint_circle.png',
-        scaledSize : new google.maps.Size(40, 40),
-        origin : new google.maps.Point(0, 0),
-        anchor : new google.maps.Point(20, 20)
-    };
 
     clearHistoryMarkerPath();
 
-    for (i = 0, j = history_flight_path_data.length; i < j; i += 2) {
+    for ( i = 0, j = history_flight_path_data.length; i < j; i += 2) {
         history_flight_path.push(transLatLngToPosition(history_flight_path_data[i], history_flight_path_data[i + 1]));
     }
 
@@ -107,31 +100,19 @@ function loadHistory(markerJson, pathJson) {
         history_mission_markers_array.push(endMarker);
     }
 
-    for (i = 0, j = history_mission_marker_data.length; i < j; i += 2) {
+    for ( i = 0, j = history_missions_data.length; i < j; i++) {
+        var lat = history_missions_data[i].latitude;
+        var lng = history_missions_data[i].longitude;
+        var type = history_missions_data[i].type;
 
-        var x = 4;
-        if (i > 18) {
-            x = 8;
-        }
-        var history_mission_marker = new MarkerWithLabel({
-            position : new google.maps.LatLng(history_mission_marker_data[i], history_mission_marker_data[i + 1]),
-            icon : history_mission_markerImage,
-            labelContent : (i / 2) + 1,
-            labelAnchor : new google.maps.Point(x, 8),
-            labelClass : "mapIconLabel",
-            labelInBackground : false,
-            zIndex : (i / 2) + 1,
-            map : map
-        });
-
-        history_mission_markers_array.push(history_mission_marker);
+        addHistoryMissionMarker(lat, lng, i + 1, type);
     }
 
     history_flight_path_polyline.setPath(history_flight_path);
     history_flight_path_polyline.setMap(map);
 
     var flightbounds = new google.maps.LatLngBounds();
-    for (i = 0, j = history_flight_path.length; i < j; i++) {
+    for ( i = 0, j = history_flight_path.length; i < j; i++) {
         flightbounds.extend(history_flight_path[i]);
     }
     map.fitBounds(flightbounds);
@@ -164,8 +145,28 @@ function clearHistoryMarkerPath() {
     history_flight_path = [];
 
     var i, j;
-    for (i = 0, j = history_mission_markers_array.length; i < j; i++) {
+    for ( i = 0, j = history_mission_markers_array.length; i < j; i++) {
         history_mission_markers_array[i].setMap(null);
     }
     history_mission_markers_array = [];
+}
+
+function addHistoryMissionMarker(lat, lng, serial_number, marker_type) {
+    var mission_marker = new google.maps.Marker({
+        position : new google.maps.LatLng(lat, lng),
+        draggable : false,
+        raiseOnDrag : false,
+        zIndex : serial_number,
+        markerType : marker_type,
+        map : map
+    });
+    generatePlanningMissionMarkerIcon(marker_type, serial_number, function(src) {
+        var mission_marker_image = {
+            url : src,
+            scaledSize : new google.maps.Size(38, 38),
+            anchor : new google.maps.Point(19, 19)
+        };
+        mission_marker.setIcon(mission_marker_image);
+    });
+    history_mission_markers_array.push(mission_marker);
 }

@@ -757,8 +757,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.setTapGoPath();
     }
 
-    public void loadHistory(List<Float> markerList, List<Long> flightPath) {
-        mDroneMap.loadHistory(markerList, flightPath);
+    public void loadHistory(List<Mission> missions, List<Long> flightPath) {
+        mDroneMap.loadHistory(missions, flightPath);
     }
 
     public void clearHistoryMarkerPath() {
