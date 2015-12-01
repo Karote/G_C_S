@@ -166,5 +166,25 @@
     <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
     <dimen name="mav_info_panel_unit_left_margin">4dp</dimen>
     <dimen name="drone_control_button_group_end_margin">6dp</dimen>
+    <dimen name="welcome_frame_width">420dp</dimen>
+    <dimen name="account_frame_top_margin">0dp</dimen>
+    <dimen name="account_frame_height">260dp</dimen>
+    <dimen name="account_frame_padding">12dp</dimen>
+    <dimen name="ed_user_id_height">48dp</dimen>
+    <dimen name="ed_user_id_text_size">22sp</dimen>
+    <dimen name="ed_user_id_padding">16dp</dimen>
+    <dimen name="ed_user_pwd_top_margin">4dp</dimen>
+    <dimen name="login_ok_button_top_margin">16dp</dimen>
+    <dimen name="login_ok_button_height">54dp</dimen>
+    <dimen name="btn_sign_up_width">148dp</dimen>
+    <dimen name="btn_sign_up_height">40dp</dimen>
+    <dimen name="login_ok_button_text_size">30sp</dimen>
+    <dimen name="btn_sign_up_top_margin">22dp</dimen>
+    <dimen name="btn_sign_up_text_size">18sp</dimen>
+    <dimen name="btn_login_with_fb_text_size">22sp</dimen>
+    <dimen name="btn_login_with_fb_text_left_padding">80dp</dimen>
+    <dimen name="btn_login_with_fb_top_margin">20dp</dimen>
+    <dimen name="welcom_text_size">28sp</dimen>
+    <dimen name="login_status_bar_height">32dp</dimen>
 
 </resources>
