@@ -14,8 +14,8 @@
     <string name="tv_txt_welcome">Welcome</string>
     <string name="tv_txt_passwd">Password</string>
     <string name="chk_txt_login">Stay logged in</string>
-    <string name="btn_txt_login">Log in</string>
-    <string name="email_hint">abc@coretronic.com</string>
+    <string name="btn_txt_login">Log In</string>
+    <string name="email_hint">Email</string>
 
     <!-- API 16-->
     <string name="font_roboto_regular">sans-serif</string>
