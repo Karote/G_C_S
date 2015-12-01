@@ -25,4 +25,16 @@ public class Utils {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    public static int calculateLevel(int max, int min, int value, int level) {
+        if (value < min) {
+            return 0;
+        } else if (value >= max) {
+            return level - 1;
+        } else {
+            int inputRange = (max - min);
+            int outputRange = (level - 1);
+            return ((value - min) * outputRange / inputRange) + 1;
+        }
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.coretronic.drone.ui;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
+import com.coretronic.drone.util.Utils;
 
 /**
  * Created by jiaLian on 15/6/9.
@@ -27,7 +27,8 @@ public class StatusView extends LinearLayout {
     private final static int GPS_LEVEL_5_SATELLITE_COUNT = 12;
 
     private final static int MAX_LEVEL_RF_STATUS = 6;
-    private final static int MIN_VALUE_RF = -100;
+    private final static int MAX_RF_VALUE = 100;
+    private final static int MIN_RF_VALUE = 0;
 
     private ImageView mGpsStatus;
     private ImageView mRfStatusImageView;
@@ -63,9 +64,8 @@ public class StatusView extends LinearLayout {
         addView(view);
     }
 
-//    (RSSI / 1.9) - 127
     public void setRFStatus(int rssi) {
-        mRfStatusImageView.setImageLevel(WifiManager.calculateSignalLevel(rssi, MAX_LEVEL_RF_STATUS));
+        mRfStatusImageView.setImageLevel(Utils.calculateLevel(MAX_RF_VALUE, MIN_RF_VALUE, rssi, MAX_LEVEL_RF_STATUS));
     }
 
     public void setGpsStatus(int satellites) {
@@ -91,7 +91,7 @@ public class StatusView extends LinearLayout {
         mCommunicateLightState.onDisconnect();
         setBatteryStatus(0);
         setGpsStatus(-1);
-        setRFStatus(MIN_VALUE_RF);
+        setRFStatus(0);
     }
 
     private int calculateGpsLevel(int satellites) {
