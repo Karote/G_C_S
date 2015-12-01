@@ -1,6 +1,5 @@
 package com.coretronic.drone.missionplan.fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,25 +69,13 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
         }
     }
 
-    // Implement DroneController.FollowMeStateListener
     @Override
     public void onStart(float latOffset, float longOffset) {
         Toast.makeText(getActivity(), "Start Follow Me", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onMissionItemUpdated(float lat, float lon, float yaw, int clock) {
+    public void onDroneTargetUpdated(float lat, float lon, float yaw, int clock) {
 
     }
-
-    @Override
-    public void onLocationUpdated(float lat, float lon) {
-
-    }
-
-    @Override
-    public void onLocationUpdated(Location location) {
-
-    }
-    // End DroneController.FollowMeStateListener
 }

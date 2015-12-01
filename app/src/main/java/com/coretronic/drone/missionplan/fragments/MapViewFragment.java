@@ -19,15 +19,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
-import com.coretronic.drone.DroneController.DroneMode;
-import com.coretronic.drone.DroneController.DroneStatus;
-import com.coretronic.drone.DroneController.MissionStatus;
-import com.coretronic.drone.DroneController.StatusChangedListener;
+import com.coretronic.drone.DroneDevice;
+import com.coretronic.drone.DroneDevice.OnDeviceChangedListener;
+import com.coretronic.drone.DroneStatus;
+import com.coretronic.drone.DroneStatus.DroneMode;
+import com.coretronic.drone.DroneStatus.MissionStatus;
+import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
-import com.coretronic.drone.controller.DroneDevice;
-import com.coretronic.drone.controller.DroneDevice.OnDeviceChangedListener;
 import com.coretronic.drone.missionplan.map.DroneMap;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
@@ -774,9 +774,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     @Override
     public void onDeviceRemoved(DroneDevice droneDevice) {
-        if (droneDevice.equals(((MainActivity) getActivity()).getConnectedDroneDevice())) {
-            mStatusView.onDisconnect();
-        }
+
+    }
+
+    @Override
+    public void onConnectingDeviceRemoved(DroneDevice droneDevice) {
+        mStatusView.onDisconnect();
     }
 
     public void clearSurvey() {
@@ -798,7 +801,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     public void updatePolygon(List<Coord2D> polygonPoints) {
         mDroneMap.updatePolygon(polygonPoints);
     }
-    
+
     void setMavInfoViewVisibility(int mavInfoViewVisibility) {
         mMavInfoView.setVisibility(mavInfoViewVisibility);
     }

@@ -1,2 +1,2 @@
-apply from: 'DroneControlLibrary/settings.gradle'
+apply from: 'DroneControlLibrary/include.gradle'
 include ':app', ':ControlCoreLib', ':TTSLib', ':libuvccamera'

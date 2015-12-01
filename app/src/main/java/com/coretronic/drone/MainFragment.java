@@ -23,10 +23,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coretronic.drone.DroneController.DroneStatus;
+import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
-import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.settings.SettingFragment;
 import com.coretronic.drone.ui.StatusView;
@@ -35,7 +34,7 @@ import com.coretronic.drone.util.AppConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends UnBindDrawablesFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneDevice.OnDeviceChangedListener, DroneController.StatusChangedListener {
+public class MainFragment extends UnBindDrawablesFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneDevice.OnDeviceChangedListener, StatusChangedListener {
 
     private static final String ADD_NEW_DEVICE_TITLE = "Add New Device";
     private static final String TAG = MainFragment.class.getSimpleName();
@@ -85,7 +84,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         mSharedPreferences = mMainActivity.getPreferences(Context.MODE_PRIVATE);
     }
 
-    private boolean initCloudStorage() {
+    private boolean tryToLogin() {
         String userId = mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "");
         if (userId.length() == 0) {
             return false;
@@ -99,7 +98,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         super.onActivityCreated(savedInstanceState);
         mMainActivity.registerDeviceChangedListener(this);
         mMainActivity.registerDroneStatusChangedListener(this);
-        if (!initCloudStorage()) {
+        if (!tryToLogin()) {
             Toast.makeText(mMainActivity, "Drone Cloud login error.", Toast.LENGTH_SHORT).show();
             mMainActivity.switchToLoginFragment();
         }
@@ -125,10 +124,12 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     @Override
     public void onDeviceRemoved(final DroneDevice droneDevice) {
         mDeviceAdapter.remove(droneDevice);
-        if (droneDevice.equals(mMainActivity.getConnectedDroneDevice())) {
-            mDroneDeviceSpinner.setSelection(0);
-            mStatusView.onDisconnect();
-        }
+    }
+
+    @Override
+    public void onConnectingDeviceRemoved(DroneDevice droneDevice) {
+        mDroneDeviceSpinner.setSelection(0);
+        mStatusView.onDisconnect();
     }
 
     @Override
@@ -155,7 +156,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         final DroneDevice droneDevice = mDeviceAdapter.getItem(position);
         Log.d(TAG, "onItemSelected: " + droneDevice.getName());
 
-        if (droneDevice == mMainActivity.getConnectedDroneDevice()) {
+        if (droneDevice == mMainActivity.getSelectedDevice()) {
             return;
         }
         mStatusView.onDisconnect();
@@ -163,14 +164,14 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             if (ADD_NEW_DEVICE_TITLE.equals(droneDevice.getName())) {
                 showAddNewDroneDialog();
                 mDroneDeviceSpinner.setSelection(0);
+                return;
             }
         }
-        mMainActivity.selectDrone(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
+        mMainActivity.selectDevice(droneDevice, new MiniDronesActivity.OnDroneConnectedListener() {
             @Override
             public void onConnected() {
                 Toast.makeText(getActivity(), "Init controller" + droneDevice.getName(), Toast.LENGTH_LONG).show();
-                mMainActivity.setConnectedDroneDevice(droneDevice);
-                mMainActivity.initialSetting();
+                mMainActivity.initialSetting(droneDevice);
                 mMainActivity.readParameter();
             }
 

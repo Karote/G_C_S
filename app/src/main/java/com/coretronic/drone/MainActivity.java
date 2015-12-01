@@ -10,7 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.coretronic.drone.activity.MiniDronesActivity;
-import com.coretronic.drone.controller.DroneDevice;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.service.Parameter;
 import com.coretronic.drone.settings.Setting;
@@ -29,10 +28,9 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     private static final String SETTING_NAME_G2 = "setting_g2";
     private static final String SETTINGS_VALUE = "settings_value";
     private static final char DEGREE_SYMBOL = 0x00B0;   //º
-    private final static DroneDevice DISCONNECTED_FAKE_DEVICE = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
+//    private final static DroneDevice DISCONNECTED_FAKE_DEVICE = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
 
     private Setting[] mSettings = new Setting[Setting.SettingType.values().length];
-    private DroneDevice mConnectedDroneDevice = DISCONNECTED_FAKE_DEVICE;
     private DroneDevice.OnDeviceChangedListener mDeviceChangedListener;
 
     @Override
@@ -45,7 +43,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         } else {
             switchToLoginFragment();
         }
-        initialSetting();
+        initialSetting(DroneDevice.FAKE_DRONE_DEVICE);
     }
 
     @Override
@@ -89,12 +87,12 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         if (mDeviceChangedListener != null) {
             mDeviceChangedListener.onDeviceRemoved(droneDevice);
         }
+    }
 
-        if (droneDevice.getName().equals(mConnectedDroneDevice.getName())) {
-            Toast.makeText(this, mConnectedDroneDevice.getName() + " Disconnected", Toast.LENGTH_LONG).show();
-            mConnectedDroneDevice = DISCONNECTED_FAKE_DEVICE;
-            initialSetting();
-        }
+    @Override
+    public void onConnectingDeviceRemoved(DroneDevice droneDevice) {
+        Toast.makeText(this, droneDevice.getName() + " Disconnected", Toast.LENGTH_LONG).show();
+        initialSetting(DroneDevice.FAKE_DRONE_DEVICE);
     }
 
     void switchToLoginFragment() {
@@ -116,19 +114,6 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         if (this.mDeviceChangedListener == deviceChangedListener) {
             this.mDeviceChangedListener = null;
         }
-    }
-
-    public void setConnectedDroneDevice(DroneDevice droneDevice) {
-        mConnectedDroneDevice = droneDevice;
-    }
-
-    public DroneDevice getConnectedDroneDevice() {
-        return mConnectedDroneDevice;
-    }
-
-    public void selectDrone(DroneDevice droneDevice, OnDroneConnectedListener onDroneConnectedListener) {
-        mConnectedDroneDevice = DroneDevice.FAKE_DRONE_DEVICE;
-        selectControl(droneDevice, onDroneConnectedListener);
     }
 
     @Override
@@ -154,8 +139,8 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
         getDroneController().readParameters(MainActivity.this, Parameter.Type.DRONE_SETTING, Parameter.Type.FLIP, Parameter.Type.FLIP_ORIENTATION, Parameter.Type.ROTATION_SPEED_MAX, Parameter.Type.ANGLE_MAX, Parameter.Type.VERTICAL_SPEED_MAX, Parameter.Type.ALTITUDE_LIMIT, Parameter.Type.ABSOLUTE_CONTROL);
     }
 
-    public void initialSetting() {
-        switch (mConnectedDroneDevice.getDroneType()) {
+    public void initialSetting(DroneDevice droneDevice) {
+        switch (droneDevice.getDroneType()) {
             case DroneDevice.DRONE_TYPE_FAKE:
                 loadDefaultSettings();
                 break;
@@ -223,7 +208,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
             }
 
         }
-        if (mConnectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
+        if (getSelectedDevice().getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC) {
             mSettings[Setting.SettingType.VERTICAL_SPEED_MAX.ordinal()] = new Setting(Parameter.Type.VERTICAL_SPEED_MAX, 0, 500, 300, "cm/s");
         }
     }
@@ -245,7 +230,7 @@ public class MainActivity extends MiniDronesActivity implements DroneController.
     }
 
     public boolean loadSettingsFromPreferences() {
-        String name = mConnectedDroneDevice.getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
+        String name = getSelectedDevice().getDroneType() == DroneDevice.DRONE_TYPE_CORETRONIC ? SETTING_NAME_2015 : SETTING_NAME_G2;
         SharedPreferences prefs = getSharedPreferences(name, MODE_PRIVATE);
         String json = prefs.getString(SETTINGS_VALUE, null);
         try {

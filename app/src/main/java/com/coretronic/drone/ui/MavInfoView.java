@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.coretronic.drone.DroneController.DroneStatus;
-import com.coretronic.drone.DroneController.StatusChangedListener;
+import com.coretronic.drone.DroneStatus;
+import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.util.Utils;

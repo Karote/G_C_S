@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.coretronic.drone.service.DroneConnectionService"/>
+        <service android:name=".DroneConnectionService"/>
 
     </application>
 </manifest>
