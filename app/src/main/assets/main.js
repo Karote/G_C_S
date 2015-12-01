@@ -212,7 +212,9 @@ function clearDroneMarker() {
 
 function fitMapShowAll() {
     var bounds = new google.maps.LatLngBounds();
-    bounds.extend(GeoMarker.getPosition());
+    if (GeoMarker.getPosition()) {
+        bounds.extend(GeoMarker.getPosition());
+    }
     if (planning_drone_marker_outer.getPosition()) {
         bounds.extend(planning_drone_marker_outer.getPosition());
     }
