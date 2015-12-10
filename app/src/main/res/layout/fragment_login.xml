@@ -79,6 +79,7 @@
                 android:layout_height="@dimen/login_editview_height"
                 android:layout_marginTop="8dp"
                 android:text="@string/chk_txt_login"
+                android:checked="true"
                 android:visibility="gone" />
 
             <Button
