@@ -152,12 +152,8 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:setMapTo(" + droneLat + "," + dronelon + ")");
     }
 
-    public void fitMapShowAllMission() {
-        mMapWebView.loadUrl("javascript:fitMapShowAllMissionPlanning()");
-    }
-
-    public void fitMapShowDroneAndMe() {
-        mMapWebView.loadUrl("javascript:fitMapShowDroneAndMe()");
+    public void fitMapShowAll() {
+        mMapWebView.loadUrl("javascript:fitMapShowAll()");
     }
 
     public void changeMapType() {
@@ -172,10 +168,13 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:clearTapMarker()");
     }
 
-    public void loadHistory(List<Float> markers, List<Long> path) {
-        JSONArray markerJSON = new JSONArray(markers);
+    public void clearTapAndGoPlan() {
+        mMapWebView.loadUrl("javascript:clearTapAndGoPlan()");
+    }
+
+    public void loadHistory(List<Mission> missions, List<Long> path) {
         JSONArray pathJson = new JSONArray(path);
-        mMapWebView.loadUrl("javascript:loadHistory(" + markerJSON + "," + pathJson + ")");
+        mMapWebView.loadUrl("javascript:loadHistory(" + transMissionToJson(missions) + "," + pathJson + ")");
     }
 
     public void clearHistoryMarkerPath() {

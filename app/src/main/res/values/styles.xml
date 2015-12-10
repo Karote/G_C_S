@@ -44,13 +44,13 @@
     <style name="way_point_detail_unit_text_style">
         <item name="android:fontFamily">@string/font_roboto_medium</item>
         <item name="android:textSize">@dimen/way_point_detail_unit_text_size</item>
-        <item name="android:textColor">@color/go_dialog_unit</item>
+        <item name="android:textColor">#BDBDBD</item>
     </style>
 
     <style name="way_point_detail_location_text_style">
         <item name="android:fontFamily">@string/font_roboto_medium</item>
-        <item name="android:textSize">@dimen/way_point_detail_location_text_size</item>
-        <item name="android:textColor">#727272</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#2d2d2d</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -77,4 +77,22 @@
         <item name="android:layout_gravity">left|center_vertical</item>
     </style>
 
+    <style name="way_point_detail_type_spinner_text_style">
+        <item name="android:fontFamily">@string/font_roboto_condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="way_point_detail_delete_button_text_style">
+        <item name="android:fontFamily">@string/font_roboto_medium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="tap_and_go_dialog_location_text_style">
+        <item name="android:fontFamily">@string/font_roboto_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#949494</item>
+    </style>
 </resources>

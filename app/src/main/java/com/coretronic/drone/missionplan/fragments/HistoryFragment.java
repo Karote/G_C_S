@@ -70,18 +70,13 @@ public class HistoryFragment extends MapChildFragment {
 
             @Override
             public void onFlightHistorySelected(FlightHistory flightHistory) {
-                List<Float> missionLocations = new ArrayList<>();
                 List<Long> flightRecords = new ArrayList<>();
-                for (Mission mission : flightHistory.getMissions()) {
-                    missionLocations.add(mission.getLatitude());
-                    missionLocations.add(mission.getLongitude());
-                }
 
                 for (RecordItem recordItem : flightHistory.getRecordItems()) {
                     flightRecords.add(recordItem.getLatitude());
                     flightRecords.add(recordItem.getLongitude());
                 }
-                mMapViewFragment.loadHistory(missionLocations, flightRecords);
+                mMapViewFragment.loadHistory(flightHistory.getMissions(), flightRecords);
                 flightDurationTextView.setText(Utils.getDurationInHMSFormat(flightHistory.getDuration() / 1000));
                 mDroneHistoryInfoPanel.setVisibility(View.VISIBLE);
                 mActivatePlanButton.setVisibility(View.VISIBLE);

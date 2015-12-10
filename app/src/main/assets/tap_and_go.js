@@ -62,7 +62,7 @@ function clearTapMarker() {
     }
 }
 
-function clearTapGoSetMarker() {
+function clearTapAndGoPlan() {
     if (tapgo_set_marker) {
         tapgo_set_marker.setMap(null);
         if (planning_drone_marker_arrow.position) {

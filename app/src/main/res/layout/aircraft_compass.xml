@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true">
 
     <ImageView
         android:id="@+id/compass_level"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@color/transparent"
-        android:src="@drawable/instrument_compass_bg"/>
+        android:src="@drawable/instrument_compass_bg" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
             android:layout_height="@dimen/instrument_compass_ruler_height"
             android:layout_gravity="center"
             android:scaleType="fitXY"
-            android:src="@drawable/instrument_scale"/>
+            android:src="@drawable/instrument_scale" />
     </FrameLayout>
 
     <ImageView
@@ -35,7 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@color/transparent"
-        android:src="@drawable/instrument_compass_circle"/>
+        android:clickable="true"
+        android:src="@drawable/instrument_compass_circle" />
 
     <ImageView
         android:id="@+id/compass_direction"
@@ -43,14 +44,14 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@color/transparent"
-        android:src="@drawable/instrument_compass_arrow"/>
+        android:src="@drawable/instrument_compass_arrow" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@color/transparent"
-        android:src="@drawable/instrument_benchmark"/>
+        android:src="@drawable/instrument_benchmark" />
 
 
 </RelativeLayout>

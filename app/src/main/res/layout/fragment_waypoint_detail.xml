@@ -18,16 +18,13 @@
             android:layout_width="@dimen/way_point_detail_name_text_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/way_point_detail_name_text_left_margin"
-            android:layout_marginStart="@dimen/way_point_detail_name_text_left_margin"
+            android:gravity="center"
             android:text="@string/mission_id_hint" />
 
         <View
             android:layout_width="@dimen/way_point_detail_divider_width"
             android:layout_height="@dimen/way_point_detail_divider_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/way_point_detail_divider_left_margin"
-            android:layout_marginStart="@dimen/way_point_detail_divider_left_margin"
             android:background="@color/white" />
 
         <ImageView
@@ -191,15 +188,12 @@
 
         <Button
             android:id="@+id/btn_detail_delete"
+            style="@style/way_point_detail_delete_button_text_style"
             android:layout_width="match_parent"
             android:layout_height="@dimen/way_point_detail_delete_button_height"
             android:layout_marginTop="@dimen/way_point_detail_delete_button_top_margin"
             android:background="#C85D5D"
-            android:fontFamily="@string/font_roboto_regular"
-            android:text="@string/delete"
-            android:textColor="@color/white"
-            android:textSize="@dimen/way_point_detail_delete_button_text_size"
-            android:textStyle="bold" />
+            android:text="@string/delete"/>
     </LinearLayout>
 
 </LinearLayout>

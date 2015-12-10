@@ -109,10 +109,10 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         }
 
         if (mIsDeleteLayoutVisible) {
-            viewHolder.deletePanel.setVisibility(View.VISIBLE);
+            viewHolder.deleteButton.setVisibility(View.VISIBLE);
             viewHolder.rowItemLayout.setEnabled(false);
         } else {
-            viewHolder.deletePanel.setVisibility(View.GONE);
+            viewHolder.deleteButton.setVisibility(View.GONE);
             viewHolder.rowItemLayout.setEnabled(true);
         }
 
@@ -161,7 +161,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             case TAKEOFF:
                 return R.drawable.ico_indicator_plan_takeoff;
             case LAND:
-                return R.drawable.ico_indicator_plan_land;
+                return R.drawable.ico_indicator_plan_landing;
             case RTL:
                 return R.drawable.ico_indicator_plan_home;
             case CAMERA_TRIGGER_DISTANCE:
@@ -185,7 +185,6 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     public class MissionItemListViewHolder extends RecyclerView.ViewHolder {
         final TextView serialNumberTextView, altitudeTextView;
         final View typeView;
-        final View deletePanel;
         final ImageButton deleteButton;
         final RelativeLayout rowItemLayout;
         final View focusBar;
@@ -195,7 +194,6 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
             serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
             altitudeTextView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
-            deletePanel = itemView.findViewById(R.id.rowDeleteLayout);
             deleteButton = (ImageButton) itemView.findViewById(R.id.btn_plan_waypoint_delet);
             rowItemLayout = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
             focusBar = itemView.findViewById(R.id.view_focusbar);

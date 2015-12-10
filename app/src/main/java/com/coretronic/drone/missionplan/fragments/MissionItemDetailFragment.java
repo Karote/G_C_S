@@ -45,7 +45,7 @@ public class MissionItemDetailFragment extends Fragment {
     private final static int RTL_INDEX = 3;
     private final static int CAMERA_INDEX = 4;
     public static final int ALTITUDE_MIN_VALUE = 1;
-    public static final int ALTITUDE_MAX_VALUE = 500;
+    public static final int ALTITUDE_MAX_VALUE = 200;
     public static final int DELAY_MIN_VALUE = 0;
     public static final int DELAY_MAX_VALUE = 30;
 
@@ -127,7 +127,7 @@ public class MissionItemDetailFragment extends Fragment {
                         break;
                     case LAND_INDEX: // Land
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.LAND);
-                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_land);
+                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_landing);
                         break;
                     case RTL_INDEX: // RTL_INDEX
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.RTL);
@@ -190,7 +190,7 @@ public class MissionItemDetailFragment extends Fragment {
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                     break;
                 case LAND:
-                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_land);
+                    mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_landing);
                     break;
                 case RTL:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_home);

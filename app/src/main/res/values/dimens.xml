@@ -7,26 +7,25 @@
     <dimen name="compass_ruler_height">1.2dp</dimen>
 
     <dimen name="control_button_group_background_padding">2dp</dimen>
-    <dimen name="control_button_group_landing_button_text_size">20sp</dimen>
+    <dimen name="control_button_group_landing_button_text_size">18sp</dimen>
     <dimen name="drone_control_button_group_right_padding">0dp</dimen>
     <dimen name="drone_control_button_group_divider_height">44dp</dimen>
     <dimen name="drone_control_button_group_divider_h_margin">0dp</dimen>
-    <dimen name="drone_control_button_group_landing_button_width">120dp</dimen>
+    <dimen name="drone_control_button_group_landing_button_width">68dp</dimen>
     <dimen name="drone_control_button_group_btn_v_margin">0dp</dimen>
     <dimen name="map_type_control_button_top_margin">8dp</dimen>
     <dimen name="map_type_control_button_left_margin">8dp</dimen>
 
     <dimen name="fragment_mission_plan_action_bar_height">44dp</dimen>
     <dimen name="fragment_mission_plan_action_bar_status_left_margin">0dp</dimen>
-    <dimen name="fragment_mission_plan_spinner_width">184dp</dimen>
-    <dimen name="fragment_mission_plan_spinner_height">36dp</dimen>
+    <dimen name="fragment_mission_plan_spinner_width">168dp</dimen>
+    <dimen name="fragment_mission_plan_spinner_height">44dp</dimen>
     <dimen name="fragment_mission_plan_spinner_text_size">18sp</dimen>
     <dimen name="fragment_mission_plan_spinner_dropdown_height">48dp</dimen>
     <dimen name="fragment_mission_plan_spinner_dropdown_text_size">18sp</dimen>
 
-    <dimen name="status_bar_gps_left_margin">8dp</dimen>
-    <dimen name="status_bar_gps_text_size">10sp</dimen>
-    <dimen name="status_bar_rf_left_margin">6dp</dimen>
+    <dimen name="status_bar_gps_left_margin">12dp</dimen>
+    <dimen name="status_bar_rf_left_margin">8dp</dimen>
     <dimen name="status_bar_battery_progress_width">32dp</dimen>
     <dimen name="status_bar_battery_progress_height">6dp</dimen>
     <dimen name="status_bar_battery_progress_left_margin">12dp</dimen>
@@ -43,33 +42,29 @@
 
     <!-- way_point_detail -->
     <dimen name="way_point_detail_container_top_margin">4dp</dimen>
-    <dimen name="way_point_detail_fragment_width">240dp</dimen>
+    <dimen name="way_point_detail_fragment_width">232dp</dimen>
     <dimen name="way_point_detail_title_layout_height">44dp</dimen>
     <dimen name="way_point_detail_content_layout_bottom_padding">20dp</dimen>
     <dimen name="way_point_detail_content_layout_left_padding">12dp</dimen>
     <dimen name="way_point_detail_content_layout_right_padding">12dp</dimen>
     <dimen name="way_point_detail_content_layout_top_padding">8dp</dimen>
-    <dimen name="way_point_detail_name_text_width">32dp</dimen>
-    <dimen name="way_point_detail_name_text_left_margin">12dp</dimen>
+    <dimen name="way_point_detail_name_text_width">44dp</dimen>
     <dimen name="way_point_detail_name_text_size">20sp</dimen>
     <dimen name="way_point_detail_divider_width">1dp</dimen>
     <dimen name="way_point_detail_divider_height">36dp</dimen>
-    <dimen name="way_point_detail_divider_left_margin">4dp</dimen>
     <dimen name="way_point_detail_type_spinner_right_margin">12dp</dimen>
     <dimen name="way_point_detail_type_spinner_left_margin">4dp</dimen>
-    <dimen name="way_point_detail_type_spinner_text_size">20sp</dimen>
-    <dimen name="way_point_detail_spinner_wheel_height">32dp</dimen>
+    <dimen name="way_point_detail_spinner_wheel_height">36dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
     <dimen name="way_point_detail_location_layout_top_margin">8dp</dimen>
-    <dimen name="way_point_detail_location_text_height">32dp</dimen>
-    <dimen name="way_point_detail_location_text_size">16sp</dimen>
+    <dimen name="way_point_detail_location_text_height">36dp</dimen>
     <dimen name="way_point_detail_location_text_top_margin">2dp</dimen>
     <dimen name="way_point_detail_longitude_layout_left_margin">8dp</dimen>
     <dimen name="way_point_detail_delete_button_height">40dp</dimen>
-    <dimen name="way_point_detail_delete_button_top_margin">8dp</dimen>
+    <dimen name="way_point_detail_delete_button_top_margin">12dp</dimen>
     <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
     <dimen name="way_point_detail_unit_text_size">12sp</dimen>
-    <dimen name="way_point_detail_delay_unit_layout_top_margin">8dp</dimen>
+    <dimen name="way_point_detail_delay_unit_layout_top_margin">12dp</dimen>
     <dimen name="way_point_detail_type_icon_left_margin">12dp</dimen>
     <dimen name="way_point_detail_type_icon_top_margin">14dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_text_size">20sp</dimen>
@@ -78,22 +73,25 @@
     <dimen name="way_point_detail_spinner_wheel_focus_width">50dp</dimen>
 
 
-    <dimen name="mission_plan_detail_text_size">14sp</dimen>
+    <dimen name="mission_plan_detail_text_size">12sp</dimen>
 
     <!-- tap_and_go_dialog -->
     <dimen name="tap_and_go_dialog_fragment_width">220dp</dimen>
-    <dimen name="tap_and_go_dialog_content_left_margin">12dp</dimen>
+    <dimen name="tap_and_go_dialog_content_left_margin">20dp</dimen>
     <dimen name="tap_and_go_dialog_content_right_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_location_text_top_margin">12dp</dimen>
-    <dimen name="tap_and_go_dialog_location_text_size">20sp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_size">16sp</dimen>
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">12dp</dimen>
     <dimen name="tap_and_go_dialog_top_bar_height">40dp</dimen>
     <dimen name="tap_and_go_dialog_cancel_text_size">16sp</dimen>
     <dimen name="tap_and_go_altitude_wheel_height">32dp</dimen>
     <dimen name="tap_and_go_start_button_height">44dp</dimen>
-    <dimen name="tap_and_go_start_button_bottom_margin">20dp</dimen>
+    <dimen name="tap_and_go_start_button_bottom_margin">16dp</dimen>
     <dimen name="tap_and_go_start_button_top_margin">12dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">22sp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_width">188dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_height">36dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_padding">58dp</dimen>
 
     <!-- marker_editor_control_panel -->
     <dimen name="marker_editor_control_panel_undo_button_right_margin">1dp</dimen>
@@ -109,7 +107,7 @@
     <dimen name="history_fragment_activate_button_width">136dp</dimen>
     <dimen name="history_fragment_activate_button_height">56dp</dimen>
     <dimen name="history_fragment_activate_button_left_margin">8dp</dimen>
-    <dimen name="history_fragment_activate_button_bottom_margin">6dp</dimen>
+    <dimen name="history_fragment_activate_button_bottom_margin">8dp</dimen>
     <dimen name="history_fragment_info_layout_height">22dp</dimen>
     <dimen name="history_fragment_info_text_left_margin">8dp</dimen>
     <dimen name="history_fragment_log_listitem_width">96dp</dimen>
@@ -125,12 +123,10 @@
 
     <dimen name="control_progress_circle_thumb_size">38dp</dimen>
     <dimen name="aircraft_compass_ruler_outer_padding">4dp</dimen>
-    <dimen name="mission_item_recycle_view_bottom_margin">0dp</dimen>
-    <dimen name="mission_item_recycle_view_top_margin">0dp</dimen>
 
-    <dimen name="mission_item_recycler_view_bottom_margin">48dp</dimen>
-    <dimen name="mission_item_recycler_view_top_margin">8dp</dimen>
-    <dimen name="mission_item_recycler_view_right_margin">8dp</dimen>
+    <dimen name="mission_item_recycler_view_bottom_margin">32dp</dimen>
+    <dimen name="mission_item_recycler_view_top_margin">4dp</dimen>
+    <dimen name="mission_item_recycler_view_right_margin">4dp</dimen>
     <dimen name="ico_indicator_waypoint_arrow_padding">2dp</dimen>
 
     <dimen name="setting_item_height">48dp</dimen>
@@ -154,7 +150,7 @@
     <dimen name="setting_flight_page_execute_button_width">96dp</dimen>
     <dimen name="setting_flight_page_execute_text_size">16sp</dimen>
     <dimen name="setting_flight_page_execute_margin">8dp</dimen>
-    <dimen name="main_fragment_status_bar_height">25dp</dimen>
+    <dimen name="main_fragment_status_bar_height">24dp</dimen>
     <dimen name="main_fragment_status_bar_clock_text_size">14sp</dimen>
     <dimen name="main_fragment_app_version_text_size">12sp</dimen>
     <dimen name="main_fragment_view_margin_left_right">12dp</dimen>
@@ -165,9 +161,31 @@
     <dimen name="main_fragment_setting_btn_margin_right">12dp</dimen>
     <dimen name="main_fragment_main_button_width">244dp</dimen>
     <dimen name="main_fragment_main_button_height">136dp</dimen>
-    <dimen name="main_fragment_main_button_text_size">44sp</dimen>
+    <dimen name="main_fragment_main_button_text_size">28sp</dimen>
     <dimen name="main_fragment_select_device_spinner_text_size">14sp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_left">12dp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_right">12dp</dimen>
+    <dimen name="drone_control_button_group_end_margin">0dp</dimen>
+    <dimen name="way_point_detail_container_right_margin">0dp</dimen>
+    <dimen name="welcome_frame_width">280dp</dimen>
+    <dimen name="account_frame_top_margin">16dp</dimen>
+    <dimen name="account_frame_height">188dp</dimen>
+    <dimen name="account_frame_padding">8dp</dimen>
+    <dimen name="ed_user_id_height">40dp</dimen>
+    <dimen name="ed_user_id_text_size">18sp</dimen>
+    <dimen name="ed_user_id_padding">12dp</dimen>
+    <dimen name="ed_user_pwd_top_margin">2dp</dimen>
+    <dimen name="login_ok_button_top_margin">8dp</dimen>
+    <dimen name="login_ok_button_height">44dp</dimen>
+    <dimen name="btn_sign_up_width">80dp</dimen>
+    <dimen name="btn_sign_up_height">24dp</dimen>
+    <dimen name="login_ok_button_text_size">22sp</dimen>
+    <dimen name="btn_sign_up_top_margin">12dp</dimen>
+    <dimen name="btn_sign_up_text_size">14sp</dimen>
+    <dimen name="btn_login_with_fb_text_size">18sp</dimen>
+    <dimen name="btn_login_with_fb_text_left_padding">56dp</dimen>
+    <dimen name="btn_login_with_fb_top_margin">16dp</dimen>
+    <dimen name="welcom_text_size">30sp</dimen>
+    <dimen name="login_status_bar_height">24dp</dimen>
 
 </resources>

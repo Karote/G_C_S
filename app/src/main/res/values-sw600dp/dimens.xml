@@ -6,7 +6,6 @@
     <dimen name="settings_title_size">22sp</dimen>
 
     <dimen name="status_bar_gps_left_margin">12dp</dimen>
-    <dimen name="status_bar_gps_text_size">12sp</dimen>
     <dimen name="status_bar_rf_left_margin">8dp</dimen>
     <dimen name="status_bar_battery_progress_width">80dp</dimen>
     <dimen name="status_bar_battery_progress_height">12dp</dimen>
@@ -54,8 +53,8 @@
     <dimen name="history_fragment_activate_button_width">144dp</dimen>
     <dimen name="history_fragment_activate_button_height">60dp</dimen>
     <dimen name="history_fragment_activate_button_left_margin">12dp</dimen>
-    <dimen name="history_fragment_activate_button_bottom_margin">8dp</dimen>
-    <dimen name="history_fragment_info_layout_height">44dp</dimen>
+    <dimen name="history_fragment_activate_button_bottom_margin">12dp</dimen>
+    <dimen name="history_fragment_info_layout_height">40dp</dimen>
     <dimen name="history_fragment_info_text_left_margin">8dp</dimen>
     <dimen name="history_fragment_log_listitem_width">132dp</dimen>
     <dimen name="history_fragment_log_listitem_height">62dp</dimen>
@@ -69,12 +68,12 @@
     <dimen name="control_progress_circle_thumb_size">48dp</dimen>
 
     <dimen name="aircraft_compass_ruler_outer_padding">16dp</dimen>
-    <dimen name="mission_item_recycle_view_bottom_margin">56dp</dimen>
-    <dimen name="mission_item_recycle_view_top_margin">8dp</dimen>
-    <dimen name="mission_item_recycle_view_right_margin">8dp</dimen>
+    <dimen name="mission_item_recycler_view_bottom_margin">48dp</dimen>
+    <dimen name="mission_item_recycler_view_top_margin">8dp</dimen>
+    <dimen name="mission_item_recycler_view_right_margin">8dp</dimen>
 
     <dimen name="way_point_detail_container_top_margin">8dp</dimen>
-    <dimen name="way_point_detail_location_text_size">18sp</dimen>
+    <dimen name="way_point_detail_container_right_margin">2dp</dimen>
     <dimen name="way_point_detail_location_text_height">36dp</dimen>
     <dimen name="way_point_detail_delete_button_height">44dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_text_size">22sp</dimen>
@@ -89,15 +88,17 @@
     <dimen name="way_point_detail_content_layout_left_padding">16dp</dimen>
     <dimen name="way_point_detail_content_layout_top_padding">8dp</dimen>
     <dimen name="way_point_detail_unit_text_size">14sp</dimen>
+    <dimen name="way_point_detail_delay_unit_layout_top_margin">8dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_top_margin">2dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_height">36dp</dimen>
     <dimen name="way_point_detail_longitude_layout_left_margin">4dp</dimen>
     <dimen name="way_point_detail_delete_button_text_size">20sp</dimen>
+    <dimen name="way_point_detail_delete_button_top_margin">8dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_width">246dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_padding">91dp</dimen>
     <dimen name="way_point_detail_spinner_wheel_focus_width">64dp</dimen>
     <dimen name="way_point_detail_name_text_size">24sp</dimen>
-    <dimen name="way_point_detail_type_spinner_text_size">20sp</dimen>
+    <dimen name="way_point_detail_name_text_width">54dp</dimen>
 
     <dimen name="ico_indicator_waypoint_arrow_padding">4dp</dimen>
 
@@ -111,6 +112,11 @@
     <dimen name="tap_and_go_dialog_location_text_top_margin">8dp</dimen>
     <dimen name="tap_and_go_dialog_altitude_unit_layout_top_margin">8dp</dimen>
     <dimen name="tap_and_go_start_button_text_size">20sp</dimen>
+    <dimen name="tap_and_go_dialog_location_text_size">20sp</dimen>
+    <dimen name="tap_and_go_start_button_bottom_margin">20dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_width">208dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_height">36dp</dimen>
+    <dimen name="tap_and_go_altitude_spinner_wheel_padding">58dp</dimen>
 
     <dimen name="mission_plan_detail_text_size">14sp</dimen>
     <dimen name="flight_history_recycler_view_right_margin">8dp</dimen>
@@ -159,5 +165,26 @@
     <dimen name="main_fragment_select_device_spinner_padding_left">16dp</dimen>
     <dimen name="main_fragment_select_device_spinner_padding_right">8dp</dimen>
     <dimen name="mav_info_panel_unit_left_margin">4dp</dimen>
+    <dimen name="drone_control_button_group_end_margin">6dp</dimen>
+    <dimen name="welcome_frame_width">420dp</dimen>
+    <dimen name="account_frame_top_margin">0dp</dimen>
+    <dimen name="account_frame_height">260dp</dimen>
+    <dimen name="account_frame_padding">12dp</dimen>
+    <dimen name="ed_user_id_height">48dp</dimen>
+    <dimen name="ed_user_id_text_size">22sp</dimen>
+    <dimen name="ed_user_id_padding">16dp</dimen>
+    <dimen name="ed_user_pwd_top_margin">4dp</dimen>
+    <dimen name="login_ok_button_top_margin">16dp</dimen>
+    <dimen name="login_ok_button_height">54dp</dimen>
+    <dimen name="btn_sign_up_width">148dp</dimen>
+    <dimen name="btn_sign_up_height">40dp</dimen>
+    <dimen name="login_ok_button_text_size">30sp</dimen>
+    <dimen name="btn_sign_up_top_margin">22dp</dimen>
+    <dimen name="btn_sign_up_text_size">18sp</dimen>
+    <dimen name="btn_login_with_fb_text_size">22sp</dimen>
+    <dimen name="btn_login_with_fb_text_left_padding">80dp</dimen>
+    <dimen name="btn_login_with_fb_top_margin">20dp</dimen>
+    <dimen name="welcom_text_size">28sp</dimen>
+    <dimen name="login_status_bar_height">32dp</dimen>
 
 </resources>

@@ -5,11 +5,47 @@
     android:layout_height="@dimen/mav_info_panel_height">
 
     <View
-        android:id="@+id/background_view"
-        android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:id="@+id/baseline_view"
+        android:layout_width="@dimen/aircraft_compass_size"
+        android:layout_height="@dimen/aircraft_compass_size"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/instrument_bg" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp" />
+
+    <View
+        android:id="@+id/center_background_view"
+        android:layout_width="428dp"
+        android:layout_height="84dp"
+        android:layout_alignLeft="@id/baseline_view"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/baseline_view"
+        android:layout_marginLeft="-108dp"
+        android:layout_marginStart="-108dp"
+        android:background="@drawable/instrument_bg"
+        android:clickable="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignEnd="@id/center_background_view"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@id/center_background_view"
+        android:layout_marginEnd="428dp"
+        android:layout_marginRight="428dp"
+        android:background="@drawable/instrument_bar_bg"
+        android:clickable="true" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@id/center_background_view"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/center_background_view"
+        android:layout_marginLeft="428dp"
+        android:layout_marginStart="428dp"
+        android:background="@drawable/instrument_bar_bg"
+        android:clickable="true" />
 
     <TextView
         android:id="@+id/flight_duration"
@@ -52,21 +88,9 @@
         android:layout_alignBaseline="@id/flight_time_text"
         android:layout_toEndOf="@id/from_home_title"
         android:layout_toRightOf="@id/from_home_title"
-        android:gravity="end"
-        android:minWidth="62dp"
+        android:gravity="start"
+        android:minWidth="68dp"
         android:text="@string/from_home_hint" />
-
-    <TextView
-        android:id="@+id/from_home_distance_unit"
-        style="@style/mav_info_value_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
-        android:layout_marginLeft="@dimen/mav_info_panel_unit_left_margin"
-        android:layout_marginStart="@dimen/mav_info_panel_unit_left_margin"
-        android:layout_toEndOf="@id/from_home_distance_text"
-        android:layout_toRightOf="@id/from_home_distance_text"
-        android:text="@string/unit_in_meter" />
 
     <TextView
         android:id="@+id/target_title"
@@ -76,8 +100,8 @@
         android:layout_alignBaseline="@id/flight_time_text"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
-        android:layout_toEndOf="@id/from_home_distance_unit"
-        android:layout_toRightOf="@id/from_home_distance_unit"
+        android:layout_toEndOf="@id/from_home_distance_text"
+        android:layout_toRightOf="@id/from_home_distance_text"
         android:text="@string/target" />
 
     <TextView
@@ -88,21 +112,9 @@
         android:layout_alignBaseline="@id/flight_time_text"
         android:layout_toEndOf="@id/target_title"
         android:layout_toRightOf="@id/target_title"
-        android:gravity="end"
-        android:minWidth="34dp"
+        android:gravity="start"
+        android:minWidth="68dp"
         android:text="@string/target_hint" />
-
-    <TextView
-        android:id="@+id/target_distance_unit"
-        style="@style/mav_info_value_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
-        android:layout_marginLeft="@dimen/mav_info_panel_unit_left_margin"
-        android:layout_marginStart="@dimen/mav_info_panel_unit_left_margin"
-        android:layout_toEndOf="@id/target_distance_text"
-        android:layout_toRightOf="@id/target_distance_text"
-        android:text="@string/unit_in_meter" />
 
     <include
         android:id="@+id/aircraft_compass"

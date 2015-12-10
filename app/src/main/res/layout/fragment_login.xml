@@ -1,12 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="@dimen/login_status_bar_height"
         android:alpha="0.5"
-        android:background="@color/blue_sky"
+        android:background="#59c3f6"
         android:orientation="horizontal">
 
         <DigitalClock
@@ -15,15 +15,14 @@
             android:layout_gravity="center|top"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="216dp"
+        android:layout_width="@dimen/welcome_frame_width"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginTop="32dp"
         android:orientation="vertical">
 
         <TextView
@@ -33,66 +32,96 @@
             android:gravity="center"
             android:text="@string/tv_txt_welcome"
             android:textColor="#59C3F6"
-            android:textSize="28sp"
-            android:textStyle="bold"/>
+            android:textSize="@dimen/welcom_text_size"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/ed_user_id"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/login_input_field_bg"
-            android:fontFamily="sans-serif-condensed"
-            android:hint="@string/email_hint"
-            android:inputType="textEmailAddress"
-            android:padding="5dp"
-            android:textColor="@color/input_field_text"
-            android:textColorHint="@color/input_field_hint"/>
+            android:layout_height="@dimen/account_frame_height"
+            android:layout_marginTop="@dimen/account_frame_top_margin"
+            android:background="@drawable/account_frame_background"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="@dimen/account_frame_padding">
 
-        <EditText
-            android:id="@+id/ed_user_pwd"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/login_input_field_bg"
-            android:hint="@string/tv_txt_passwd"
-            android:inputType="textPassword"
-            android:padding="5dp"
-            android:textColor="@color/input_field_text"
-            android:textColorHint="@color/input_field_hint"/>
+            <EditText
+                android:id="@+id/ed_user_id"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_user_id_height"
+                android:background="@drawable/login_input_field_bg"
+                android:fontFamily="@string/font_roboto_medium"
+                android:hint="@string/email_hint"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="@dimen/ed_user_id_padding"
+                android:paddingRight="@dimen/ed_user_id_padding"
+                android:textColor="@color/input_field_text"
+                android:textColorHint="@color/input_field_hint"
+                android:textSize="@dimen/ed_user_id_text_size" />
 
-        <CheckBox
-            android:id="@+id/chk_stay_logged"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/login_editview_height"
-            android:layout_marginTop="8dp"
-            android:text="@string/chk_txt_login"/>
+            <EditText
+                android:id="@+id/ed_user_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_user_id_height"
+                android:layout_marginTop="@dimen/ed_user_pwd_top_margin"
+                android:background="@drawable/login_input_field_bg"
+                android:fontFamily="@string/font_roboto_medium"
+                android:hint="@string/tv_txt_passwd"
+                android:inputType="textPassword"
+                android:paddingLeft="@dimen/ed_user_id_padding"
+                android:paddingRight="@dimen/ed_user_id_padding"
+                android:textColor="@color/input_field_text"
+                android:textColorHint="@color/input_field_hint"
+                android:textSize="@dimen/ed_user_id_text_size" />
+
+            <CheckBox
+                android:id="@+id/chk_stay_logged"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/login_editview_height"
+                android:layout_marginTop="8dp"
+                android:text="@string/chk_txt_login"
+                android:checked="true"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/login_ok_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_ok_button_height"
+                android:layout_marginTop="@dimen/login_ok_button_top_margin"
+                android:background="@drawable/login_button_bg"
+                android:fontFamily="@string/font_roboto_condensed"
+                android:text="@string/btn_txt_login"
+                android:textColor="@color/white"
+                android:textSize="@dimen/login_ok_button_text_size"
+                android:textStyle="bold" />
+
+
+            <Button
+                android:id="@+id/btn_sign_up"
+                android:layout_width="@dimen/btn_sign_up_width"
+                android:layout_height="@dimen/btn_sign_up_height"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/btn_sign_up_top_margin"
+                android:background="@drawable/btn_sign_up_background"
+                android:fontFamily="@string/font_roboto_medium"
+                android:text="Sign Up"
+                android:textColor="#C6C6C6"
+                android:textSize="@dimen/btn_sign_up_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Button
-            android:id="@+id/login_ok_button"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/login_button_bg"
-            android:fontFamily="@string/font_roboto_medium"
-            android:text="@string/btn_txt_login"
+            android:id="@+id/btn_login_with_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/btn_login_with_fb_top_margin"
+            android:background="@drawable/btn_login_facebook"
+            android:fontFamily="@string/font_roboto_regular"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/btn_login_with_fb_text_left_padding"
+            android:text="Log in with Facebook"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-
-
-        <!--<Button-->
-        <!--android:id="@+id/btn_sign_up"-->
-        <!--android:layout_width="104dp"-->
-        <!--android:layout_height="32dp"-->
-        <!--android:fontFamily="sans-serif-condensed"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:textStyle="bold"-->
-        <!--android:textSize="16sp"-->
-        <!--android:layout_marginTop="32dp"-->
-        <!--android:textColor="@color/btn_sign_up_text"-->
-        <!--android:background="@drawable/btn_sign_up"-->
-        <!--android:text="@string/btn_txt_sign_up" />-->
+            android:textSize="@dimen/btn_login_with_fb_text_size"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>

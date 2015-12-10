@@ -623,6 +623,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                     return;
                 }
                 mControlBarView.showGoButton();
+                mDroneMap.clearTapAndGoPlan();
                 break;
             case R.id.drone_takeoff_button:
                 if (getDroneController() != null) {
@@ -635,11 +636,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                     getDroneController().land();
                 }
                 mControlBarView.showTakeoffButton();
+                mDroneMap.clearTapAndGoPlan();
                 return;
             case R.id.drone_rtl_button:
                 if (getDroneController() != null) {
                     getDroneController().returnToLaunch();
                 }
+                mDroneMap.clearTapAndGoPlan();
                 return;
             case R.id.plan_play_button:
 //                if (getDroneController() != null) {
@@ -657,6 +660,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 return;
             case R.id.drone_location_button:
                 setMapToDrone();
+                return;
+            case R.id.fit_map_button:
+                fitMapShowAll();
                 return;
             case R.id.map_type_button:
                 changeMapType();
@@ -727,8 +733,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.updateMissions(missions);
     }
 
-    public void fitMapShowAllMission() {
-        mDroneMap.fitMapShowAllMission();
+    public void fitMapShowAll() {
+        mDroneMap.fitMapShowAll();
     }
 
     public void setMapToMyLocation() {
@@ -751,16 +757,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.setTapGoPath();
     }
 
-    public void loadHistory(List<Float> markerList, List<Long> flightPath) {
-        mDroneMap.loadHistory(markerList, flightPath);
+    public void loadHistory(List<Mission> missions, List<Long> flightPath) {
+        mDroneMap.loadHistory(missions, flightPath);
     }
 
     public void clearHistoryMarkerPath() {
         mDroneMap.clearHistoryMarkerPath();
-    }
-
-    public void fitMapShowDroneAndMe() {
-        mDroneMap.fitMapShowDroneAndMe();
     }
 
     private void updateOnMapDrone(DroneStatus droneStatus) {

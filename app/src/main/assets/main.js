@@ -210,18 +210,33 @@ function clearDroneMarker() {
     planning_drone_marker_arrow.setMap(null);
 }
 
-function fitMapShowDroneAndMe() {
-    var droneBound = new google.maps.LatLngBounds();
-    droneBound.extend(droneMarkerOuter.position);
-    droneBound.extend(GeoMarker.getPosition());
-
-    map.fitBounds(droneBound);
+function fitMapShowAll() {
+    var bounds = new google.maps.LatLngBounds();
+    if (GeoMarker.getPosition()) {
+        bounds.extend(GeoMarker.getPosition());
+    }
+    if (planning_drone_marker_outer.getPosition()) {
+        bounds.extend(planning_drone_marker_outer.getPosition());
+    }
+    if (planning_mission_marker_array) {
+        var i, j;
+        for ( i = 0, j = planning_mission_marker_array.length; i < j; i++) {
+            bounds.extend(planning_mission_marker_array[i].position);
+        }
+    }
+    if (tapgo_tap_marker.getMap()) {
+        bounds.extend(tapgo_tap_marker.getPosition());
+    }
+    if (tapgo_set_marker.getMap()) {
+        bounds.extend(tapgo_set_marker.getPosition());
+    }
+    map.fitBounds(bounds);
 }
 
 function mapClean() {
     clearMissionPlanningMarkers();
     clearTapMarker();
-    clearTapGoSetMarker();
+    clearTapAndGoPlan();
     clearHistoryMarkerPath();
     clearSurvey();
 }
