@@ -135,7 +135,7 @@ public class DroneMap implements OnMapEventCallback {
             }
         });
         mMapWebView.getSettings().setGeolocationEnabled(true);
-        mMapWebView.loadUrl("file:///android_asset/GoogleMap.html");
+        mMapWebView.loadUrl("file:///android_asset/drone_map/GoogleMap.html");
         mGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     }
