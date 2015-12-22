@@ -14,8 +14,8 @@ import android.widget.Toast;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneController.MissionLoaderListener;
 import com.coretronic.drone.R;
-import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
-import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter.OnItemSelectedListener;
+import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter;
+import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter.OnListStateChangedListener;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Builder;
 import com.coretronic.drone.model.Mission.Type;
@@ -33,7 +33,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private final static int DEFAULT_RADIUS = 0;
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
 
-    private MissionItemListAdapter mMissionItemAdapter;
+    private MissionListUndoableAdapter mMissionItemAdapter;
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
@@ -80,13 +80,13 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.mission_item_recycler_view);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new FixedLinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-        mMissionItemAdapter = new MissionItemListAdapter();
+        mMissionItemAdapter = new MissionListUndoableAdapter();
         recyclerView.setAdapter(mMissionItemAdapter);
 
         mWayPointDetailPanel = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
         mWayPointDetailPanel.setVisibility(View.GONE);
 
-        mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
+        mMissionItemAdapter.setOnItemClickListener(new OnListStateChangedListener() {
             @Override
             public void onItemDeleted(int position) {
                 updateMissionToMap();
@@ -103,6 +103,11 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onNothingSelected() {
                 mWayPointDetailPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onUndoOptionEnable(boolean enable) {
+                mMapViewFragment.setUndoButtonEnable(enable);
             }
         });
 
@@ -157,13 +162,10 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.undo_button:
-                if (mMissionItemAdapter.undo()) {
-                    mMissionItemAdapter.onNothingSelected();
-                    mWayPointDetailPanel.setVisibility(View.GONE);
-                    updateMissionToMap();
-                } else {
-                    showToastMessage("There is no undo item existed");
-                }
+                mMissionItemAdapter.undo();
+                mMissionItemAdapter.onNothingSelected();
+                mWayPointDetailPanel.setVisibility(View.GONE);
+                updateMissionToMap();
                 break;
             case R.id.delete_all_button:
                 mMissionItemAdapter.clearMission();

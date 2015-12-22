@@ -23,17 +23,17 @@ import java.util.Stack;
 /**
  * Created by karot.chuang on 2015/5/15.
  */
-public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
+public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionListUndoableAdapter.MissionItemListViewHolder> {
 
     private final static int UNDO_LIST_MAX_SIZE = 64;
     private List<Mission> mMissionList = null;
-    private OnItemSelectedListener mItemClickListener = null;
+    private OnListStateChangedListener mItemClickListener = null;
     private boolean mIsDeleteLayoutVisible = false;
     private int mFocusIndex = -1;
     private LimitedStack<List<Mission>> mUndoLists;
     private Context mContext;
 
-    public MissionItemListAdapter() {
+    public MissionListUndoableAdapter() {
         this.mMissionList = new ArrayList<>();
         this.mUndoLists = new LimitedStack<>(UNDO_LIST_MAX_SIZE);
     }
@@ -69,16 +69,18 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return clonedMissions;
     }
 
-    public interface OnItemSelectedListener {
+    public interface OnListStateChangedListener {
 
         void onItemDeleted(int position);
 
         void onItemSelected(Mission mission, int currentIndex);
 
         void onNothingSelected();
+
+        void onUndoOptionEnable(boolean enable);
     }
 
-    public void setOnItemClickListener(final OnItemSelectedListener listener) {
+    public void setOnItemClickListener(final OnListStateChangedListener listener) {
         mItemClickListener = listener;
     }
 
@@ -207,6 +209,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
     }
 
     public void clearMission() {
+        if (mMissionList.isEmpty()) {
+            return;
+        }
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.clear();
         notifyDataSetChanged();
@@ -228,13 +233,16 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return mMissionList;
     }
 
-    public boolean undo() {
-        if (mUndoLists.size() <= 0) {
-            return false;
-        }
+    public void undo() {
         mMissionList = mUndoLists.pop();
+        if(!canUndo()) {
+            mItemClickListener.onUndoOptionEnable(false);
+        }
         notifyDataSetChanged();
-        return true;
+    }
+
+    private boolean canUndo() {
+        return !mUndoLists.isEmpty();
     }
 
     public Mission getMission(int position) {
@@ -271,6 +279,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         public E push(E object) {
             while (size() >= maxSize) {
                 remove(0);
+            }
+            if(!canUndo()){
+                mItemClickListener.onUndoOptionEnable(true);
             }
             super.push(object);
             return object;
