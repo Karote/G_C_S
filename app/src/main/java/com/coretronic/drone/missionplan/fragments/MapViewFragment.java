@@ -80,7 +80,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private View mMissionModeControlPanel = null;
     private View mDeleteOptionPanel = null;
     private View mUndoButton = null;
-    private View mDeleteButton = null;
+    private View mMoreButton = null;
 
     private RadioGroup mMissionPlanTypeRadioGroup = null;
     private Spinner mSpinnerView = null;
@@ -438,8 +438,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         mUndoButton = view.findViewById(R.id.undo_button);
         mUndoButton.setOnClickListener(this);
-        mDeleteButton = view.findViewById(R.id.delete_button);
-        mDeleteButton.setOnClickListener(this);
+        mMoreButton = view.findViewById(R.id.more_button);
+        mMoreButton.setOnClickListener(this);
         view.findViewById(R.id.delete_done_button).setOnClickListener(this);
         view.findViewById(R.id.delete_all_button).setOnClickListener(this);
         view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
@@ -498,23 +498,27 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         boolean isTapAndGoMode = fragmentType == FRAGMENT_TYPE_TAP_AND_GO;
         boolean canAddMarker = fragmentType != FRAGMENT_TYPE_HISTORY;
-        int deleteAndUndoButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
+        int undoAndMoreButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
         int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int droneControlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_PLANNING ? View.GONE : View.VISIBLE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
         setDeleteOptionShow(false);
-        setDeleteAndUndoButtonVisibility(deleteAndUndoButtonVisibility);
+        setUndoAndMoreButtonVisibility(undoAndMoreButtonVisibility);
         mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
         mMavInfoView.setVisibility(mavInfoPanelVisibility);
         mControlBarView.setVisibility(controlButtonBarVisibility);
         mControlBarView.setDroneControlBarVisibility(droneControlButtonBarVisibility);
     }
 
-    void setDeleteAndUndoButtonVisibility(int visibility) {
+    void setUndoAndMoreButtonVisibility(int visibility) {
         mUndoButton.setVisibility(visibility);
-        mDeleteButton.setVisibility(visibility);
+        mMoreButton.setVisibility(visibility);
+    }
+
+    void setUndoButtonEnable(boolean enable){
+        mUndoButton.setEnabled(enable);
     }
 
     private void setUpLocationService() {
@@ -594,10 +598,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case R.id.delete_all_button:
                 setDeleteOptionShow(false);
                 mDroneMap.setAddMarkerEnable(true);
-                break;
-            case R.id.delete_button:
-                setDeleteOptionShow(true);
-                mDroneMap.setAddMarkerEnable(false);
                 break;
             case R.id.delete_done_button:
                 setDeleteOptionShow(false);
@@ -710,12 +710,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         if (isShow) {
             mDeleteOptionPanel.setVisibility(View.VISIBLE);
             mMissionPlanTypeRadioGroup.setVisibility(View.GONE);
-            mDeleteButton.setVisibility(View.GONE);
+            mMoreButton.setVisibility(View.GONE);
             mUndoButton.setVisibility(View.GONE);
         } else {
             mDeleteOptionPanel.setVisibility(View.GONE);
             mMissionPlanTypeRadioGroup.setVisibility(View.VISIBLE);
-            mDeleteButton.setVisibility(View.VISIBLE);
+            mMoreButton.setVisibility(View.VISIBLE);
             mUndoButton.setVisibility(View.VISIBLE);
         }
     }

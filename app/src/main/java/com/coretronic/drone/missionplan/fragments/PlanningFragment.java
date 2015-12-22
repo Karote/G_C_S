@@ -173,9 +173,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             case R.id.delete_done_button:
                 missionAdapterShowDelete(false);
                 break;
-            case R.id.delete_button:
-                missionAdapterShowDelete(true);
-                break;
             case R.id.plan_go_button:
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                 if (droneMissionList == null || droneMissionList.size() == 0) {

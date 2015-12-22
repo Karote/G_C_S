@@ -285,9 +285,6 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             case R.id.delete_done_button:
                 missionAdapterShowDelete(false);
                 break;
-            case R.id.delete_button:
-                missionAdapterShowDelete(true);
-                break;
             case R.id.plan_go_button:
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                 if (droneMissionList == null || droneMissionList.size() == 0) {
@@ -440,7 +437,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mRoutePropertiesDialog.setVisibility(View.GONE);
                 mMapViewFragment.setMavInfoViewVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.GONE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
                 break;
@@ -448,7 +445,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mCreateRouteButton.setVisibility(View.VISIBLE);
                 mCreateRouteButton.setEnabled(true);
                 mRoutePropertiesDialog.setVisibility(View.GONE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
                 break;
@@ -457,7 +454,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mRoutePropertiesDialog.setVisibility(View.VISIBLE);
                 mMapViewFragment.setMavInfoViewVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.GONE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.VISIBLE);
                 mDistanceAndTimeInfo.setVisibility(View.VISIBLE);
                 mGoEditPanel.setVisibility(View.GONE);
@@ -473,7 +470,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             case PLAN_GO_STATUS:
                 mGoEditPanel.setVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.VISIBLE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.VISIBLE);
                 break;
         }
     }
