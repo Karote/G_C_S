@@ -1,6 +1,7 @@
 package com.coretronic.drone.missionplan.map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.Pair;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
 import org.json.JSONArray;
 
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -91,6 +93,20 @@ public class DroneMap implements OnMapEventCallback {
         });
     }
 
+    @Override
+    @JavascriptInterface
+    public void onGetMissionPlanPathDistanceAndFlightTimeCallback(final int lengthInMeters, final int timeInSeconds) {
+        if (mOnMapEventCallback == null) {
+            return;
+        }
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mOnMapEventCallback.onGetMissionPlanPathDistanceAndFlightTimeCallback(lengthInMeters, timeInSeconds);
+            }
+        });
+    }
+
     @JavascriptInterface
     public void onWarningMessage(final String message) {
         mHandler.post(new Runnable() {
@@ -126,6 +142,7 @@ public class DroneMap implements OnMapEventCallback {
         mHandler = handler;
 
         mMapWebView = (WebView) view.findViewById(R.id.map_webview);
+        mMapWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mMapWebView.addJavascriptInterface(this, "AndroidFunction");
         mMapWebView.getSettings().setJavaScriptEnabled(true);
         // permission to disclose the user's location to JavaScript.
@@ -138,6 +155,39 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("file:///android_asset/drone_map/GoogleMap.html");
         mGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
+    }
+
+    public void saveWebViewScreenShot(String fileName) {
+        mMapWebView.buildDrawingCache();
+        Bitmap cacheBitmap = mMapWebView.getDrawingCache();
+        if (cacheBitmap == null) {
+            return;
+        }
+        FileOutputStream fos = null;
+        try {
+//            fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos = new FileOutputStream("mnt/sdcard/" + fileName + ".jpg");
+            if (fos != null) {
+                cacheBitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                fos.close();
+            }
+        } catch (Exception e) {
+
+        }
+        mMapWebView.destroyDrawingCache();
+    }
+
+    public Bitmap getWebViewScreenShot(int width, int height) {
+
+        mMapWebView.buildDrawingCache();
+        Bitmap cacheBitmap = Bitmap.createScaledBitmap(mMapWebView.getDrawingCache(), width, height, false);
+        mMapWebView.destroyDrawingCache();
+        return cacheBitmap;
+    }
+
+    public void getMissionPlanPathLengthAndTime(List<Integer> speed) {
+        JSONArray speedJson = new JSONArray(speed);
+        mMapWebView.loadUrl("javascript:getMissionPlanPathDistanceAndFlightTime(" + speedJson + ")");
     }
 
     public void updateMissions(List<Mission> missions) {
@@ -154,6 +204,10 @@ public class DroneMap implements OnMapEventCallback {
 
     public void fitMapShowAll() {
         mMapWebView.loadUrl("javascript:fitMapShowAll()");
+    }
+
+    public void fitMapShowAllMissions() {
+        mMapWebView.loadUrl("javascript:fitMapShowAllMissionPlanning()");
     }
 
     public void changeMapType() {

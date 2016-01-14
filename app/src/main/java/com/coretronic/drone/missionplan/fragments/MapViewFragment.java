@@ -3,6 +3,7 @@ package com.coretronic.drone.missionplan.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -512,13 +513,27 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mControlBarView.setDroneControlBarVisibility(droneControlButtonBarVisibility);
     }
 
-    void setUndoAndMoreButtonVisibility(int visibility) {
+    public void setUndoAndMoreButtonVisibility(int visibility) {
         mUndoButton.setVisibility(visibility);
         mMoreButton.setVisibility(visibility);
+        mUndoButton.setEnabled(false);
     }
 
-    void setUndoButtonEnable(boolean enable){
+    public void setUndoButtonEnable(boolean enable) {
         mUndoButton.setEnabled(enable);
+    }
+
+
+    public void getMissionPlanPathLengthAndTime(List<Integer> speedList) {
+        mDroneMap.getMissionPlanPathLengthAndTime(speedList);
+    }
+
+    public void saveWebViewScreenShot(String fileName) {
+        mDroneMap.saveWebViewScreenShot(fileName);
+    }
+
+    public Bitmap getWebViewScreenShot(int width, int height) {
+        return mDroneMap.getWebViewScreenShot(width, height);
     }
 
     private void setUpLocationService() {
@@ -735,6 +750,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public void fitMapShowAll() {
         mDroneMap.fitMapShowAll();
+    }
+
+    public void fitMapShowAllMissions() {
+        mDroneMap.fitMapShowAllMissions();
     }
 
     public void setMapToMyLocation() {

@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
+import com.google.gson.Gson;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -67,6 +69,15 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             clonedMissions.add(mission.clone());
         }
         return clonedMissions;
+    }
+
+    public List<Integer> getMissionsSpeed() {
+        List<Integer> speedList = new ArrayList<>();
+        for (Mission mission : mMissionList) {
+//            speedList.add(mission.getSpeed());
+            speedList.add(8);
+        }
+        return speedList;
     }
 
     public interface OnListStateChangedListener {
@@ -215,6 +226,25 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.clear();
         notifyDataSetChanged();
+    }
+
+    public void saveMissionToFile(String fileName) {
+        try {
+            Gson gson = new Gson();
+            String jsonStr = gson.toJson(mMissionList);
+//            fileName += ".txt";
+//            fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileWriter fileWriter = new FileWriter("mnt/sdcard/" + fileName + ".txt");
+            fileWriter.write(jsonStr);
+            fileWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getMissionToJSON() {
+        Gson gson = new Gson();
+        return gson.toJson(mMissionList);
     }
 
     public void update(List<Mission> missions) {
