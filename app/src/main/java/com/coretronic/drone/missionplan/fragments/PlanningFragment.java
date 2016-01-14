@@ -1,25 +1,40 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneController.MissionLoaderListener;
 import com.coretronic.drone.R;
+import com.coretronic.drone.missionplan.adapter.LoadMissionListAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter.OnListStateChangedListener;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Builder;
 import com.coretronic.drone.model.Mission.Type;
+import com.coretronic.drone.util.LoadMissionDataAccessObject;
+import com.coretronic.drone.util.MissionLists;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -32,12 +47,22 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private final static int DEFAULT_WAIT_SECONDS = 0;
     private final static int DEFAULT_RADIUS = 0;
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
+    private final static int WEBVIEW_SCREENSHOT_WIDTH = 432;
+    private final static int WEBVIEW_SCREENSHOT_HEIGHT = 318;
 
     private MissionListUndoableAdapter mMissionItemAdapter;
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
     private Mission.Builder mMissionBuilder;
+    private Dialog mMoreFunctionPopupDialog;
+    private Button mSaveMissionButton;
+    private Button mLoadMissionButton;
+    private Button mClearMissionButton;
+    private boolean mSaveAndClearMissionFlag = false;
+    private Dialog mLoadMissionPopDialog;
+    private LoadMissionDataAccessObject mLoadMissionDAO;
+    private LoadMissionListAdapter mLoadMissionListAdapter;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -109,9 +134,59 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             public void onUndoOptionEnable(boolean enable) {
                 mMapViewFragment.setUndoButtonEnable(enable);
             }
+
+            @Override
+            public void onSaveAndClearMissionEnable(boolean enable) {
+                mSaveAndClearMissionFlag = enable;
+            }
         });
 
+        mLoadMissionDAO = new LoadMissionDataAccessObject(getActivity().getApplicationContext());
+        mLoadMissionListAdapter = new LoadMissionListAdapter(getActivity().getApplicationContext(), mLoadMissionDAO.getAll());
+        mLoadMissionListAdapter.setOnGridItemClickListener(new LoadMissionListAdapter.OnGridItemClickListener() {
+            @Override
+            public void onItemSelected(MissionLists missionLists) {
+                Gson gson = new Gson();
+                List<Mission> selectedList = gson.fromJson(missionLists.getMissionContent(), new TypeToken<List<Mission>>(){}.getType());
+                mMissionItemAdapter.update(selectedList);
+                updateMissionToMap();
+                mMapViewFragment.fitMapShowAllMissions();
+                mLoadMissionPopDialog.dismiss();
+            }
+        });
     }
+
+    private View.OnClickListener missionFunctionClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mMoreFunctionPopupDialog.dismiss();
+
+            switch (v.getId()) {
+                case R.id.save_mission_button:
+                    mMapViewFragment.getMissionPlanPathLengthAndTime(mMissionItemAdapter.getMissionsSpeed());
+                    break;
+                case R.id.load_mission_button:
+                    showLoadMissionPopDialog();
+                    break;
+                case R.id.clear_mission_button:
+                    mMissionItemAdapter.clearMission();
+                    missionAdapterShowDelete(false);
+                    updateMissionToMap();
+                    break;
+            }
+        }
+    };
+
+    private View.OnClickListener loadMissionClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.load_mission_cancel_button:
+                    mLoadMissionPopDialog.dismiss();
+                    break;
+            }
+        }
+    };
 
     private void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -167,6 +242,9 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 mWayPointDetailPanel.setVisibility(View.GONE);
                 updateMissionToMap();
                 break;
+            case R.id.more_button:
+                showMoreFunctionPopupDialog(v);
+                break;
             case R.id.delete_all_button:
                 mMissionItemAdapter.clearMission();
                 missionAdapterShowDelete(false);
@@ -188,12 +266,62 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         }
     }
 
+    private void showMoreFunctionPopupDialog(View v) {
+        mMoreFunctionPopupDialog = new Dialog(getActivity());
+        mMoreFunctionPopupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mMoreFunctionPopupDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mMoreFunctionPopupDialog.setContentView(R.layout.popwindow_more_function);
+        WindowManager.LayoutParams wmlp = mMoreFunctionPopupDialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+        int[] viewLocationInPx = new int[2];
+        v.getLocationOnScreen(viewLocationInPx);
+        wmlp.x = viewLocationInPx[0] - getResources().getDimensionPixelOffset(R.dimen.popdialog_more_function_width) + getResources().getDimensionPixelOffset(R.dimen.popdialog_more_function_peak_right_margin) + (v.getWidth() / 2);
+        wmlp.y = viewLocationInPx[1] + v.getHeight();
+        mMoreFunctionPopupDialog.getWindow().setAttributes(wmlp);
+        mMoreFunctionPopupDialog.show();
+
+        mSaveMissionButton = (Button) mMoreFunctionPopupDialog.findViewById(R.id.save_mission_button);
+        mSaveMissionButton.setOnClickListener(missionFunctionClickListener);
+        mLoadMissionButton = (Button) mMoreFunctionPopupDialog.findViewById(R.id.load_mission_button);
+        mLoadMissionButton.setOnClickListener(missionFunctionClickListener);
+        mClearMissionButton = (Button) mMoreFunctionPopupDialog.findViewById(R.id.clear_mission_button);
+        mClearMissionButton.setOnClickListener(missionFunctionClickListener);
+
+        setSaveOrClearButtonEnable();
+    }
+
+    private void setSaveOrClearButtonEnable(){
+        mSaveMissionButton.setEnabled(mSaveAndClearMissionFlag);
+        mClearMissionButton.setEnabled(mSaveAndClearMissionFlag);
+    }
+
+    private void showLoadMissionPopDialog() {
+        mLoadMissionPopDialog = new Dialog(getActivity());
+        mLoadMissionPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mLoadMissionPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mLoadMissionPopDialog.setContentView(R.layout.popwindow_load_mission);
+
+        GridView mLoadMissionGridView = (GridView) mLoadMissionPopDialog.findViewById(R.id.load_mission_grid_view);
+        mLoadMissionListAdapter.notifyDataSetChanged();
+        mLoadMissionGridView.setAdapter(mLoadMissionListAdapter);
+
+        mLoadMissionPopDialog.show();
+
+        mLoadMissionPopDialog.findViewById(R.id.load_mission_cancel_button).setOnClickListener(loadMissionClickListener);
+    }
+
     private void loadMissionFromDrone() {
         if (mMapViewFragment.getDroneController() == null) {
             return;
         }
         mMapViewFragment.getDroneController().readMissions(this);
         showLoadProgressDialog("Loading", "Please wait...");
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 
     @Override
@@ -252,6 +380,21 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     public void onMapDragStartEvent() {
         mMissionItemAdapter.onNothingSelected();
         mWayPointDetailPanel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onGetMissionPlanPathDistanceAndFlightTimeCallback(int lengthInMeters, int timeInSeconds) {
+//        String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+//        fileName += Integer.toString(lengthInMeters) + "m" + Integer.toString(timeInSeconds);
+//        mMissionItemAdapter.saveMissionToFile(fileName);
+        MissionLists.Builder missionListsBuilder = new MissionLists.Builder();
+        MissionLists newMissionListItem = missionListsBuilder.setDistance(lengthInMeters)
+                .setFlightTime(timeInSeconds)
+                .setMissionContent(mMissionItemAdapter.getMissionToJSON())
+                .setImageContent(getBitmapAsByteArray(mMapViewFragment.getWebViewScreenShot(WEBVIEW_SCREENSHOT_WIDTH, WEBVIEW_SCREENSHOT_HEIGHT)))
+                .create();
+        mLoadMissionDAO.insert(newMissionListItem);
+        mLoadMissionListAdapter.update(mLoadMissionDAO.getAll());
     }
 
     @Override

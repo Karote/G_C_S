@@ -152,6 +152,11 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             public void onUndoOptionEnable(boolean enable) {
                 mMapViewFragment.setUndoButtonEnable(enable);
             }
+
+            @Override
+            public void onSaveAndClearMissionEnable(boolean enable) {
+
+            }
         });
 
         mCreateRouteButton = (Button) view.findViewById(R.id.create_route_button);

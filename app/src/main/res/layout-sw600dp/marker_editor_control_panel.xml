@@ -24,7 +24,6 @@
         android:layout_marginEnd="@dimen/marker_editor_control_panel_more_button_right_margin"
         android:layout_marginRight="@dimen/marker_editor_control_panel_more_button_right_margin"
         android:background="@drawable/marker_editor_more_button_icon"
-        android:enabled="false"
         android:minHeight="0dp"
         android:minWidth="0dp" />
 
