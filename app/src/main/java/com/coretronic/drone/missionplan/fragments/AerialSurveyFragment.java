@@ -129,7 +129,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         view.findViewById(R.id.route_go_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.route_edit_button).setOnClickListener(onPlanningBtnClickListener);
 
-        mMissionItemAdapter.setOnItemClickListener(new OnListStateChangedListener() {
+        mMissionItemAdapter.setOnAdapterListChangedListener(new OnListStateChangedListener() {
             @Override
             public void onItemDeleted(int position) {
                 updatePolygon();

@@ -86,7 +86,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mWayPointDetailPanel = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
         mWayPointDetailPanel.setVisibility(View.GONE);
 
-        mMissionItemAdapter.setOnItemClickListener(new OnListStateChangedListener() {
+        mMissionItemAdapter.setOnAdapterListChangedListener(new OnListStateChangedListener() {
             @Override
             public void onItemDeleted(int position) {
                 updateMissionToMap();

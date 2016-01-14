@@ -25,7 +25,7 @@ import java.util.Stack;
 /**
  * Created by karot.chuang on 2015/5/15.
  */
-public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionListUndoableAdapter.MissionItemListViewHolder> {
+public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionListUndoableAdapter.MissionListUndoableViewHolder> {
 
     private final static int UNDO_LIST_MAX_SIZE = 64;
     private List<Mission> mMissionList = null;
@@ -91,19 +91,19 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         void onUndoOptionEnable(boolean enable);
     }
 
-    public void setOnItemClickListener(final OnListStateChangedListener listener) {
+    public void setOnAdapterListChangedListener(final OnListStateChangedListener listener) {
         mItemClickListener = listener;
     }
 
     @Override
-    public MissionItemListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public MissionListUndoableViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.points_list_item, viewGroup, false);
         mContext = viewGroup.getContext();
-        return new MissionItemListViewHolder(v);
+        return new MissionListUndoableViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final MissionItemListViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final MissionListUndoableViewHolder viewHolder, final int position) {
 
         final Mission mission = mMissionList.get(position);
 
@@ -195,14 +195,14 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public class MissionItemListViewHolder extends RecyclerView.ViewHolder {
+    public class MissionListUndoableViewHolder extends RecyclerView.ViewHolder {
         final TextView serialNumberTextView, altitudeTextView;
         final View typeView;
         final ImageButton deleteButton;
         final RelativeLayout rowItemLayout;
         final View focusBar;
 
-        MissionItemListViewHolder(View itemView) {
+        MissionListUndoableViewHolder(View itemView) {
             super(itemView);
             serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
