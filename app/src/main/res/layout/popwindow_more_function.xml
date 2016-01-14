@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/popdialog_more_function_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_arrow_dropdown"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/popdialog_more_function_right_padding"
+    android:paddingLeft="@dimen/popdialog_more_function_left_padding"
+    android:paddingRight="@dimen/popdialog_more_function_right_padding"
+    android:paddingStart="@dimen/popdialog_more_function_left_padding"
+    android:paddingTop="@dimen/popdialog_more_function_top_padding"
+    android:paddingBottom="8dp">
+
+    <Button
+        android:id="@+id/save_mission_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:drawableLeft="@drawable/icon_action_save"
+        android:drawablePadding="@dimen/popdialog_more_function_button_drawablePadding"
+        android:drawableStart="@drawable/icon_action_save"
+        android:fontFamily="@string/font_roboto_medium"
+        android:paddingEnd="@dimen/popdialog_more_function_button_right_padding"
+        android:paddingLeft="@dimen/popdialog_more_function_button_left_padding"
+        android:paddingRight="@dimen/popdialog_more_function_button_right_padding"
+        android:paddingStart="@dimen/popdialog_more_function_button_left_padding"
+        android:text="@string/save_mission"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+
+    <Button
+        android:id="@+id/load_mission_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:drawableLeft="@drawable/icon_acion_load"
+        android:drawablePadding="@dimen/popdialog_more_function_button_drawablePadding"
+        android:drawableStart="@drawable/icon_acion_load"
+        android:fontFamily="@string/font_roboto_medium"
+        android:paddingEnd="@dimen/popdialog_more_function_button_right_padding"
+        android:paddingLeft="@dimen/popdialog_more_function_button_left_padding"
+        android:paddingRight="@dimen/popdialog_more_function_button_right_padding"
+        android:paddingStart="@dimen/popdialog_more_function_button_left_padding"
+        android:text="@string/load_mission"
+        android:textColor="#474747"
+        android:textSize="18sp" />
+
+
+    <Button
+        android:id="@+id/clear_mission_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:drawableLeft="@drawable/icon_action_clear"
+        android:drawablePadding="@dimen/popdialog_more_function_button_drawablePadding"
+        android:drawableStart="@drawable/icon_action_clear"
+        android:fontFamily="@string/font_roboto_medium"
+        android:paddingEnd="@dimen/popdialog_more_function_button_right_padding"
+        android:paddingLeft="@dimen/popdialog_more_function_button_left_padding"
+        android:paddingRight="@dimen/popdialog_more_function_button_right_padding"
+        android:paddingStart="@dimen/popdialog_more_function_button_left_padding"
+        android:text="@string/clear_mission"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+</LinearLayout>
