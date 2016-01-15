@@ -257,37 +257,30 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
     @Override
     public void onMissionLatitudeUpdate(float latitude) {
-        mMissionItemAdapter.getSelectedItem().setLatitude(latitude);
-        mMissionItemAdapter.notifyDataSetChanged();
-        mMapViewFragment.clearMap();
+        mMissionItemAdapter.updateSelectedItemLatitude(latitude);
         updateMissionToMap();
     }
 
     @Override
     public void onMissionLongitudeUpdate(float longitude) {
-        mMissionItemAdapter.getSelectedItem().setLongitude(longitude);
-        mMissionItemAdapter.notifyDataSetChanged();
-        mMapViewFragment.clearMap();
+        mMissionItemAdapter.updateSelectedItemLongitude(longitude);
         updateMissionToMap();
     }
 
     @Override
     public void onMissionTypeUpdate(Mission.Type missionType) {
-        mMissionItemAdapter.getSelectedItem().setType(missionType);
-        mMissionItemAdapter.notifyDataSetChanged();
+        mMissionItemAdapter.updateSelectedItemType(missionType);
         updateMissionToMap();
     }
 
     @Override
     public void onMissionAltitudeUpdate(float missionAltidude) {
-        mMissionItemAdapter.getSelectedItem().setAltitude(missionAltidude);
-        mMissionItemAdapter.notifyDataSetChanged();
+        mMissionItemAdapter.updateSelectedItemAltitude(missionAltidude);
     }
 
     @Override
     public void onMissionDelayUpdate(int seconds) {
-        mMissionItemAdapter.getSelectedItem().setWaitSeconds(seconds);
-        mMissionItemAdapter.notifyDataSetChanged();
+        mMissionItemAdapter.updateSelectedItemDelay(seconds);
     }
 
     @Override

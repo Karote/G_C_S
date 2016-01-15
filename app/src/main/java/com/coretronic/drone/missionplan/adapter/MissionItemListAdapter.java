@@ -61,6 +61,46 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         notifyDataSetChanged();
     }
 
+    public void updateSelectedItemLatitude(float latitude) {
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(mFocusIndex).clone();
+        mission.setLatitude(latitude);
+        mMissionList.set(mFocusIndex, mission);
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedItemLongitude(float longitude) {
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(mFocusIndex).clone();
+        mission.setLongitude(longitude);
+        mMissionList.set(mFocusIndex, mission);
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedItemType(Mission.Type missionType) {
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(mFocusIndex).clone();
+        mission.setType(missionType);
+        mMissionList.set(mFocusIndex, mission);
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedItemAltitude(float altidude) {
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(mFocusIndex).clone();
+        mission.setAltitude(altidude);
+        mMissionList.set(mFocusIndex, mission);
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedItemDelay(int seconds) {
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(mFocusIndex).clone();
+        mission.setWaitSeconds(seconds);
+        mMissionList.set(mFocusIndex, mission);
+        notifyDataSetChanged();
+    }
+
     private List<Mission> cloneMissions() {
         List<Mission> clonedMissions = new ArrayList<>();
         for (Mission mission : mMissionList) {

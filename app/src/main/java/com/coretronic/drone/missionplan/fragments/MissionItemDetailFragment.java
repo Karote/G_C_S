@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
-import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
+import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
@@ -57,6 +58,7 @@ public class MissionItemDetailFragment extends Fragment {
     private AbstractWheel mAltitudeWheel = null;
     private AbstractWheel mDelayWheel = null;
     private SelectedMissionUpdatedCallback mSelectedMissionUpdatedCallback;
+    private int mWheelScrollingCount;
 
     public static MissionItemDetailFragment newInstance(int index, Mission mission) {
         MissionItemDetailFragment fragment = new MissionItemDetailFragment();
@@ -114,8 +116,15 @@ public class MissionItemDetailFragment extends Fragment {
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_waypoint_detail_dropdown_style);
         mType.setAdapter(spinnerAdapter);
         mType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            protected Adapter initializedAdapter = null;
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (initializedAdapter != parent.getAdapter()) {
+                    initializedAdapter = parent.getAdapter();
+                    return;
+                }
                 switch (position) {
                     case WAYPOINT_INDEX: // Waypoint
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.WAY_POINT);
@@ -150,22 +159,12 @@ public class MissionItemDetailFragment extends Fragment {
         mAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.altitude_wheel);
         mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, ALTITUDE_MIN_VALUE, ALTITUDE_MAX_VALUE, "%01d"));
         mAltitudeWheel.setCyclic(false);
-        mAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
-            @Override
-            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mSelectedMissionUpdatedCallback.onMissionAltitudeUpdate((float) newValue + ALTITUDE_MIN_VALUE);
-            }
-        });
+        mAltitudeWheel.addScrollingListener(new LockedWheelScrollingListener());
 
         mDelayWheel = (AbstractWheel) fragmentView.findViewById(R.id.delay_wheel);
         mDelayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number, DELAY_MIN_VALUE, DELAY_MAX_VALUE, "%01d"));
         mDelayWheel.setCyclic(false);
-        mDelayWheel.addChangingListener(new OnWheelChangedListener() {
-            @Override
-            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mSelectedMissionUpdatedCallback.onMissionDelayUpdate(newValue);
-            }
-        });
+        mDelayWheel.addScrollingListener(new LockedWheelScrollingListener());
     }
 
     @Override
@@ -220,6 +219,62 @@ public class MissionItemDetailFragment extends Fragment {
             case WAY_POINT:
             default:
                 return WAYPOINT_INDEX;
+        }
+    }
+
+    private void updateAltitudeValue(int altitude) {
+        mSelectedMissionUpdatedCallback.onMissionAltitudeUpdate((float) altitude + ALTITUDE_MIN_VALUE);
+    }
+
+    private void updateDelayValue(int delay) {
+        mSelectedMissionUpdatedCallback.onMissionDelayUpdate(delay);
+    }
+
+    private void lockWheelScrolling() {
+        synchronized (MissionItemDetailFragment.class) {
+            mWheelScrollingCount++;
+        }
+    }
+
+    private void releaseWheelScrolling() {
+        synchronized (MissionItemDetailFragment.class) {
+            mWheelScrollingCount--;
+        }
+    }
+
+    private boolean isWheelingLocked() {
+        synchronized (MissionItemDetailFragment.class) {
+            return mWheelScrollingCount != 0;
+        }
+    }
+
+    private class LockedWheelScrollingListener implements OnWheelScrollListener {
+        private int oldValue;
+
+        @Override
+        public void onScrollingStarted(AbstractWheel wheel) {
+            lockWheelScrolling();
+            oldValue = wheel.getCurrentItem();
+        }
+
+        @Override
+        public void onScrollingFinished(AbstractWheel wheel) {
+            releaseWheelScrolling();
+            if (isWheelingLocked() || oldValue == wheel.getCurrentItem()) {
+                return;
+            }
+            try {
+                switch (wheel.getId()) {
+                    case R.id.altitude_wheel:
+                        updateAltitudeValue(wheel.getCurrentItem());
+                        break;
+                    case R.id.delay_wheel:
+                        updateDelayValue(wheel.getCurrentItem());
+                        break;
+                }
+            } catch (Exception e) {
+                wheel.setCurrentItem(oldValue);
+            }
         }
     }
 }
