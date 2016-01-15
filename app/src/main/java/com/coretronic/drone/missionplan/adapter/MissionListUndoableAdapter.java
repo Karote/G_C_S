@@ -235,20 +235,6 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
-    public void saveMissionToFile(String fileName) {
-        try {
-            Gson gson = new Gson();
-            String jsonStr = gson.toJson(mMissionList);
-//            fileName += ".txt";
-//            fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
-            FileWriter fileWriter = new FileWriter("mnt/sdcard/" + fileName + ".txt");
-            fileWriter.write(jsonStr);
-            fileWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public String getMissionToJSON() {
         Gson gson = new Gson();
         return gson.toJson(mMissionList);

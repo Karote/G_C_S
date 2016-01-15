@@ -1,4 +1,4 @@
-package com.coretronic.drone.util;
+package com.coretronic.drone.missionplan.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +8,7 @@ import java.util.Calendar;
 /**
  * Created by karot.chuang on 2015/12/30.
  */
-public class MissionLists {
+public class PlanningData {
     private final static String KEY_ID = "_id";
     private final static String KEY_DATE_YEAR = "dateYear";
     private final static String KEY_DATE_MONTH = "dateMonth";
@@ -18,7 +18,7 @@ public class MissionLists {
     private final static String KEY_DATE_SECOND = "dateSecond";
     private final static String KEY_DISTANCE = "distance";
     private final static String KEY_FLIGHT_TIME = "flightTime";
-    private final static String KEY_MISSION_CONTENT = "missionContent";
+    private final static String KEY_PLANNING_CONTENT = "planningContent";
     private final static String KEY_IMAGE_CONTENT = "imageContent";
 
     @Expose
@@ -58,25 +58,25 @@ public class MissionLists {
     private int mFlightTime;
 
     @Expose
-    @SerializedName(KEY_MISSION_CONTENT)
-    private String mMissionContent;
+    @SerializedName(KEY_PLANNING_CONTENT)
+    private String mPlanningContent;
 
     @Expose
     @SerializedName(KEY_IMAGE_CONTENT)
     private byte[] mImageContent;
 
-    private MissionLists(long id, float distance, int flightTime, String missionContent, byte[] imageContent) {
+    private PlanningData(long id, float distance, int flightTime, String planningContent, byte[] imageContent) {
         this(id, Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH) + 1,
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                 Calendar.getInstance().get(Calendar.MINUTE),
                 Calendar.getInstance().get(Calendar.SECOND),
-                distance, flightTime, missionContent, imageContent);
+                distance, flightTime, planningContent, imageContent);
     }
 
-    private MissionLists(long id, int year, int month, int day, int hour, int minute, int second,
-                         float distance, int flightTime, String missionContent, byte[] imageContent) {
+    private PlanningData(long id, int year, int month, int day, int hour, int minute, int second,
+                         float distance, int flightTime, String planningContent, byte[] imageContent) {
         mId = id;
         mDateYear = year;
         mDateMonth = month;
@@ -86,16 +86,16 @@ public class MissionLists {
         mDateSecond = second;
         mDistance = distance;
         mFlightTime = flightTime;
-        mMissionContent = missionContent;
+        mPlanningContent = planningContent;
         mImageContent = imageContent;
     }
 
     @Override
-    public MissionLists clone() {
+    public PlanningData clone() {
         try {
-            return (MissionLists) super.clone();
+            return (PlanningData) super.clone();
         } catch (CloneNotSupportedException e) {
-            return new MissionLists.Builder().create();
+            return new PlanningData.Builder().create();
         }
     }
 
@@ -135,8 +135,8 @@ public class MissionLists {
         return mFlightTime;
     }
 
-    public String getMissionContent() {
-        return mMissionContent;
+    public String getPlanningContent() {
+        return mPlanningContent;
     }
 
     public byte[] getImageContent() {
@@ -144,64 +144,64 @@ public class MissionLists {
     }
 
 
-    public MissionLists setId(long id) {
+    public PlanningData setId(long id) {
         this.mId = id;
         return this;
     }
 
-    public MissionLists setDateYear(int dateYear) {
+    public PlanningData setDateYear(int dateYear) {
         this.mDateYear = dateYear;
         return this;
     }
 
-    public MissionLists setDateMonth(int dateMonth) {
+    public PlanningData setDateMonth(int dateMonth) {
         this.mDateMonth = dateMonth;
         return this;
     }
 
-    public MissionLists setDateDay(int dateDay) {
+    public PlanningData setDateDay(int dateDay) {
         this.mDateDay = dateDay;
         return this;
     }
 
-    public MissionLists setDateHour(int dateHour) {
+    public PlanningData setDateHour(int dateHour) {
         this.mDateHour = dateHour;
         return this;
     }
 
-    public MissionLists setDateMinute(int dateMinute) {
+    public PlanningData setDateMinute(int dateMinute) {
         this.mDateMinute = dateMinute;
         return this;
     }
 
-    public MissionLists setDateSecond(int dateSecond) {
+    public PlanningData setDateSecond(int dateSecond) {
         this.mDateSecond = dateSecond;
         return this;
     }
 
-    public MissionLists setDistance(float distance) {
+    public PlanningData setDistance(float distance) {
         this.mDistance = distance;
         return this;
     }
 
-    public MissionLists setFlightTime(int flightTime) {
+    public PlanningData setFlightTime(int flightTime) {
         this.mFlightTime = flightTime;
         return this;
     }
 
-    public MissionLists setMissionContent(String missionContent) {
-        this.mMissionContent = missionContent;
+    public PlanningData setPlanningContent(String planningContent) {
+        this.mPlanningContent = planningContent;
         return this;
     }
 
-    public MissionLists setImageContent(byte[] imageContent) {
+    public PlanningData setImageContent(byte[] imageContent) {
         this.mImageContent = imageContent;
         return this;
     }
 
     @Override
     public String toString() {
-        return "MissionLists{" +
+        return "PlanningData{" +
                 "mId=" + mId +
                 ", mDateMonth=" + mDateMonth +
                 ", mDateDay=" + mDateDay +
@@ -210,7 +210,7 @@ public class MissionLists {
                 ", mDateSecond=" + mDateSecond +
                 ", mDistance=" + mDistance +
                 ", mFlightTime=" + mFlightTime +
-                ", mMissionContent=" + mMissionContent +
+                ", mPlanningContent=" + mPlanningContent +
                 '}';
     }
 
@@ -218,7 +218,7 @@ public class MissionLists {
         private long mId;
         private float mDistance;
         private int mFlightTime;
-        private String mMissionContent;
+        private String mPlanningContent;
         private byte[] mImageContent;
 
         public Builder setId(long id) {
@@ -236,8 +236,8 @@ public class MissionLists {
             return this;
         }
 
-        public Builder setMissionContent(String missionContent) {
-            mMissionContent = missionContent;
+        public Builder setPlanningContent(String planningContent) {
+            mPlanningContent = planningContent;
             return this;
         }
 
@@ -246,8 +246,8 @@ public class MissionLists {
             return this;
         }
 
-        public MissionLists create() {
-            return new MissionLists(mId, mDistance, mFlightTime, mMissionContent, mImageContent);
+        public PlanningData create() {
+            return new PlanningData(mId, mDistance, mFlightTime, mPlanningContent, mImageContent);
         }
     }
 }

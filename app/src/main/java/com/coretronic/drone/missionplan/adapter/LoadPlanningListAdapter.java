@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.StickyGridHeaders.StickyGridHeadersSimpleAdapter;
-import com.coretronic.drone.util.MissionLists;
+import com.coretronic.drone.missionplan.model.PlanningData;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,26 +23,26 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by karot.chuang on 2015/12/29.
  */
-public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHeadersSimpleAdapter {
+public class LoadPlanningListAdapter extends BaseAdapter implements StickyGridHeadersSimpleAdapter {
     private final static String[] DAY_OF_WEEK = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     private final static String[] MONTH_OF_YEAR = {"", "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
 
-    private List<MissionLists> mLoadMissionList;
+    private List<PlanningData> mPlanningList;
     private LayoutInflater mInflater;
     private OnGridItemClickListener mItemClickListener;
 
-    public LoadMissionListAdapter(Context context, List<MissionLists> loadMissionList) {
+    public LoadPlanningListAdapter(Context context, List<PlanningData> planningList) {
         this.mInflater = LayoutInflater.from(context);
-        this.mLoadMissionList = loadMissionList;
+        this.mPlanningList = planningList;
     }
 
     public interface OnGridItemClickListener {
-        void onItemSelected(MissionLists missionLists);
+        void onItemSelected(PlanningData planningData);
     }
 
     @Override
     public long getHeaderId(int position) {
-        String headerText = getItemYMString(mLoadMissionList.get(position));
+        String headerText = getItemYMString(mPlanningList.get(position));
         return Long.parseLong(headerText.replace("/", ""));
     }
 
@@ -59,24 +59,24 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
             mHeaderHolder = (HeaderViewHolder) convertView.getTag();
         }
 
-        mHeaderHolder.headerText.setText(getHeaderText(mLoadMissionList.get(position)));
+        mHeaderHolder.headerText.setText(getHeaderText(mPlanningList.get(position)));
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return mLoadMissionList.size();
+        return mPlanningList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mLoadMissionList.get(position);
+        return mPlanningList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mLoadMissionList.get(position).getId();
+        return mPlanningList.get(position).getId();
     }
 
     @Override
@@ -95,15 +95,15 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
-        mViewHolder.datetimeText.setText(getItemDateTimeString(mLoadMissionList.get(position)));
-        mViewHolder.flightDistanceText.setText(getItemDistanceString(mLoadMissionList.get(position)));
-        mViewHolder.flightTimeText.setText(getItemFlightTimeString(mLoadMissionList.get(position)));
-        mViewHolder.screenShotImage.setImageBitmap(getItemImageBitmap(mLoadMissionList.get(position)));
+        mViewHolder.datetimeText.setText(getItemDateTimeString(mPlanningList.get(position)));
+        mViewHolder.flightDistanceText.setText(getItemDistanceString(mPlanningList.get(position)));
+        mViewHolder.flightTimeText.setText(getItemFlightTimeString(mPlanningList.get(position)));
+        mViewHolder.screenShotImage.setImageBitmap(getItemImageBitmap(mPlanningList.get(position)));
 
         convertView.findViewById(R.id.load_mission_grid_item_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemClickListener.onItemSelected(mLoadMissionList.get(position));
+                mItemClickListener.onItemSelected(mPlanningList.get(position));
             }
         });
 
@@ -125,7 +125,7 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
         public TextView headerText;
     }
 
-    private String getItemDateTimeString(MissionLists item) {
+    private String getItemDateTimeString(PlanningData item) {
         String mText, dateText, timeText;
         SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd");
         Calendar todayTime = Calendar.getInstance();
@@ -164,13 +164,13 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
         return (int) (diffs / (24 * 60 * 60 * 1000));
     }
 
-    private String getItemYMString(MissionLists item) {
+    private String getItemYMString(PlanningData item) {
         String mText;
         mText = String.format("%02d/%d", item.getDateMonth(), item.getDateYear());
         return mText;
     }
 
-    private String getHeaderText(MissionLists item) {
+    private String getHeaderText(PlanningData item) {
         String mText;
         Calendar todayTime = Calendar.getInstance();
 
@@ -182,7 +182,7 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
         return mText;
     }
 
-    private String getItemDistanceString(MissionLists item) {
+    private String getItemDistanceString(PlanningData item) {
         String mText;
         float value = item.getDistance();
 
@@ -195,7 +195,7 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
         return mText;
     }
 
-    private String getItemFlightTimeString(MissionLists item) {
+    private String getItemFlightTimeString(PlanningData item) {
         String mText;
         long value = item.getFlightTime();
         long minutes = TimeUnit.SECONDS.toMinutes(value);
@@ -206,13 +206,13 @@ public class LoadMissionListAdapter extends BaseAdapter implements StickyGridHea
         return mText;
     }
 
-    private Bitmap getItemImageBitmap(MissionLists item) {
+    private Bitmap getItemImageBitmap(PlanningData item) {
         byte[] imgByte = item.getImageContent();
         return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
     }
 
-    public void update(List<MissionLists> updateList) {
-        mLoadMissionList = updateList;
+    public void update(List<PlanningData> updateList) {
+        mPlanningList = updateList;
         notifyDataSetChanged();
     }
 }
