@@ -243,9 +243,13 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
+        if(mWayPointDetailPanel.getVisibility() == View.VISIBLE){
+            mMissionItemAdapter.onNothingSelected();
+            mWayPointDetailPanel.setVisibility(View.GONE);
+            return;
+        }
         mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).create());
         mMissionItemAdapter.onNothingSelected();
-        mWayPointDetailPanel.setVisibility(View.GONE);
         updateMissionToMap();
     }
 
