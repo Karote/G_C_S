@@ -25,7 +25,7 @@
     <dimen name="fragment_mission_plan_action_bar_height">48dp</dimen>
 
     <dimen name="marker_editor_control_panel_undo_button_right_margin">2dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_button_right_margin">8dp</dimen>
+    <dimen name="marker_editor_control_panel_more_button_right_margin">8dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">8dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_right_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">8dp</dimen>

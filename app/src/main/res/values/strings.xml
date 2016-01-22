@@ -118,6 +118,9 @@
     <string name="aerial_survey_dialog_ok">OK</string>
     <string name="aerial_survey_dialog_camera">Camera</string>
     <string name="aerial_survey_dialog_camera_hint">Canon SX260</string>
+    <string name="save_mission">Save Mission</string>
+    <string name="load_mission">Load Mission</string>
+    <string name="clear_mission">Clear Mission</string>
 
 
 </resources>

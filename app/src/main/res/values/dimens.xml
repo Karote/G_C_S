@@ -95,7 +95,7 @@
 
     <!-- marker_editor_control_panel -->
     <dimen name="marker_editor_control_panel_undo_button_right_margin">1dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_button_right_margin">4dp</dimen>
+    <dimen name="marker_editor_control_panel_more_button_right_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_right_margin">2dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">4dp</dimen>
@@ -188,4 +188,14 @@
     <dimen name="welcom_text_size">30sp</dimen>
     <dimen name="login_status_bar_height">24dp</dimen>
 
+    <dimen name="popdialog_more_function_width">194dp</dimen>
+    <dimen name="popdialog_more_function_height">154dp</dimen>
+    <dimen name="popdialog_more_function_top_padding">10dp</dimen>
+    <dimen name="popdialog_more_function_left_padding">8dp</dimen>
+    <dimen name="popdialog_more_function_right_padding">8dp</dimen>
+    <dimen name="popdialog_more_function_button_height">48dp</dimen>
+    <dimen name="popdialog_more_function_button_left_padding">16dp</dimen>
+    <dimen name="popdialog_more_function_button_right_padding">0dp</dimen>
+    <dimen name="popdialog_more_function_button_drawablePadding">10dp</dimen>
+    <dimen name="popdialog_more_function_peak_right_margin">33dp</dimen>
 </resources>

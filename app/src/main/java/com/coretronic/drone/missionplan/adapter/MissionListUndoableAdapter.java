@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
+import com.google.gson.Gson;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -23,17 +25,17 @@ import java.util.Stack;
 /**
  * Created by karot.chuang on 2015/5/15.
  */
-public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemListAdapter.MissionItemListViewHolder> {
+public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionListUndoableAdapter.MissionListUndoableViewHolder> {
 
     private final static int UNDO_LIST_MAX_SIZE = 64;
     private List<Mission> mMissionList = null;
-    private OnItemSelectedListener mItemClickListener = null;
+    private OnListStateChangedListener mItemClickListener = null;
     private boolean mIsDeleteLayoutVisible = false;
     private int mFocusIndex = -1;
     private LimitedStack<List<Mission>> mUndoLists;
     private Context mContext;
 
-    public MissionItemListAdapter() {
+    public MissionListUndoableAdapter() {
         this.mMissionList = new ArrayList<>();
         this.mUndoLists = new LimitedStack<>(UNDO_LIST_MAX_SIZE);
     }
@@ -48,6 +50,7 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         }
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.remove(mFocusIndex);
+        mItemClickListener.onSaveAndClearMissionEnable(canSaveAndClearFunction());
         mFocusIndex = -1;
         notifyDataSetChanged();
     }
@@ -109,28 +112,41 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return clonedMissions;
     }
 
-    public interface OnItemSelectedListener {
+    public List<Integer> getMissionsSpeed() {
+        List<Integer> speedList = new ArrayList<>();
+        for (Mission mission : mMissionList) {
+//            speedList.add(mission.getSpeed());
+            speedList.add(8);
+        }
+        return speedList;
+    }
+
+    public interface OnListStateChangedListener {
 
         void onItemDeleted(int position);
 
         void onItemSelected(Mission mission, int currentIndex);
 
         void onNothingSelected();
+
+        void onUndoOptionEnable(boolean enable);
+
+        void onSaveAndClearMissionEnable(boolean enable);
     }
 
-    public void setOnItemClickListener(final OnItemSelectedListener listener) {
+    public void setOnAdapterListChangedListener(final OnListStateChangedListener listener) {
         mItemClickListener = listener;
     }
 
     @Override
-    public MissionItemListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public MissionListUndoableViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.points_list_item, viewGroup, false);
         mContext = viewGroup.getContext();
-        return new MissionItemListViewHolder(v);
+        return new MissionListUndoableViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final MissionItemListViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final MissionListUndoableViewHolder viewHolder, final int position) {
 
         final Mission mission = mMissionList.get(position);
 
@@ -222,14 +238,14 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public class MissionItemListViewHolder extends RecyclerView.ViewHolder {
+    public class MissionListUndoableViewHolder extends RecyclerView.ViewHolder {
         final TextView serialNumberTextView, altitudeTextView;
         final View typeView;
         final ImageButton deleteButton;
         final RelativeLayout rowItemLayout;
         final View focusBar;
 
-        MissionItemListViewHolder(View itemView) {
+        MissionListUndoableViewHolder(View itemView) {
             super(itemView);
             serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
@@ -242,25 +258,43 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
 
     public void add(Mission mission) {
         mUndoLists.push(new ArrayList<>(mMissionList));
+        if (!canSaveAndClearFunction()) {
+            mItemClickListener.onSaveAndClearMissionEnable(true);
+        }
         mMissionList.add(mission);
         notifyDataSetChanged();
     }
 
     public void clearMission() {
+        if (mMissionList.isEmpty()) {
+            return;
+        }
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.clear();
+        mItemClickListener.onSaveAndClearMissionEnable(false);
         notifyDataSetChanged();
+    }
+
+    public String getMissionToJSON() {
+        Gson gson = new Gson();
+        return gson.toJson(mMissionList);
     }
 
     public void update(List<Mission> missions) {
         mUndoLists.clear();
+        if (missions.isEmpty()) {
+            clearMission();
+            return;
+        }
         mMissionList = missions;
+        mItemClickListener.onSaveAndClearMissionEnable(true);
         notifyDataSetChanged();
     }
 
     private void remove(int position) {
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.remove(position);
+        mItemClickListener.onSaveAndClearMissionEnable(canSaveAndClearFunction());
         notifyDataSetChanged();
     }
 
@@ -268,13 +302,21 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         return mMissionList;
     }
 
-    public boolean undo() {
-        if (mUndoLists.size() <= 0) {
-            return false;
-        }
+    public void undo() {
         mMissionList = mUndoLists.pop();
+        if (!canUndo()) {
+            mItemClickListener.onUndoOptionEnable(false);
+        }
+        mItemClickListener.onSaveAndClearMissionEnable(canSaveAndClearFunction());
         notifyDataSetChanged();
-        return true;
+    }
+
+    private boolean canUndo() {
+        return !mUndoLists.isEmpty();
+    }
+
+    private boolean canSaveAndClearFunction() {
+        return !mMissionList.isEmpty();
     }
 
     public Mission getMission(int position) {
@@ -311,6 +353,9 @@ public class MissionItemListAdapter extends RecyclerView.Adapter<MissionItemList
         public E push(E object) {
             while (size() >= maxSize) {
                 remove(0);
+            }
+            if (!canUndo()) {
+                mItemClickListener.onUndoOptionEnable(true);
             }
             super.push(object);
             return object;

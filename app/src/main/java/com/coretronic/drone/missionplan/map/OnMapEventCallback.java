@@ -11,4 +11,6 @@ public interface OnMapEventCallback {
     void onMapDragStartEvent();
 
     void onMapDeleteMarker(int index);
+
+    void onGetMissionPlanPathDistanceAndFlightTimeCallback(int lengthInMeters, int timeInSeconds);
 }

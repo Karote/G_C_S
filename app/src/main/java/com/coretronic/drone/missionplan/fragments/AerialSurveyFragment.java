@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneController.MissionLoaderListener;
 import com.coretronic.drone.R;
-import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter;
-import com.coretronic.drone.missionplan.adapter.MissionItemListAdapter.OnItemSelectedListener;
+import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter;
+import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter.OnListStateChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
@@ -63,7 +63,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     private static final int SIDELAP_MIN_VALUE = 15;
     private static final int SIDELAP_MAX_VALUE = 90;
 
-    private MissionItemListAdapter mMissionItemAdapter;
+    private MissionListUndoableAdapter mMissionItemAdapter;
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
     private ProgressDialog mLoadMissionProgressDialog;
@@ -119,7 +119,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.mission_item_recycler_view);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new FixedLinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-        mMissionItemAdapter = new MissionItemListAdapter();
+        mMissionItemAdapter = new MissionListUndoableAdapter();
         recyclerView.setAdapter(mMissionItemAdapter);
 
         mWayPointDetailPanel = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
@@ -129,7 +129,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         view.findViewById(R.id.route_go_button).setOnClickListener(onPlanningBtnClickListener);
         view.findViewById(R.id.route_edit_button).setOnClickListener(onPlanningBtnClickListener);
 
-        mMissionItemAdapter.setOnItemClickListener(new OnItemSelectedListener() {
+        mMissionItemAdapter.setOnAdapterListChangedListener(new OnListStateChangedListener() {
             @Override
             public void onItemDeleted(int position) {
                 updatePolygon();
@@ -146,6 +146,16 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             @Override
             public void onNothingSelected() {
                 mWayPointDetailPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onUndoOptionEnable(boolean enable) {
+                mMapViewFragment.setUndoButtonEnable(enable);
+            }
+
+            @Override
+            public void onSaveAndClearMissionEnable(boolean enable) {
+
             }
         });
 
@@ -276,17 +286,11 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 changeLayoutStatus(INIT_STATUS);
                 break;
             case R.id.undo_button:
-                if (mMissionItemAdapter.undo()) {
-                    updateMissionToMap();
-                } else {
-                    showToastMessage("There is no undo item existed");
-                }
+                mMissionItemAdapter.undo();
+                updateMissionToMap();
                 break;
             case R.id.delete_done_button:
                 missionAdapterShowDelete(false);
-                break;
-            case R.id.delete_button:
-                missionAdapterShowDelete(true);
                 break;
             case R.id.plan_go_button:
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
@@ -440,7 +444,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mRoutePropertiesDialog.setVisibility(View.GONE);
                 mMapViewFragment.setMavInfoViewVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.GONE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
                 break;
@@ -448,7 +452,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mCreateRouteButton.setVisibility(View.VISIBLE);
                 mCreateRouteButton.setEnabled(true);
                 mRoutePropertiesDialog.setVisibility(View.GONE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.GONE);
                 mDistanceAndTimeInfo.setVisibility(View.GONE);
                 break;
@@ -457,7 +461,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mRoutePropertiesDialog.setVisibility(View.VISIBLE);
                 mMapViewFragment.setMavInfoViewVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.GONE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.GONE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.GONE);
                 mRouteDetailInfo.setVisibility(View.VISIBLE);
                 mDistanceAndTimeInfo.setVisibility(View.VISIBLE);
                 mGoEditPanel.setVisibility(View.GONE);
@@ -473,7 +477,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             case PLAN_GO_STATUS:
                 mGoEditPanel.setVisibility(View.GONE);
                 mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
-                mMapViewFragment.setDeleteAndUndoButtonVisibility(View.VISIBLE);
+                mMapViewFragment.setUndoAndMoreButtonVisibility(View.VISIBLE);
                 break;
         }
     }
