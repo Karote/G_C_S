@@ -26,11 +26,11 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.LoadPlanningListAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter.OnListStateChangedListener;
+import com.coretronic.drone.missionplan.model.LoadPlanningDataAccessObject;
+import com.coretronic.drone.missionplan.model.PlanningData;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Builder;
 import com.coretronic.drone.model.Mission.Type;
-import com.coretronic.drone.missionplan.model.LoadPlanningDataAccessObject;
-import com.coretronic.drone.missionplan.model.PlanningData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -146,7 +146,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onItemSelected(PlanningData planningData) {
                 Gson gson = new Gson();
-                List<Mission> selectedList = gson.fromJson(planningData.getPlanningContent(), new TypeToken<List<Mission>>(){}.getType());
+                List<Mission> selectedList = gson.fromJson(planningData.getPlanningContent(), new TypeToken<List<Mission>>() {
+                }.getType());
                 mMissionItemAdapter.update(selectedList);
                 updateMissionToMap();
                 mMapViewFragment.fitMapShowAllMissions();
@@ -289,7 +290,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         setSaveOrClearButtonEnable();
     }
 
-    private void setSaveOrClearButtonEnable(){
+    private void setSaveOrClearButtonEnable() {
         mSaveMissionButton.setEnabled(mSaveAndClearMissionFlag);
         mClearMissionButton.setEnabled(mSaveAndClearMissionFlag);
     }
@@ -301,7 +302,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mLoadPlanningPopDialog.setContentView(R.layout.popwindow_load_mission);
 
         GridView mLoadPlanningGridView = (GridView) mLoadPlanningPopDialog.findViewById(R.id.load_mission_grid_view);
-//        mLoadPlanningListAdapter.notifyDataSetChanged();
         mLoadPlanningGridView.setAdapter(mLoadPlanningListAdapter);
 
         mLoadPlanningPopDialog.show();
@@ -310,10 +310,9 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     }
 
     private void loadMissionFromDrone() {
-        if (mMapViewFragment.getDroneController() == null) {
+        if (!mMapViewFragment.getDroneController().readMissions(this)) {
             return;
         }
-        mMapViewFragment.getDroneController().readMissions(this);
         showLoadProgressDialog("Loading", "Please wait...");
     }
 
@@ -369,7 +368,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
     @Override
     public void onMapClickEvent(float lat, float lon) {
-        if(mWayPointDetailPanel.getVisibility() == View.VISIBLE){
+        if (mWayPointDetailPanel.getVisibility() == View.VISIBLE) {
             mMissionItemAdapter.onNothingSelected();
             mWayPointDetailPanel.setVisibility(View.GONE);
             return;
