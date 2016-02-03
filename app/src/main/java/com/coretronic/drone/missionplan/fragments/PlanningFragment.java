@@ -130,13 +130,13 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             }
 
             @Override
-            public void onUndoOptionEnable(boolean enable) {
-                mMapViewFragment.setUndoButtonEnable(enable);
+            public void onUndoListIsEmptyOrNot(boolean empty) {
+                mMapViewFragment.setUndoButtonEnable(!empty);
             }
 
             @Override
-            public void onSaveAndClearMissionEnable(boolean enable) {
-                mSaveAndClearMissionFlag = enable;
+            public void onAdapterListIsEmptyOrNot(boolean isEmpty) {
+                mSaveAndClearMissionFlag = !isEmpty;
             }
         });
 

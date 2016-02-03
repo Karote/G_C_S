@@ -149,12 +149,12 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             }
 
             @Override
-            public void onUndoOptionEnable(boolean enable) {
-                mMapViewFragment.setUndoButtonEnable(enable);
+            public void onUndoListIsEmptyOrNot(boolean empty) {
+                mMapViewFragment.setUndoButtonEnable(!empty);
             }
 
             @Override
-            public void onSaveAndClearMissionEnable(boolean enable) {
+            public void onAdapterListIsEmptyOrNot(boolean enable) {
 
             }
         });

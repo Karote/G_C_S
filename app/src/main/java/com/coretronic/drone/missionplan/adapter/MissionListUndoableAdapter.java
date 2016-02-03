@@ -50,7 +50,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         }
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.remove(mFocusIndex);
-        mItemClickListener.onSaveAndClearMissionEnable(canSaveAndClearFunction());
+        mItemClickListener.onAdapterListIsEmptyOrNot(mMissionList.isEmpty());
         mFocusIndex = -1;
         notifyDataSetChanged();
     }
@@ -129,9 +129,9 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
         void onNothingSelected();
 
-        void onUndoOptionEnable(boolean enable);
+        void onUndoListIsEmptyOrNot(boolean empty);
 
-        void onSaveAndClearMissionEnable(boolean enable);
+        void onAdapterListIsEmptyOrNot(boolean isEmpty);
     }
 
     public void setOnAdapterListChangedListener(final OnListStateChangedListener listener) {
@@ -258,8 +258,8 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     public void add(Mission mission) {
         mUndoLists.push(new ArrayList<>(mMissionList));
-        if (!canSaveAndClearFunction()) {
-            mItemClickListener.onSaveAndClearMissionEnable(true);
+        if (mMissionList.isEmpty()) {
+            mItemClickListener.onAdapterListIsEmptyOrNot(false);
         }
         mMissionList.add(mission);
         notifyDataSetChanged();
@@ -271,7 +271,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         }
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.clear();
-        mItemClickListener.onSaveAndClearMissionEnable(false);
+        mItemClickListener.onAdapterListIsEmptyOrNot(true);
         notifyDataSetChanged();
     }
 
@@ -287,14 +287,14 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             return;
         }
         mMissionList = missions;
-        mItemClickListener.onSaveAndClearMissionEnable(true);
+        mItemClickListener.onAdapterListIsEmptyOrNot(false);
         notifyDataSetChanged();
     }
 
     private void remove(int position) {
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.remove(position);
-        mItemClickListener.onSaveAndClearMissionEnable(canSaveAndClearFunction());
+        mItemClickListener.onAdapterListIsEmptyOrNot(mMissionList.isEmpty());
         notifyDataSetChanged();
     }
 
@@ -304,19 +304,9 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     public void undo() {
         mMissionList = mUndoLists.pop();
-        if (!canUndo()) {
-            mItemClickListener.onUndoOptionEnable(false);
-        }
-        mItemClickListener.onSaveAndClearMissionEnable(canSaveAndClearFunction());
+        mItemClickListener.onUndoListIsEmptyOrNot(mUndoLists.isEmpty());
+        mItemClickListener.onAdapterListIsEmptyOrNot(mMissionList.isEmpty());
         notifyDataSetChanged();
-    }
-
-    private boolean canUndo() {
-        return !mUndoLists.isEmpty();
-    }
-
-    private boolean canSaveAndClearFunction() {
-        return !mMissionList.isEmpty();
     }
 
     public Mission getMission(int position) {
@@ -354,10 +344,8 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             while (size() >= maxSize) {
                 remove(0);
             }
-            if (!canUndo()) {
-                mItemClickListener.onUndoOptionEnable(true);
-            }
             super.push(object);
+            mItemClickListener.onUndoListIsEmptyOrNot(mUndoLists.isEmpty());
             return object;
         }
     }
