@@ -156,7 +156,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         });
     }
 
-    private View.OnClickListener missionFunctionClickListener = new View.OnClickListener() {
+    private View.OnClickListener missionSaveLoadFunctionClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             mMoreFunctionPopupDialog.dismiss();
@@ -172,16 +172,16 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     mMissionItemAdapter.clearMission();
                     updateMissionToMap();
                     break;
+                case R.id.load_mission_cancel_button:
+                    mLoadPlanningPopDialog.dismiss();
+                    break;
             }
         }
     };
 
-    private View.OnClickListener loadMissionClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.load_mission_cancel_button:
-                    mLoadPlanningPopDialog.dismiss();
                     break;
             }
         }
@@ -280,10 +280,10 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mMoreFunctionPopupDialog.show();
 
         mSaveMissionButton = (Button) mMoreFunctionPopupDialog.findViewById(R.id.save_mission_button);
-        mSaveMissionButton.setOnClickListener(missionFunctionClickListener);
-        mMoreFunctionPopupDialog.findViewById(R.id.load_mission_button).setOnClickListener(missionFunctionClickListener);
+        mSaveMissionButton.setOnClickListener(missionSaveLoadFunctionClickListener);
+        mMoreFunctionPopupDialog.findViewById(R.id.load_mission_button).setOnClickListener(missionSaveLoadFunctionClickListener);
         mClearMissionButton = (Button) mMoreFunctionPopupDialog.findViewById(R.id.clear_mission_button);
-        mClearMissionButton.setOnClickListener(missionFunctionClickListener);
+        mClearMissionButton.setOnClickListener(missionSaveLoadFunctionClickListener);
 
         setSaveOrClearButtonEnable();
     }
@@ -304,7 +304,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
         mLoadPlanningPopDialog.show();
 
-        mLoadPlanningPopDialog.findViewById(R.id.load_mission_cancel_button).setOnClickListener(loadMissionClickListener);
+        mLoadPlanningPopDialog.findViewById(R.id.load_mission_cancel_button).setOnClickListener(missionSaveLoadFunctionClickListener);
     }
 
     private void loadMissionFromDrone() {
