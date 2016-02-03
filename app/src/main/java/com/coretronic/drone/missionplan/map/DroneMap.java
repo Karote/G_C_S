@@ -35,7 +35,7 @@ public class DroneMap implements OnMapEventCallback {
     private OnMapEventCallback mOnMapEventCallback;
 
     private boolean mIsTapAndGoMode = true;
-    private boolean mCanAddMarket = true;
+    private boolean mCanAddMarker = true;
 
     @Override
     @JavascriptInterface
@@ -122,7 +122,7 @@ public class DroneMap implements OnMapEventCallback {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                init(mIsTapAndGoMode, mCanAddMarket);
+                init(mIsTapAndGoMode, mCanAddMarker);
             }
         });
     }
@@ -240,7 +240,7 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
         mMapWebView.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
         mIsTapAndGoMode = isTapAndGo;
-        mCanAddMarket = canMapAddMarker;
+        mCanAddMarker = canMapAddMarker;
     }
 
     public DroneMap setOnMapEventListener(OnMapEventCallback onMapEventCallback) {
@@ -257,7 +257,7 @@ public class DroneMap implements OnMapEventCallback {
     }
 
     public void setAddMarkerEnable(boolean isAddMarkerEnable) {
-        mCanAddMarket = isAddMarkerEnable;
+        mCanAddMarker = isAddMarkerEnable;
         mMapWebView.loadUrl("javascript:setMapClickable(" + isAddMarkerEnable + ")");
     }
 

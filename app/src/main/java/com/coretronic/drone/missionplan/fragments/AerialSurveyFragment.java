@@ -242,9 +242,9 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
     private void missionAdapterShowDelete(boolean isShow) {
         if (isShow) {
-            mMissionItemAdapter.setDeleteLayoutVisible(true);
+            mMissionItemAdapter.setSelectLayoutVisible(true);
         } else {
-            mMissionItemAdapter.setDeleteLayoutVisible(false);
+            mMissionItemAdapter.setSelectLayoutVisible(false);
         }
         mWayPointDetailPanel.setVisibility(View.GONE);
     }
@@ -276,7 +276,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.delete_all_button:
+            case R.id.edit_cancel_button:
                 mMissionItemAdapter.clearMission();
                 missionAdapterShowDelete(false);
                 updateMissionToMap();
@@ -289,7 +289,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMissionItemAdapter.undo();
                 updateMissionToMap();
                 break;
-            case R.id.delete_done_button:
+            case R.id.edit_done_button:
                 missionAdapterShowDelete(false);
                 break;
             case R.id.plan_go_button:

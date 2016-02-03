@@ -30,7 +30,7 @@ public class MissionItemDetailFragment extends Fragment {
     private final static String ARGUMENT_INDEX = "index";
     private final static String ARGUMENT_TYPE = "type";
     private final static String ARGUMENT_ALTITUDE = "altitude";
-    private final static String ARGUMENT_DELAY = "delay";
+    private final static String ARGUMENT_STAY = "stay";
     private final static String ARGUMENT_LATITUDE = "latitude";
     private final static String ARGUMENT_LONGITUDE = "longitude";
     private final static String TXT_WAYPOINT = "Waypoint";
@@ -66,7 +66,7 @@ public class MissionItemDetailFragment extends Fragment {
         args.putInt(ARGUMENT_INDEX, index);
         args.putSerializable(ARGUMENT_TYPE, mission.getType() == null ? Type.WAY_POINT : mission.getType());
         args.putFloat(ARGUMENT_ALTITUDE, mission.getAltitude());
-        args.putInt(ARGUMENT_DELAY, mission.getWaitSeconds());
+        args.putInt(ARGUMENT_STAY, mission.getWaitSeconds());
         args.putFloat(ARGUMENT_LATITUDE, mission.getLatitude());
         args.putFloat(ARGUMENT_LONGITUDE, mission.getLongitude());
         fragment.setArguments(args);
@@ -202,7 +202,7 @@ public class MissionItemDetailFragment extends Fragment {
                     break;
             }
             mAltitudeWheel.setCurrentItem((int) arguments.getFloat(ARGUMENT_ALTITUDE) - ALTITUDE_MIN_VALUE);
-            mDelayWheel.setCurrentItem(arguments.getInt(ARGUMENT_DELAY));
+            mDelayWheel.setCurrentItem(arguments.getInt(ARGUMENT_STAY));
         }
     }
 

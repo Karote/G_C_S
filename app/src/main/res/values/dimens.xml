@@ -99,9 +99,9 @@
     <dimen name="marker_editor_control_panel_multi_way_point_button_right_margin">2dp</dimen>
     <dimen name="marker_editor_control_panel_multi_way_point_button_left_margin">4dp</dimen>
     <dimen name="marker_editor_control_panel_tap_and_go_button_right_margin">4dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_option_button_margin">1dp</dimen>
-    <dimen name="marker_editor_control_panel_delete_option_text_size">14sp</dimen>
-    <dimen name="marker_editor_control_panel_delete_option_button_text_padding">8dp</dimen>
+    <dimen name="marker_editor_control_panel_edit_option_button_margin">1dp</dimen>
+    <dimen name="marker_editor_control_panel_edit_option_text_size">14sp</dimen>
+    <dimen name="marker_editor_control_panel_edit_option_button_text_padding">8dp</dimen>
 
     <!-- history_fragment -->
     <dimen name="history_fragment_activate_button_width">136dp</dimen>

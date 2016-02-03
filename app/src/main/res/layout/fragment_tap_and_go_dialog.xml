@@ -20,7 +20,7 @@
             android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
             android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
             android:fontFamily="@string/font_roboto_medium"
-            android:text="@string/btn_cancel"
+            android:text="@string/cancel"
             android:textColor="@drawable/tap_and_go_dialog_cancel_color"
             android:textSize="@dimen/tap_and_go_dialog_cancel_text_size" />
     </LinearLayout>

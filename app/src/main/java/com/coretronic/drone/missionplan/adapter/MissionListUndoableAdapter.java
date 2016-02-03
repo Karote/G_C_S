@@ -30,7 +30,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     private final static int UNDO_LIST_MAX_SIZE = 64;
     private List<Mission> mMissionList = null;
     private OnListStateChangedListener mItemClickListener = null;
-    private boolean mIsDeleteLayoutVisible = false;
+    private boolean mIsSelectLayoutVisible = false;
     private int mFocusIndex = -1;
     private LimitedStack<List<Mission>> mUndoLists;
     private Context mContext;
@@ -164,11 +164,11 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             viewHolder.serialNumberTextView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         }
 
-        if (mIsDeleteLayoutVisible) {
-            viewHolder.deleteButton.setVisibility(View.VISIBLE);
+        if (mIsSelectLayoutVisible) {
+            viewHolder.selectCheck.setVisibility(View.VISIBLE);
             viewHolder.rowItemLayout.setEnabled(false);
         } else {
-            viewHolder.deleteButton.setVisibility(View.GONE);
+            viewHolder.selectCheck.setVisibility(View.GONE);
             viewHolder.rowItemLayout.setEnabled(true);
         }
 
@@ -195,7 +195,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             }
         });
 
-        viewHolder.deleteButton.setOnClickListener(new OnClickListener() {
+        viewHolder.selectCheck.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 remove(position);
@@ -241,7 +241,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     public class MissionListUndoableViewHolder extends RecyclerView.ViewHolder {
         final TextView serialNumberTextView, altitudeTextView;
         final View typeView;
-        final ImageButton deleteButton;
+        final View selectCheck;
         final RelativeLayout rowItemLayout;
         final View focusBar;
 
@@ -250,7 +250,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
             altitudeTextView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
-            deleteButton = (ImageButton) itemView.findViewById(R.id.btn_plan_waypoint_delet);
+            selectCheck = itemView.findViewById(R.id.btn_select_check);
             rowItemLayout = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
             focusBar = itemView.findViewById(R.id.view_focusbar);
         }
@@ -323,8 +323,8 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         return mMissionList.get(position);
     }
 
-    public void setDeleteLayoutVisible(boolean isVisible) {
-        mIsDeleteLayoutVisible = isVisible;
+    public void setSelectLayoutVisible(boolean isVisible) {
+        mIsSelectLayoutVisible = isVisible;
         onNothingSelected();
     }
 

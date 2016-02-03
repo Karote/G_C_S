@@ -170,7 +170,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     break;
                 case R.id.clear_mission_button:
                     mMissionItemAdapter.clearMission();
-                    missionAdapterShowDelete(false);
                     updateMissionToMap();
                     break;
             }
@@ -212,11 +211,11 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         }
     };
 
-    private void missionAdapterShowDelete(boolean isShow) {
+    private void missionAdapterShowSelect(boolean isShow) {
         if (isShow) {
-            mMissionItemAdapter.setDeleteLayoutVisible(true);
+            mMissionItemAdapter.setSelectLayoutVisible(true);
         } else {
-            mMissionItemAdapter.setDeleteLayoutVisible(false);
+            mMissionItemAdapter.setSelectLayoutVisible(false);
         }
         mWayPointDetailPanel.setVisibility(View.GONE);
     }
@@ -246,13 +245,12 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             case R.id.more_button:
                 showMoreFunctionPopupDialog(v);
                 break;
-            case R.id.delete_all_button:
-                mMissionItemAdapter.clearMission();
-                missionAdapterShowDelete(false);
+            case R.id.edit_cancel_button:
                 updateMissionToMap();
+                missionAdapterShowSelect(false);
                 break;
-            case R.id.delete_done_button:
-                missionAdapterShowDelete(false);
+            case R.id.edit_done_button:
+                missionAdapterShowSelect(false);
                 break;
             case R.id.plan_go_button:
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
