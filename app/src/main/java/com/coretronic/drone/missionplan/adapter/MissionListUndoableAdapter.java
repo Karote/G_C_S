@@ -3,11 +3,11 @@ package com.coretronic.drone.missionplan.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,7 +17,6 @@ import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
 import com.google.gson.Gson;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -29,15 +28,19 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     private final static int UNDO_LIST_MAX_SIZE = 64;
     private List<Mission> mMissionList = null;
+    private List<Mission> mBackupList = null;
     private OnListStateChangedListener mItemClickListener = null;
     private boolean mIsSelectLayoutVisible = false;
     private int mFocusIndex = -1;
     private LimitedStack<List<Mission>> mUndoLists;
     private Context mContext;
+    private SparseBooleanArray mSelectedItems;
 
     public MissionListUndoableAdapter() {
         this.mMissionList = new ArrayList<>();
         this.mUndoLists = new LimitedStack<>(UNDO_LIST_MAX_SIZE);
+        this.mSelectedItems = new SparseBooleanArray();
+        this.mBackupList = new ArrayList<>();
     }
 
     public Mission getSelectedItem() {
@@ -132,6 +135,10 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         void onUndoListIsEmptyOrNot(boolean empty);
 
         void onAdapterListIsEmptyOrNot(boolean isEmpty);
+
+        void onItemChecked(int checkCount);
+
+        void onListModified();
     }
 
     public void setOnAdapterListChangedListener(final OnListStateChangedListener listener) {
@@ -166,6 +173,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
         if (mIsSelectLayoutVisible) {
             viewHolder.selectCheck.setVisibility(View.VISIBLE);
+            viewHolder.selectCheck.setSelected(mSelectedItems.get(position, false));
             viewHolder.rowItemLayout.setEnabled(false);
         } else {
             viewHolder.selectCheck.setVisibility(View.GONE);
@@ -192,16 +200,21 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
                         mItemClickListener.onItemSelected(mission, mFocusIndex);
                     }
                 }
+                notifyDataSetChanged();
             }
         });
 
         viewHolder.selectCheck.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                remove(position);
-                if (mItemClickListener != null) {
-                    mItemClickListener.onItemDeleted(position);
+                if (mSelectedItems.get(position, false)) {
+                    mSelectedItems.delete(position);
+                    viewHolder.selectCheck.setSelected(false);
+                } else {
+                    mSelectedItems.put(position, true);
+                    viewHolder.selectCheck.setSelected(true);
                 }
+                mItemClickListener.onItemChecked(mSelectedItems.size());
             }
         });
 
@@ -314,6 +327,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     }
 
     public void setSelectLayoutVisible(boolean isVisible) {
+        mSelectedItems.clear();
         mIsSelectLayoutVisible = isVisible;
         onNothingSelected();
     }
@@ -323,12 +337,38 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
-    private List<Mission> deepCopyMissionList() {
-        List<Mission> missions = new ArrayList<>();
-        for (Mission mission : mMissionList) {
-            missions.add(mission.clone());
+    public void setAllItemChecked(boolean isCheck) {
+        if (isCheck) {
+            for (int i = 0; i < mMissionList.size(); i++) {
+                mSelectedItems.put(i, true);
+            }
+        } else {
+            mSelectedItems.clear();
         }
-        return missions;
+        notifyDataSetChanged();
+    }
+
+    public void deleteSelectedItem() {
+        List<Mission> selectedList = new ArrayList<>();
+        for (int i = 0; i < mSelectedItems.size(); i++) {
+            selectedList.add(mMissionList.get(mSelectedItems.keyAt(i)));
+        }
+        mMissionList.removeAll(selectedList);
+        mSelectedItems.clear();
+        mItemClickListener.onListModified();
+        notifyDataSetChanged();
+    }
+
+    public void backUpMissionList() {
+        mBackupList = cloneMissions();
+    }
+
+    public void recoverMissionList() {
+        mMissionList = mBackupList;
+    }
+
+    public void saveEditDoneMissionList() {
+        mUndoLists.push(new ArrayList<>(mBackupList));
     }
 
     private class LimitedStack<E> extends Stack<E> {

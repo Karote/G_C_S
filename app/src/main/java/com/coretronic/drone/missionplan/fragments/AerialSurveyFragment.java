@@ -157,6 +157,16 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             public void onAdapterListIsEmptyOrNot(boolean enable) {
 
             }
+
+            @Override
+            public void onItemChecked(int checkCount) {
+
+            }
+
+            @Override
+            public void onListModified() {
+
+            }
         });
 
         mCreateRouteButton = (Button) view.findViewById(R.id.create_route_button);

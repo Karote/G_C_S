@@ -741,6 +741,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.setAddMarkerEnable(!isShow);
     }
 
+    public void setEditDoneEnable(){
+        mEditDoneButton.setEnabled(true);
+    }
+
     public void activateWithExistedMission(List<Mission> missionList) {
         mCurrentMissionList = missionList;
         mIsSpinnerTriggerByUser = false;
@@ -780,6 +784,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public void setTapGoPath() {
         mDroneMap.setTapGoPath();
+    }
+
+    public void setMapCanAddMarker(boolean enable) {
+        mDroneMap.setAddMarkerEnable(enable);
     }
 
     public void loadHistory(List<Mission> missions, List<Long> flightPath) {

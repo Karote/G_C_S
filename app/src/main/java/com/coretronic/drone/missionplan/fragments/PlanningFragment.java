@@ -18,7 +18,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneController.MissionLoaderListener;
@@ -49,7 +51,16 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
     private final static int WEBVIEW_SCREENSHOT_WIDTH = 432;
     private final static int WEBVIEW_SCREENSHOT_HEIGHT = 318;
+    private final static int SELECT_NONE = 0;
+    private final static int SELECTED_ONE = 1;
+    private final static int SELECT_ALL = 2;
 
+    private View mWaypointListTopView;
+    private View mWaypointListEditHeaderPanel;
+    private View mWaypointListHeaderPanel;
+    private View mWaypointListDroneItem;
+    private TextView mWaypointListHeaderCountText;
+    private ToggleButton mWaypointListHeaderSelectAllToggleButton;
     private MissionListUndoableAdapter mMissionItemAdapter;
     private FrameLayout mWayPointDetailPanel;
     private MissionItemDetailFragment mMissionItemDetailFragment;
@@ -101,6 +112,30 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         super.onViewCreated(view, savedInstanceState);
 
         // Mission List
+        mWaypointListTopView = view.findViewById(R.id.waypoint_list_top_view);
+        mWaypointListTopView.setVisibility(View.GONE);
+
+        mWaypointListEditHeaderPanel = mWaypointListTopView.findViewById(R.id.waypoint_list_edit_header_panel);
+        mWaypointListHeaderPanel = mWaypointListTopView.findViewById(R.id.waypoint_list_header_panel);
+        mWaypointListDroneItem = mWaypointListTopView.findViewById(R.id.waypoint_list_drone_item);
+        mWaypointListHeaderCountText = (TextView) mWaypointListTopView.findViewById(R.id.waypoint_list_header_count_text);
+        mWaypointListHeaderSelectAllToggleButton = (ToggleButton) mWaypointListTopView.findViewById(R.id.waypoint_list_header_select_all_toggle_button);
+        mWaypointListHeaderSelectAllToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mWaypointListHeaderSelectAllToggleButton.isChecked()) {
+                    mMissionItemAdapter.setAllItemChecked(true);
+                    setSelectAllToggleButtonState(SELECT_ALL, 0);
+                } else {
+                    mMissionItemAdapter.setAllItemChecked(false);
+                    setSelectAllToggleButtonState(SELECT_NONE, 0);
+                }
+            }
+        });
+        mWaypointListTopView.findViewById(R.id.waypoint_list_header_edit_text).setOnClickListener(missionListEditFunctionListener);
+        mWaypointListTopView.findViewById(R.id.waypoint_list_header_delete_button).setOnClickListener(missionListEditFunctionListener);
+
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.mission_item_recycler_view);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new FixedLinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
@@ -137,6 +172,26 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onAdapterListIsEmptyOrNot(boolean isEmpty) {
                 mSaveAndClearMissionFlag = !isEmpty;
+                int topViewVisibility = isEmpty ? View.GONE : View.VISIBLE;
+                mWaypointListTopView.setVisibility(topViewVisibility);
+            }
+
+            @Override
+            public void onItemChecked(int checkCount) {
+                int selectState;
+                if (checkCount == mMissionItemAdapter.getItemCount()) {
+                    selectState = SELECT_ALL;
+                } else if (checkCount == 0) {
+                    selectState = SELECT_NONE;
+                } else {
+                    selectState = SELECTED_ONE;
+                }
+                setSelectAllToggleButtonState(selectState, checkCount);
+            }
+
+            @Override
+            public void onListModified() {
+                mMapViewFragment.setEditDoneEnable();
             }
         });
 
@@ -154,6 +209,26 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 mLoadPlanningPopDialog.dismiss();
             }
         });
+    }
+
+    private void setSelectAllToggleButtonState(int state, int selectCount) {
+        switch (state) {
+            case SELECT_ALL:
+                mWaypointListHeaderSelectAllToggleButton.setBackgroundResource(R.drawable.waypoint_list_header_select_all_selected_all_icon);
+                mWaypointListHeaderSelectAllToggleButton.setChecked(true);
+                mWaypointListHeaderSelectAllToggleButton.setText(String.valueOf(mMissionItemAdapter.getItemCount()));
+                break;
+            case SELECTED_ONE:
+                mWaypointListHeaderSelectAllToggleButton.setBackgroundResource(R.drawable.waypoint_list_header_select_all_selected_icon);
+                mWaypointListHeaderSelectAllToggleButton.setChecked(false);
+                mWaypointListHeaderSelectAllToggleButton.setText(String.valueOf(selectCount));
+                break;
+            case SELECT_NONE:
+                mWaypointListHeaderSelectAllToggleButton.setBackgroundResource(R.drawable.waypoint_list_header_select_all_unselect_icon);
+                mWaypointListHeaderSelectAllToggleButton.setChecked(false);
+                mWaypointListHeaderSelectAllToggleButton.setText("");
+                break;
+        }
     }
 
     private View.OnClickListener missionSaveLoadFunctionClickListener = new View.OnClickListener() {
@@ -179,9 +254,26 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         }
     };
 
+    private View.OnClickListener missionListEditFunctionListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+                case R.id.waypoint_list_header_edit_text:
+                    mMissionItemAdapter.backUpMissionList();
+
+                    setSelectAllToggleButtonState(SELECT_NONE, 0);
+                    mWaypointListEditHeaderPanel.setVisibility(View.VISIBLE);
+                    mWaypointListHeaderPanel.setVisibility(View.GONE);
+                    mWaypointListDroneItem.setVisibility(View.GONE);
+                    missionAdapterShowSelect(true);
+                    mMapViewFragment.setMapCanAddMarker(false);
+                    mMapViewFragment.setEditOptionShow(true);
+                    break;
+                
+                case R.id.waypoint_list_header_delete_button:
+                    mMissionItemAdapter.deleteSelectedItem();
+                    setSelectAllToggleButtonState(SELECT_NONE, 0);
+                    updateMissionToMap();
                     break;
             }
         }
@@ -222,6 +314,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
     private void updateMissionToMap() {
         mMapViewFragment.updateMissions(mMissionItemAdapter.getMissions());
+        mWaypointListHeaderCountText.setText(String.valueOf(mMissionItemAdapter.getItemCount()));
     }
 
     @Override
@@ -246,10 +339,20 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 showMoreFunctionPopupDialog(v);
                 break;
             case R.id.edit_cancel_button:
+                mMissionItemAdapter.recoverMissionList();
                 updateMissionToMap();
+
+                mWaypointListEditHeaderPanel.setVisibility(View.GONE);
+                mWaypointListHeaderPanel.setVisibility(View.VISIBLE);
+                mWaypointListDroneItem.setVisibility(View.VISIBLE);
                 missionAdapterShowSelect(false);
                 break;
             case R.id.edit_done_button:
+                mMissionItemAdapter.saveEditDoneMissionList();
+
+                mWaypointListEditHeaderPanel.setVisibility(View.GONE);
+                mWaypointListHeaderPanel.setVisibility(View.VISIBLE);
+                mWaypointListDroneItem.setVisibility(View.VISIBLE);
                 missionAdapterShowSelect(false);
                 break;
             case R.id.plan_go_button:
