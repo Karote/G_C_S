@@ -426,6 +426,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private void showLoadMissionPopDialog() {
         mLoadPlanningPopDialog = new Dialog(getActivity());
         mLoadPlanningPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mLoadPlanningPopDialog.setCanceledOnTouchOutside(false);
         mLoadPlanningPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mLoadPlanningPopDialog.setContentView(R.layout.popwindow_load_mission);
 
