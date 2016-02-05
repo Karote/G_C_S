@@ -28,9 +28,8 @@ import java.util.Stack;
 public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionListUndoableAdapter.MissionListUndoableViewHolder> {
 
     private final static int UNDO_LIST_MAX_SIZE = 64;
-    private List<Mission> mMissionList = null;
-    private List<Mission> mBackupList = null;
-    private OnListStateChangedListener mItemClickListener = null;
+    private List<Mission> mMissionList;
+    private OnListStateChangedListener mItemClickListener;
     private boolean mIsSelectLayoutVisible = false;
     private int mFocusIndex = -1;
     private LimitedStack<List<Mission>> mUndoLists;
@@ -41,7 +40,6 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         this.mMissionList = new ArrayList<>();
         this.mUndoLists = new LimitedStack<>(UNDO_LIST_MAX_SIZE);
         this.mSelectedItems = new SparseBooleanArray();
-        this.mBackupList = new ArrayList<>();
     }
 
     public Mission getSelectedItem() {
@@ -108,7 +106,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
-    public void updateSelectedItemSpeed(int speed){
+    public void updateSelectedItemSpeed(int speed) {
         mUndoLists.push(cloneMissions());
         Mission mission = getMission(mFocusIndex).clone();
         mission.setSpeed(speed);
@@ -325,6 +323,31 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         return mMissionList;
     }
 
+    public List<Mission> getSelectedMissionList() {
+        List<Mission> selectedList = new ArrayList<>();
+        for (int i = 0; i < mSelectedItems.size(); i++) {
+            Mission mission = getMission(mSelectedItems.keyAt(i));
+            selectedList.add(mission);
+        }
+        return selectedList;
+    }
+
+    public void updateSelectedList(float altitude, int stay, int speed) {
+        for (int i = 0; i < mSelectedItems.size(); i++) {
+            Mission updateMission = getMission(mSelectedItems.keyAt(i)).clone();
+            if (altitude >= ConstantValue.ALTITUDE_MIN_VALUE)
+                updateMission.setAltitude(altitude);
+            if (stay >= ConstantValue.STAY_MIN_VALUE)
+                updateMission.setWaitSeconds(stay);
+            if (speed >= ConstantValue.SPEED_MIN_VALUE)
+                updateMission.setSpeed(speed);
+
+            mMissionList.set(mSelectedItems.keyAt(i), updateMission);
+        }
+        mSelectedItems.clear();
+        notifyDataSetChanged();
+    }
+
     public void undo() {
         mMissionList = mUndoLists.pop();
         mItemClickListener.onUndoListIsEmptyOrNot(mUndoLists.isEmpty());
@@ -361,7 +384,8 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     public void deleteSelectedItem() {
         List<Mission> selectedList = new ArrayList<>();
         for (int i = 0; i < mSelectedItems.size(); i++) {
-            selectedList.add(mMissionList.get(mSelectedItems.keyAt(i)));
+            Mission mission = getMission(mSelectedItems.keyAt(i));
+            selectedList.add(mission);
         }
         mMissionList.removeAll(selectedList);
         mSelectedItems.clear();
@@ -369,16 +393,12 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
-    public void backUpMissionList() {
-        mBackupList = cloneMissions();
+    public void enterMissionListEditMode() {
+        mUndoLists.push(new ArrayList<>(mMissionList));
     }
 
-    public void recoverMissionList() {
-        mMissionList = mBackupList;
-    }
-
-    public void saveEditDoneMissionList() {
-        mUndoLists.push(new ArrayList<>(mBackupList));
+    public void exitMissionListEditMode() {
+        mMissionList = mUndoLists.pop();
     }
 
     private class LimitedStack<E> extends Stack<E> {
