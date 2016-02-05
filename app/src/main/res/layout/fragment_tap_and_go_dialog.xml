@@ -20,7 +20,7 @@
             android:layout_marginEnd="@dimen/tap_and_go_dialog_content_right_margin"
             android:layout_marginRight="@dimen/tap_and_go_dialog_content_right_margin"
             android:fontFamily="@string/font_roboto_medium"
-            android:text="@string/btn_cancel"
+            android:text="@string/cancel"
             android:textColor="@drawable/tap_and_go_dialog_cancel_color"
             android:textSize="@dimen/tap_and_go_dialog_cancel_text_size" />
     </LinearLayout>
@@ -65,7 +65,7 @@
             android:text="@string/flight_altitude" />
 
         <TextView
-            style="@style/way_point_detail_unit_text_style"
+            style="@style/waypoint_detail_unit_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

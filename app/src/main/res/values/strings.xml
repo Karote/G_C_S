@@ -6,8 +6,8 @@
         <item>FLIGHT HISTORY</item>
     </string-array>
     <string name="delete_all">DELETE ALL</string>
-    <string name="delete_done">DONE</string>
-    <string name="btn_cancel">CANCEL</string>
+    <string name="done">DONE</string>
+    <string name="cancel">CANCEL</string>
     <string name="database_url">http://175.111.192.40:4984/coretronicdroneg1</string>
 
     <!-- Login in fragment-->
@@ -39,8 +39,8 @@
     <string name="altitude">ALTITUDE</string>
 
     <!-- mission plan-->
-    <string name="delay">Delay</string>
-    <string name="speed">Speed</string>
+    <string name="stay">Stay</string>
+    <string name="speed_to_next">Speed to Next</string>
     <string name="second">sec</string>
     <string name="delete">DELETE</string>
 

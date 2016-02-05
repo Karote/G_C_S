@@ -149,12 +149,22 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             }
 
             @Override
-            public void onUndoOptionEnable(boolean enable) {
-                mMapViewFragment.setUndoButtonEnable(enable);
+            public void onUndoListIsEmptyOrNot(boolean empty) {
+                mMapViewFragment.setUndoButtonEnable(!empty);
             }
 
             @Override
-            public void onSaveAndClearMissionEnable(boolean enable) {
+            public void onAdapterListIsEmptyOrNot(boolean enable) {
+
+            }
+
+            @Override
+            public void onItemChecked(int checkCount) {
+
+            }
+
+            @Override
+            public void onListModified() {
 
             }
         });
@@ -242,9 +252,9 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
 
     private void missionAdapterShowDelete(boolean isShow) {
         if (isShow) {
-            mMissionItemAdapter.setDeleteLayoutVisible(true);
+            mMissionItemAdapter.setSelectLayoutVisible(true);
         } else {
-            mMissionItemAdapter.setDeleteLayoutVisible(false);
+            mMissionItemAdapter.setSelectLayoutVisible(false);
         }
         mWayPointDetailPanel.setVisibility(View.GONE);
     }
@@ -276,7 +286,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.delete_all_button:
+            case R.id.edit_cancel_button:
                 mMissionItemAdapter.clearMission();
                 missionAdapterShowDelete(false);
                 updateMissionToMap();
@@ -289,7 +299,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 mMissionItemAdapter.undo();
                 updateMissionToMap();
                 break;
-            case R.id.delete_done_button:
+            case R.id.edit_done_button:
                 missionAdapterShowDelete(false);
                 break;
             case R.id.plan_go_button:
@@ -420,7 +430,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     }
 
     @Override
-    public void onMissionDelayUpdate(int seconds) {
+    public void onMissionStayUpdate(int seconds) {
         mMissionItemAdapter.getSelectedItem().setWaitSeconds(seconds);
         mMissionItemAdapter.notifyDataSetChanged();
     }
@@ -430,6 +440,12 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         mMissionItemAdapter.removeSelected();
         mWayPointDetailPanel.setVisibility(View.GONE);
         updateMissionToMap();
+    }
+
+    @Override
+    public void onMissionSpeedUpdate(int missionSpeed) {
+        mMissionItemAdapter.getSelectedItem().setSpeed(missionSpeed);
+        mMissionItemAdapter.notifyDataSetChanged();
     }
 
     private void updateMissionToMap() {

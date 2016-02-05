@@ -79,9 +79,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private ControlBarView mControlBarView;
 
     private View mMissionModeControlPanel = null;
-    private View mDeleteOptionPanel = null;
+    private View mEditOptionPanel = null;
     private View mUndoButton = null;
     private View mMoreButton = null;
+    private View mEditDoneButton = null;
 
     private RadioGroup mMissionPlanTypeRadioGroup = null;
     private Spinner mSpinnerView = null;
@@ -434,15 +435,17 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         mStatusView = (StatusView) view.findViewById(R.id.status);
         mMissionModeControlPanel = view.findViewById(R.id.marker_editor_control_panel);
-        mDeleteOptionPanel = view.findViewById(R.id.delete_option_layout);
+        mEditOptionPanel = view.findViewById(R.id.edit_option_layout);
         mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);
 
         mUndoButton = view.findViewById(R.id.undo_button);
         mUndoButton.setOnClickListener(this);
         mMoreButton = view.findViewById(R.id.more_button);
         mMoreButton.setOnClickListener(this);
-        view.findViewById(R.id.delete_done_button).setOnClickListener(this);
-        view.findViewById(R.id.delete_all_button).setOnClickListener(this);
+        mEditDoneButton = view.findViewById(R.id.edit_done_button);
+        mEditDoneButton.setEnabled(false);
+        mEditDoneButton.setOnClickListener(this);
+        view.findViewById(R.id.edit_cancel_button).setOnClickListener(this);
         view.findViewById(R.id.multi_way_point_button).setOnClickListener(this);
         view.findViewById(R.id.tap_and_go_button).setOnClickListener(this);
         view.findViewById(R.id.back_to_main_button).setOnClickListener(this);
@@ -505,7 +508,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int droneControlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_PLANNING ? View.GONE : View.VISIBLE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
-        setDeleteOptionShow(false);
+        setEditOptionShow(false);
         setUndoAndMoreButtonVisibility(undoAndMoreButtonVisibility);
         mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
         mMavInfoView.setVisibility(mavInfoPanelVisibility);
@@ -610,12 +613,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case R.id.back_to_main_button:
                 getActivity().onBackPressed();
                 return;
-            case R.id.delete_all_button:
-                setDeleteOptionShow(false);
+            case R.id.edit_cancel_button:
+                setEditOptionShow(false);
                 mDroneMap.setAddMarkerEnable(true);
                 break;
-            case R.id.delete_done_button:
-                setDeleteOptionShow(false);
+            case R.id.edit_done_button:
+                setEditOptionShow(false);
                 mDroneMap.setAddMarkerEnable(true);
                 break;
             case R.id.multi_way_point_button:
@@ -721,18 +724,25 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         return ((MainActivity) getActivity()).getDroneController();
     }
 
-    private void setDeleteOptionShow(boolean isShow) {
+    public void setEditOptionShow(boolean isShow) {
         if (isShow) {
-            mDeleteOptionPanel.setVisibility(View.VISIBLE);
+            mEditOptionPanel.setVisibility(View.VISIBLE);
             mMissionPlanTypeRadioGroup.setVisibility(View.GONE);
             mMoreButton.setVisibility(View.GONE);
             mUndoButton.setVisibility(View.GONE);
+            mEditDoneButton.setEnabled(false);
         } else {
-            mDeleteOptionPanel.setVisibility(View.GONE);
+            mEditOptionPanel.setVisibility(View.GONE);
             mMissionPlanTypeRadioGroup.setVisibility(View.VISIBLE);
             mMoreButton.setVisibility(View.VISIBLE);
             mUndoButton.setVisibility(View.VISIBLE);
+            mEditDoneButton.setEnabled(false);
         }
+        mDroneMap.setAddMarkerEnable(!isShow);
+    }
+
+    public void setEditDoneEnable(){
+        mEditDoneButton.setEnabled(true);
     }
 
     public void activateWithExistedMission(List<Mission> missionList) {
@@ -774,6 +784,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public void setTapGoPath() {
         mDroneMap.setTapGoPath();
+    }
+
+    public void setMapCanAddMarker(boolean enable) {
+        mDroneMap.setAddMarkerEnable(enable);
     }
 
     public void loadHistory(List<Mission> missions, List<Long> flightPath) {
