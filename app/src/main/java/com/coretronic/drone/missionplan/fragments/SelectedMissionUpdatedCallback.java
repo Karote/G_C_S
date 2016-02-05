@@ -9,7 +9,7 @@ public interface SelectedMissionUpdatedCallback {
 
     void onMissionAltitudeUpdate(float newValue);
 
-    void onMissionDelayUpdate(int seconds);
+    void onMissionStayUpdate(int seconds);
 
     void onMissionTypeUpdate(Type type);
 
@@ -18,4 +18,6 @@ public interface SelectedMissionUpdatedCallback {
     void onMissionLatitudeUpdate(float latitude);
 
     void onMissionDeleted();
+
+    void onMissionSpeedUpdate(int speed);
 }

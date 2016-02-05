@@ -65,7 +65,7 @@
             android:text="@string/flight_altitude" />
 
         <TextView
-            style="@style/way_point_detail_unit_text_style"
+            style="@style/waypoint_detail_unit_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

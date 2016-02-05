@@ -4,13 +4,13 @@
         <shape android:shape="rectangle">
             <solid android:color="#c4e5ff" />
             <size
-                android:width="@dimen/way_point_detail_spinner_wheel_width"
-                android:height="@dimen/way_point_detail_spinner_wheel_height" />
+                android:width="@dimen/waypoint_detail_spinner_wheel_width"
+                android:height="@dimen/waypoint_detail_spinner_wheel_height" />
         </shape>
     </item>
     <item
-        android:left="@dimen/way_point_detail_spinner_wheel_focus_padding"
-        android:right="@dimen/way_point_detail_spinner_wheel_focus_padding">
+        android:left="@dimen/waypoint_detail_spinner_wheel_focus_padding"
+        android:right="@dimen/waypoint_detail_spinner_wheel_focus_padding">
         <shape android:shape="rectangle">
             <solid android:color="@color/blue_sky" />
         </shape>

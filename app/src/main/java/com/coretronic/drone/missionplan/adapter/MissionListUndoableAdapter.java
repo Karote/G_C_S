@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Type;
+import com.coretronic.drone.util.ConstantValue;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -99,10 +100,18 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
-    public void updateSelectedItemDelay(int seconds) {
+    public void updateSelectedItemStay(int seconds) {
         mUndoLists.push(cloneMissions());
         Mission mission = getMission(mFocusIndex).clone();
         mission.setWaitSeconds(seconds);
+        mMissionList.set(mFocusIndex, mission);
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedItemSpeed(int speed){
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(mFocusIndex).clone();
+        mission.setSpeed(speed);
         mMissionList.set(mFocusIndex, mission);
         notifyDataSetChanged();
     }
@@ -118,8 +127,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     public List<Integer> getMissionsSpeed() {
         List<Integer> speedList = new ArrayList<>();
         for (Mission mission : mMissionList) {
-//            speedList.add(mission.getSpeed());
-            speedList.add(8);
+            speedList.add(mission.getSpeed());
         }
         return speedList;
     }
@@ -159,6 +167,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
         viewHolder.serialNumberTextView.setText(position + 1 + "");
         viewHolder.altitudeTextView.setText((int) mission.getAltitude() + "");
+        viewHolder.speedTextView.setText(mission.getSpeed() + "");
         ((ImageView) viewHolder.typeView).setImageResource(getTypeResource(mission.getType()));
 
         if (position == mFocusIndex) {
@@ -252,7 +261,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     }
 
     public class MissionListUndoableViewHolder extends RecyclerView.ViewHolder {
-        final TextView serialNumberTextView, altitudeTextView;
+        final TextView serialNumberTextView, altitudeTextView, speedTextView;
         final View typeView;
         final View selectCheck;
         final RelativeLayout rowItemLayout;
@@ -263,6 +272,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
             altitudeTextView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
+            speedTextView = (TextView) itemView.findViewById(R.id.rowSpeedView);
             selectCheck = itemView.findViewById(R.id.btn_select_check);
             rowItemLayout = (RelativeLayout) itemView.findViewById(R.id.rowItemLayout);
             focusBar = itemView.findViewById(R.id.view_focusbar);

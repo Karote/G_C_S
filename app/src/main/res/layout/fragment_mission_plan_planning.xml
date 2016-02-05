@@ -32,9 +32,9 @@
         android:id="@+id/way_point_detail_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/way_point_detail_container_right_margin"
-        android:layout_marginRight="@dimen/way_point_detail_container_right_margin"
-        android:layout_marginTop="@dimen/way_point_detail_container_top_margin"
+        android:layout_marginEnd="@dimen/waypoint_detail_container_right_margin"
+        android:layout_marginRight="@dimen/waypoint_detail_container_right_margin"
+        android:layout_marginTop="@dimen/waypoint_detail_container_top_margin"
         android:layout_toLeftOf="@id/mission_item_recycler_view"
         android:layout_toStartOf="@id/mission_item_recycler_view"
         android:clickable="true" />

@@ -14,7 +14,6 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter;
 import com.coretronic.drone.missionplan.adapter.HistoryItemListAdapter.onFlightHisorySelectedListener;
 import com.coretronic.drone.model.FlightHistory;
-import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.OnFlightHistoryUpdateListener;
 import com.coretronic.drone.model.RecordItem;
 import com.coretronic.drone.util.Utils;

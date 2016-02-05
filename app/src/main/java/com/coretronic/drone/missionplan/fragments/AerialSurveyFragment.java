@@ -430,7 +430,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
     }
 
     @Override
-    public void onMissionDelayUpdate(int seconds) {
+    public void onMissionStayUpdate(int seconds) {
         mMissionItemAdapter.getSelectedItem().setWaitSeconds(seconds);
         mMissionItemAdapter.notifyDataSetChanged();
     }
@@ -440,6 +440,12 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         mMissionItemAdapter.removeSelected();
         mWayPointDetailPanel.setVisibility(View.GONE);
         updateMissionToMap();
+    }
+
+    @Override
+    public void onMissionSpeedUpdate(int missionSpeed) {
+        mMissionItemAdapter.getSelectedItem().setSpeed(missionSpeed);
+        mMissionItemAdapter.notifyDataSetChanged();
     }
 
     private void updateMissionToMap() {

@@ -33,6 +33,7 @@ import com.coretronic.drone.missionplan.model.PlanningData;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Builder;
 import com.coretronic.drone.model.Mission.Type;
+import com.coretronic.drone.util.ConstantValue;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,8 +46,6 @@ import java.util.List;
 public class PlanningFragment extends MapChildFragment implements MissionLoaderListener, SelectedMissionUpdatedCallback {
     private final static String ARG_From_History = "argFromHistory";
     private final static boolean DEFAULT_AUTO_CONTINUE = true;
-    private final static int DEFAULT_ALTITUDE = 8;
-    private final static int DEFAULT_WAIT_SECONDS = 0;
     private final static int DEFAULT_RADIUS = 0;
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
     private final static int WEBVIEW_SCREENSHOT_WIDTH = 432;
@@ -86,8 +85,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMissionBuilder = new Builder();
-        mMissionBuilder.setAltitude(DEFAULT_ALTITUDE).setType(DEFAULT_TYPE).setAutoContinue(DEFAULT_AUTO_CONTINUE)
-                .setWaitSeconds(DEFAULT_WAIT_SECONDS).setRadius(DEFAULT_RADIUS);
+        mMissionBuilder.setAltitude(ConstantValue.ALTITUDE_DEFAULT_VALUE).setType(DEFAULT_TYPE).setAutoContinue(DEFAULT_AUTO_CONTINUE)
+                .setWaitSeconds(ConstantValue.STAY_DEFAULT_VALUE).setSpeed(ConstantValue.SPEED_DEFAULT_VALUE).setRadius(DEFAULT_RADIUS);
         Bundle arguments = getArguments();
         if (arguments == null || !arguments.getBoolean(ARG_From_History)) {
             loadMissionFromDrone();
@@ -521,8 +520,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     }
 
     @Override
-    public void onMissionDelayUpdate(int seconds) {
-        mMissionItemAdapter.updateSelectedItemDelay(seconds);
+    public void onMissionStayUpdate(int seconds) {
+        mMissionItemAdapter.updateSelectedItemStay(seconds);
     }
 
     @Override
@@ -530,6 +529,11 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mMissionItemAdapter.removeSelected();
         mWayPointDetailPanel.setVisibility(View.GONE);
         updateMissionToMap();
+    }
+
+    @Override
+    public void onMissionSpeedUpdate(int missionSpeed) {
+        mMissionItemAdapter.updateSelectedItemSpeed(missionSpeed);
     }
 
 }

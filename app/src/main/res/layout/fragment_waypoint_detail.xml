@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/way_point_detail_fragment_width"
+    android:layout_width="@dimen/waypoint_detail_fragment_width"
     android:layout_height="wrap_content"
     android:background="@drawable/plan_point_detail_bg"
     android:orientation="vertical"
@@ -9,21 +9,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/way_point_detail_title_layout_height"
+        android:layout_height="@dimen/waypoint_detail_title_layout_height"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/way_point_detail_name_text"
-            style="@style/way_point_detail_name_text_style"
-            android:layout_width="@dimen/way_point_detail_name_text_width"
+            style="@style/waypoint_detail_name_text_style"
+            android:layout_width="@dimen/waypoint_detail_name_text_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:text="@string/mission_id_hint" />
 
         <View
-            android:layout_width="@dimen/way_point_detail_divider_width"
-            android:layout_height="@dimen/way_point_detail_divider_height"
+            android:layout_width="@dimen/waypoint_detail_divider_width"
+            android:layout_height="@dimen/waypoint_detail_divider_height"
             android:layout_gravity="center_vertical"
             android:background="@color/white" />
 
@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/way_point_detail_type_icon_left_margin"
-            android:layout_marginStart="@dimen/way_point_detail_type_icon_left_margin"
+            android:layout_marginLeft="@dimen/waypoint_detail_type_icon_left_margin"
+            android:layout_marginStart="@dimen/waypoint_detail_type_icon_left_margin"
             android:src="@drawable/ico_indicator_plan_waypoint" />
 
         <Spinner
@@ -41,11 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/way_point_detail_type_spinner_right_margin"
-            android:layout_marginLeft="@dimen/way_point_detail_type_spinner_left_margin"
-            android:layout_marginRight="@dimen/way_point_detail_type_spinner_right_margin"
-            android:layout_marginStart="@dimen/way_point_detail_type_spinner_left_margin"
-            android:background="@drawable/way_point_detail_type_spinner_bg" />
+            android:layout_marginEnd="@dimen/waypoint_detail_type_spinner_right_margin"
+            android:layout_marginLeft="@dimen/waypoint_detail_type_spinner_left_margin"
+            android:layout_marginRight="@dimen/waypoint_detail_type_spinner_right_margin"
+            android:layout_marginStart="@dimen/waypoint_detail_type_spinner_left_margin"
+            android:background="@drawable/waypoint_detail_type_spinner_bg" />
 
     </LinearLayout>
 
@@ -53,12 +53,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/way_point_detail_content_layout_bottom_padding"
-        android:paddingEnd="@dimen/way_point_detail_content_layout_right_padding"
-        android:paddingLeft="@dimen/way_point_detail_content_layout_left_padding"
-        android:paddingRight="@dimen/way_point_detail_content_layout_right_padding"
-        android:paddingStart="@dimen/way_point_detail_content_layout_left_padding"
-        android:paddingTop="@dimen/way_point_detail_content_layout_top_padding">
+        android:paddingBottom="@dimen/waypoint_detail_content_layout_bottom_padding"
+        android:paddingEnd="@dimen/waypoint_detail_content_layout_right_padding"
+        android:paddingLeft="@dimen/waypoint_detail_content_layout_left_padding"
+        android:paddingRight="@dimen/waypoint_detail_content_layout_right_padding"
+        android:paddingStart="@dimen/waypoint_detail_content_layout_left_padding"
+        android:paddingTop="@dimen/waypoint_detail_content_layout_top_padding">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -73,7 +73,7 @@
                 android:text="@string/flight_altitude" />
 
             <TextView
-                style="@style/way_point_detail_unit_text_style"
+                style="@style/waypoint_detail_unit_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -85,9 +85,9 @@
         <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
             android:id="@+id/altitude_wheel"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/way_point_detail_spinner_wheel_height"
-            android:layout_marginTop="@dimen/way_point_detail_spinner_wheel_top_margin"
-            android:background="@drawable/way_point_detail_spinner_wheel_bg"
+            android:layout_height="@dimen/waypoint_detail_spinner_wheel_height"
+            android:layout_marginTop="@dimen/waypoint_detail_spinner_wheel_top_margin"
+            android:background="@drawable/waypoint_detail_spinner_wheel_bg"
             app:isAllVisible="false"
             app:isCyclic="false"
             app:itemsDimmedAlpha="100"
@@ -96,7 +96,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/way_point_detail_delay_unit_layout_top_margin">
+            android:layout_marginTop="@dimen/waypoint_detail_stay_unit_layout_top_margin">
 
             <TextView
                 style="@style/mission_plan_detail_text_style"
@@ -107,7 +107,7 @@
                 android:text="@string/stay" />
 
             <TextView
-                style="@style/way_point_detail_unit_text_style"
+                style="@style/waypoint_detail_unit_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -117,11 +117,45 @@
         </RelativeLayout>
 
         <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
-            android:id="@+id/delay_wheel"
+            android:id="@+id/stay_wheel"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/way_point_detail_spinner_wheel_height"
-            android:layout_marginTop="@dimen/way_point_detail_spinner_wheel_top_margin"
-            android:background="@drawable/way_point_detail_spinner_wheel_bg"
+            android:layout_height="@dimen/waypoint_detail_spinner_wheel_height"
+            android:layout_marginTop="@dimen/waypoint_detail_spinner_wheel_top_margin"
+            android:background="@drawable/waypoint_detail_spinner_wheel_bg"
+            app:isAllVisible="false"
+            app:isCyclic="false"
+            app:itemsDimmedAlpha="100"
+            app:visibleItems="5" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/waypoint_detail_stay_unit_layout_top_margin">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="@string/speed_to_next" />
+
+            <TextView
+                style="@style/waypoint_detail_unit_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/speed_unit" />
+
+        </RelativeLayout>
+
+        <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+            android:id="@+id/speed_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/waypoint_detail_spinner_wheel_height"
+            android:layout_marginTop="@dimen/waypoint_detail_spinner_wheel_top_margin"
+            android:background="@drawable/waypoint_detail_spinner_wheel_bg"
             app:isAllVisible="false"
             app:isCyclic="false"
             app:itemsDimmedAlpha="100"
@@ -130,7 +164,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/way_point_detail_location_layout_top_margin"
+            android:layout_marginTop="@dimen/waypoint_detail_location_layout_top_margin"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -147,10 +181,10 @@
 
                 <EditText
                     android:id="@+id/way_point_detail_lat_text"
-                    style="@style/way_point_detail_location_text_style"
+                    style="@style/waypoint_detail_location_text_style"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/way_point_detail_location_text_height"
-                    android:layout_marginTop="@dimen/way_point_detail_location_text_top_margin"
+                    android:layout_height="@dimen/waypoint_detail_location_text_height"
+                    android:layout_marginTop="@dimen/waypoint_detail_location_text_top_margin"
                     android:background="@color/mission_item_location_field_bg"
                     android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
@@ -161,8 +195,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/way_point_detail_longitude_layout_left_margin"
-                android:layout_marginStart="@dimen/way_point_detail_longitude_layout_left_margin"
+                android:layout_marginLeft="@dimen/waypoint_detail_longitude_layout_left_margin"
+                android:layout_marginStart="@dimen/waypoint_detail_longitude_layout_left_margin"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -174,10 +208,10 @@
 
                 <EditText
                     android:id="@+id/way_point_detail_lng_text"
-                    style="@style/way_point_detail_location_text_style"
+                    style="@style/waypoint_detail_location_text_style"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/way_point_detail_location_text_height"
-                    android:layout_marginTop="@dimen/way_point_detail_location_text_top_margin"
+                    android:layout_height="@dimen/waypoint_detail_location_text_height"
+                    android:layout_marginTop="@dimen/waypoint_detail_location_text_top_margin"
                     android:background="@color/mission_item_location_field_bg"
                     android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
@@ -188,10 +222,10 @@
 
         <Button
             android:id="@+id/btn_detail_delete"
-            style="@style/way_point_detail_delete_button_text_style"
+            style="@style/waypoint_detail_delete_button_text_style"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/way_point_detail_delete_button_height"
-            android:layout_marginTop="@dimen/way_point_detail_delete_button_top_margin"
+            android:layout_height="@dimen/waypoint_detail_delete_button_height"
+            android:layout_marginTop="@dimen/waypoint_detail_delete_button_top_margin"
             android:background="#C85D5D"
             android:text="@string/delete"/>
     </LinearLayout>

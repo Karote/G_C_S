@@ -12,14 +12,12 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelScrollListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
+import com.coretronic.drone.util.ConstantValue;
 
 /**
  * Created by karot.chuang on 2015/7/21.
  */
 public class FollowMeFragment extends MapChildFragment implements DroneController.FollowMeStateListener {
-    private static final int DEFAULT_ALTITUDE = 8;
-    private static final int MIN_VALUE = 1;
-    private static final int MAX_VALUE = 20;
 
     private AbstractWheel mAltitudeWheel = null;
     private View mStartFollowMePanel = null;
@@ -39,11 +37,11 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAltitudeWheel = (AbstractWheel) view.findViewById(R.id.follow_me_altitude_wheel);
-        final NumericWheelAdapter altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), MIN_VALUE, MAX_VALUE, "%01d");
+        final NumericWheelAdapter altitudeAdapter = new NumericWheelAdapter(getActivity().getBaseContext(), ConstantValue.ALTITUDE_MIN_VALUE, ConstantValue.ALTITUDE_MAX_VALUE, "%01d");
         altitudeAdapter.setItemResource(R.layout.text_wheel_number);
         mAltitudeWheel.setViewAdapter(altitudeAdapter);
         mAltitudeWheel.setCyclic(false);
-        mAltitudeWheel.setCurrentItem(DEFAULT_ALTITUDE - MIN_VALUE);
+        mAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE - ConstantValue.ALTITUDE_MIN_VALUE);
         mAltitudeWheel.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(AbstractWheel wheel) {
@@ -53,7 +51,7 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
             @Override
             public void onScrollingFinished(AbstractWheel wheel) {
                 if (mStartFollowMePanel.getVisibility() == View.GONE) {
-                    ((MainActivity) getActivity()).getDroneController().startFollowMe(mAltitudeWheel.getCurrentItem() + MIN_VALUE, FollowMeFragment.this);
+                    ((MainActivity) getActivity()).getDroneController().startFollowMe(mAltitudeWheel.getCurrentItem() + ConstantValue.ALTITUDE_MIN_VALUE, FollowMeFragment.this);
                 }
             }
         });
