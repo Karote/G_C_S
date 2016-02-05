@@ -181,30 +181,32 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         if (mIsSelectLayoutVisible) {
             viewHolder.selectCheck.setVisibility(View.VISIBLE);
             viewHolder.selectCheck.setSelected(mSelectedItems.get(position, false));
-            viewHolder.rowItemLayout.setEnabled(false);
         } else {
             viewHolder.selectCheck.setVisibility(View.GONE);
-            viewHolder.rowItemLayout.setEnabled(true);
         }
 
         viewHolder.rowItemLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFocusIndex == position) {
-                    viewHolder.focusBar.setVisibility(View.INVISIBLE);
-                    viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.point_list_item_row_name_unselected));
-                    viewHolder.serialNumberTextView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-                    mFocusIndex = -1;
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onNothingSelected();
-                    }
+                if (mIsSelectLayoutVisible) {
+                    viewHolder.selectCheck.performClick();
                 } else {
-                    viewHolder.focusBar.setVisibility(View.VISIBLE);
-                    viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.white));
-                    viewHolder.serialNumberTextView.setTypeface(Typeface.create("sans-serif-black", Typeface.NORMAL));
-                    mFocusIndex = position;
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onItemSelected(mission, mFocusIndex);
+                    if (mFocusIndex == position) {
+                        viewHolder.focusBar.setVisibility(View.INVISIBLE);
+                        viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.point_list_item_row_name_unselected));
+                        viewHolder.serialNumberTextView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+                        mFocusIndex = -1;
+                        if (mItemClickListener != null) {
+                            mItemClickListener.onNothingSelected();
+                        }
+                    } else {
+                        viewHolder.focusBar.setVisibility(View.VISIBLE);
+                        viewHolder.serialNumberTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+                        viewHolder.serialNumberTextView.setTypeface(Typeface.create("sans-serif-black", Typeface.NORMAL));
+                        mFocusIndex = position;
+                        if (mItemClickListener != null) {
+                            mItemClickListener.onItemSelected(mission, mFocusIndex);
+                        }
                     }
                 }
                 notifyDataSetChanged();

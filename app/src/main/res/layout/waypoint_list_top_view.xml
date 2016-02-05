@@ -118,7 +118,7 @@
         <RelativeLayout
             android:layout_width="108dp"
             android:layout_height="match_parent"
-            android:background="@color/black_transparent_95"
+            android:background="@color/black_transparent_80"
             android:orientation="horizontal">
 
             <ImageView
