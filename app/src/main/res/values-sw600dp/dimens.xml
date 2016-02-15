@@ -96,7 +96,7 @@
     <dimen name="waypoint_detail_delete_button_top_margin">8dp</dimen>
     <dimen name="waypoint_detail_spinner_wheel_width">246dp</dimen>
     <dimen name="waypoint_detail_spinner_wheel_focus_padding">91dp</dimen>
-    <dimen name="waypoint_detail_spinner_wheel_focus_width">64dp</dimen>
+    <dimen name="waypoint_detail_spinner_wheel_focus_width">52dp</dimen>
     <dimen name="waypoint_detail_name_text_size">24sp</dimen>
     <dimen name="waypoint_detail_name_text_width">54dp</dimen>
 

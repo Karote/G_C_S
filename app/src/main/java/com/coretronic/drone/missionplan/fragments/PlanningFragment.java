@@ -333,12 +333,12 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     };
 
     private void missionAdapterShowSelect(boolean isShow) {
+        mWayPointDetailPanel.setVisibility(View.GONE);
         if (isShow) {
             mMissionItemAdapter.setSelectLayoutVisible(true);
         } else {
             mMissionItemAdapter.setSelectLayoutVisible(false);
         }
-        mWayPointDetailPanel.setVisibility(View.GONE);
     }
 
     private void updateMissionToMap() {

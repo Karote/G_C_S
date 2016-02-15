@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="294dp"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/popup_properties_bg"
     android:orientation="vertical"
-    android:padding="0dp">
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,8 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginLeft="48dp"
-            android:layout_marginStart="48dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@string/font_roboto_condensed"
             android:text="@string/cancel"
@@ -31,13 +32,14 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="16dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginRight="48dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@string/font_roboto_condensed"
             android:text="@string/aerial_survey_dialog_ok"
             android:textColor="@drawable/waypoint_edit_setting_button_text_color"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -72,10 +74,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="@dimen/waypoint_detail_content_layout_bottom_padding"
-        android:paddingEnd="@dimen/waypoint_detail_content_layout_right_padding"
-        android:paddingLeft="@dimen/waypoint_detail_content_layout_left_padding"
-        android:paddingRight="@dimen/waypoint_detail_content_layout_right_padding"
-        android:paddingStart="@dimen/waypoint_detail_content_layout_left_padding"
         android:paddingTop="@dimen/waypoint_detail_content_layout_top_padding">
 
         <RelativeLayout
