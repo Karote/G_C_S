@@ -401,7 +401,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mMoreFunctionPopupDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mMoreFunctionPopupDialog.setContentView(R.layout.popwindow_more_function);
         WindowManager.LayoutParams wmlp = mMoreFunctionPopupDialog.getWindow().getAttributes();
-        wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+        wmlp.gravity = Gravity.TOP | Gravity.START;
         int[] viewLocationInPx = new int[2];
         v.getLocationOnScreen(viewLocationInPx);
         wmlp.x = viewLocationInPx[0] - getResources().getDimensionPixelOffset(R.dimen.popdialog_more_function_width) + getResources().getDimensionPixelOffset(R.dimen.popdialog_more_function_peak_right_margin) + (v.getWidth() / 2);
