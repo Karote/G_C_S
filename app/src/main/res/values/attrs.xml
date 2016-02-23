@@ -29,4 +29,14 @@
         <attr name="progressColor" format="color" />
         <attr name="roundEdges" format="boolean" />
     </declare-styleable>
+
+    <attr name="label" format="string" />
+    <declare-styleable name="FlightModeModel">
+        <attr name="label" />
+        <attr name="range" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="RcCalibrationBar">
+        <attr name="label" />
+    </declare-styleable>
 </resources>

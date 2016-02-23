@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/popdialog_more_function_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_properties_bg"
+    android:orientation="vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <Button
+        android:id="@+id/altitude_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/flight_altitude"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/manual_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/manual"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/gps_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/gps"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/rtl_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/rtl"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/land_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/land"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/optical_flow_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/optical_flow"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+</LinearLayout>

@@ -49,4 +49,8 @@
 
     <color name="plan_go_button">#669900</color>
     <color name="plan_stop_button">#e23b3b</color>
+
+    <color name="settings_main_title_text_normal_color">#8f8f8f</color>
+    <color name="settings_main_title_divider_color">#4f4f4f</color>
+    <color name="settings_button_normal_bg">#8b8b8b</color>
 </resources>
