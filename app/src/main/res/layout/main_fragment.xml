@@ -90,7 +90,19 @@
                 android:layout_alignRight="@+id/coretronic_logo_title"
                 android:layout_marginBottom="@dimen/main_fragment_setting_btn_margin_bottom"
                 android:layout_marginRight="@dimen/main_fragment_setting_btn_margin_right"
-                android:src="@drawable/main_fragment_main_setting_button_icon"/>
+                android:src="@drawable/main_fragment_main_setting_button_icon" />
+
+            <ImageView
+                android:id="@+id/btn_preflight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/coretronic_logo_title"
+                android:layout_marginBottom="@dimen/main_fragment_setting_btn_margin_bottom"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@id/btn_flight_setting"
+                android:layout_toStartOf="@id/btn_flight_setting"
+                android:src="@drawable/main_fragment_main_preflight_button_icon" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

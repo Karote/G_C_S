@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
+import com.coretronic.drone.settings.PreflightCheckDialogFragment;
 import com.coretronic.drone.settings.SettingsMaingFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.util.AppConfig;
@@ -60,6 +62,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         view.findViewById(R.id.btn_mission_plan).setOnClickListener(this);
         view.findViewById(R.id.btn_flight_history).setOnClickListener(this);
         view.findViewById(R.id.btn_flight_setting).setOnClickListener(this);
+        view.findViewById(R.id.btn_preflight).setOnClickListener(this);
 
         ((TextView) view.findViewById(R.id.tv_app_version)).setText("v " + BuildConfig.VERSION_NAME);
         Button logoutButton = (Button) view.findViewById(R.id.btn_logout);
@@ -231,6 +234,10 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             case R.id.btn_flight_setting:
 //                fragment = new SettingFragment();
                 fragment = new SettingsMaingFragment();
+                break;
+            case R.id.btn_preflight:
+                DialogFragment preflightCheckDialog = new PreflightCheckDialogFragment();
+                preflightCheckDialog.show(getFragmentManager().beginTransaction(), "PreflightCheckDialog");
                 break;
         }
         if (fragment != null) {
