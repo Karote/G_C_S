@@ -8,7 +8,8 @@
     android:layout_marginRight="32dp"
     android:layout_marginStart="40dp"
     android:layout_marginTop="24dp"
-    android:scrollbarSize="3dp">
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar_thumb_white_alpha35">
 
     <LinearLayout
         android:layout_width="match_parent"

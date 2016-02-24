@@ -428,7 +428,11 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mLoadPlanningPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mLoadPlanningPopDialog.setCanceledOnTouchOutside(false);
         mLoadPlanningPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mLoadPlanningPopDialog.setContentView(R.layout.popwindow_load_mission);
+        mLoadPlanningPopDialog.setContentView(R.layout.dialog_load_mission);
+        WindowManager.LayoutParams wmlp = mLoadPlanningPopDialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.CENTER;
+        wmlp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        mLoadPlanningPopDialog.getWindow().setAttributes(wmlp);
 
         GridView mLoadPlanningGridView = (GridView) mLoadPlanningPopDialog.findViewById(R.id.load_mission_grid_view);
         mLoadPlanningGridView.setAdapter(mLoadPlanningListAdapter);
