@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:background="@drawable/route_properties_ok_button_bg"
             android:fontFamily="@string/font_roboto_regular"
-            android:text="@string/aerial_survey_dialog_ok"
+            android:text="@string/ok"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />

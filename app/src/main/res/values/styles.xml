@@ -58,6 +58,24 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="motor_test_button_text_style">
+        <item name="android:fontFamily">@string/font_roboto_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@drawable/motor_test_button_text_color</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="preflight_check_title_text_style">
+        <item name="android:fontFamily">@string/font_roboto_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#474747</item>
+    </style>
+
+    <style name="preflight_check_status_text_style">
+        <item name="android:fontFamily">@string/font_roboto_medium</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="mav_info_content_text_style">
         <item name="android:layout_gravity">bottom</item>
         <item name="android:fontFamily">@string/font_roboto_condensed</item>

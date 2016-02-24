@@ -155,6 +155,19 @@
     <string name="firmware_update">Firmware Update</string>
     <string name="check_now">Check Now</string>
 
+    <!-- Preflight Check -->
+    <string name="preflight_check">Preflight Check</string>
+    <string name="ok">OK</string>
+    <string name="test_for_motors">Test for Motors</string>
+    <string name="remote_controller">Remote Controller</string>
+    <string name="compass">Compass</string>
+    <string name="accelerometers">Accelerometers</string>
+    <string name="barometer">Barometer</string>
+    <string name="sonar">Sonar</string>
+    <string name="unconnected">Unconnected</string>
+    <string name="no_signal">No Signal</string>
+    <string name="ready">Ready</string>
+
     <!-- main -->
     <string name="version">version</string>
     <string name="mission_plan">MISSION PLAN</string>
@@ -195,7 +208,6 @@
     <string name="aerial_survey_strips">NUMBER OF STRIPS</string>
     <string name="aerial_survey_strips_hint">8</string>
     <string name="aerial_survey_dialog_back">BACK</string>
-    <string name="aerial_survey_dialog_ok">OK</string>
     <string name="aerial_survey_dialog_camera">Camera</string>
     <string name="aerial_survey_dialog_camera_hint">Canon SX260</string>
     <string name="save_mission">Save Mission</string>
