@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="32dp"
+    android:layout_marginLeft="40dp"
+    android:layout_marginRight="32dp"
+    android:layout_marginStart="40dp"
+    android:layout_marginTop="24dp"
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar_thumb_white_alpha35">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/altitude_max_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/altitude_max" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/altitude_max_title"
+                    android:text="@string/except_manual_mode" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_altitude_max"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/vertical_speed_max_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vertical_speed_max" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/vertical_speed_max_title"
+                    android:text="@string/except_manual_mode" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_vertical_speed_max"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/horizontal_speed_max_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/horizontal_speed_max" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/horizontal_speed_max_title"
+                    android:text="@string/for_gps_mode" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/rtl_speed" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/rtl_altitude" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/heading_direction" />
+
+            <RadioGroup
+                android:id="@+id/settings_heading_direction_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/heading_direction_never_change_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/never_change" />
+
+                <RadioButton
+                    android:id="@+id/heading_direction_next_waypoint_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/next_waypoint" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/rtl_heading_direction" />
+
+            <RadioGroup
+                android:id="@+id/settings_rtl_heading_direction_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rtl_heading_direction_front_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/front" />
+
+                <RadioButton
+                    android:id="@+id/rtl_heading_direction_rear_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/rear" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/throttle_position_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/throttle_position" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/throttle_position_title"
+                    android:text="@string/for_hovering" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/horizontal_speed_default_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/horizontal_speed_default" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/horizontal_speed_default_title"
+                    android:text="@string/for_waypoint" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/optical_flow" />
+
+            <RadioGroup
+                android:id="@+id/setting_optical_flow_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/optical_flow_on_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/switch_btn_on" />
+
+                <RadioButton
+                    android:id="@+id/optical_flow_off_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/switch_btn_off" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/magnetic_field_deviation" />
+
+            <Button
+                android:id="@+id/settings_magnetic_field_deviation_auto_adjust_button"
+                style="@style/settings_button_text"
+                android:layout_width="144dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/settings_button_bg"
+                android:text="@string/auto_adjust" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/flat_trim" />
+
+            <Button
+                android:id="@+id/settings_flat_trim_execute_button"
+                style="@style/settings_button_text"
+                android:layout_width="144dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/settings_button_bg"
+                android:text="@string/execute" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/show_flight_route" />
+
+            <RadioGroup
+                android:id="@+id/settings_show_flight_route_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/show_flight_route_on_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/switch_btn_on" />
+
+                <RadioButton
+                    android:id="@+id/show_flight_route_off_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/switch_btn_off" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_to_default" />
+
+            <Button
+                android:id="@+id/settings_reset_to_default_reset_button"
+                style="@style/settings_button_text"
+                android:layout_width="144dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/settings_button_bg"
+                android:text="@string/reset" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:text="@string/firmware_update" />
+
+            <Button
+                android:id="@+id/settings_firmware_update_check_button"
+                style="@style/settings_button_text"
+                android:layout_width="144dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/settings_button_bg"
+                android:text="@string/check_now" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

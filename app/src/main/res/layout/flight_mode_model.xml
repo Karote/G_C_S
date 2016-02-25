@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="204dp"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/label_text"
+            style="@style/settings_title_lv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/flight_mode_1" />
+
+        <TextView
+            android:id="@+id/range_text"
+            style="@style/settings_title_lv_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1231-1360" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mode_type_button"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_weight="100"
+            android:background="@drawable/settings_button_bg"
+            android:drawableEnd="@drawable/icon_settings_down_arrow"
+            android:drawableRight="@drawable/icon_settings_down_arrow"
+            android:fontFamily="@string/font_roboto_medium"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:paddingStart="12dp"
+            android:text="@string/flight_altitude"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <RadioGroup
+            android:id="@+id/flight_mode_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/heading_lock_button"
+                style="@style/settings_button_text"
+                android:layout_width="114dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/settings_button_bg"
+                android:button="@android:color/transparent"
+                android:text="@string/heading_lock" />
+
+            <RadioButton
+                android:id="@+id/home_lock_button"
+                style="@style/settings_button_text"
+                android:layout_width="114dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_marginStart="1dp"
+                android:background="@drawable/settings_button_bg"
+                android:button="@android:color/transparent"
+                android:text="@string/home_lock" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+</LinearLayout>

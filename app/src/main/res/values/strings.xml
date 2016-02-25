@@ -57,15 +57,15 @@
     <string name="time_hint">09:26</string>
 
     <!-- Setting-->
-    <string name="altitude_max">ALTITUDE MAX</string>
-    <string name="vertical_speed_max">VERTICAL SPEED MAX</string>
+    <string name="altitude_max">Altitude Max</string>
+    <string name="vertical_speed_max">Vertical Speed Max</string>
     <string name="rotation_speed_max">ROTATION SPEED MAX</string>
     <string name="tilt_angle_max">TILT ANGLE MAX</string>
     <string name="low_power_protection">LOW POWER PROTECT</string>
     <string name="low_power_protection_level_1">LEVEL1</string>
     <string name="low_power_protection_level_2">LEVEL2</string>
-    <string name="flat_trim">FLAT TRIM</string>
-    <string name="execute">EXECUTE</string>
+    <string name="flat_trim">Flat Trim</string>
+    <string name="execute">Execute</string>
     <string name="last_execution">Last Execution:</string>
     <string name="basic_aileron_gain">BASIC AILERON GAIN</string>
     <string name="basic_elevator_gain">BASIC ELEVATOR GAIN</string>
@@ -74,6 +74,99 @@
     <string name="attitude_gps_elevator_gain">ATTITUDE/GPS ELEVATOR GAIN</string>
     <string name="attitude_gps_rudder_gain">ATTITUDE/GPS RUDDER GAIN</string>
     <string name="altitude_gain">ALTITUDE GAIN</string>
+    <string name="rc_tx_rx">RC TRANSMITER &amp;\nRECEVER</string>
+    <string name="gain">GAIN</string>
+    <string name="battery_and_failsafe">BATTERY &amp; FAILSAFE</string>
+    <string name="general">GENERAL</string>
+
+    <!-- RC TRANSMITER & RECEVER -->
+    <string name="receiver_type">Receiver Type</string>
+    <string name="receiver_type_futaba">Futaba</string>
+    <string name="receiver_type_jr">JR</string>
+    <string name="receiver_type_spektrum">Spektrum</string>
+    <string name="flight_mode">Flight Mode</string>
+    <string name="flight_mode_1">Flight Mode 1</string>
+    <string name="flight_mode_2">Flight Mode 2</string>
+    <string name="flight_mode_3">Flight Mode 3</string>
+    <string name="flight_mode_4">Flight Mode 4</string>
+    <string name="flight_mode_5">Flight Mode 5</string>
+    <string name="flight_mode_6">Flight Mode 6</string>
+    <string name="heading_lock">Heading Lock</string>
+    <string name="home_lock">Home Lock</string>
+    <string name="manual">Manual</string>
+    <string name="gps">GPS</string>
+    <string name="tuning">Tuning</string>
+    <string name="throttle_position_for_hovering">Throttle Position for Hovering</string>
+    <string name="basic_p_gain_roll_pitch">Basic P Gain - Roll / Pitch</string>
+    <string name="gear">Gear</string>
+    <string name="reverse">Reverse</string>
+    <string name="retract">Retract</string>
+    <string name="deploy">Deploy</string>
+    <string name="camera_trigger">Camera Trigger</string>
+    <string name="calibration">Calibration</string>
+    <string name="start">Start</string>
+    <string name="roll">Roll</string>
+    <string name="pitch">Pitch</string>
+    <string name="yaw">Yaw</string>
+    <string name="throttle">Throttle</string>
+    <string name="minus_hundred_percent">-100%</string>
+    <string name="one_hundred_percent">100%</string>
+
+    <!-- Gain -->
+    <string name="basic_gain">Basic Gain</string>
+    <string name="altitude_gps_mode_gain">Altitude/GPS\nMode Gain</string>
+
+    <!-- Battery & Failsafe -->
+    <string name="battery_capacity">Battery Capacity</string>
+    <string name="per_battery">Per Battery</string>
+    <string name="ten_thousand_mah">10000mAh</string>
+    <string name="sixteen_thousand_mah">16000mAh</string>
+    <string name="twenty_two_thousand_mah">22000mAh</string>
+    <string name="failsafe">Failsafe</string>
+    <string name="battery_remaining">Battery \nRemaining</string>
+    <string name="none">None</string>
+    <string name="rtl">RTL</string>
+    <string name="land">Land</string>
+    <string name="rc_signal_lost">RC Signal Lost</string>
+    <string name="gps_signal_lost">GPS Signal Lost</string>
+    <string name="gcs_signal_lost">GCS Signal Lost</string>
+
+    <!-- General -->
+    <string name="except_manual_mode">Except Manual Mode</string>
+    <string name="horizontal_speed_max">Horizontal Speed Max</string>
+    <string name="for_gps_mode">For GPS Mode</string>
+    <string name="rtl_speed">RTL Speed</string>
+    <string name="rtl_altitude">RTL Altitude</string>
+    <string name="heading_direction">Heading Direction</string>
+    <string name="never_change">Never Change</string>
+    <string name="next_waypoint">Next Waypoint</string>
+    <string name="rtl_heading_direction">RTL Heading Direction</string>
+    <string name="front">Front</string>
+    <string name="rear">Rear</string>
+    <string name="throttle_position">Throttle Position</string>
+    <string name="for_hovering">For Hovering</string>
+    <string name="horizontal_speed_default">Horizontal Speed Default</string>
+    <string name="for_waypoint">For Waypoint</string>
+    <string name="optical_flow">Optical Flow</string>
+    <string name="magnetic_field_deviation">Magnetic Field Deviation</string>
+    <string name="auto_adjust">Auto adjust</string>
+    <string name="show_flight_route">Show Flight Route</string>
+    <string name="reset_to_default">Reset to Default</string>
+    <string name="firmware_update">Firmware Update</string>
+    <string name="check_now">Check Now</string>
+
+    <!-- Preflight Check -->
+    <string name="preflight_check">Preflight Check</string>
+    <string name="ok">OK</string>
+    <string name="test_for_motors">Test for Motors</string>
+    <string name="remote_controller">Remote Controller</string>
+    <string name="compass">Compass</string>
+    <string name="accelerometers">Accelerometers</string>
+    <string name="barometer">Barometer</string>
+    <string name="sonar">Sonar</string>
+    <string name="unconnected">Unconnected</string>
+    <string name="no_signal">No Signal</string>
+    <string name="ready">Ready</string>
 
     <!-- main -->
     <string name="version">version</string>
@@ -115,7 +208,6 @@
     <string name="aerial_survey_strips">NUMBER OF STRIPS</string>
     <string name="aerial_survey_strips_hint">8</string>
     <string name="aerial_survey_dialog_back">BACK</string>
-    <string name="aerial_survey_dialog_ok">OK</string>
     <string name="aerial_survey_dialog_camera">Camera</string>
     <string name="aerial_survey_dialog_camera_hint">Canon SX260</string>
     <string name="save_mission">Save Mission</string>

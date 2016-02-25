@@ -9,7 +9,7 @@
         android:layout_width="@dimen/setting_progress_text_width"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/setting_progress_text_margin_right"
-        android:fontFamily="@string/font_roboto_regular"
+        android:fontFamily="@string/font_roboto_black"
         android:gravity="center|right"
         android:textColor="@color/blue_sky"
         android:textSize="@dimen/setting_progress_text_size"

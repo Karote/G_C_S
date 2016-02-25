@@ -2,18 +2,18 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <size android:height="@dimen/setting_progress_bar_height"/>
-            <solid android:color="@color/gray"/>
-            <corners android:radius="@dimen/setting_progress_bar_height"/>
+            <size android:height="@dimen/setting_progress_bar_height" />
+            <solid android:color="@color/white" />
+            <corners android:radius="@dimen/setting_progress_bar_height" />
         </shape>
     </item>
 
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <size android:height="@dimen/setting_progress_bar_height"/>
-                <solid android:color="@color/blue_sky"/>
-                <corners android:radius="@dimen/setting_progress_bar_height"/>
+                <size android:height="@dimen/setting_progress_bar_height" />
+                <solid android:color="@color/primary_color_normal" />
+                <corners android:radius="@dimen/setting_progress_bar_height" />
             </shape>
         </clip>
     </item>

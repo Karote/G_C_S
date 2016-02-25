@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="488dp"
+    android:layout_height="match_parent"
+    android:paddingBottom="24dp"
+    android:paddingTop="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/plan_point_detail_bg"
+        android:orientation="vertical"
+        android:paddingBottom="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@string/font_roboto_regular"
+                android:text="@string/preflight_check"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <Button
+                android:id="@+id/preflight_check_ok_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/transparent"
+                android:fontFamily="@string/font_roboto_condensed"
+                android:text="@string/ok"
+                android:textColor="@drawable/dialog_dismiss_button_text_color"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/motor_type_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/icon_motor_type06" />
+
+            <TextView
+                android:id="@+id/motor_test_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/motor_type_icon"
+                android:layout_alignStart="@id/motor_type_icon"
+                android:layout_below="@id/motor_type_icon"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@string/font_roboto_regular"
+                android:text="@string/test_for_motors"
+                android:textColor="#474747"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/motor_test_button_group1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/motor_type_icon"
+                android:layout_alignStart="@id/motor_type_icon"
+                android:layout_below="@id/motor_test_title"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical">
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="1" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="2" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="3" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="4" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="5" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="6" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/motor_test_button_group2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/motor_test_title"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="6dp"
+                android:layout_toEndOf="@id/motor_test_button_group1"
+                android:layout_toRightOf="@id/motor_test_button_group1"
+                android:orientation="vertical">
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="7" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="8" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="9" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="10" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="11" />
+
+                <Button
+                    style="@style/motor_test_button_text_style"
+                    android:layout_width="82dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/btn_motor_test_background"
+                    android:text="12" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/motor_type_icon"
+                android:layout_toRightOf="@id/motor_type_icon"
+                android:background="#d5d5d5" />
+
+            <RelativeLayout
+                android:id="@+id/battery_1"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="32dp"
+                android:layout_toEndOf="@id/divider"
+                android:layout_toRightOf="@id/divider">
+
+                <RelativeLayout
+                    android:id="@+id/battery_icon_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_battery_light_0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@string/font_roboto_black"
+                        android:text="1"
+                        android:textColor="#bfbfbf"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_icon_1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@string/font_roboto_medium"
+                    android:singleLine="true"
+                    android:text="@string/twenty_two_thousand_mah"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/battery_2"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_toEndOf="@id/battery_1"
+                android:layout_toRightOf="@id/battery_1">
+
+                <RelativeLayout
+                    android:id="@+id/battery_icon_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_battery_light_0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@string/font_roboto_black"
+                        android:text="2"
+                        android:textColor="#bfbfbf"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_icon_2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@string/font_roboto_medium"
+                    android:singleLine="true"
+                    android:text="@string/twenty_two_thousand_mah"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/battery_3"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_toEndOf="@id/battery_2"
+                android:layout_toRightOf="@id/battery_2">
+
+                <RelativeLayout
+                    android:id="@+id/battery_icon_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_battery_light_0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@string/font_roboto_black"
+                        android:text="3"
+                        android:textColor="#bfbfbf"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_icon_3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@string/font_roboto_medium"
+                    android:singleLine="true"
+                    android:text="@string/twenty_two_thousand_mah"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/battery_1"
+                android:layout_marginEnd="36dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="45dp"
+                android:layout_toEndOf="@id/divider"
+                android:layout_toRightOf="@id/divider"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/battery_capacity_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/battery_capacity_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/battery_capacity_check_icon"
+                        android:layout_toRightOf="@id/battery_capacity_check_icon"
+                        android:text="@string/battery_capacity" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/battery_capacity_check_title"
+                        android:layout_toEndOf="@id/battery_capacity_check_icon"
+                        android:layout_toRightOf="@id/battery_capacity_check_icon"
+                        android:text="0%"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/rc_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/rc_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/rc_check_icon"
+                        android:layout_toRightOf="@id/rc_check_icon"
+                        android:text="@string/remote_controller" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rc_check_title"
+                        android:layout_toEndOf="@id/rc_check_icon"
+                        android:layout_toRightOf="@id/rc_check_icon"
+                        android:text="@string/unconnected"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/compass_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/compass_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/compass_check_icon"
+                        android:layout_toRightOf="@id/compass_check_icon"
+                        android:text="@string/compass" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/compass_check_title"
+                        android:layout_toEndOf="@id/compass_check_icon"
+                        android:layout_toRightOf="@id/compass_check_icon"
+                        android:text="@string/no_signal"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/accelerometers_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/accelerometers_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/accelerometers_check_icon"
+                        android:layout_toRightOf="@id/accelerometers_check_icon"
+                        android:text="@string/accelerometers" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/accelerometers_check_title"
+                        android:layout_toEndOf="@id/accelerometers_check_icon"
+                        android:layout_toRightOf="@id/accelerometers_check_icon"
+                        android:text="@string/no_signal"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/gps_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/gps_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/gps_check_icon"
+                        android:layout_toRightOf="@id/gps_check_icon"
+                        android:text="@string/gps" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gps_check_title"
+                        android:layout_toEndOf="@id/gps_check_icon"
+                        android:layout_toRightOf="@id/gps_check_icon"
+                        android:text="@string/no_signal"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/barometer_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/barometer_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/barometer_check_icon"
+                        android:layout_toRightOf="@id/barometer_check_icon"
+                        android:text="@string/barometer" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/barometer_check_title"
+                        android:layout_toEndOf="@id/barometer_check_icon"
+                        android:layout_toRightOf="@id/barometer_check_icon"
+                        android:text="@string/no_signal"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/sonar_check_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_circle_check_alart" />
+
+                    <TextView
+                        android:id="@+id/sonar_check_title"
+                        style="@style/preflight_check_title_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/sonar_check_icon"
+                        android:layout_toRightOf="@id/sonar_check_icon"
+                        android:text="@string/sonar" />
+
+                    <TextView
+                        style="@style/preflight_check_status_text_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/sonar_check_title"
+                        android:layout_toEndOf="@id/sonar_check_icon"
+                        android:layout_toRightOf="@id/sonar_check_icon"
+                        android:text="@string/no_signal"
+                        android:textColor="@color/preflight_check_status_text_alart_color" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</FrameLayout>
