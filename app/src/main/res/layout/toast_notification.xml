@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_toast"
+    android:layout_width="340dp"
+    android:layout_height="54dp"
+    android:background="@color/black_transparent_80"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/notification_toast_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/icon_noti_battery" />
+
+    <TextView
+        android:id="@+id/notification_toast_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="Drone Battery Low - 20% remaining"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</LinearLayout>

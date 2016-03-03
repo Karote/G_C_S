@@ -199,4 +199,10 @@
     <dimen name="popdialog_more_function_button_drawablePadding">10dp</dimen>
     <dimen name="popdialog_more_function_peak_right_margin">33dp</dimen>
     <dimen name="waypoint_edit_setting_dialog_xoffset">414dp</dimen>
+
+    <dimen name="notification_toast_position_x">48dp</dimen>
+    <dimen name="notification_toast_position_y">0dp</dimen>
+    <dimen name="notification_toast_width">340dp</dimen>
+    <dimen name="notification_toast_height">54dp</dimen>
+    <dimen name="notification_center_popwindow_width">340dp</dimen>
 </resources>

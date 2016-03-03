@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="440dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/notification_dialog_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@string/font_roboto_medium"
+        android:gravity="center_horizontal"
+        android:text="GPS no Signal"
+        android:textColor="#474747"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/notification_dialog_dismiss_button"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/popdialog_button_bg"
+        android:fontFamily="@string/font_roboto_condensed"
+        android:text="Dismiss"
+        android:textColor="@color/primary_color_normal"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
