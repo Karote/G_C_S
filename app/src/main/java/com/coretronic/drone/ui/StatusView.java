@@ -19,6 +19,12 @@ import com.coretronic.drone.util.Utils;
  */
 public class StatusView extends LinearLayout {
 
+    private final static int UPDATE_GAP_NO_SIGNAL = 5 * 1000;
+    private final static int UPDATE_GAP_WEAK = 3 * 1000;
+    private final static int UPDATE_PERIOD = 1 * 1000;
+
+    private final static int[] DRONE_BATTERY_LOW_THRESHOLD_ARRAY = {20, 10, 5, 1, 0};
+
     private final static int GPS_LEVEL_0_SATELLITE_COUNT = 0;
     private final static int GPS_LEVEL_1_SATELLITE_COUNT = 4;
     private final static int GPS_LEVEL_2_SATELLITE_COUNT = 6;
@@ -38,6 +44,13 @@ public class StatusView extends LinearLayout {
     private Handler mTranslateHandler;
     private Runnable mTranslateRunnable;
     private CommunicateLightState mCommunicateLightState;
+
+    private int mGpsCurrentLevel;
+    private Handler mGpsAlarmHandler;
+    private Runnable mGpsAlarmRunnable;
+    private long mGpsAlarmTimestamp;
+    private StatusAlarmListener mStatusAlarmListener;
+    private int mDroneBatteryAlarmLevel;
 
     public StatusView(Context context) {
         super(context);
@@ -61,26 +74,88 @@ public class StatusView extends LinearLayout {
         mBatteryProgressBar = (ProgressBar) view.findViewById(R.id.progress_battery);
         mBatteryTextView = (TextView) view.findViewById(R.id.tv_battery);
         mCommunicateLightState = new CommunicateLightState((ImageView) view.findViewById(R.id.iv_communication_light));
+
+        mGpsAlarmHandler = new Handler();
+        mGpsCurrentLevel = 0;
+        mGpsAlarmTimestamp = System.currentTimeMillis();
+        mDroneBatteryAlarmLevel = 4;
+
         addView(view);
     }
 
     public void setRFStatus(int rssi) {
-        mRfStatusImageView.setImageLevel(Utils.calculateLevel(MAX_RF_VALUE, MIN_RF_VALUE, rssi, MAX_LEVEL_RF_STATUS));
+        int rfLevel = Utils.calculateLevel(MAX_RF_VALUE, MIN_RF_VALUE, rssi, MAX_LEVEL_RF_STATUS);
+        mRfStatusImageView.setImageLevel(rfLevel);
+
+        if (rfLevel == 0)
+            mStatusAlarmListener.onRemoteControllerDisconnect();
     }
 
     public void setGpsStatus(int satellites) {
-        mGpsStatus.setImageLevel(calculateGpsLevel(satellites));
-        if (calculateGpsLevel(satellites) > 0) {
+        final int gpsNewLevel = calculateGpsLevel(satellites);
+
+        mGpsStatus.setImageLevel(gpsNewLevel);
+        if (gpsNewLevel > 0) {
             mGpsCountTextView.setText(satellites + "");
             mGpsCountTextView.setVisibility(View.VISIBLE);
         } else {
             mGpsCountTextView.setVisibility(View.GONE);
         }
+
+
+        if (mGpsAlarmRunnable != null) {
+            return;
+        }
+        mGpsAlarmRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mGpsCurrentLevel == gpsNewLevel) {
+                    mGpsAlarmTimestamp = System.currentTimeMillis();
+                    return;
+                }
+
+                long gap = System.currentTimeMillis() - mGpsAlarmTimestamp;
+                if (gap > UPDATE_GAP_NO_SIGNAL) {
+                    if (gpsNewLevel > 0) {
+                        mStatusAlarmListener.onGpsSignalRecover();
+                    } else {
+                        mStatusAlarmListener.onGpsNoSignalAlarm();
+                    }
+                    mGpsCurrentLevel = gpsNewLevel;
+                    mGpsAlarmTimestamp = System.currentTimeMillis();
+                }
+                mGpsAlarmHandler.postDelayed(this, UPDATE_PERIOD);
+            }
+        };
+        mGpsAlarmHandler.postDelayed(mGpsAlarmRunnable, UPDATE_PERIOD);
     }
 
     public void setBatteryStatus(final int progress) {
         mBatteryTextView.setText(progress + "%");
         mBatteryProgressBar.setProgress(progress);
+
+        if (mDroneBatteryAlarmLevel > 3) {
+            initialDroneBatteryAlarmLevel(progress);
+        }
+
+        if (progress < DRONE_BATTERY_LOW_THRESHOLD_ARRAY[mDroneBatteryAlarmLevel]) {
+            mStatusAlarmListener.onBatteryLowAlarm(progress);
+            mDroneBatteryAlarmLevel++;
+        }
+    }
+
+    private void initialDroneBatteryAlarmLevel(int initValue) {
+        if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[0]) {
+            mDroneBatteryAlarmLevel = 0;
+        } else if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[1]) {
+            mDroneBatteryAlarmLevel = 1;
+        } else if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[2]) {
+            mDroneBatteryAlarmLevel = 2;
+        } else if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[3]) {
+            mDroneBatteryAlarmLevel = 3;
+        } else {
+            mDroneBatteryAlarmLevel = 4;
+        }
     }
 
     public void updateCommunicateLight() {
@@ -88,6 +163,12 @@ public class StatusView extends LinearLayout {
     }
 
     public void onDisconnect() {
+
+        if (mGpsAlarmRunnable != null) {
+            mGpsAlarmHandler.removeCallbacks(mGpsAlarmRunnable);
+            mGpsAlarmRunnable = null;
+        }
+
         mCommunicateLightState.onDisconnect();
         setBatteryStatus(0);
         setGpsStatus(-1);
@@ -120,10 +201,6 @@ public class StatusView extends LinearLayout {
         private final static int LEVEL_WEAK = 1;
         private final static int LEVEL_NORMAL = 2;
 
-        private final static int UPDATE_GAP_NO_SIGNAL = 5 * 1000;
-        private final static int UPDATE_GAP_WEAK = 3 * 1000;
-        private final static int UPDATE_PERIOD = 1 * 1000;
-
         private ImageView mCommunicateLightImageView;
         private long mLastUpdateTime;
         private int mCurrentLevel = LEVEL_NO_CONNECT;
@@ -150,6 +227,11 @@ public class StatusView extends LinearLayout {
             if (newLevel != mCurrentLevel) {
                 mCommunicateLightImageView.setImageLevel(newLevel);
                 mCurrentLevel = newLevel;
+
+
+                if (newLevel == LEVEL_NO_CONNECT) {
+                    mStatusAlarmListener.onDroneDisconnect();
+                }
             }
         }
 
@@ -170,5 +252,21 @@ public class StatusView extends LinearLayout {
             mCommunicateLightImageView.startAnimation(AnimationUtils.loadAnimation(mCommunicateLightImageView.getContext(), R.anim.fade_communicate_light));
         }
 
+    }
+
+    public interface StatusAlarmListener {
+        void onGpsNoSignalAlarm();
+
+        void onGpsSignalRecover();
+
+        void onBatteryLowAlarm(int batteryRemainging);
+
+        void onRemoteControllerDisconnect();
+
+        void onDroneDisconnect();
+    }
+
+    public void setStatusAlarmListener(final StatusAlarmListener listener) {
+        mStatusAlarmListener = listener;
     }
 }

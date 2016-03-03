@@ -1,22 +1,34 @@
 package com.coretronic.drone.missionplan.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coretronic.drone.DroneController;
@@ -29,7 +41,9 @@ import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
+import com.coretronic.drone.missionplan.adapter.NotificationCenterListAdapter;
 import com.coretronic.drone.missionplan.map.DroneMap;
+import com.coretronic.drone.missionplan.model.Notification;
 import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.RecordItem;
@@ -62,6 +76,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         OnConnectionFailedListener, StatusChangedListener, OnDeviceChangedListener {
 
     private static final String ARGUMENT_INDEX_KEY = "fragment_index";
+
+    private static final String NOTIFICATION_TEXT_GPS_NO_SIGNAL = "GPS no Signal";
+    private static final String NOTIFICATION_TEXT_DRONE_BATTERY_LOW = "Drone Battery Low - %d%% remaining";
+    private static final String NOTIFICATION_TEXT_REMOTE_CONTROLLER_UNCONNECTED = "Remote Controller Unconnected";
+    private static final String NOTIFICATION_TEXT_DRONE_UNCONNECTED = "Drone unconnected";
+    private static final String NOTIFICATION_TEXT_DRONE_DISCONNECTED = "Drone disconnected due to signal lost";
 
     public static final int FRAGMENT_TYPE_PLANNING = 0;
     public static final int FRAGMENT_TYPE_HISTORY = 1;
@@ -109,6 +129,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private boolean mIsSpinnerTriggerByUser = true;
     private View mFPVView;
 
+
+    private NotificationCenterListAdapter mNotificationCenterListAdapter;
+    private Button mNotificationCenterButton;
+    private Dialog mNotificationPopDialog;
+    private View mNotificationToastView;
+    private View mNotificationCenterPopWindowView;
+
     public static Fragment newInstance(int fragmentTypePlanning) {
 
         MapViewFragment mapViewFragment = new MapViewFragment();
@@ -147,6 +174,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mission_plan, container, false);
+
+        mNotificationToastView = inflater.inflate(R.layout.toast_notification, null);
+        mNotificationCenterPopWindowView = inflater.inflate(R.layout.popwindow_notification_center, null);
+        mNotificationCenterListAdapter = new NotificationCenterListAdapter(inflater);
+        mNotificationCenterListAdapter.setNotificationCenterListChangedListener(mNotificationCenterListChangedListener);
 
         initStatusBar(view);
         initSpinner(view);
@@ -277,6 +309,94 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
         }
 
+    }
+
+    private StatusView.StatusAlarmListener mStatusAlarmListener = new StatusView.StatusAlarmListener() {
+        @Override
+        public void onGpsNoSignalAlarm() {
+            Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_GPS, NOTIFICATION_TEXT_GPS_NO_SIGNAL, System.currentTimeMillis());
+            mNotificationCenterListAdapter.updateList(newAlarm);
+            showNotificationPopDialog(NOTIFICATION_TEXT_GPS_NO_SIGNAL);
+        }
+
+        @Override
+        public void onGpsSignalRecover() {
+            mNotificationCenterListAdapter.removeItem(NotificationCenterListAdapter.NOTIFICATION_TYPE_GPS);
+        }
+
+        @Override
+        public void onBatteryLowAlarm(int batteryRemainging) {
+            String notificationText = String.format(NOTIFICATION_TEXT_DRONE_BATTERY_LOW, batteryRemainging);
+            Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_DRONE_BATTERY, notificationText, System.currentTimeMillis());
+            mNotificationCenterListAdapter.updateList(newAlarm);
+            showNotificationPopDialog(notificationText);
+        }
+
+        @Override
+        public void onRemoteControllerDisconnect() {
+
+        }
+
+        @Override
+        public void onDroneDisconnect() {
+            Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_DRONE, NOTIFICATION_TEXT_DRONE_DISCONNECTED, System.currentTimeMillis());
+            mNotificationCenterListAdapter.updateList(newAlarm);
+            showNotificationToast(R.drawable.icon_noti_drone, NOTIFICATION_TEXT_DRONE_DISCONNECTED);
+        }
+    };
+
+    private NotificationCenterListAdapter.NotificationCenterListChangedListener mNotificationCenterListChangedListener = new NotificationCenterListAdapter.NotificationCenterListChangedListener() {
+        @Override
+        public void onNotificationCenterListGetOne() {
+            mNotificationCenterButton.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onNotificationCenterListEmpty() {
+            mNotificationCenterButton.setVisibility(View.GONE);
+        }
+    };
+
+    private void showNotificationPopDialog(String notificationText) {
+        mNotificationPopDialog = new Dialog(getActivity());
+        mNotificationPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mNotificationPopDialog.setCanceledOnTouchOutside(false);
+        mNotificationPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mNotificationPopDialog.setContentView(R.layout.popdialog_notification);
+        ((TextView) mNotificationPopDialog.findViewById(R.id.notification_dialog_title_text)).setText(notificationText);
+        mNotificationPopDialog.show();
+
+        mNotificationPopDialog.findViewById(R.id.notification_dialog_dismiss_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNotificationPopDialog.dismiss();
+            }
+        });
+    }
+
+    private void showNotificationToast(int iconResourceId, String notificationText) {
+        ((ImageView) mNotificationToastView.findViewById(R.id.notification_toast_icon)).setImageResource(iconResourceId);
+        ((TextView) mNotificationToastView.findViewById(R.id.notification_toast_text)).setText(notificationText);
+
+        Toast notificationToast = new Toast(getActivity().getBaseContext());
+        notificationToast.setGravity(Gravity.TOP | Gravity.START, getResources().getDimensionPixelOffset(R.dimen.notification_toast_position_x), getResources().getDimensionPixelOffset(R.dimen.notification_toast_position_y));
+        notificationToast.setView(mNotificationToastView);
+        notificationToast.setDuration(Toast.LENGTH_LONG);
+        notificationToast.show();
+
+    }
+
+    private void showNotificationCenterPopwindow() {
+        PopupWindow mNotificationCenterPopupWindow = new PopupWindow(mNotificationCenterPopWindowView, getResources().getDimensionPixelOffset(R.dimen.notification_center_popwindow_width), LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        mNotificationCenterPopupWindow.setTouchable(true);
+        mNotificationCenterPopupWindow.setOutsideTouchable(true);
+        mNotificationCenterPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+        ListView notificationCenterListView = (ListView) mNotificationCenterPopWindowView.findViewById(R.id.notification_center_listview);
+        notificationCenterListView.setEnabled(false);
+
+        notificationCenterListView.setAdapter(mNotificationCenterListAdapter);
+
+        mNotificationCenterPopupWindow.showAsDropDown(mNotificationCenterButton);
     }
 
     private void notificationWithTTS(DroneMode droneMode) {
@@ -434,6 +554,15 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private void initStatusBar(View view) {
 
         mStatusView = (StatusView) view.findViewById(R.id.status);
+        mStatusView.setStatusAlarmListener(mStatusAlarmListener);
+        mNotificationCenterButton = (Button) view.findViewById(R.id.notification_center_button);
+        mNotificationCenterButton.setVisibility(View.GONE);
+        mNotificationCenterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNotificationCenterPopwindow();
+            }
+        });
         mMissionModeControlPanel = view.findViewById(R.id.marker_editor_control_panel);
         mEditOptionPanel = view.findViewById(R.id.edit_option_layout);
         mMissionPlanTypeRadioGroup = (RadioGroup) view.findViewById(R.id.multi_or_single_radioGroup);

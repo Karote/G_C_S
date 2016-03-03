@@ -56,8 +56,17 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/notification_center_button"
+        android:layout_width="280dp"
+        android:layout_height="54dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginStart="48dp"
+        android:background="@drawable/notification_center_button_bg"
+        android:visibility="visible" />
 
     <include
         android:id="@+id/mav_info_panel"
