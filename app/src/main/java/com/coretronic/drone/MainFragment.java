@@ -175,7 +175,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             public void onConnected() {
                 Toast.makeText(getActivity(), "Init controller" + droneDevice.getName(), Toast.LENGTH_LONG).show();
                 mMainActivity.initialSetting(droneDevice);
-                mMainActivity.readParameter();
             }
 
             @Override

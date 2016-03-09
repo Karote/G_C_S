@@ -10,7 +10,6 @@ import android.widget.RadioGroup;
 
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
-import com.coretronic.drone.util.ViewManager;
 import com.coretronic.ibs.log.Logger;
 
 /**
@@ -37,10 +36,6 @@ public class GeneralSettingFragment extends Fragment implements View.OnClickList
     }
 
     private void initView(View v) {
-        ViewManager.assignSettingSeekBarTextView(mMainActivity, v, R.id.settings_altitude_max, Setting.SettingType.ALTITUDE_LIMIT);
-        ViewManager.assignSettingSeekBarTextView(mMainActivity, v, R.id.settings_vertical_speed_max, Setting.SettingType.VERTICAL_SPEED_MAX);
-
-
         ((RadioGroup) v.findViewById(R.id.settings_heading_direction_radio_group)).setOnCheckedChangeListener(this);
         ((RadioGroup) v.findViewById(R.id.settings_rtl_heading_direction_radio_group)).setOnCheckedChangeListener(this);
         ((RadioGroup) v.findViewById(R.id.setting_optical_flow_radio_group)).setOnCheckedChangeListener(this);
