@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,18 +30,23 @@ import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
-import com.coretronic.drone.settings.SettingFragment;
+import com.coretronic.drone.settings.PreflightCheckDialogFragment;
+import com.coretronic.drone.settings.SettingsMaingFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.util.AppConfig;
+import com.coretronic.ibs.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends UnBindDrawablesFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneDevice.OnDeviceChangedListener, StatusChangedListener {
+public class MainFragment extends UnBindDrawablesFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, DroneDevice.OnDeviceChangedListener, StatusChangedListener, DroneController.ParameterLoaderListener {
 
     private static final String ADD_NEW_DEVICE_TITLE = "Add New Device";
     private static final String TAG = MainFragment.class.getSimpleName();
     private static final String G2_IP = "192.168.42.1";
+
+    private final static int UPDATE_TIME_OUT = 5 * 1000;
+    private final static int UPDATE_PERIOD = 1 * 1000;
 
     private StatusView mStatusView;
     private Spinner mDroneDeviceSpinner;
@@ -46,6 +54,12 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
     private DeviceAdapter mDeviceAdapter;
     private MainActivity mMainActivity;
     private SharedPreferences mSharedPreferences;
+
+    private ImageView mSettingButton;
+    private int mPreParameterCount;
+    private long mGetPreParameterTime;
+    private Handler mReadParamTimeOutHandler = new Handler();
+    private Runnable mReadParamTimeOutRunnable;
 
     private final int TTS_RESULT_CODE = 0x1;
 
@@ -59,7 +73,12 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.btn_mission_plan).setOnClickListener(this);
         view.findViewById(R.id.btn_flight_history).setOnClickListener(this);
-        view.findViewById(R.id.btn_flight_setting).setOnClickListener(this);
+        mSettingButton = (ImageView) view.findViewById(R.id.btn_flight_setting);
+        mSettingButton.setOnClickListener(this);
+        if (mMainActivity.getReadDroneParametersStatus() != MainActivity.READ_DRONE_PARAMETERS_DONE) {
+            mSettingButton.setEnabled(false);
+        }
+        view.findViewById(R.id.btn_preflight).setOnClickListener(this);
 
         ((TextView) view.findViewById(R.id.tv_app_version)).setText("v " + BuildConfig.VERSION_NAME);
         Button logoutButton = (Button) view.findViewById(R.id.btn_logout);
@@ -146,10 +165,67 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 mStatusView.setRFStatus(droneStatus.getRadioSignal());
                 break;
             case ON_HEARTBEAT:
-                mStatusView.updateCommunicateLight();
+                mStatusView.updateCommunicateLight(droneStatus.getLastHeartbeatTime());
+                if (mMainActivity.getReadDroneParametersStatus() == MainActivity.READ_DRONE_PARAMETERS_NONE) {
+                    Logger.d("droneStatus.getRadioSignal(): " + droneStatus.getRadioSignal());
+                    mMainActivity.getDroneController().readAllParameters(MainFragment.this);
+                    mMainActivity.setReadDroneParametersStatus(MainActivity.READ_DRONE_PARAMETERS_READING);
+                    Logger.d("Parameter Reading...");
+                }
                 break;
-
         }
+    }
+
+    @Override
+    public void onParameterLoaded(int parameterCount, int totalParameterCount) {
+        Logger.d("onParameterLoaded : " + parameterCount + "," + totalParameterCount);
+
+        if (parameterCount == totalParameterCount) {
+            mMainActivity.setReadDroneParametersStatus(MainActivity.READ_DRONE_PARAMETERS_DONE);
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mSettingButton.setEnabled(true);
+                }
+            });
+            Logger.d("Parameter Reading DONE");
+
+            if (mReadParamTimeOutRunnable != null) {
+                mReadParamTimeOutHandler.removeCallbacks(mReadParamTimeOutRunnable);
+                mReadParamTimeOutRunnable = null;
+            }
+        }
+
+        if (parameterCount == 0) {
+            mGetPreParameterTime = System.currentTimeMillis();
+            mPreParameterCount = parameterCount;
+        }
+
+        if (mPreParameterCount != parameterCount) {
+            mGetPreParameterTime = System.currentTimeMillis();
+            mPreParameterCount = parameterCount;
+        }
+
+        if (mReadParamTimeOutRunnable != null) {
+            return;
+        }
+        mReadParamTimeOutRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mMainActivity.getReadDroneParametersStatus() != MainActivity.READ_DRONE_PARAMETERS_READING)
+                    return;
+
+                if ((System.currentTimeMillis() - mGetPreParameterTime) > UPDATE_TIME_OUT) {
+                    Logger.d("Get Parameter TIME OUT");
+                    mMainActivity.setReadDroneParametersStatus(MainActivity.READ_DRONE_PARAMETERS_FAIL);
+                    return;
+                }
+                mReadParamTimeOutHandler.postDelayed(this, UPDATE_PERIOD);
+            }
+        };
+        mReadParamTimeOutHandler.postDelayed(mReadParamTimeOutRunnable, UPDATE_PERIOD);
+
     }
 
     @Override
@@ -173,7 +249,6 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
             public void onConnected() {
                 Toast.makeText(getActivity(), "Init controller" + droneDevice.getName(), Toast.LENGTH_LONG).show();
                 mMainActivity.initialSetting(droneDevice);
-                mMainActivity.readParameter();
             }
 
             @Override
@@ -230,7 +305,11 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_HISTORY);
                 break;
             case R.id.btn_flight_setting:
-                fragment = new SettingFragment();
+                fragment = new SettingsMaingFragment();
+                break;
+            case R.id.btn_preflight:
+                DialogFragment preflightCheckDialog = new PreflightCheckDialogFragment();
+                preflightCheckDialog.show(getFragmentManager().beginTransaction(), "PreflightCheckDialog");
                 break;
         }
         if (fragment != null) {

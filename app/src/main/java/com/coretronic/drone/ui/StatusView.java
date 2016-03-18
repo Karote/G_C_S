@@ -19,9 +19,8 @@ import com.coretronic.drone.util.Utils;
  */
 public class StatusView extends LinearLayout {
 
-    private final static int UPDATE_GAP_NO_SIGNAL = 5 * 1000;
-    private final static int UPDATE_GAP_WEAK = 3 * 1000;
-    private final static int UPDATE_PERIOD = 1 * 1000;
+    private final static int GPS_UPDATE_GAP_NO_SIGNAL = 5 * 1000;
+    private final static int GPS_UPDATE_PERIOD = 1 * 1000;
 
     private final static int[] DRONE_BATTERY_LOW_THRESHOLD_ARRAY = {20, 10, 5, 1, 0};
 
@@ -115,7 +114,7 @@ public class StatusView extends LinearLayout {
                 }
 
                 long gap = System.currentTimeMillis() - mGpsAlarmTimestamp;
-                if (gap > UPDATE_GAP_NO_SIGNAL) {
+                if (gap > GPS_UPDATE_GAP_NO_SIGNAL) {
                     if (gpsNewLevel > 0) {
                         mStatusAlarmListener.onGpsSignalRecover();
                     } else {
@@ -124,10 +123,10 @@ public class StatusView extends LinearLayout {
                     mGpsCurrentLevel = gpsNewLevel;
                     mGpsAlarmTimestamp = System.currentTimeMillis();
                 }
-                mGpsAlarmHandler.postDelayed(this, UPDATE_PERIOD);
+                mGpsAlarmHandler.postDelayed(this, GPS_UPDATE_PERIOD);
             }
         };
-        mGpsAlarmHandler.postDelayed(mGpsAlarmRunnable, UPDATE_PERIOD);
+        mGpsAlarmHandler.postDelayed(mGpsAlarmRunnable, GPS_UPDATE_PERIOD);
     }
 
     public void setBatteryStatus(final int progress) {
@@ -158,8 +157,8 @@ public class StatusView extends LinearLayout {
         }
     }
 
-    public void updateCommunicateLight() {
-        mCommunicateLightState.flash();
+    public void updateCommunicateLight(long heartbeatTimeStamp) {
+        mCommunicateLightState.flash(heartbeatTimeStamp);
     }
 
     public void onDisconnect() {
@@ -200,6 +199,9 @@ public class StatusView extends LinearLayout {
         private final static int LEVEL_NO_CONNECT = 0;
         private final static int LEVEL_WEAK = 1;
         private final static int LEVEL_NORMAL = 2;
+        private final static int UPDATE_GAP_NO_SIGNAL = 5;
+        private final static int UPDATE_GAP_WEAK = 3;
+        private final static int UPDATE_PERIOD = 1;
 
         private ImageView mCommunicateLightImageView;
         private long mLastUpdateTime;
@@ -207,7 +209,7 @@ public class StatusView extends LinearLayout {
 
         public CommunicateLightState(ImageView communicateLightImageView) {
             mCommunicateLightImageView = communicateLightImageView;
-            mLastUpdateTime = System.currentTimeMillis();
+            mLastUpdateTime = Long.MAX_VALUE;
             mTranslateHandler = new Handler();
         }
 
@@ -222,7 +224,7 @@ public class StatusView extends LinearLayout {
         }
 
         private void update() {
-            long gap = System.currentTimeMillis() - mLastUpdateTime;
+            long gap = (System.currentTimeMillis() / 1000) - mLastUpdateTime;
             int newLevel = gap > UPDATE_GAP_NO_SIGNAL ? LEVEL_NO_CONNECT : gap > UPDATE_GAP_WEAK ? LEVEL_WEAK : LEVEL_NORMAL;
             if (newLevel != mCurrentLevel) {
                 mCommunicateLightImageView.setImageLevel(newLevel);
@@ -235,8 +237,8 @@ public class StatusView extends LinearLayout {
             }
         }
 
-        private void flash() {
-            mLastUpdateTime = System.currentTimeMillis();
+        private void flash(long heartbeatTimeStamp) {
+            mLastUpdateTime = heartbeatTimeStamp;
             update();
             if (mTranslateRunnable != null) {
                 return;

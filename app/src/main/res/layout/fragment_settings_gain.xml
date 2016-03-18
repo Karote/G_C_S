@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="32dp"
+    android:layout_marginLeft="40dp"
+    android:layout_marginRight="32dp"
+    android:layout_marginStart="40dp"
+    android:layout_marginTop="24dp"
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar_thumb_white_alpha35">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/basic_gain" />
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="end"
+                android:text="@string/roll" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/basic_gain_roll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="212dp"
+                android:layout_marginStart="212dp"
+                app:unit="@string/unit_in_percent" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/pitch" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/basic_gain_pitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_percent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/yaw" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/basic_gain_yaw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_percent" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <TextView
+                style="@style/settings_title_lv_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/attitude_gps_mode_gain" />
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="end"
+                android:text="@string/roll" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/attitude_gain_roll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="212dp"
+                android:layout_marginStart="212dp"
+                app:unit="@string/unit_in_percent" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/pitch" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/attitude_gain_pitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_percent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/yaw" />
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/attitude_gain_yaw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_percent" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

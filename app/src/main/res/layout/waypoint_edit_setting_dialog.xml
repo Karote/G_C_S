@@ -36,7 +36,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@string/font_roboto_condensed"
-            android:text="@string/aerial_survey_dialog_ok"
+            android:text="@string/ok"
             android:textColor="@drawable/waypoint_edit_setting_button_text_color"
             android:textSize="20sp"
             android:textStyle="bold" />

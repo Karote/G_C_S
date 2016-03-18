@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="32dp"
+    android:layout_marginLeft="40dp"
+    android:layout_marginRight="32dp"
+    android:layout_marginStart="40dp"
+    android:layout_marginTop="24dp"
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar_thumb_white_alpha35">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/battery_capacity_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/battery_capacity" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_capacity_title"
+                    android:text="@string/per_battery" />
+            </RelativeLayout>
+
+            <RadioGroup
+                android:id="@+id/settings_battery_capacity_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/battery_capacity_ten_thousand_mah_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/ten_thousand_mah" />
+
+                <RadioButton
+                    android:id="@+id/battery_capacity_sixteen_thousand_mah_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/sixteen_thousand_mah" />
+
+                <RadioButton
+                    android:id="@+id/battery_capacity_twenty_two_thousand_mah_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/twenty_two_thousand_mah" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <RelativeLayout
+                android:id="@+id/battery_1"
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="212dp"
+                android:layout_marginStart="212dp"
+                android:layout_marginTop="4dp">
+
+                <RelativeLayout
+                    android:id="@+id/battery_icon_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:id="@+id/battery_1_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/battery_remaining_dark_level_list" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@string/font_roboto_black"
+                        android:text="1"
+                        android:textColor="#848484"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/battery_1_current_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_icon_1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@string/font_roboto_medium"
+                    android:singleLine="true"
+                    android:text="@string/zero_mah"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/battery_2"
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/battery_1"
+                android:layout_toRightOf="@id/battery_1">
+
+                <RelativeLayout
+                    android:id="@+id/battery_icon_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:id="@+id/battery_2_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/battery_remaining_dark_level_list" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@string/font_roboto_black"
+                        android:text="2"
+                        android:textColor="#848484"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/battery_2_current_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_icon_2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@string/font_roboto_medium"
+                    android:singleLine="true"
+                    android:text="@string/zero_mah"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/battery_3"
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/battery_2"
+                android:layout_toRightOf="@id/battery_2">
+
+                <RelativeLayout
+                    android:id="@+id/battery_icon_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:id="@+id/battery_3_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/battery_remaining_dark_level_list" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@string/font_roboto_black"
+                        android:text="3"
+                        android:textColor="#848484"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/battery_3_current_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/battery_icon_3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@string/font_roboto_medium"
+                    android:singleLine="true"
+                    android:text="@string/zero_mah"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/failsafe" />
+
+                <TextView
+                    style="@style/settings_title_lv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="end"
+                    android:text="@string/battery_remaining" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp">
+
+                <com.coretronic.drone.ui.SeekBarTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    app:unit="@string/unit_in_percent" />
+
+                <RadioGroup
+                    android:id="@+id/settings_failsafe_battery_option_radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/battery_option_none_button"
+                        style="@style/settings_button_text"
+                        android:layout_width="64dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="1dp"
+                        android:layout_marginRight="1dp"
+                        android:background="@drawable/settings_button_bg"
+                        android:button="@android:color/transparent"
+                        android:checked="true"
+                        android:text="@string/none" />
+
+                    <RadioButton
+                        android:id="@+id/battery_option_rtl_button"
+                        style="@style/settings_button_text"
+                        android:layout_width="64dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginStart="1dp"
+                        android:background="@drawable/settings_button_bg"
+                        android:button="@android:color/transparent"
+                        android:text="@string/rtl" />
+
+                    <RadioButton
+                        android:id="@+id/battery_option_land_button"
+                        style="@style/settings_button_text"
+                        android:layout_width="64dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginStart="1dp"
+                        android:background="@drawable/settings_button_bg"
+                        android:button="@android:color/transparent"
+                        android:text="@string/land" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/rc_signal_lost" />
+
+            <RadioGroup
+                android:id="@+id/settings_rc_signal_lost_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rc_signal_lost_none_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/none" />
+
+                <RadioButton
+                    android:id="@+id/rc_signal_lost_rtl_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/rtl" />
+
+                <RadioButton
+                    android:id="@+id/rc_signal_lost_land_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/land" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/gps_signal_lost" />
+
+            <RadioGroup
+                android:id="@+id/settings_gps_signal_lost_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/gps_signal_lost_none_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/none" />
+
+                <RadioButton
+                    android:id="@+id/gps_signal_lost_land_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/land" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/settings_title_lv_2"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="@string/gcs_signal_lost" />
+
+            <RadioGroup
+                android:id="@+id/settings_gcs_signal_lost_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/gcs_signal_lost_none_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/none" />
+
+                <RadioButton
+                    android:id="@+id/gcs_signal_lost_rtl_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/rtl" />
+
+                <RadioButton
+                    android:id="@+id/gcs_signal_lost_land_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/land" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
