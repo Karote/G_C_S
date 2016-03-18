@@ -67,6 +67,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
         logoutButton.setText(mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, ""));
 
         mStatusView = (StatusView) view.findViewById(R.id.status);
+        mStatusView.setStatusAlarmListener(mStatusAlarmListener);
 
         mDeviceAdapter = new DeviceAdapter(mMainActivity, R.layout.main_fragment_select_device_spinner_item, new ArrayList<DroneDevice>());
         mDeviceAdapter.add(DroneDevice.FAKE_DRONE_DEVICE);
@@ -339,4 +340,31 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
 
         alertDialog.show();
     }
+
+    private StatusView.StatusAlarmListener mStatusAlarmListener = new StatusView.StatusAlarmListener() {
+        @Override
+        public void onGpsNoSignalAlarm() {
+
+        }
+
+        @Override
+        public void onGpsSignalRecover() {
+
+        }
+
+        @Override
+        public void onBatteryLowAlarm(int batteryRemainging) {
+
+        }
+
+        @Override
+        public void onRemoteControllerDisconnect() {
+
+        }
+
+        @Override
+        public void onDroneDisconnect() {
+
+        }
+    };
 }
