@@ -16,9 +16,9 @@ import com.coretronic.drone.R;
  * Created by karot.chuang on 2016/2/17.
  */
 public class FlightModeModel extends LinearLayout {
-    private final static int FLIGHT_MODE_LOCK_TYPE_NONE = 0;
-    private final static int FLIGHT_MODE_LOCK_TYPE_HEADING = 1;
-    private final static int FLIGHT_MODE_LOCK_TYPE_HOME = 2;
+    public final static int FLIGHT_MODE_LOCK_TYPE_NONE = 0;
+    public final static int FLIGHT_MODE_LOCK_TYPE_HEADING = 1;
+    public final static int FLIGHT_MODE_LOCK_TYPE_HOME = 2;
 
     private FlightModeModelButtonClickListener mFlightModeModelButtonClickListener;
     private int mResourceId;
@@ -101,6 +101,20 @@ public class FlightModeModel extends LinearLayout {
             mModeTypeButton.setBackgroundResource(R.color.primary_color_normal);
         } else {
             mModeTypeButton.setBackgroundResource(R.drawable.settings_button_bg);
+        }
+    }
+
+    public void setCheckStatus(int checkStatus) {
+        switch (checkStatus) {
+            case FLIGHT_MODE_LOCK_TYPE_NONE:
+                mRadioGroup.clearCheck();
+                break;
+            case FLIGHT_MODE_LOCK_TYPE_HEADING:
+                mRadioGroup.check(R.id.heading_lock_button);
+                break;
+            case FLIGHT_MODE_LOCK_TYPE_HOME:
+                mRadioGroup.check(R.id.home_lock_button);
+                break;
         }
     }
 

@@ -33,7 +33,7 @@ public class Utils {
         } else {
             int inputRange = (max - min);
             int outputRange = (level - 1);
-            return ((value - min) * outputRange / inputRange) + 1;
+            return ((value - min) * outputRange / inputRange);
         }
     }
 

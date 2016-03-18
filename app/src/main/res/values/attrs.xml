@@ -39,4 +39,8 @@
     <declare-styleable name="RcCalibrationBar">
         <attr name="label" />
     </declare-styleable>
+
+    <declare-styleable name="SeekBarTextView">
+        <attr name="unit" format="string" />
+    </declare-styleable>
 </resources>

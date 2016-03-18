@@ -74,10 +74,14 @@
     <string name="attitude_gps_elevator_gain">ATTITUDE/GPS ELEVATOR GAIN</string>
     <string name="attitude_gps_rudder_gain">ATTITUDE/GPS RUDDER GAIN</string>
     <string name="altitude_gain">ALTITUDE GAIN</string>
-    <string name="rc_tx_rx">RC TRANSMITER &amp;\nRECEVER</string>
+    <string name="rc_tx_rx">RC TRANSMITTER &amp;\nRECEIVER</string>
     <string name="gain">GAIN</string>
     <string name="battery_and_failsafe">BATTERY &amp; FAILSAFE</string>
     <string name="general">GENERAL</string>
+    <string name="rc_disconnected">RC Disconnected</string>
+    <string name="rc_connected">RC Connected</string>
+    <string name="drone_disconnected">Drone Disconnected</string>
+    <string name="drone_connected">Drone Connected</string>
 
     <!-- RC TRANSMITER & RECEVER -->
     <string name="receiver_type">Receiver Type</string>
@@ -94,10 +98,11 @@
     <string name="heading_lock">Heading Lock</string>
     <string name="home_lock">Home Lock</string>
     <string name="manual">Manual</string>
+    <string name="auto">Auto</string>
     <string name="gps">GPS</string>
     <string name="tuning">Tuning</string>
-    <string name="throttle_position_for_hovering">Throttle Position for Hovering</string>
-    <string name="basic_p_gain_roll_pitch">Basic P Gain - Roll / Pitch</string>
+    <string name="throttle_position_for_hovering">Throttle Position \nfor Hovering</string>
+    <string name="basic_p_gain_roll_pitch">Basic P Gain \n- Roll / Pitch</string>
     <string name="gear">Gear</string>
     <string name="reverse">Reverse</string>
     <string name="retract">Retract</string>
@@ -105,6 +110,7 @@
     <string name="camera_trigger">Camera Trigger</string>
     <string name="calibration">Calibration</string>
     <string name="start">Start</string>
+    <string name="stop">Stop</string>
     <string name="roll">Roll</string>
     <string name="pitch">Pitch</string>
     <string name="yaw">Yaw</string>
@@ -114,11 +120,13 @@
 
     <!-- Gain -->
     <string name="basic_gain">Basic Gain</string>
-    <string name="altitude_gps_mode_gain">Altitude/GPS\nMode Gain</string>
+    <string name="attitude_gps_mode_gain">Attitude/GPS\nMode Gain</string>
+    <string name="unit_in_percent">%</string>
 
     <!-- Battery & Failsafe -->
     <string name="battery_capacity">Battery Capacity</string>
     <string name="per_battery">Per Battery</string>
+    <string name="zero_mah">0mAh</string>
     <string name="ten_thousand_mah">10000mAh</string>
     <string name="sixteen_thousand_mah">16000mAh</string>
     <string name="twenty_two_thousand_mah">22000mAh</string>
@@ -145,6 +153,7 @@
     <string name="rear">Rear</string>
     <string name="throttle_position">Throttle Position</string>
     <string name="for_hovering">For Hovering</string>
+    <string name="altitude_default">Altitude Default</string>
     <string name="horizontal_speed_default">Horizontal Speed Default</string>
     <string name="for_waypoint">For Waypoint</string>
     <string name="optical_flow">Optical Flow</string>

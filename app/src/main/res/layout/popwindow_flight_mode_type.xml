@@ -28,6 +28,16 @@
         android:textSize="18sp" />
 
     <Button
+        android:id="@+id/auto_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popdialog_more_function_button_height"
+        android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
+        android:fontFamily="@string/font_roboto_medium"
+        android:text="@string/auto"
+        android:textColor="@drawable/more_function_button_text_color"
+        android:textSize="18sp" />
+
+    <Button
         android:id="@+id/gps_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/popdialog_more_function_button_height"

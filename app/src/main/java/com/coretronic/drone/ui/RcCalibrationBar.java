@@ -5,18 +5,26 @@ import android.content.res.TypedArray;
 import android.support.percent.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.CompoundButton;
+import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.coretronic.drone.R;
-import com.coretronic.ibs.log.Logger;
 
 /**
  * Created by karot.chuang on 2016/2/17.
  */
-public class RcCalibrationBar extends PercentRelativeLayout implements ToggleButton.OnCheckedChangeListener {
+public class RcCalibrationBar extends PercentRelativeLayout {
     private String mLabel;
+    private SeekBar mCaliSeekBar;
+    private ToggleButton mReverseButton;
+    private TextView mPWMValueTextView;
+
+    private float mPwmMin;
+    private float mPwmMax;
+    private boolean mCheckRev;
+    private onReverseButtonCheckedListener mOnReverseButtonCheckedListener;
 
     public RcCalibrationBar(Context context) {
         super(context);
@@ -47,16 +55,39 @@ public class RcCalibrationBar extends PercentRelativeLayout implements ToggleBut
             a.recycle();
         }
 
-        this.findViewById(R.id.rc_cali_seekbar).setEnabled(false);
-        ((ToggleButton) this.findViewById(R.id.reverse_button)).setOnCheckedChangeListener(this);
+        mCaliSeekBar = (SeekBar) this.findViewById(R.id.rc_cali_seekbar);
+        mCaliSeekBar.setMax(200);
+        mCaliSeekBar.setEnabled(false);
+        mReverseButton = (ToggleButton) this.findViewById(R.id.reverse_button);
+        mReverseButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCheckRev = !mCheckRev;
+                mOnReverseButtonCheckedListener.onReverseButtonCheckedChanged(mCheckRev);
+            }
+        });
+        mPWMValueTextView = (TextView) this.findViewById(R.id.rc_calibration_bar_pwm);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            Logger.d("*****Settings - Calibration " + mLabel + ": ON");
-        } else {
-            Logger.d("*****Settings - Calibration " + mLabel + ": OFF");
-        }
+    public void setCalibrationConfig(float pwmMin, float pwmMax, boolean checkRev) {
+        mPwmMin = pwmMin;
+        mPwmMax = pwmMax;
+        mCheckRev = checkRev;
+
+        mReverseButton.setChecked(mCheckRev);
+    }
+
+    public void setPWMValue(float value) {
+        int seekLevel = (int) (((value - mPwmMin) / (mPwmMax - mPwmMin)) * 200);
+        mCaliSeekBar.setProgress(seekLevel);
+        mPWMValueTextView.setText(String.format("%d%%", seekLevel - 100));
+    }
+
+    public interface onReverseButtonCheckedListener {
+        void onReverseButtonCheckedChanged(boolean isChecked);
+    }
+
+    public void registerReverseButtonCheckedListener(onReverseButtonCheckedListener listener) {
+        this.mOnReverseButtonCheckedListener = listener;
     }
 }

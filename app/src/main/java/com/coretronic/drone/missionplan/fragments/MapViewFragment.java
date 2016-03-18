@@ -273,7 +273,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 notificationWithTTS(droneStatus.getMode());
                 break;
             case ON_HEARTBEAT:
-                mStatusView.updateCommunicateLight();
+                mStatusView.updateCommunicateLight(droneStatus.getLastHeartbeatTime());
                 break;
         }
 

@@ -34,6 +34,7 @@
     <color name="drone_info_text">#D2D2D2</color>
     <color name="go_dialog_unit">#6D6D6D</color>
 
+    <color name="white_transparent_50">#80FFFFFF</color>
     <color name="white_transparent_40">#66FFFFFF</color>
     <color name="white_transparent_35">#59FFFFFF</color>
     <color name="white_transparent_15">#26FFFFFF</color>
@@ -53,6 +54,7 @@
     <color name="settings_main_title_text_normal_color">#8f8f8f</color>
     <color name="settings_main_title_divider_color">#4f4f4f</color>
     <color name="settings_button_normal_bg">#8b8b8b</color>
+    <color name="settings_button_normal_disable_bg">#4d8b8b8b</color>
 
     <color name="preflight_check_status_text_normal_color">#acabab</color>
     <color name="preflight_check_status_text_alart_color">#ff6767</color>

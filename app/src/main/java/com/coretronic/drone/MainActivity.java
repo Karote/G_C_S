@@ -21,9 +21,15 @@ public class MainActivity extends MiniDronesActivity {
     private static final String SETTING_NAME_G2 = "setting_g2";
     private static final String SETTINGS_VALUE = "settings_value";
     private static final char DEGREE_SYMBOL = 0x00B0;   //º
+    public static final int READ_DRONE_PARAMETERS_NONE = 0;
+    public static final int READ_DRONE_PARAMETERS_READING = 1;
+    public static final int READ_DRONE_PARAMETERS_DONE = 2;
+    public static final int READ_DRONE_PARAMETERS_FAIL = 3;
 //    private final static DroneDevice DISCONNECTED_FAKE_DEVICE = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
 
     private DroneDevice.OnDeviceChangedListener mDeviceChangedListener;
+
+    private static int mReadDroneParametersStatus = READ_DRONE_PARAMETERS_NONE;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,5 +149,13 @@ public class MainActivity extends MiniDronesActivity {
         }
 
         return true;
+    }
+
+    public int getReadDroneParametersStatus() {
+        return mReadDroneParametersStatus;
+    }
+
+    public void setReadDroneParametersStatus(int status) {
+        mReadDroneParametersStatus = status;
     }
 }

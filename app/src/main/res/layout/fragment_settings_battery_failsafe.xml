@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="32dp"
@@ -52,7 +53,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/battery_capacity_one_thousand_mah"
+                    android:id="@+id/battery_capacity_ten_thousand_mah_button"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -65,7 +66,7 @@
                     android:text="@string/ten_thousand_mah" />
 
                 <RadioButton
-                    android:id="@+id/battery_capacity_five_thousand_mah"
+                    android:id="@+id/battery_capacity_sixteen_thousand_mah_button"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -79,7 +80,7 @@
                     android:text="@string/sixteen_thousand_mah" />
 
                 <RadioButton
-                    android:id="@+id/battery_capacity_ten_thousand_mah"
+                    android:id="@+id/battery_capacity_twenty_two_thousand_mah_button"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -114,9 +115,10 @@
                     android:layout_centerHorizontal="true">
 
                     <ImageView
+                        android:id="@+id/battery_1_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_battery_dark_1" />
+                        android:src="@drawable/battery_remaining_dark_level_list" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -130,6 +132,7 @@
 
 
                 <TextView
+                    android:id="@+id/battery_1_current_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/battery_icon_1"
@@ -137,7 +140,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@string/font_roboto_medium"
                     android:singleLine="true"
-                    android:text="@string/twenty_two_thousand_mah"
+                    android:text="@string/zero_mah"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -159,9 +162,10 @@
                     android:layout_centerHorizontal="true">
 
                     <ImageView
+                        android:id="@+id/battery_2_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_battery_dark_2" />
+                        android:src="@drawable/battery_remaining_dark_level_list" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -175,6 +179,7 @@
 
 
                 <TextView
+                    android:id="@+id/battery_2_current_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/battery_icon_2"
@@ -182,7 +187,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@string/font_roboto_medium"
                     android:singleLine="true"
-                    android:text="@string/sixteen_thousand_mah"
+                    android:text="@string/zero_mah"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -204,9 +209,10 @@
                     android:layout_centerHorizontal="true">
 
                     <ImageView
+                        android:id="@+id/battery_3_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_battery_dark_3" />
+                        android:src="@drawable/battery_remaining_dark_level_list" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -220,6 +226,7 @@
 
 
                 <TextView
+                    android:id="@+id/battery_3_current_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/battery_icon_3"
@@ -227,7 +234,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@string/font_roboto_medium"
                     android:singleLine="true"
-                    android:text="@string/ten_thousand_mah"
+                    android:text="@string/zero_mah"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -270,10 +277,11 @@
                 <com.coretronic.drone.ui.SeekBarTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="100" />
+                    android:layout_weight="100"
+                    app:unit="@string/unit_in_percent" />
 
                 <RadioGroup
-                    android:id="@+id/settings_failsafe_battery_remaining_radio_group"
+                    android:id="@+id/settings_failsafe_battery_option_radio_group"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:layout_gravity="center_vertical"
@@ -281,7 +289,7 @@
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/battery_remaining_none_button"
+                        android:id="@+id/battery_option_none_button"
                         style="@style/settings_button_text"
                         android:layout_width="64dp"
                         android:layout_height="match_parent"
@@ -293,7 +301,7 @@
                         android:text="@string/none" />
 
                     <RadioButton
-                        android:id="@+id/battery_remaining_rtl_button"
+                        android:id="@+id/battery_option_rtl_button"
                         style="@style/settings_button_text"
                         android:layout_width="64dp"
                         android:layout_height="match_parent"
@@ -306,7 +314,7 @@
                         android:text="@string/rtl" />
 
                     <RadioButton
-                        android:id="@+id/battery_remaining_land_button"
+                        android:id="@+id/battery_option_land_button"
                         style="@style/settings_button_text"
                         android:layout_width="64dp"
                         android:layout_height="match_parent"

@@ -27,7 +27,7 @@
             <TextView
                 style="@style/settings_title_lv_1"
                 android:layout_width="204dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:text="@string/receiver_type" />
 
             <RadioGroup
@@ -103,6 +103,7 @@
                 android:text="CH-5" />
 
             <TextView
+                android:id="@+id/flight_mode_pwm_text"
                 style="@style/settings_title_lv_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -162,7 +163,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="76dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginBottom="@dimen/setting_item_margin_bottom">
 
             <TextView
@@ -177,64 +178,59 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tuning_title"
-                android:layout_marginTop="4dp"
                 android:text="CH-6" />
 
-            <TextView
-                style="@style/settings_title_lv_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="212dp"
-                android:layout_marginStart="212dp"
-                android:layout_marginTop="14dp"
-                android:text="PWM-1000" />
 
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/settings_tuning_radio_group"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="212dp"
                 android:layout_marginStart="212dp"
-                android:layout_marginTop="28dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <RadioGroup
-                    android:id="@+id/settings_tuning_radio_group"
+                <RadioButton
+                    android:id="@+id/tuning_throttle_button"
+                    style="@style/settings_button_text"
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:text="@string/throttle_position_for_hovering" />
 
-                    <RadioButton
-                        android:id="@+id/tuning_throttle_button"
-                        style="@style/settings_button_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/settings_button_bg"
-                        android:button="@android:color/transparent"
-                        android:checked="true"
-                        android:text="@string/throttle_position_for_hovering" />
+                <RadioButton
+                    android:id="@+id/tuning_basic_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/basic_p_gain_roll_pitch" />
 
-                    <RadioButton
-                        android:id="@+id/tuning_basic_button"
-                        style="@style/settings_button_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginStart="1dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/settings_button_bg"
-                        android:button="@android:color/transparent"
-                        android:text="@string/basic_p_gain_roll_pitch" />
+                <RadioButton
+                    android:id="@+id/tuning_none_button"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_button_bg"
+                    android:button="@android:color/transparent"
+                    android:text="@string/none" />
 
-                </RadioGroup>
-            </LinearLayout>
-
-
+            </RadioGroup>
         </RelativeLayout>
 
         <RelativeLayout
@@ -279,6 +275,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/gear_retract_text_view"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
@@ -287,6 +284,7 @@
                     android:text="@string/retract" />
 
                 <TextView
+                    android:id="@+id/gear_deploy_text_view"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
@@ -347,6 +345,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/camera_trigger_off_text_view"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
@@ -355,6 +354,7 @@
                     android:text="@string/switch_btn_off" />
 
                 <TextView
+                    android:id="@+id/camera_trigger_on_text_view"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
@@ -392,7 +392,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/calibration" />
 
-            <Button
+            <ToggleButton
                 android:id="@+id/rc_calibration_start_button"
                 style="@style/settings_button_text"
                 android:layout_width="144dp"
@@ -401,26 +401,31 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/settings_button_bg"
-                android:text="@string/start" />
+                android:textOff="@string/start"
+                android:textOn="@string/stop"/>
 
         </LinearLayout>
 
         <com.coretronic.drone.ui.RcCalibrationBar
+            android:id="@+id/rc_cali_roll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="@string/roll" />
 
         <com.coretronic.drone.ui.RcCalibrationBar
+            android:id="@+id/rc_cali_pitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="@string/pitch" />
 
         <com.coretronic.drone.ui.RcCalibrationBar
+            android:id="@+id/rc_cali_yaw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="@string/yaw" />
 
         <com.coretronic.drone.ui.RcCalibrationBar
+            android:id="@+id/rc_cali_throttle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="@string/throttle" />

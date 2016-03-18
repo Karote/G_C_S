@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="32dp"
@@ -47,7 +48,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_meter" />
 
         </LinearLayout>
 
@@ -81,7 +83,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/speed_unit" />
 
         </LinearLayout>
 
@@ -111,10 +114,12 @@
             </RelativeLayout>
 
             <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_horizontal_speed_max"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/speed_unit" />
 
         </LinearLayout>
 
@@ -131,10 +136,12 @@
                 android:text="@string/rtl_speed" />
 
             <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_rtl_speed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/speed_unit" />
 
         </LinearLayout>
 
@@ -151,10 +158,12 @@
                 android:text="@string/rtl_altitude" />
 
             <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_rtl_altitude"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_meter" />
 
         </LinearLayout>
 
@@ -284,10 +293,47 @@
             </RelativeLayout>
 
             <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_throttle_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_percent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/altitude_default_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/altitude_default" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/altitude_default_title"
+                    android:text="@string/for_waypoint" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_altitude_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_meter" />
 
         </LinearLayout>
 
@@ -317,10 +363,12 @@
             </RelativeLayout>
 
             <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_horizontal_speed_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                app:unit="@string/speed_unit" />
 
         </LinearLayout>
 
