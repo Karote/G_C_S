@@ -173,9 +173,11 @@
     <string name="accelerometers">Accelerometers</string>
     <string name="barometer">Barometer</string>
     <string name="sonar">Sonar</string>
+    <string name="connected">Connected</string>
     <string name="unconnected">Unconnected</string>
     <string name="no_signal">No Signal</string>
     <string name="ready">Ready</string>
+    <string name="not_ready">Not Ready</string>
 
     <!-- main -->
     <string name="version">version</string>

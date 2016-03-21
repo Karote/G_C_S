@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -308,7 +307,13 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 fragment = new SettingsMaingFragment();
                 break;
             case R.id.btn_preflight:
-                DialogFragment preflightCheckDialog = new PreflightCheckDialogFragment();
+                PreflightCheckDialogFragment preflightCheckDialog = new PreflightCheckDialogFragment();
+                preflightCheckDialog.registerDialogFragmentDismissListener(new PreflightCheckDialogFragment.onDialgoFragmentDismissListener() {
+                    @Override
+                    public void onDialogFragmentDismiss() {
+                        mMainActivity.registerDroneStatusChangedListener(MainFragment.this);
+                    }
+                });
                 preflightCheckDialog.show(getFragmentManager().beginTransaction(), "PreflightCheckDialog");
                 break;
         }
