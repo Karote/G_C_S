@@ -77,27 +77,27 @@
             android:background="#1f1f1f">
 
             <TextView
-                android:id="@+id/rc_txrx"
+                android:id="@+id/rc_transmistter_receiver"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="1dp"
                 android:gravity="end|center_vertical"
                 android:paddingEnd="24dp"
                 android:paddingRight="24dp"
-                android:text="@string/rc_tx_rx"
+                android:text="@string/rc_transmitter_receiver"
                 android:textColor="@color/settings_main_title_text_normal_color" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/rc_txrx"
+                android:layout_below="@id/rc_transmistter_receiver"
                 android:background="#4f4f4f" />
 
             <TextView
                 android:id="@+id/gain"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:layout_below="@id/rc_txrx"
+                android:layout_below="@id/rc_transmistter_receiver"
                 android:layout_marginTop="1dp"
                 android:gravity="end|center_vertical"
                 android:paddingEnd="24dp"

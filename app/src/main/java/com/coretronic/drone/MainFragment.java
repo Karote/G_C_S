@@ -30,7 +30,7 @@ import com.coretronic.drone.activity.MiniDronesActivity;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.missionplan.fragments.MapViewFragment;
 import com.coretronic.drone.settings.PreflightCheckDialogFragment;
-import com.coretronic.drone.settings.SettingsMaingFragment;
+import com.coretronic.drone.settings.SettingsFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.util.AppConfig;
 import com.coretronic.ibs.log.Logger;
@@ -304,7 +304,7 @@ public class MainFragment extends UnBindDrawablesFragment implements AdapterView
                 fragment = MapViewFragment.newInstance(MapViewFragment.FRAGMENT_TYPE_HISTORY);
                 break;
             case R.id.btn_flight_setting:
-                fragment = new SettingsMaingFragment();
+                fragment = new SettingsFragment();
                 break;
             case R.id.btn_preflight:
                 PreflightCheckDialogFragment preflightCheckDialog = new PreflightCheckDialogFragment();

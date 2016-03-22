@@ -30,7 +30,7 @@ import com.coretronic.ibs.drone.MavlinkLibBridge.DroneParameter;
 /**
  * Created by karot.chuang on 2016/2/19.
  */
-public class RcTxRxSettingFragment extends SettingChildFragment {
+public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     private final static String ARGUMENT_RC_TYPE = "RC_TYPE";
     private final static String ARGUMENT_RC_ROLL_MIN = "RC_ROLL_MIN";
     private final static String ARGUMENT_RC_ROLL_MAX = "RC_ROLL_MAX";
@@ -113,8 +113,8 @@ public class RcTxRxSettingFragment extends SettingChildFragment {
     private boolean mGearReverse;
     private boolean mCameraTriggerReverse;
 
-    public static RcTxRxSettingFragment newInstance(DroneParameter droneParameter) {
-        RcTxRxSettingFragment fragment = new RcTxRxSettingFragment();
+    public static RCTransmitterReceiverSettingFragment newInstance(DroneParameter droneParameter) {
+        RCTransmitterReceiverSettingFragment fragment = new RCTransmitterReceiverSettingFragment();
         Bundle args = new Bundle();
 
         args.putInt(ARGUMENT_RC_TYPE, droneParameter.getRCType());
@@ -152,7 +152,7 @@ public class RcTxRxSettingFragment extends SettingChildFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings_rc_txrx, container, false);
+        return inflater.inflate(R.layout.fragment_settings_rc_transmitter_receiver, container, false);
     }
 
     @Override

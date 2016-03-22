@@ -20,7 +20,7 @@ import com.coretronic.ibs.drone.MavlinkLibBridge.DroneParameter;
 /**
  * Created by karot.chuang on 2016/2/15.
  */
-public class SettingsMaingFragment extends UnBindDrawablesFragment {
+public class SettingsFragment extends UnBindDrawablesFragment {
     private final static int ANIMATION_DURATION_IN_SECONDS = (int) (0.2 * 1000);
     private final static float ONE_DP_IN_PIXEL = Resources.getSystem().getDisplayMetrics().densityDpi / 160f;
 
@@ -52,7 +52,7 @@ public class SettingsMaingFragment extends UnBindDrawablesFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings_main, container, false);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class SettingsMaingFragment extends UnBindDrawablesFragment {
             }
         });
 
-        mRcTxRxTextView = (TextView) view.findViewById(R.id.rc_txrx);
+        mRcTxRxTextView = (TextView) view.findViewById(R.id.rc_transmistter_receiver);
         mRcTxRxTextView.setOnClickListener(onLabelClickListener);
         mGainTextView = (TextView) view.findViewById(R.id.gain);
         mGainTextView.setOnClickListener(onLabelClickListener);
@@ -121,9 +121,9 @@ public class SettingsMaingFragment extends UnBindDrawablesFragment {
         public void onClick(View v) {
             int changeTo = mCurrentPage;
             switch (v.getId()) {
-                case R.id.rc_txrx:
+                case R.id.rc_transmistter_receiver:
                     changeTo = SETTINGS_PAGE_RC_TXRX;
-                    mCurrentFragment = RcTxRxSettingFragment.newInstance(mDroneParameter);
+                    mCurrentFragment = RCTransmitterReceiverSettingFragment.newInstance(mDroneParameter);
                     break;
                 case R.id.gain:
                     changeTo = SETTINGS_PAGE_GAIN;

@@ -42,10 +42,10 @@ public class SettingChildFragment extends Fragment  implements DroneStatus.Statu
     public void onStatusUpdate(Callback.Event event, DroneStatus droneStatus) {
         switch (event) {
             case ON_RC_CONNECT_UPDATE:
-                ((SettingsMaingFragment) mMainFragment).setRCConnectedIndicator(droneStatus.ismArmingCheckRCConnect());
+                ((SettingsFragment) mMainFragment).setRCConnectedIndicator(droneStatus.ismArmingCheckRCConnect());
                 break;
             case ON_HEARTBEAT:
-                ((SettingsMaingFragment) mMainFragment).updateHeartbeatTimeStamp(droneStatus.getLastHeartbeatTime());
+                ((SettingsFragment) mMainFragment).updateHeartbeatTimeStamp(droneStatus.getLastHeartbeatTime());
                 break;
         }
     }

@@ -74,7 +74,7 @@
     <string name="attitude_gps_elevator_gain">ATTITUDE/GPS ELEVATOR GAIN</string>
     <string name="attitude_gps_rudder_gain">ATTITUDE/GPS RUDDER GAIN</string>
     <string name="altitude_gain">ALTITUDE GAIN</string>
-    <string name="rc_tx_rx">RC TRANSMITTER &amp;\nRECEIVER</string>
+    <string name="rc_transmitter_receiver">RC TRANSMITTER &amp;\nRECEIVER</string>
     <string name="gain">GAIN</string>
     <string name="battery_and_failsafe">BATTERY &amp; FAILSAFE</string>
     <string name="general">GENERAL</string>
