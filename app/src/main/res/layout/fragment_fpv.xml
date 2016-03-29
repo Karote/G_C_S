@@ -1,14 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/black"
-             android:clickable="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <com.coretronic.drone.uvc.UVCCameraTextureView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/shutter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/icon_shutter" />
+
+    <RelativeLayout
+        android:id="@+id/layout_gimbal_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/gimbal_control_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:src="@drawable/gimble_circle_pad" />
+
+        <RelativeLayout
+            android:id="@+id/btn_gimble_con_roll_rotate_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/gimbal_control_bg"
+            android:layout_alignEnd="@id/gimbal_control_bg"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@id/gimbal_control_bg"
+            android:layout_marginBottom="-24dp"
+            android:layout_marginEnd="-24dp"
+            android:layout_marginRight="-24dp">
+
+            <ImageView
+                android:id="@+id/gimble_con_roll_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/btn_gimble_con_roll" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/joystick_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/gimbal_control_bg"
+            android:layout_alignEnd="@id/gimbal_control_bg"
+            android:layout_alignLeft="@id/gimbal_control_bg"
+            android:layout_alignRight="@id/gimbal_control_bg"
+            android:layout_alignStart="@id/gimbal_control_bg"
+            android:layout_alignTop="@id/gimbal_control_bg"
+            android:layout_margin="18dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icon_gimble_pitch_up_n" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icon_gimble_pitch_down_n" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_gimble_yaw_left_n" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_gimble_yaw_right_n" />
+
+            <com.coretronic.drone.ui.Joystick
+                android:id="@+id/joystickView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/joystick_control_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@color/transparent"
+                    android:src="@drawable/btn_gimble_controller" />
+
+            </com.coretronic.drone.ui.Joystick>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -4,15 +4,14 @@
     android:layout_height="wrap_content"
     android:paddingBottom="48dp">
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/map_fpv_switch_btn"
-        android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/fpv_window_width"
+        android:layout_height="@dimen/fpv_window_height"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/btn_plan_white"
-        android:src="@drawable/drone_control_group_fpv_button_icon" />
+        android:background="@color/transparent"/>
 
     <include
         android:id="@+id/drone_control_bar"
