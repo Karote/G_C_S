@@ -75,6 +75,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private LoadPlanningDataAccessObject mLoadPlanningDAO;
     private LoadPlanningListAdapter mLoadPlanningListAdapter;
     private WaypointListEditSettingDialog mWaypointSettingDialog;
+    private RecyclerView mRecyclerView;
+    private int mTopViewVisibility;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -143,11 +145,11 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mWaypointListHeaderSettingButton.setOnClickListener(missionListEditFunctionListener);
 
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.mission_item_recycler_view);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new FixedLinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.mission_item_recycler_view);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(new FixedLinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
         mMissionItemAdapter = new MissionListUndoableAdapter();
-        recyclerView.setAdapter(mMissionItemAdapter);
+        mRecyclerView.setAdapter(mMissionItemAdapter);
 
         mWayPointDetailPanel = (FrameLayout) view.findViewById(R.id.way_point_detail_container);
         mWayPointDetailPanel.setVisibility(View.GONE);
@@ -179,8 +181,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onAdapterListIsEmptyOrNot(boolean isEmpty) {
                 mSaveAndClearMissionFlag = !isEmpty;
-                int topViewVisibility = isEmpty ? View.GONE : View.VISIBLE;
-                mWaypointListTopView.setVisibility(topViewVisibility);
+                mTopViewVisibility = isEmpty ? View.GONE : View.VISIBLE;
+                mWaypointListTopView.setVisibility(mTopViewVisibility);
             }
 
             @Override
@@ -567,6 +569,20 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     @Override
     public void onMissionSpeedUpdate(int missionSpeed) {
         mMissionItemAdapter.updateSelectedItemSpeed(missionSpeed);
+    }
+
+    @Override
+    public void onFPVShowed() {
+        mWaypointListTopView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mMissionItemAdapter.onNothingSelected();
+        mWayPointDetailPanel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFPVHided() {
+        mWaypointListTopView.setVisibility(mTopViewVisibility);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
 }

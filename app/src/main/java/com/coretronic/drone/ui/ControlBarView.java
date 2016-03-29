@@ -97,12 +97,10 @@ public class ControlBarView {
     public void onFPVHided() {
         mFPVAndMapSwitchButton.setSelected(false);
         mMapControlBar.setVisibility(View.VISIBLE);
-        mDroneControlBar.setVisibility(View.VISIBLE);
     }
 
     public void onFPVShowed() {
         mFPVAndMapSwitchButton.setSelected(true);
         mMapControlBar.setVisibility(View.GONE);
-        mDroneControlBar.setVisibility(View.GONE);
     }
 }

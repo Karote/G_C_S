@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -127,8 +128,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private long mDroneLat;
     private long mDroneLon;
     private boolean mIsSpinnerTriggerByUser = true;
-    private View mFPVView;
+    private View mFPVContainer;
 
+    private View mWebViewContainer;
+    private View mMissionPlanContainer;
 
     private NotificationCenterListAdapter mNotificationCenterListAdapter;
     private Button mNotificationCenterButton;
@@ -185,7 +188,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         mMavInfoView = new MavInfoView(view, R.id.mav_info_panel);
         mControlBarView = new ControlBarView(view, R.id.control_button_bar, this);
-        mFPVView = view.findViewById(R.id.fpv_container);
+        mFPVContainer = view.findViewById(R.id.fpv_container);
+        mWebViewContainer = view.findViewById(R.id.webview_container);
+        mMissionPlanContainer = view.findViewById(R.id.mission_plan_container);
 
         return view;
     }
@@ -195,6 +200,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         super.onViewCreated(view, savedInstanceState);
         mDroneMap = new DroneMap(getActivity(), view, mHandler);
         mMavInfoView.onViewCreated(view, savedInstanceState);
+
+        mFPVFragment = new FirstPersonVisionFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.fpv_container, mFPVFragment, null).commitAllowingStateLoss();
     }
 
     @Override
@@ -830,23 +838,62 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     public void hideFPVFragment() {
-        if (mFPVFragment != null) {
-            getChildFragmentManager().beginTransaction().remove(mFPVFragment).commit();
-            mFPVFragment = null;
-        }
-        mFPVView.setVisibility(View.GONE);
-        mMissionModeControlPanel.setVisibility(View.VISIBLE);
+        mUndoButton.setEnabled(true);
+        mMoreButton.setEnabled(true);
+        scaleUpWebViewContainer();
+        scaleDownFPVContainer();
+        mFPVContainer.bringToFront();
         mControlBarView.onFPVHided();
+        mFPVFragment.onFPVHide();
+        mMissionPlanContainer.setVisibility(View.VISIBLE);
     }
 
     public void showFPVFragment() {
-        if (mFPVFragment == null) {
-            mFPVFragment = new FirstPersonVisionFragment();
-            getChildFragmentManager().beginTransaction().replace(R.id.fpv_container, mFPVFragment, null).commitAllowingStateLoss();
-        }
-        mFPVView.setVisibility(View.VISIBLE);
-        mMissionModeControlPanel.setVisibility(View.GONE);
+        mUndoButton.setEnabled(false);
+        mMoreButton.setEnabled(false);
+        scaleDownWebViewContainer();
+        scaleUpFPVContainer();
+        mWebViewContainer.bringToFront();
         mControlBarView.onFPVShowed();
+        mFPVFragment.onFPVShow();
+        mMissionPlanContainer.setVisibility(View.INVISIBLE);
+    }
+
+    private void scaleDownWebViewContainer() {
+        int width = getResources().getDimensionPixelOffset(R.dimen.fpv_window_width);
+        int height = getResources().getDimensionPixelOffset(R.dimen.fpv_window_height);
+        int topMargin = getResources().getDimensionPixelOffset(R.dimen.fpv_window_top_margin);
+        int leftMargin = getResources().getDimensionPixelOffset(R.dimen.fpv_window_left_margin);
+        mWebViewContainer.getLayoutParams().width = width;
+        mWebViewContainer.getLayoutParams().height = height;
+        ((ViewGroup.MarginLayoutParams) mWebViewContainer.getLayoutParams()).setMargins(leftMargin, topMargin, 0, 0);
+        mWebViewContainer.requestLayout();
+    }
+
+    private void scaleUpWebViewContainer() {
+        mWebViewContainer.getLayoutParams().width = FrameLayout.LayoutParams.MATCH_PARENT;
+        mWebViewContainer.getLayoutParams().height = FrameLayout.LayoutParams.MATCH_PARENT;
+        ((ViewGroup.MarginLayoutParams) mWebViewContainer.getLayoutParams()).setMargins(0, 0, 0, 0);
+        mWebViewContainer.requestLayout();
+    }
+
+    private void scaleDownFPVContainer() {
+        int width = getResources().getDimensionPixelOffset(R.dimen.fpv_window_width);
+        int height = getResources().getDimensionPixelOffset(R.dimen.fpv_window_height);
+        int topMargin = getResources().getDimensionPixelOffset(R.dimen.fpv_window_top_margin);
+        int leftMargin = getResources().getDimensionPixelOffset(R.dimen.fpv_window_left_margin);
+        mFPVContainer.getLayoutParams().width = width;
+        mFPVContainer.getLayoutParams().height = height;
+        ((ViewGroup.MarginLayoutParams) mFPVContainer.getLayoutParams()).setMargins(leftMargin, topMargin, 0, 0);
+        mFPVContainer.requestLayout();
+    }
+
+    private void scaleUpFPVContainer() {
+        mFPVContainer.getLayoutParams().width = FrameLayout.LayoutParams.MATCH_PARENT;
+        mFPVContainer.getLayoutParams().height = FrameLayout.LayoutParams.MATCH_PARENT;
+        ((ViewGroup.MarginLayoutParams) mFPVContainer.getLayoutParams()).setMargins(0, 0, 0, 0);
+        mFPVContainer.requestLayout();
+
     }
 
     public DroneController getDroneController() {
@@ -870,7 +917,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.setAddMarkerEnable(!isShow);
     }
 
-    public void setEditDoneEnable(){
+    public void setEditDoneEnable() {
         mEditDoneButton.setEnabled(true);
     }
 
