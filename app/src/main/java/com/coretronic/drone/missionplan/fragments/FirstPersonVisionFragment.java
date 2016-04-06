@@ -100,6 +100,12 @@ public class FirstPersonVisionFragment extends Fragment {
         mSendPWMHandler = new Handler();
 
         mShutterButton = view.findViewById(R.id.shutter_button);
+        mShutterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDroneController.cameraShutterTrigger();
+            }
+        });
         mGimbleControl = view.findViewById(R.id.layout_gimbal_control);
 
         mGimbleRollRotateView = (RelativeLayout) view.findViewById(R.id.btn_gimble_con_roll_rotate_view);
