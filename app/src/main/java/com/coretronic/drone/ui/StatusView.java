@@ -201,7 +201,7 @@ public class StatusView extends LinearLayout {
         private final static int LEVEL_NORMAL = 2;
         private final static int UPDATE_GAP_NO_SIGNAL = 5;
         private final static int UPDATE_GAP_WEAK = 3;
-        private final static int UPDATE_PERIOD = 1;
+        private final static int UPDATE_PERIOD = 1 * 1000;
 
         private ImageView mCommunicateLightImageView;
         private long mLastUpdateTime;
