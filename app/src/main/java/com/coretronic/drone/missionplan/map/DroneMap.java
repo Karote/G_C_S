@@ -27,6 +27,8 @@ import java.util.List;
  * Created by Poming on 2015/9/10.
  */
 public class DroneMap implements OnMapEventCallback {
+    private final static int MAP_MARKER_STYLE_NORMAL = 1;
+    private final static int MAP_MARKER_STYLE_SMALL = 2;
 
     private final Context mContext;
     private final Handler mHandler;
@@ -239,6 +241,7 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:mapClean()");
         mMapWebView.loadUrl("javascript:setMapClickable(" + canMapAddMarker + ")");
         mMapWebView.loadUrl("javascript:setTapGoMode(" + isTapAndGo + ")");
+        mMapWebView.loadUrl("javascript:setMarkerStyle(" + MAP_MARKER_STYLE_NORMAL + ")");
         mIsTapAndGoMode = isTapAndGo;
         mCanAddMarker = canMapAddMarker;
     }
@@ -259,6 +262,14 @@ public class DroneMap implements OnMapEventCallback {
     public void setAddMarkerEnable(boolean isAddMarkerEnable) {
         mCanAddMarker = isAddMarkerEnable;
         mMapWebView.loadUrl("javascript:setMapClickable(" + isAddMarkerEnable + ")");
+    }
+
+    public void setMarkerNormal(){
+        mMapWebView.loadUrl("javascript:setMarkerStyle(" + MAP_MARKER_STYLE_NORMAL + ")");
+    }
+
+    public void setMarkerSmall(){
+        mMapWebView.loadUrl("javascript:setMarkerStyle(" + MAP_MARKER_STYLE_SMALL + ")");
     }
 
     public void onStart() {

@@ -853,6 +853,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mControlBarView.onFPVHided();
         mFPVFragment.onFPVHide();
         mMissionPlanContainer.setVisibility(View.VISIBLE);
+        mDroneMap.setMarkerNormal();
     }
 
     public void showFPVFragment() {
@@ -864,6 +865,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mControlBarView.onFPVShowed();
         mFPVFragment.onFPVShow();
         mMissionPlanContainer.setVisibility(View.INVISIBLE);
+        mDroneMap.setMarkerSmall();
     }
 
     private void scaleDownWebViewContainer() {

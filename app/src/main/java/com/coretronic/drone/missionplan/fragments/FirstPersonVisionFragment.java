@@ -1,9 +1,10 @@
 package com.coretronic.drone.missionplan.fragments;
 
-import android.graphics.Matrix;
+import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,7 +17,10 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.coretronic.drone.DroneController;
+import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
+import com.coretronic.drone.model.Parameters;
 import com.coretronic.drone.ui.Joystick;
 import com.coretronic.drone.uvc.CameraHandler;
 import com.coretronic.drone.uvc.USBCameraMonitor;
@@ -24,29 +28,43 @@ import com.coretronic.drone.uvc.USBCameraMonitor.OnUVCCameraStatusChangedListene
 import com.coretronic.drone.uvc.UVCCameraTextureView;
 import com.coretronic.drone.uvc.UsbCameraWrap;
 
+import java.util.Timer;
+
 /**
  * Created by Poming on 2015/10/21.
  */
 public class FirstPersonVisionFragment extends Fragment {
+    private final static int PWM_MAX = 2000;
+    private final static int PWM_MIN = 1000;
 
     private UVCCameraTextureView mCameraView;
     private USBCameraMonitor mUSBCameraMonitor;
     private CameraHandler mCameraHandler;
     private Surface mSurface;
+    private DroneController mDroneController;
 
     private View mShutterButton;
     private View mGimbleControl;
     private RelativeLayout mGimbleRollRotateView;
     private ImageView mGimbleRollButton;
 
-    private Matrix matrix;
-
     private int[] mGimbleRollRotateViewLocation = new int[2];
-    private double mCurrAngle = 0;
-    private double mDownAngle = 0;
-    private double mPrevAngle = 0;
+    private float mCurrAngle = 0;
+    private float mDownAngle = 0;
+    private float mPrevAngle = 0;
 
-    private Joystick mJoystick;
+    private Handler mSendPWMHandler;
+    private Runnable mSendPWMRunnable;
+    private Timer timer;
+    private float mGimbleRollPWM;
+    private float mGimbleYawPWM;
+    private float mGimblePitchPWM;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mDroneController = ((MainActivity) activity).getDroneController();
+    }
 
     @Nullable
     @Override
@@ -79,6 +97,8 @@ public class FirstPersonVisionFragment extends Fragment {
             }
         });
 
+        mSendPWMHandler = new Handler();
+
         mShutterButton = view.findViewById(R.id.shutter_button);
         mGimbleControl = view.findViewById(R.id.layout_gimbal_control);
 
@@ -86,27 +106,52 @@ public class FirstPersonVisionFragment extends Fragment {
         mGimbleRollButton = (ImageView) view.findViewById(R.id.gimble_con_roll_button);
         mGimbleRollButton.setOnTouchListener(onGimbleRollButtonTouchListener);
 
-        mJoystick = (Joystick) view.findViewById(R.id.joystickView);
-        mJoystick.setJoystickListener(new Joystick.JoystickListener() {
+        ((Joystick) view.findViewById(R.id.joystickView)).setJoystickListener(new Joystick.JoystickListener() {
             @Override
             public void onDown() {
 
             }
 
             @Override
-            public void onDrag(float degrees, float offset) {
+            public void onDrag(final float xOffset, final float yOffset) {
+                mGimbleYawPWM = pwmTransfer(xOffset);
+                mGimblePitchPWM = pwmTransfer(yOffset);
 
+                if (mSendPWMRunnable != null) {
+                    return;
+                }
+                mSendPWMRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
+                        mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                        mSendPWMHandler.postDelayed(mSendPWMRunnable, 100);
+                    }
+                };
+                mSendPWMHandler.post(mSendPWMRunnable);
             }
 
             @Override
             public void onUp() {
-
+                mGimbleYawPWM = pwmTransfer(0);
+                mGimblePitchPWM = pwmTransfer(0);
+                mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
+                mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                if (mSendPWMRunnable != null) {
+                    mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
+                    mSendPWMRunnable = null;
+                }
             }
         });
 
-        matrix = new Matrix();
-
         return view;
+    }
+
+    private float pwmTransfer(float offset) {
+        float pwmDiff = (PWM_MAX - PWM_MIN) / 2;
+        float pwmBase = (PWM_MAX + PWM_MIN) / 2;
+        int posCoe = offset < 0 ? -1 : 1;
+        return posCoe * offset * offset * pwmDiff + pwmBase;
     }
 
     private View.OnTouchListener onGimbleRollButtonTouchListener = new View.OnTouchListener() {
@@ -124,19 +169,38 @@ public class FirstPersonVisionFragment extends Fragment {
                     mGimbleRollRotateView.clearAnimation();
                     downX = touchX;
                     downY = touchY;
-                    mDownAngle = Math.toDegrees(Math.atan2(downX - rollCenterX, rollCenterY - downY));
+                    mDownAngle = (float) Math.toDegrees(Math.atan2(downX - rollCenterX, rollCenterY - downY));
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    mPrevAngle = mCurrAngle;
-                    mCurrAngle = Math.toDegrees(Math.atan2(touchX - rollCenterX, rollCenterY - touchY)) - mDownAngle;
+                    mCurrAngle = (float) Math.toDegrees(Math.atan2(touchX - rollCenterX, rollCenterY - touchY)) - mDownAngle;
                     mCurrAngle = mCurrAngle < -90 ? -90 : mCurrAngle;
                     mCurrAngle = mCurrAngle > 90 ? 90 : mCurrAngle;
                     rotateAnimate(mPrevAngle, mCurrAngle, 0);
+                    mGimbleRollPWM = pwmTransfer(mCurrAngle / 90);
+                    mPrevAngle = mCurrAngle;
+                    if (mSendPWMRunnable != null) {
+                        break;
+                    }
+                    mSendPWMRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
+                            mSendPWMHandler.postDelayed(mSendPWMRunnable, 100);
+                        }
+                    };
+                    mSendPWMHandler.post(mSendPWMRunnable);
                     break;
                 case MotionEvent.ACTION_UP:
                     mGimbleRollButton.setImageResource(R.drawable.btn_gimble_con_roll_n);
                     mPrevAngle = mCurrAngle = 0;
                     rotateAnimate(mPrevAngle, mCurrAngle, 1000);
+
+                    mGimbleRollPWM = pwmTransfer(mCurrAngle);
+                    mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
+                    if (mSendPWMRunnable != null) {
+                        mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
+                        mSendPWMRunnable = null;
+                    }
                     break;
             }
             return true;
@@ -218,6 +282,9 @@ public class FirstPersonVisionFragment extends Fragment {
         if (mCameraHandler != null) {
             mCameraHandler = null;
         }
+        if (mSendPWMHandler != null) {
+            mSendPWMHandler = null;
+        }
     }
 
     @Override
@@ -226,12 +293,12 @@ public class FirstPersonVisionFragment extends Fragment {
         mCameraHandler.closeCamera();
     }
 
-    public void onFPVShow(){
+    public void onFPVShow() {
         mShutterButton.setVisibility(View.VISIBLE);
         mGimbleControl.setVisibility(View.VISIBLE);
     }
 
-    public void onFPVHide(){
+    public void onFPVHide() {
         mShutterButton.setVisibility(View.GONE);
         mGimbleControl.setVisibility(View.GONE);
     }

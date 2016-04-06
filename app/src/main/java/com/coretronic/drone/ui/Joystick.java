@@ -43,10 +43,10 @@ public class Joystick extends FrameLayout {
         void onDown();
 
         /**
-         * @param degrees -180 -> 180.
-         * @param offset  normalized, 0 -> 1.
+         * @param xOffset  normalized, 0 -> 1.
+         * @param yOffset  normalized, 0 -> 1.
          */
-        void onDrag(float degrees, float offset);
+        void onDrag(float xOffset, float yOffset);
 
         void onUp();
     }
@@ -264,7 +264,7 @@ public class Joystick extends FrameLayout {
         final float degrees = (float) (180 * radians / Math.PI);
 
         if (null != listener) {
-            listener.onDrag(degrees, 0 == radius ? 0 : offset / radius);
+            listener.onDrag(x / radius, y / radius);
         }
 
         draggedChild.setTranslationX(x);
