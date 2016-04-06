@@ -36,17 +36,15 @@ public class MissionItemDetailFragment extends Fragment {
     private final static String ARGUMENT_LONGITUDE = "longitude";
     private final static String ARGUMENT_SPEED = "speed";
     private final static String TXT_WAYPOINT = "Waypoint";
-    private final static String TXT_TAKEOFF = "Take Off";
     private final static String TXT_LAND = "Land";
     private final static String TXT_RTL = "RTL";
     private final static String TXT_CAMERA = "Camera";
-    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_TAKEOFF, TXT_LAND, TXT_RTL, TXT_CAMERA};
+    private final static String[] POINT_TYPE = {TXT_WAYPOINT, TXT_LAND, TXT_RTL, TXT_CAMERA};
 
     private final static int WAYPOINT_INDEX = 0;
-    private final static int TAKEOFF_INDEX = 1;
-    private final static int LAND_INDEX = 2;
-    private final static int RTL_INDEX = 3;
-    private final static int CAMERA_INDEX = 4;
+    private final static int LAND_INDEX = 1;
+    private final static int RTL_INDEX = 2;
+    private final static int CAMERA_INDEX = 3;
 
     private TextView mSerialNumberTextView = null;
     private EditText mLatitudeTextView = null;
@@ -58,6 +56,10 @@ public class MissionItemDetailFragment extends Fragment {
     private AbstractWheel mSpeedWheel = null;
     private SelectedMissionUpdatedCallback mSelectedMissionUpdatedCallback;
     private int mWheelScrollingCount;
+    private View mLocationRow;
+    private View mDeleteButton;
+    private View mTextOffTextView;
+    private View mDroneImage;
 
     public static MissionItemDetailFragment newInstance(int index, Mission mission) {
         MissionItemDetailFragment fragment = new MissionItemDetailFragment();
@@ -82,6 +84,9 @@ public class MissionItemDetailFragment extends Fragment {
 
     private void findViews(View fragmentView) {
         mSerialNumberTextView = (TextView) fragmentView.findViewById(R.id.way_point_detail_name_text);
+        mDroneImage = fragmentView.findViewById(R.id.way_point_detail_name_drone_image);
+        mLocationRow = fragmentView.findViewById(R.id.location_row);
+        mTextOffTextView = fragmentView.findViewById(R.id.takeoff_text);
         mLatitudeTextView = (EditText) fragmentView.findViewById(R.id.way_point_detail_lat_text);
         mLongitudeTextView = (EditText) fragmentView.findViewById(R.id.way_point_detail_lng_text);
         mLatitudeTextView.setOnEditorActionListener(new OnEditorActionListener() {
@@ -105,7 +110,8 @@ public class MissionItemDetailFragment extends Fragment {
         });
         mType = (Spinner) fragmentView.findViewById(R.id.way_point_detail_type_spinner);
         mTypeImageView = (ImageView) fragmentView.findViewById(R.id.way_point_detail_type_icon);
-        fragmentView.findViewById(R.id.btn_detail_delete).setOnClickListener(new View.OnClickListener() {
+        mDeleteButton = fragmentView.findViewById(R.id.btn_detail_delete);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSelectedMissionUpdatedCallback.onMissionDeleted();
@@ -129,10 +135,6 @@ public class MissionItemDetailFragment extends Fragment {
                     case WAYPOINT_INDEX: // Waypoint
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.WAY_POINT);
                         mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_waypoint);
-                        break;
-                    case TAKEOFF_INDEX: // Take Off
-                        mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.TAKEOFF);
-                        mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_takeoff);
                         break;
                     case LAND_INDEX: // Land
                         mSelectedMissionUpdatedCallback.onMissionTypeUpdate(Mission.Type.LAND);
@@ -183,7 +185,8 @@ public class MissionItemDetailFragment extends Fragment {
         Bundle arguments = getArguments();
 
         if (arguments != null) {
-            mSerialNumberTextView.setText(String.valueOf(arguments.getInt(ARGUMENT_INDEX)));
+            int index = arguments.getInt(ARGUMENT_INDEX);
+            mSerialNumberTextView.setText(String.valueOf(index));
             mLatitudeTextView.setText(String.valueOf(arguments.getFloat(ARGUMENT_LATITUDE)));
             mLongitudeTextView.setText(String.valueOf(arguments.getFloat(ARGUMENT_LONGITUDE)));
 
@@ -192,6 +195,8 @@ public class MissionItemDetailFragment extends Fragment {
             switch (missionType) {
                 case TAKEOFF:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_takeoff);
+                    mType.setVisibility(View.GONE);
+                    mTextOffTextView.setVisibility(View.VISIBLE);
                     break;
                 case LAND:
                     mTypeImageView.setImageResource(R.drawable.ico_indicator_plan_landing);
@@ -209,13 +214,20 @@ public class MissionItemDetailFragment extends Fragment {
             mAltitudeWheel.setCurrentItem((int) arguments.getFloat(ARGUMENT_ALTITUDE) - ConstantValue.ALTITUDE_MIN_VALUE);
             mStayWheel.setCurrentItem(arguments.getInt(ARGUMENT_STAY));
             mSpeedWheel.setCurrentItem(arguments.getInt(ARGUMENT_SPEED));
+
+            if (index == 0) {
+                mSerialNumberTextView.setVisibility(View.GONE);
+                mDroneImage.setVisibility(View.VISIBLE);
+                mType.setEnabled(false);
+                mLocationRow.setVisibility(View.GONE);
+                mDeleteButton.setVisibility(View.GONE);
+            }
+
         }
     }
 
     private int typeToIndex(Mission.Type type) {
         switch (type) {
-            case TAKEOFF:
-                return TAKEOFF_INDEX;
             case LAND:
                 return LAND_INDEX;
             case RTL:

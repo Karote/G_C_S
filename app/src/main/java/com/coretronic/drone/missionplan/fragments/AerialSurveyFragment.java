@@ -250,7 +250,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void missionAdapterShowDelete(boolean isShow) {
+    private void missionAdapterShowSelect(boolean isShow) {
         if (isShow) {
             mMissionItemAdapter.setSelectLayoutVisible(true);
         } else {
@@ -288,7 +288,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         switch (v.getId()) {
             case R.id.edit_cancel_button:
                 mMissionItemAdapter.clearMission();
-                missionAdapterShowDelete(false);
+                missionAdapterShowSelect(false);
                 updateMissionToMap();
                 mMapViewFragment.clearSurvey();
                 mPolygonPoints.clear();
@@ -300,7 +300,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 updateMissionToMap();
                 break;
             case R.id.edit_done_button:
-                missionAdapterShowDelete(false);
+                missionAdapterShowSelect(false);
                 break;
             case R.id.plan_go_button:
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
