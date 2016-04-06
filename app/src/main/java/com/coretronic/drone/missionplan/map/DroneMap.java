@@ -198,7 +198,7 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:setMapToMyLocation()");
     }
 
-    public void setMapToDroneLocation(long droneLat, long dronelon) {
+    public void setMapToDroneLocation(float droneLat, float dronelon) {
         mMapWebView.loadUrl("javascript:setMapTo(" + droneLat + "," + dronelon + ")");
     }
 
@@ -226,7 +226,7 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:clearTapAndGoPlan()");
     }
 
-    public void loadHistory(List<Mission> missions, List<Long> path) {
+    public void loadHistory(List<Mission> missions, List<Float> path) {
         JSONArray pathJson = new JSONArray(path);
         mMapWebView.loadUrl("javascript:loadHistory(" + transMissionToJson(missions) + "," + pathJson + ")");
     }
@@ -252,7 +252,7 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("about:blank");
     }
 
-    public void updateDroneLocation(long latitude, long longitude, float yaw) {
+    public void updateDroneLocation(float latitude, float longitude, float yaw) {
         mMapWebView.loadUrl("javascript:updateDroneLocation(" + latitude + "," + longitude + "," + yaw + ")");
     }
 

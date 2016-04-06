@@ -69,7 +69,7 @@ public class HistoryFragment extends MapChildFragment {
 
             @Override
             public void onFlightHistorySelected(FlightHistory flightHistory) {
-                List<Long> flightRecords = new ArrayList<>();
+                List<Float> flightRecords = new ArrayList<>();
 
                 for (RecordItem recordItem : flightHistory.getRecordItems()) {
                     flightRecords.add(recordItem.getLatitude());

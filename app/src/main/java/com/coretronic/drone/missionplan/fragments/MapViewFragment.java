@@ -125,8 +125,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private List<Mission> mCurrentMissionList;
     private MapChildFragment mCurrentFragment = null;
     private FirstPersonVisionFragment mFPVFragment;
-    private long mDroneLat;
-    private long mDroneLon;
+    private float mDroneLat;
+    private float mDroneLon;
     private boolean mIsSpinnerTriggerByUser = true;
     private View mFPVContainer;
 
@@ -138,6 +138,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private Dialog mNotificationPopDialog;
     private View mNotificationToastView;
     private View mNotificationCenterPopWindowView;
+    private int mGPSCounts;
+    private int mGPSLockType;
+    private boolean mGPSLock;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -284,8 +287,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mRecordItemBuilder.setLongitude(droneStatus.getLongitude());
                 break;
             case ON_SATELLITE_UPDATE:
-                mStatusView.setGpsStatus(droneStatus.getSatellites());
-                mRecordItemBuilder.setSatellites(droneStatus.getSatellites());
+                mGPSCounts = droneStatus.getSatellites();
+                mStatusView.setGpsStatus(mGPSCounts);
+                mRecordItemBuilder.setSatellites(mGPSCounts);
+                break;
+            case ON_GPS_LOCK_TYPE_UPDATE:
+                mGPSLockType = droneStatus.getGPSLockType();
                 break;
             case ON_ATTITUDE_UPDATE:
                 updateOnMapDrone(droneStatus);
@@ -966,7 +973,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mDroneMap.setAddMarkerEnable(enable);
     }
 
-    public void loadHistory(List<Mission> missions, List<Long> flightPath) {
+    public void loadHistory(List<Mission> missions, List<Float> flightPath) {
         mDroneMap.loadHistory(missions, flightPath);
     }
 
@@ -1019,5 +1026,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     void setDroneControlBarVisibility(int visibility) {
         mControlBarView.setDroneControlBarVisibility(visibility);
+    }
+
+    public boolean isGPSLock() {
+        mGPSLock = mGPSCounts >= 6 && mGPSLockType > 2;
+        return mGPSLock;
     }
 }
