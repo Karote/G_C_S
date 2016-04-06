@@ -92,12 +92,12 @@ public class MavInfoView implements StatusChangedListener {
         mDroneClimbSpeedTextWrap.setValue(climbSpeed);
     }
 
-    final private void onLocationUpdate(long droneLat, long droneLng) {
+    final private void onLocationUpdate(float droneLat, float droneLng) {
         if (mDroneLatitudeTextView == null || mDroneLongitudeTextView == null) {
             return;
         }
-        mDroneLatitudeTextView.setText(String.format("%d.%07d,", droneLat / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
-        mDroneLongitudeTextView.setText(String.format("%d.%07d", droneLng / LOCATION_NORMALIZE, droneLat % LOCATION_NORMALIZE));
+        mDroneLatitudeTextView.setText(String.format("%f,", droneLat));
+        mDroneLongitudeTextView.setText(String.format("%f",droneLng));
     }
 
     final private void onFlightTimeUpdate(int flightTimeInSeconds) {

@@ -47,7 +47,16 @@ public class MapChildFragment extends Fragment implements OnMapEventCallback {
 
     }
 
-    @Override    public void onGetMissionPlanPathDistanceAndFlightTimeCallback(int lengthInMeters, int timeInSeconds){
+    @Override
+    public void onGetMissionPlanPathDistanceAndFlightTimeCallback(int lengthInMeters, int timeInSeconds) {
+
+    }
+
+    public void onFPVShowed() {
+
+    }
+
+    public void onFPVHided() {
 
     }
 

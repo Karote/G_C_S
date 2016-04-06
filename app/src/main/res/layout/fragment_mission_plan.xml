@@ -4,16 +4,29 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <WebView
-        android:id="@+id/map_webview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <FrameLayout
-        android:id="@+id/fpv_container"
+        android:id="@+id/map_and_fpv_parent_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fpv_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <FrameLayout
+            android:id="@+id/webview_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/map_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/action_bar_layout"

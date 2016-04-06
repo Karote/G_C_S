@@ -6,6 +6,11 @@
 
     <dimen name="compass_ruler_height">1.2dp</dimen>
 
+    <dimen name="fpv_window_width">164dp</dimen>
+    <dimen name="fpv_window_height">112dp</dimen>
+    <dimen name="fpv_window_top_margin">60dp</dimen>
+    <dimen name="fpv_window_left_margin">12dp</dimen>
+
     <dimen name="control_button_group_background_padding">2dp</dimen>
     <dimen name="control_button_group_landing_button_text_size">18sp</dimen>
     <dimen name="drone_control_button_group_right_padding">0dp</dimen>
