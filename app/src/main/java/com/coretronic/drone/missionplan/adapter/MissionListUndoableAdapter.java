@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.coretronic.drone.R;
@@ -163,7 +164,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
         final Mission mission = mMissionList.get(position);
 
-        viewHolder.serialNumberTextView.setText(position + 1 + "");
+        viewHolder.serialNumberTextView.setText(position + "");
         viewHolder.altitudeTextView.setText((int) mission.getAltitude() + "");
         viewHolder.speedTextView.setText(mission.getSpeed() + "");
         ((ImageView) viewHolder.typeView).setImageResource(getTypeResource(mission.getType()));
@@ -179,10 +180,26 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         }
 
         if (mIsSelectLayoutVisible) {
-            viewHolder.selectCheck.setVisibility(View.VISIBLE);
-            viewHolder.selectCheck.setSelected(mSelectedItems.get(position, false));
+            if(position == 0){
+                hideHomePoint(viewHolder);
+            }else {
+                showHomePoint(viewHolder);
+
+                viewHolder.serialNumberTextView.setVisibility(View.VISIBLE);
+                viewHolder.takeOffView.setVisibility(View.GONE);
+            }
+            showSelectLayout(viewHolder, position);
         } else {
-            viewHolder.selectCheck.setVisibility(View.GONE);
+            if(position == 0){
+                viewHolder.serialNumberTextView.setVisibility(View.GONE);
+                viewHolder.takeOffView.setVisibility(View.VISIBLE);
+            }else {
+                viewHolder.serialNumberTextView.setVisibility(View.VISIBLE);
+                viewHolder.takeOffView.setVisibility(View.GONE);
+            }
+            hideSelectLayout(viewHolder);
+
+            showHomePoint(viewHolder);
         }
 
         viewHolder.rowItemLayout.setOnClickListener(new OnClickListener() {
@@ -229,6 +246,26 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     }
 
+    private void showSelectLayout(MissionListUndoableViewHolder viewHolder, int position) {
+        viewHolder.selectCheck.setVisibility(View.VISIBLE);
+        viewHolder.selectCheck.setSelected(mSelectedItems.get(position, false));
+    }
+
+    private void hideSelectLayout(MissionListUndoableViewHolder viewHolder) {
+        viewHolder.selectCheck.setVisibility(View.GONE);
+    }
+
+    private void showHomePoint(MissionListUndoableViewHolder viewHolder) {
+        int rowHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.points_list_item_height);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, rowHeight);
+        viewHolder.allOfRowLayout.setLayoutParams(params);
+    }
+
+    private void hideHomePoint(MissionListUndoableViewHolder viewHolder) {
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, 0);
+        viewHolder.allOfRowLayout.setLayoutParams(params);
+    }
+
     private int getTypeResource(Type type) {
 
         if (type == null) {
@@ -261,7 +298,9 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     }
 
     public class MissionListUndoableViewHolder extends RecyclerView.ViewHolder {
+        final RelativeLayout allOfRowLayout;
         final TextView serialNumberTextView, altitudeTextView, speedTextView;
+        final View takeOffView;
         final View typeView;
         final View selectCheck;
         final RelativeLayout rowItemLayout;
@@ -269,6 +308,8 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
         MissionListUndoableViewHolder(View itemView) {
             super(itemView);
+            allOfRowLayout = (RelativeLayout) itemView.findViewById(R.id.all_of_row_layout);
+            takeOffView = itemView.findViewById(R.id.takeoff_view);
             serialNumberTextView = (TextView) itemView.findViewById(R.id.rowNameView);
             typeView = itemView.findViewById(R.id.icon_waypoint_type);
             altitudeTextView = (TextView) itemView.findViewById(R.id.rowAltitudeView);
@@ -279,11 +320,16 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         }
     }
 
+    public void addFirstPoint(Mission homePoint, Mission firstPoint) {
+        mItemClickListener.onAdapterListIsEmptyOrNot(false);
+        mUndoLists.push(new ArrayList<>(mMissionList));
+        mMissionList.add(homePoint);
+        mMissionList.add(firstPoint);
+        notifyDataSetChanged();
+    }
+
     public void add(Mission mission) {
         mUndoLists.push(new ArrayList<>(mMissionList));
-        if (mMissionList.isEmpty()) {
-            mItemClickListener.onAdapterListIsEmptyOrNot(false);
-        }
         mMissionList.add(mission);
         notifyDataSetChanged();
     }
@@ -322,7 +368,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     }
 
     public List<Mission> getMissions() {
-        return mMissionList;
+        return cloneMissions();
     }
 
     public List<Mission> getSelectedMissionList() {
@@ -374,7 +420,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     public void setAllItemChecked(boolean isCheck) {
         if (isCheck) {
-            for (int i = 0; i < mMissionList.size(); i++) {
+            for (int i = 1; i < mMissionList.size(); i++) {
                 mSelectedItems.put(i, true);
             }
         } else {
@@ -401,6 +447,14 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     public void exitMissionListEditMode() {
         mMissionList = mUndoLists.pop();
+    }
+
+    public void finishMissionListEditMode(){
+        if(mMissionList.size() == 1){
+            mMissionList.clear();
+            mItemClickListener.onAdapterListIsEmptyOrNot(true);
+            notifyDataSetChanged();
+        }
     }
 
     private class LimitedStack<E> extends Stack<E> {

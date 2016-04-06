@@ -210,4 +210,6 @@
     <dimen name="notification_toast_width">340dp</dimen>
     <dimen name="notification_toast_height">54dp</dimen>
     <dimen name="notification_center_popwindow_width">340dp</dimen>
+
+    <dimen name="points_list_item_height">62dp</dimen>
 </resources>

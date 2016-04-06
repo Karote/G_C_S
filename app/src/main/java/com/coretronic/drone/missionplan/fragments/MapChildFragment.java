@@ -60,4 +60,8 @@ public class MapChildFragment extends Fragment implements OnMapEventCallback {
 
     }
 
+    public void updateDroneLocation(float droneLat, float droneLon){
+
+    }
+
 }

@@ -285,6 +285,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 updateOnMapDrone(droneStatus);
                 mRecordItemBuilder.setLatitude(droneStatus.getLatitude());
                 mRecordItemBuilder.setLongitude(droneStatus.getLongitude());
+                if (isMultiMissionPlanMode()) {
+                    mCurrentFragment.updateDroneLocation(mDroneLat, mDroneLon);
+                }
                 break;
             case ON_SATELLITE_UPDATE:
                 mGPSCounts = droneStatus.getSatellites();
@@ -526,6 +529,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         return mCurrentMissionList;
     }
 
+    private void clearMissionList() {
+        mCurrentMissionList = null;
+    }
+
     private void initSpinner(View view) {
 
         mSpinnerView = (Spinner) view.findViewById(R.id.mission_plan_spinner);
@@ -624,6 +631,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mCurrentFragment = AerialSurveyFragment.newInstance();
                 break;
         }
+
+        clearMissionList();
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mission_plan_container, mCurrentFragment, null).commit();

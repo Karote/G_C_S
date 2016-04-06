@@ -53,11 +53,11 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private final static int SELECT_NONE = 0;
     private final static int SELECTED_ONE = 1;
     private final static int SELECT_ALL = 2;
+    private final static float DRONE_LOCATION_INVALID = Float.MAX_VALUE;
 
     private View mWaypointListTopView;
     private View mWaypointListEditHeaderPanel;
     private View mWaypointListHeaderPanel;
-    private View mWaypointListDroneItem;
     private TextView mWaypointListHeaderCountText;
     private ToggleButton mWaypointListHeaderSelectAllToggleButton;
     private View mWaypointListHeaderDeleteButton;
@@ -77,6 +77,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private WaypointListEditSettingDialog mWaypointSettingDialog;
     private RecyclerView mRecyclerView;
     private int mTopViewVisibility;
+    private float mDroneLat = DRONE_LOCATION_INVALID;
+    private float mDroneLon = DRONE_LOCATION_INVALID;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -121,7 +123,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
         mWaypointListEditHeaderPanel = mWaypointListTopView.findViewById(R.id.waypoint_list_edit_header_panel);
         mWaypointListHeaderPanel = mWaypointListTopView.findViewById(R.id.waypoint_list_header_panel);
-        mWaypointListDroneItem = mWaypointListTopView.findViewById(R.id.waypoint_list_drone_item);
         mWaypointListHeaderCountText = (TextView) mWaypointListTopView.findViewById(R.id.waypoint_list_header_count_text);
         mWaypointListHeaderSelectAllToggleButton = (ToggleButton) mWaypointListTopView.findViewById(R.id.waypoint_list_header_select_all_toggle_button);
         mWaypointListHeaderSelectAllToggleButton.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +164,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onItemSelected(Mission mission, int currentIndex) {
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                mMissionItemDetailFragment = MissionItemDetailFragment.newInstance(currentIndex + 1, mission);
+                mMissionItemDetailFragment = MissionItemDetailFragment.newInstance(currentIndex, mission);
                 fragmentTransaction.replace(R.id.way_point_detail_container, mMissionItemDetailFragment, "DetailFragment").commit();
                 mWayPointDetailPanel.setVisibility(View.VISIBLE);
             }
@@ -188,7 +189,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onItemChecked(int checkCount) {
                 int selectState;
-                if (checkCount == mMissionItemAdapter.getItemCount()) {
+                if (checkCount == mMissionItemAdapter.getItemCount() - 1) {
                     selectState = SELECT_ALL;
                 } else if (checkCount == 0) {
                     selectState = SELECT_NONE;
@@ -225,7 +226,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             case SELECT_ALL:
                 mWaypointListHeaderSelectAllToggleButton.setBackgroundResource(R.drawable.waypoint_list_header_select_all_selected_all_icon);
                 mWaypointListHeaderSelectAllToggleButton.setChecked(true);
-                mWaypointListHeaderSelectAllToggleButton.setText(String.valueOf(mMissionItemAdapter.getItemCount()));
+                mWaypointListHeaderSelectAllToggleButton.setText(String.valueOf(mMissionItemAdapter.getItemCount() - 1));
 
                 mWaypointListHeaderSettingButton.setEnabled(true);
                 mWaypointListHeaderDeleteButton.setEnabled(true);
@@ -282,7 +283,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     setEditOptionButtonState(SELECT_NONE, 0);
                     mWaypointListEditHeaderPanel.setVisibility(View.VISIBLE);
                     mWaypointListHeaderPanel.setVisibility(View.GONE);
-                    mWaypointListDroneItem.setVisibility(View.GONE);
                     missionAdapterShowSelect(true);
                     mMapViewFragment.setMapCanAddMarker(false);
                     mMapViewFragment.setEditOptionShow(true);
@@ -345,7 +345,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
     private void updateMissionToMap() {
         mMapViewFragment.updateMissions(mMissionItemAdapter.getMissions());
-        mWaypointListHeaderCountText.setText(String.valueOf(mMissionItemAdapter.getItemCount()));
+        mWaypointListHeaderCountText.setText(String.valueOf(mMissionItemAdapter.getItemCount() - 1));
     }
 
     @Override
@@ -375,13 +375,13 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
                 mWaypointListEditHeaderPanel.setVisibility(View.GONE);
                 mWaypointListHeaderPanel.setVisibility(View.VISIBLE);
-                mWaypointListDroneItem.setVisibility(View.VISIBLE);
                 missionAdapterShowSelect(false);
                 break;
             case R.id.edit_done_button:
+                mMissionItemAdapter.finishMissionListEditMode();
+                updateMissionToMap();
                 mWaypointListEditHeaderPanel.setVisibility(View.GONE);
                 mWaypointListHeaderPanel.setVisibility(View.VISIBLE);
-                mWaypointListDroneItem.setVisibility(View.VISIBLE);
                 missionAdapterShowSelect(false);
                 break;
             case R.id.plan_go_button:
@@ -508,7 +508,13 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             mWayPointDetailPanel.setVisibility(View.GONE);
             return;
         }
-        mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).create());
+        if (mMissionItemAdapter.getItemCount() == 0) {
+            mMissionItemAdapter.addFirstPoint(
+                    mMissionBuilder.setLatitude(mDroneLat).setLongitude(mDroneLon).setType(Type.TAKEOFF).create(),
+                    mMissionBuilder.setLatitude(lat).setLongitude(lon).setType(DEFAULT_TYPE).create());
+        } else {
+            mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).setType(DEFAULT_TYPE).create());
+        }
         mMissionItemAdapter.onNothingSelected();
         updateMissionToMap();
     }
@@ -583,6 +589,12 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     public void onFPVHided() {
         mWaypointListTopView.setVisibility(mTopViewVisibility);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void updateDroneLocation(float droneLat, float droneLon) {
+        mDroneLat = droneLat;
+        mDroneLon = droneLon;
     }
 
 }
