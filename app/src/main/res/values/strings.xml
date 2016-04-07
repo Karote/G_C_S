@@ -43,6 +43,9 @@
     <string name="speed_to_next">Speed to Next</string>
     <string name="second">sec</string>
     <string name="delete">DELETE</string>
+    <string name="auto_rtl_request">Do you want to return home when mission is completed?</string>
+    <string name="go_without_rtl">Go and not Return Home</string>
+    <string name="go_with_rtl">Yes and Go</string>
 
     <!-- follow me-->
     <string name="follow_me_start">START FOLLOW</string>

@@ -115,6 +115,15 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
+    public void updateLastItemToRTL(){
+        int lastIndex = mMissionList.size() - 1;
+        mUndoLists.push(cloneMissions());
+        Mission mission = getMission(lastIndex).clone();
+        mission.setType(Type.RTL);
+        mMissionList.set(lastIndex, mission);
+        notifyDataSetChanged();
+    }
+
     private List<Mission> cloneMissions() {
         List<Mission> clonedMissions = new ArrayList<>();
         for (Mission mission : mMissionList) {

@@ -2,6 +2,7 @@ package com.coretronic.drone.missionplan.fragments;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -79,6 +80,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private int mTopViewVisibility;
     private float mDroneLat = DRONE_LOCATION_INVALID;
     private float mDroneLon = DRONE_LOCATION_INVALID;
+    private Dialog mAutoRTLPopDialog;
 
     public static PlanningFragment newInstance(boolean isFromHistory) {
         PlanningFragment fragment = new PlanningFragment();
@@ -390,11 +392,51 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     showToastMessage("There is no mission existed");
                     return;
                 }
+                if (droneMissionList.get(droneMissionList.size() - 1).getType() != Type.RTL) {
+                    showAutoRTLPopDialog();
+                }else {
+                    mMapViewFragment.getDroneController().clearMission();
+                    mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
+                    showLoadProgressDialog("Writing Mission", "Please wait...");
+                }
+                break;
+        }
+    }
+
+    private void showAutoRTLPopDialog() {
+        mAutoRTLPopDialog = new Dialog(getActivity());
+        mAutoRTLPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mAutoRTLPopDialog.setCanceledOnTouchOutside(false);
+        mAutoRTLPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mAutoRTLPopDialog.setContentView(R.layout.popdialog_auto_return_home);
+        mAutoRTLPopDialog.show();
+
+        mAutoRTLPopDialog.findViewById(R.id.go_without_rtl_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAutoRTLPopDialog.dismiss();
+            }
+        });
+
+        mAutoRTLPopDialog.findViewById(R.id.go_with_rtl_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMissionItemAdapter.updateLastItemToRTL();
+                updateMissionToMap();
+
+                mAutoRTLPopDialog.dismiss();
+            }
+        });
+
+        mAutoRTLPopDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                 mMapViewFragment.getDroneController().clearMission();
                 mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
                 showLoadProgressDialog("Writing Mission", "Please wait...");
-                break;
-        }
+            }
+        });
     }
 
     private void showMoreFunctionPopupDialog(View v) {
