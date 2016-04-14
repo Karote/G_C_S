@@ -141,6 +141,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private int mGPSCounts;
     private int mGPSLockType;
     private boolean mGPSLock;
+    private View mPopdialogContainer;
+    private ReturnToHomePopupDialogFragment mRTLPopupDialogFragment;
+    private TakeOffPopupDialogFragment mTakeOffPopupDialogFragment;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -194,6 +197,44 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mFPVContainer = view.findViewById(R.id.fpv_container);
         mWebViewContainer = view.findViewById(R.id.webview_container);
         mMissionPlanContainer = view.findViewById(R.id.mission_plan_container);
+
+        mPopdialogContainer = view.findViewById(R.id.popdialog_container);
+        mPopdialogContainer.setVisibility(View.GONE);
+
+        mRTLPopupDialogFragment = new ReturnToHomePopupDialogFragment();
+        mTakeOffPopupDialogFragment = new TakeOffPopupDialogFragment();
+
+        mRTLPopupDialogFragment.setPopDialogCallbackListener(new ReturnToHomePopupDialogFragment.PopupDialogCallback() {
+            @Override
+            public void onCancelButtonClick() {
+                mPopdialogContainer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onConfirmButtonClick(int altitude, int stay, int speed) {
+                mPopdialogContainer.setVisibility(View.GONE);
+                if (getDroneController() != null) {
+                    getDroneController().returnToLaunch(altitude, stay, speed);
+                }
+                mDroneMap.clearTapAndGoPlan();
+            }
+        });
+
+        mTakeOffPopupDialogFragment.setPopDialogCallbackListener(new TakeOffPopupDialogFragment.PopupDialogCallback() {
+            @Override
+            public void onCancelButtonClick() {
+                mPopdialogContainer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onOKButtonClick(int takeOffAltitude) {
+                mPopdialogContainer.setVisibility(View.GONE);
+                mControlBarView.showLandingButton();
+                if (getDroneController() != null) {
+                    getDroneController().takeOff(takeOffAltitude);
+                }
+            }
+        });
 
         return view;
     }
@@ -797,10 +838,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mDroneMap.clearTapAndGoPlan();
                 break;
             case R.id.drone_takeoff_button:
-                if (getDroneController() != null) {
-//                    getDroneController().takeOff();
-                }
-                mControlBarView.showLandingButton();
+                showTakeOffPopupDialog();
                 return;
             case R.id.drone_landing_button:
                 if (getDroneController() != null) {
@@ -810,10 +848,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mDroneMap.clearTapAndGoPlan();
                 return;
             case R.id.drone_rtl_button:
-                if (getDroneController() != null) {
-                    getDroneController().returnToLaunch();
-                }
-                mDroneMap.clearTapAndGoPlan();
+                showRTLPopupDialog();
                 return;
             case R.id.plan_play_button:
 //                if (getDroneController() != null) {
@@ -851,6 +886,20 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
         mCurrentFragment.onClick(v);
 
+    }
+
+    private void showTakeOffPopupDialog() {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.popdialog_container, mTakeOffPopupDialogFragment, null).commit();
+
+        mPopdialogContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showRTLPopupDialog() {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.popdialog_container, mRTLPopupDialogFragment, null).commit();
+
+        mPopdialogContainer.setVisibility(View.VISIBLE);
     }
 
     public void hideFPVFragment() {

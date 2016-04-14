@@ -54,7 +54,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private final static int SELECT_NONE = 0;
     private final static int SELECTED_ONE = 1;
     private final static int SELECT_ALL = 2;
-    private final static float DRONE_LOCATION_INVALID = Float.MAX_VALUE;
+    private final static float DRONE_LOCATION_INVALID = 0;// Float.MAX_VALUE;
 
     private View mWaypointListTopView;
     private View mWaypointListEditHeaderPanel;
@@ -395,7 +395,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 if (droneMissionList.get(droneMissionList.size() - 1).getType() != Type.RTL) {
                     showAutoRTLPopDialog();
                 }else {
-                    mMapViewFragment.getDroneController().clearMission();
                     mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
                     showLoadProgressDialog("Writing Mission", "Please wait...");
                 }
@@ -432,7 +431,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onDismiss(DialogInterface dialog) {
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
-                mMapViewFragment.getDroneController().clearMission();
                 mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
                 showLoadProgressDialog("Writing Mission", "Please wait...");
             }
@@ -487,10 +485,10 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     }
 
     private void loadMissionFromDrone() {
-        if (!mMapViewFragment.getDroneController().readMissions(this)) {
-            return;
-        }
-        showLoadProgressDialog("Loading", "Please wait...");
+//        if (!mMapViewFragment.getDroneController().readMissions(this)) {
+//            return;
+//        }
+//        showLoadProgressDialog("Loading", "Please wait...");
     }
 
     public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
@@ -552,7 +550,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         }
         if (mMissionItemAdapter.getItemCount() == 0) {
             mMissionItemAdapter.addFirstPoint(
-                    mMissionBuilder.setLatitude(mDroneLat).setLongitude(mDroneLon).setType(Type.TAKEOFF).create(),
+//                    mMissionBuilder.setLatitude(mDroneLat).setLongitude(mDroneLon).setType(Type.TAKEOFF).create(),
+                    mMissionBuilder.setLatitude(24.767761f).setLongitude(121.027432f).setType(Type.TAKEOFF).create(),
                     mMissionBuilder.setLatitude(lat).setLongitude(lon).setType(DEFAULT_TYPE).create());
         } else {
             mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).setType(DEFAULT_TYPE).create());

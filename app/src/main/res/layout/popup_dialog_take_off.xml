@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_transparent_55"
+    android:clickable="true">
+
+    <LinearLayout
+        android:id="@+id/popup_dialog_layout"
+        android:layout_width="440dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="36dp"
+            android:fontFamily="@string/font_roboto_medium"
+            android:text="@string/altitude_for_takeoff"
+            android:textColor="#474747"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp">
+
+            <TextView
+                style="@style/mission_plan_detail_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="@string/flight_altitude" />
+
+            <TextView
+                style="@style/waypoint_detail_unit_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/unit_in_meter" />
+
+        </RelativeLayout>
+
+        <com.coretronic.drone.missionplan.spinnerWheel.WheelHorizontalView
+            android:id="@+id/takeoff_altitude_wheel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/waypoint_detail_spinner_wheel_height"
+            android:layout_marginBottom="44dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/popdialog_takeoff_spinner_wheel_bg"
+            app:isAllVisible="false"
+            app:isCyclic="false"
+            app:itemsDimmedAlpha="100"
+            app:visibleItems="5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/takeoff_cancel_button"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_weight="1"
+                android:background="@drawable/popdialog_button_bg"
+                android:fontFamily="@string/font_roboto_condensed"
+                android:text="@string/cancel"
+                android:textColor="@color/primary_color_normal"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/takeoff_ok_button"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/popdialog_button_bg"
+                android:fontFamily="@string/font_roboto_condensed"
+                android:text="@string/ok"
+                android:textColor="@color/primary_color_normal"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
