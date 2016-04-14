@@ -3,6 +3,7 @@ package com.coretronic.drone.missionplan.map;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
@@ -230,6 +231,8 @@ public class DroneMap implements OnMapEventCallback {
 
     public void loadHistory(List<Mission> missions, List<Float> path) {
         JSONArray pathJson = new JSONArray(path);
+        Log.d("loadHistory", "path:" + path);
+        Log.d("loadHistory", "pathJson:" + pathJson);
         mMapWebView.loadUrl("javascript:loadHistory(" + transMissionToJson(missions) + "," + pathJson + ")");
     }
 
@@ -264,11 +267,11 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:setMapClickable(" + isAddMarkerEnable + ")");
     }
 
-    public void setMarkerNormal(){
+    public void setMarkerNormal() {
         mMapWebView.loadUrl("javascript:setMarkerStyle(" + MAP_MARKER_STYLE_NORMAL + ")");
     }
 
-    public void setMarkerSmall(){
+    public void setMarkerSmall() {
         mMapWebView.loadUrl("javascript:setMarkerStyle(" + MAP_MARKER_STYLE_SMALL + ")");
     }
 

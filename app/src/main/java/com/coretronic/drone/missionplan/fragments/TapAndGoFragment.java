@@ -37,10 +37,10 @@ public class TapAndGoFragment extends MapChildFragment {
         return inflater.inflate(R.layout.fragment_mission_plan_tap_and_go, container, false);
     }
 
-    public void executeTapAndGoMission(int alt, float lat, float lng) {
+    public void executeTapAndGoMission(float lat, float lng, float alt) {
         DroneController droneController = mMapViewFragment.getDroneController();
         if (droneController != null) {
-            droneController.moveToLocation(mMissionBuilder.setAltitude(alt).setLatitude(lat).setLongitude(lng).create());
+            droneController.moveToLocation(lat, lng, alt);
             mMapViewFragment.setTapGoPath();
             mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
         }

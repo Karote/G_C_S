@@ -219,12 +219,17 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                                     } else {
                                         DroneController droneController = mMapViewFragment.getDroneController();
                                         if (droneController != null) {
-                                            droneController.startMission();
+//                                            droneController.startMission();
                                         }
                                         mLoadMissionProgressDialog.dismiss();
                                     }
                                 }
                             });
+                        }
+
+                        @Override
+                        public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
+
                         }
                     });
                     showLoadProgressDialog("Loading", "Please wait...");
@@ -322,12 +327,17 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                                 } else {
                                     DroneController droneController = mMapViewFragment.getDroneController();
                                     if (droneController != null) {
-                                        droneController.startMission();
+//                                        droneController.startMission();
                                     }
                                     mLoadMissionProgressDialog.dismiss();
                                 }
                             }
                         });
+                    }
+
+                    @Override
+                    public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
+
                     }
                 });
                 showLoadProgressDialog("Loading", "Please wait...");

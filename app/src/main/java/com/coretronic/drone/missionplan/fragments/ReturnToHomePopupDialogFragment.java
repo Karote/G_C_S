@@ -30,7 +30,7 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
     public interface PopupDialogCallback {
         void onCancelButtonClick();
 
-        void onConfirmButtonClick(int altitude, int stay, int speed);
+        void onConfirmButtonClick(float altitude, float stay, float speed);
     }
 
     @Override

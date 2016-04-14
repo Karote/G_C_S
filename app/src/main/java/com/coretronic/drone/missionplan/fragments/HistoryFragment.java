@@ -17,6 +17,7 @@ import com.coretronic.drone.model.FlightHistory;
 import com.coretronic.drone.model.OnFlightHistoryUpdateListener;
 import com.coretronic.drone.model.RecordItem;
 import com.coretronic.drone.util.Utils;
+import com.coretronic.ibs.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +73,8 @@ public class HistoryFragment extends MapChildFragment {
                 List<Float> flightRecords = new ArrayList<>();
 
                 for (RecordItem recordItem : flightHistory.getRecordItems()) {
-                    flightRecords.add(recordItem.getLatitude());
-                    flightRecords.add(recordItem.getLongitude());
+                    flightRecords.add(recordItem.getLatitude() / 10000000);
+                    flightRecords.add(recordItem.getLongitude() / 10000000);
                 }
                 mMapViewFragment.loadHistory(flightHistory.getMissions(), flightRecords);
                 flightDurationTextView.setText(Utils.getDurationInHMSFormat(flightHistory.getDuration() / 1000));

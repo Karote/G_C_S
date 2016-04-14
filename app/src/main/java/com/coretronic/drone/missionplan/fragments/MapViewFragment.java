@@ -98,6 +98,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private StatusView mStatusView = null;
     private MavInfoView mMavInfoView;
     private ControlBarView mControlBarView;
+    private TextView mCurrentFlightModeTextView;
 
     private View mMissionModeControlPanel = null;
     private View mEditOptionPanel = null;
@@ -198,6 +199,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mWebViewContainer = view.findViewById(R.id.webview_container);
         mMissionPlanContainer = view.findViewById(R.id.mission_plan_container);
 
+        mCurrentFlightModeTextView = (TextView) view.findViewById(R.id.current_flight_mode_text);
+
         mPopdialogContainer = view.findViewById(R.id.popdialog_container);
         mPopdialogContainer.setVisibility(View.GONE);
 
@@ -211,7 +214,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             }
 
             @Override
-            public void onConfirmButtonClick(int altitude, int stay, int speed) {
+            public void onConfirmButtonClick(float altitude, float stay, float speed) {
                 mPopdialogContainer.setVisibility(View.GONE);
                 if (getDroneController() != null) {
                     getDroneController().returnToLaunch(altitude, stay, speed);
@@ -231,7 +234,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mPopdialogContainer.setVisibility(View.GONE);
                 mControlBarView.showLandingButton();
                 if (getDroneController() != null) {
-                    getDroneController().takeOff(takeOffAltitude);
+                    getDroneController().takeOff(mDroneLat, mDroneLon, takeOffAltitude);
                 }
             }
         });
@@ -340,7 +343,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_ATTITUDE_UPDATE:
                 updateOnMapDrone(droneStatus);
-                mRecordItemBuilder.setHeading((int) droneStatus.getYaw());
+                mRecordItemBuilder.setHeading((int) droneStatus.getHeading());
                 break;
             case ON_GROUND_SPEED_UPDATE:
                 mRecordItemBuilder.setGroundSpeed(droneStatus.getGroundSpeed());
@@ -474,23 +477,28 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case GPS:
                 ttsStr = "GPS";
                 break;
-            case IOC:
-                ttsStr = "IOC";
-                break;
             case LAND:
                 ttsStr = "LAND";
                 break;
             case RTL:
                 ttsStr = "RTL";
                 break;
-            case POI:
-                ttsStr = "POI";
+            case ALT_HOLD:
+                ttsStr = "ALT HOLD";
                 break;
-            case HEADING_LOCK:
-                ttsStr = "HEADING LOCK";
+            case AUTO:
+                ttsStr = "AUTO";
+                break;
+            case GUIDED:
+                ttsStr = "GUIDED";
+                break;
+            case OPTICAL_FLOW:
+                ttsStr = "OPTICAL FLOW";
                 break;
         }
         mTtsSpeaker.speak(ttsStr + " Mode");
+
+        mCurrentFlightModeTextView.setText(ttsStr);
 
     }
 
@@ -667,11 +675,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
+
                 break;
             case FRAGMENT_TYPE_AERIAL_SURVEY:
                 mCurrentFragment = AerialSurveyFragment.newInstance();
                 break;
         }
+
+        setFPVContainerVisibile(mCurrentFragmentType != FRAGMENT_TYPE_HISTORY);
 
         clearMissionList();
 
@@ -902,6 +913,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mPopdialogContainer.setVisibility(View.VISIBLE);
     }
 
+    public void setFPVContainerVisibile(boolean isVisible) {
+        mFPVContainer.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
     public void hideFPVFragment() {
         mUndoButton.setEnabled(true);
         mMoreButton.setEnabled(true);
@@ -1042,7 +1057,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void updateOnMapDrone(DroneStatus droneStatus) {
-        mDroneMap.updateDroneLocation(droneStatus.getLatitude(), droneStatus.getLongitude(), droneStatus.getYaw());
+        mDroneMap.updateDroneLocation(droneStatus.getLatitude(), droneStatus.getLongitude(), droneStatus.getHeading());
     }
 
     @Override

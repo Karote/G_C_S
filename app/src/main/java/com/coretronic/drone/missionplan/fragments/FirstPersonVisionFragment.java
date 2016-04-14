@@ -37,6 +37,7 @@ import java.util.Timer;
 public class FirstPersonVisionFragment extends Fragment {
     private final static int PWM_MAX = 100;
     private final static int PWM_MIN = -100;
+    private static final float GIMBLE_PWM_THRESHOLD = 10f;
 
     private UVCCameraTextureView mCameraView;
     private USBCameraMonitor mUSBCameraMonitor;
@@ -60,8 +61,6 @@ public class FirstPersonVisionFragment extends Fragment {
     private float mGimbleRollPWM;
     private float mGimbleYawPWM;
     private float mGimblePitchPWM;
-    private boolean isTouchUp;
-    private int mTouchUpCountDown;
 
     @Override
     public void onAttach(Activity activity) {
@@ -118,7 +117,7 @@ public class FirstPersonVisionFragment extends Fragment {
         ((Joystick) view.findViewById(R.id.joystickView)).setJoystickListener(new Joystick.JoystickListener() {
             @Override
             public void onDown() {
-                isTouchUp = false;
+
             }
 
             @Override
@@ -126,22 +125,24 @@ public class FirstPersonVisionFragment extends Fragment {
                 mGimbleYawPWM = pwmTransfer(xOffset);
                 mGimblePitchPWM = pwmTransfer(-yOffset);
 
+                mGimbleYawPWM = Math.abs(mGimbleYawPWM) < GIMBLE_PWM_THRESHOLD ? 0 : mGimbleYawPWM;
+                mGimblePitchPWM = Math.abs(mGimblePitchPWM) < GIMBLE_PWM_THRESHOLD ? 0 : mGimblePitchPWM;
+
+
+                // FOR NAV SHOW DEMO
+                mGimbleYawPWM = mGimbleYawPWM < 0 ? PWM_MIN : (mGimbleYawPWM == 0 ? 0 : PWM_MAX);
+                mGimblePitchPWM = mGimblePitchPWM < 0 ? PWM_MIN : (mGimblePitchPWM == 0 ? 0 : PWM_MAX);
+                // FOR NAV SHOW DEMO
+
+
                 if (mSendPWMRunnable != null) {
                     return;
                 }
                 mSendPWMRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (isTouchUp) {
-                            mTouchUpCountDown--;
-                        }
-                        gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
                         gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
-                        if (isTouchUp && mTouchUpCountDown == 0) {
-                            mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
-                            mSendPWMRunnable = null;
-                            return;
-                        }
+                        gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
                         mSendPWMHandler.postDelayed(mSendPWMRunnable, 100);
                     }
                 };
@@ -152,8 +153,12 @@ public class FirstPersonVisionFragment extends Fragment {
             public void onUp() {
                 mGimbleYawPWM = pwmTransfer(0);
                 mGimblePitchPWM = pwmTransfer(0);
-                isTouchUp = true;
-                mTouchUpCountDown = 10;
+                gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
+                if (mSendPWMRunnable != null) {
+                    mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
+                    mSendPWMRunnable = null;
+                }
             }
         });
 
@@ -162,8 +167,9 @@ public class FirstPersonVisionFragment extends Fragment {
 
     private float pwmTransfer(float offset) {
         float pwmDiff = (PWM_MAX - PWM_MIN) / 2;
+        float pwmBase = (PWM_MAX + PWM_MIN) / 2;
         int posCoe = offset < 0 ? -1 : 1;
-        return posCoe * offset * offset * pwmDiff;
+        return posCoe * offset * offset * pwmDiff + pwmBase;
     }
 
     private View.OnTouchListener onGimbleRollButtonTouchListener = new View.OnTouchListener() {
@@ -177,7 +183,6 @@ public class FirstPersonVisionFragment extends Fragment {
             final float downX, downY;
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    isTouchUp = false;
                     mGimbleRollButton.setImageResource(R.drawable.btn_gimble_con_roll_p);
                     mGimbleRollRotateView.clearAnimation();
                     downX = touchX;
@@ -190,6 +195,12 @@ public class FirstPersonVisionFragment extends Fragment {
                     mCurrAngle = mCurrAngle > 90 ? 90 : mCurrAngle;
                     rotateAnimate(mPrevAngle, mCurrAngle, 0);
                     mGimbleRollPWM = pwmTransfer(mCurrAngle / 90);
+
+                    // FOR NAV SHOW DEMO
+                    mGimbleRollPWM = mGimbleRollPWM < 0 ? PWM_MIN : (mGimbleRollPWM == 0 ? 0 : PWM_MAX);
+                    // FOR NAV SHOW DEMO
+
+
                     mPrevAngle = mCurrAngle;
                     if (mSendPWMRunnable != null) {
                         break;
@@ -197,15 +208,7 @@ public class FirstPersonVisionFragment extends Fragment {
                     mSendPWMRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            if (isTouchUp) {
-                                mTouchUpCountDown--;
-                            }
                             gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
-                            if (isTouchUp && mTouchUpCountDown == 0) {
-                                mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
-                                mSendPWMRunnable = null;
-                                return;
-                            }
                             mSendPWMHandler.postDelayed(mSendPWMRunnable, 100);
                         }
                     };
@@ -217,8 +220,11 @@ public class FirstPersonVisionFragment extends Fragment {
                     rotateAnimate(mPrevAngle, mCurrAngle, 1000);
 
                     mGimbleRollPWM = pwmTransfer(mCurrAngle);
-                    isTouchUp = true;
-                    mTouchUpCountDown = 10;
+                    gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
+                    if (mSendPWMRunnable != null) {
+                        mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
+                        mSendPWMRunnable = null;
+                    }
                     break;
             }
             return true;

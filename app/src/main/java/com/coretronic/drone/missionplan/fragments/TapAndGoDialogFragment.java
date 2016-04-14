@@ -11,6 +11,7 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
+import com.coretronic.drone.util.ConstantValue;
 
 /**
  * Created by karot.chuang on 2015/6/23.
@@ -58,7 +59,7 @@ public class TapAndGoDialogFragment extends Fragment {
         fragmentView.findViewById(R.id.tap_and_go_start_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TapAndGoFragment) getParentFragment()).executeTapAndGoMission(mMissionAltitude, mMissionLatitude, mMissionLongitude);
+                ((TapAndGoFragment) getParentFragment()).executeTapAndGoMission(mMissionLatitude, mMissionLongitude, mMissionAltitude);
                 dismiss();
             }
         });
@@ -91,7 +92,9 @@ public class TapAndGoDialogFragment extends Fragment {
             mMissionLongitude = arguments.getFloat(ARGUMENT_LONGITUDE);
 
             mAltitudeWheel.setCurrentItem(mMissionAltitude);
-            mLocationTextView.setText(String.format("%.07f,", mMissionLatitude) + String.format("%.07f", mMissionLongitude));
+            String latStrFormat = ConstantValue.LOCATION_STRING_FORMAT + ", ";
+            String lonStrFormat = ConstantValue.LOCATION_STRING_FORMAT;
+            mLocationTextView.setText(String.format(latStrFormat, mMissionLatitude) + String.format(lonStrFormat, mMissionLongitude));
         }
     }
 }
