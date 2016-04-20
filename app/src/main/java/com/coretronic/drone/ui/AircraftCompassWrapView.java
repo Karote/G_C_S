@@ -94,17 +94,20 @@ public class AircraftCompassWrapView {
 
     public AircraftCompassWrapView setDroneYaw(float droneYaw) {
         droneYaw *= -1;
-        mCircleView.startAnimation(getYawAnimation(droneYaw));
+        float degrees = (float) (180 * droneYaw / Math.PI);
+        mCircleView.startAnimation(getYawAnimation(degrees));
         return this;
     }
 
     public AircraftCompassWrapView setDronePitch(float dronePitch) {
-        mRulerView.startAnimation(getPitchAnimation(dronePitch * mRulerHeightScale));
+        float degrees = (float) (180 * dronePitch / Math.PI);
+        mRulerView.startAnimation(getPitchAnimation(degrees * mRulerHeightScale));
         return this;
     }
 
     public AircraftCompassWrapView setDroneRoll(float droneRoll) {
-        mLevelView.startAnimation(getRollAnimation(droneRoll));
+        float degrees = (float) (180 * droneRoll / Math.PI);
+        mLevelView.startAnimation(getRollAnimation(degrees));
         return this;
     }
 

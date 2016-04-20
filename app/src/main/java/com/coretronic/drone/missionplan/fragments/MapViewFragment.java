@@ -433,20 +433,23 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case GPS:
                 ttsStr = "GPS";
                 break;
-            case IOC:
-                ttsStr = "IOC";
-                break;
             case LAND:
                 ttsStr = "LAND";
                 break;
             case RTL:
                 ttsStr = "RTL";
                 break;
-            case POI:
-                ttsStr = "POI";
+            case ALT_HOLD:
+                ttsStr = "ALT HOLD";
                 break;
-            case HEADING_LOCK:
-                ttsStr = "HEADING LOCK";
+            case AUTO:
+                ttsStr = "AUTO";
+                break;
+            case GUIDED:
+                ttsStr = "GUIDED";
+                break;
+            case OPTICAL_FLOW:
+                ttsStr = "OPTICAL FLOW";
                 break;
         }
         mTtsSpeaker.speak(ttsStr + " Mode");
