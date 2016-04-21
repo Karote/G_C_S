@@ -54,7 +54,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private final static int SELECT_NONE = 0;
     private final static int SELECTED_ONE = 1;
     private final static int SELECT_ALL = 2;
-    private final static float DRONE_LOCATION_INVALID = 0;// Float.MAX_VALUE;
+    private final static float DRONE_LOCATION_INVALID = Float.MAX_VALUE;
 
     private View mWaypointListTopView;
     private View mWaypointListEditHeaderPanel;
@@ -327,12 +327,24 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     } else {
                         DroneController droneController = mMapViewFragment.getDroneController();
                         if (droneController != null) {
-                            droneController.startMission();
+                            droneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
                         }
                         mLoadMissionProgressDialog.dismiss();
                     }
                 }
             });
+        }
+
+        @Override
+        public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
+            if (seq == total - 1 && isComplete) {
+                DroneController droneController = mMapViewFragment.getDroneController();
+                if (droneController != null) {
+                    List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
+                    droneController.startMission(droneMissionList.get(0).getLatitude(), droneMissionList.get(0).getLongitude(), droneMissionList.get(0).getAltitude());
+                }
+                mLoadMissionProgressDialog.dismiss();
+            }
         }
     };
 
@@ -394,7 +406,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 }
                 if (droneMissionList.get(droneMissionList.size() - 1).getType() != Type.RTL) {
                     showAutoRTLPopDialog();
-                }else {
+                } else {
                     mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
                     showLoadProgressDialog("Writing Mission", "Please wait...");
                 }
@@ -513,6 +525,24 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 } else {
                     mMissionItemAdapter.update(missions);
                     updateMissionToMap();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onWriteMissionStatusUpdate(final int seq, final int total, final boolean isComplete) {
+        if (getActivity() == null) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mLoadMissionProgressDialog != null) {
+                    mLoadMissionProgressDialog.dismiss();
+                }
+                if (isComplete && seq != total - 1) {
+                    showToastMessage("Write mission failed");
                 }
             }
         });
