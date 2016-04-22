@@ -266,6 +266,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onStop() {
         super.onStop();
+        mStatusView.setStatusAlarmListener(null);
         if (mGoogleApiClient.isConnected()) {
             mFusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
@@ -286,7 +287,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             mFlightRecordRunnable = null;
         }
         USBCameraMonitor.onDestroy();
-        mStatusView.setStatusAlarmListener(null);
     }
 
     // Implement GoogleApiClient.ConnectionCallbacks
@@ -473,34 +473,34 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         switch (droneMode) {
             case MANUAL:
-                ttsStr = "MANUAL";
+                ttsStr = "Manual Mode";
                 break;
             case ATTITUDE:
-                ttsStr = "ATTITUDE";
+                ttsStr = "Attitude Mode";
                 break;
             case GPS:
-                ttsStr = "GPS";
+                ttsStr = "GPS Mode";
                 break;
             case LAND:
-                ttsStr = "LAND";
+                ttsStr = "Land Mode";
                 break;
             case RTL:
-                ttsStr = "RTL";
+                ttsStr = "RTL Mode";
                 break;
             case ALT_HOLD:
-                ttsStr = "ALT HOLD";
+                ttsStr = "Altitude Hold Mode";
                 break;
             case AUTO:
-                ttsStr = "AUTO";
+                ttsStr = "Auto Mode";
                 break;
             case GUIDED:
-                ttsStr = "GUIDED";
+                ttsStr = "Guided Mode";
                 break;
             case OPTICAL_FLOW:
-                ttsStr = "OPTICAL FLOW";
+                ttsStr = "Optical FLOW";
                 break;
         }
-        mTtsSpeaker.speak(ttsStr + " Mode");
+        mTtsSpeaker.speak(ttsStr);
 
         mCurrentFlightModeTextView.setText(ttsStr);
 
@@ -682,7 +682,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
-                mDroneController.startTapAndGo();
+                if (mDroneController != null) {
+                    mDroneController.startTapAndGo();
+                }
                 break;
             case FRAGMENT_TYPE_AERIAL_SURVEY:
                 mCurrentFragment = AerialSurveyFragment.newInstance();

@@ -87,7 +87,9 @@ public class StatusView extends LinearLayout {
         mRfStatusImageView.setImageLevel(rfLevel);
 
         if (rfLevel == 0)
-            mStatusAlarmListener.onRemoteControllerDisconnect();
+            if (mStatusAlarmListener != null) {
+                mStatusAlarmListener.onRemoteControllerDisconnect();
+            }
     }
 
     public void setGpsStatus(int satellites) {
@@ -116,9 +118,13 @@ public class StatusView extends LinearLayout {
                 long gap = System.currentTimeMillis() - mGpsAlarmTimestamp;
                 if (gap > GPS_UPDATE_GAP_NO_SIGNAL) {
                     if (gpsNewLevel > 0) {
-                        mStatusAlarmListener.onGpsSignalRecover();
+                        if (mStatusAlarmListener != null) {
+                            mStatusAlarmListener.onGpsSignalRecover();
+                        }
                     } else {
-                        mStatusAlarmListener.onGpsNoSignalAlarm();
+                        if (mStatusAlarmListener != null) {
+                            mStatusAlarmListener.onGpsNoSignalAlarm();
+                        }
                     }
                     mGpsCurrentLevel = gpsNewLevel;
                     mGpsAlarmTimestamp = System.currentTimeMillis();
@@ -138,7 +144,9 @@ public class StatusView extends LinearLayout {
         }
 
         if (progress < DRONE_BATTERY_LOW_THRESHOLD_ARRAY[mDroneBatteryAlarmLevel]) {
-            mStatusAlarmListener.onBatteryLowAlarm(progress);
+            if (mStatusAlarmListener != null) {
+                mStatusAlarmListener.onBatteryLowAlarm(progress);
+            }
             mDroneBatteryAlarmLevel++;
         }
     }
@@ -232,7 +240,9 @@ public class StatusView extends LinearLayout {
 
 
                 if (newLevel == LEVEL_NO_CONNECT) {
-                    mStatusAlarmListener.onDroneDisconnect();
+                    if (mStatusAlarmListener != null) {
+                        mStatusAlarmListener.onDroneDisconnect();
+                    }
                 }
             }
         }
