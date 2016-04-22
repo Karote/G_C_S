@@ -146,6 +146,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private ReturnToHomePopupDialogFragment mRTLPopupDialogFragment;
     private TakeOffPopupDialogFragment mTakeOffPopupDialogFragment;
 
+    private DroneController mDroneController;
+
     public static Fragment newInstance(int fragmentTypePlanning) {
 
         MapViewFragment mapViewFragment = new MapViewFragment();
@@ -158,6 +160,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDroneController = getDroneController();
         setUpLocationService();
         mTtsSpeaker = new Speaker(getActivity());
         mHandler = new Handler();
@@ -215,8 +218,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             @Override
             public void onConfirmButtonClick(float altitude, float stay, float speed) {
                 mPopdialogContainer.setVisibility(View.GONE);
-                if (getDroneController() != null) {
-                    getDroneController().returnToLaunch(altitude, stay, speed);
+                if (mDroneController != null) {
+                    mDroneController.returnToLaunch(altitude, stay, speed);
                 }
                 mDroneMap.clearTapAndGoPlan();
             }
@@ -233,8 +236,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             public void onOKButtonClick(int takeOffAltitude) {
                 mPopdialogContainer.setVisibility(View.GONE);
                 mControlBarView.showLandingButton();
-                if (getDroneController() != null) {
-                    getDroneController().takeOff(mDroneLat, mDroneLon, takeOffAltitude);
+                if (mDroneController != null) {
+                    mDroneController.takeOff(mDroneLat, mDroneLon, takeOffAltitude);
                 }
             }
         });
@@ -283,6 +286,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             mFlightRecordRunnable = null;
         }
         USBCameraMonitor.onDestroy();
+        mStatusView.setStatusAlarmListener(null);
     }
 
     // Implement GoogleApiClient.ConnectionCallbacks
@@ -662,6 +666,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             return;
         }
         hideFPVFragment();
+        if (mCurrentFragmentType == FRAGMENT_TYPE_TAP_AND_GO && mDroneController != null) {
+            mDroneController.stopTapAndGo();
+        }
         mCurrentFragmentType = fragmentType;
         switch (fragmentType) {
             case FRAGMENT_TYPE_ACTIVATE:
@@ -675,7 +682,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
-
+                mDroneController.startTapAndGo();
                 break;
             case FRAGMENT_TYPE_AERIAL_SURVEY:
                 mCurrentFragment = AerialSurveyFragment.newInstance();
@@ -836,13 +843,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 setFragmentTransaction(FRAGMENT_TYPE_AERIAL_SURVEY);
                 return;
             case R.id.plan_go_button:
-                if (getDroneController() == null) {
+                if (mDroneController == null) {
                     return;
                 }
                 mControlBarView.showStopButton();
                 break;
             case R.id.plan_stop_button:
-                if (getDroneController() == null) {
+                if (mDroneController == null) {
                     return;
                 }
                 mControlBarView.showGoButton();
@@ -852,8 +859,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 showTakeOffPopupDialog();
                 return;
             case R.id.drone_landing_button:
-                if (getDroneController() != null) {
-                    getDroneController().land();
+                if (mDroneController != null) {
+                    mDroneController.land();
                 }
                 mControlBarView.showTakeoffButton();
                 mDroneMap.clearTapAndGoPlan();
@@ -862,13 +869,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 showRTLPopupDialog();
                 return;
             case R.id.plan_play_button:
-//                if (getDroneController() != null) {
-//                    getDroneController().resumeMission();
+//                if (mDroneController != null) {
+//                    mDroneController.resumeMission();
 //                }
                 mControlBarView.showPauseButton();
             case R.id.plan_pause_button:
-                if (getDroneController() != null) {
-                    getDroneController().pauseMission();
+                if (mDroneController != null) {
+                    mDroneController.pauseMission();
                 }
                 mControlBarView.showPlayButton();
                 return;

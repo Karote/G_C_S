@@ -325,10 +325,10 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     if (missions == null || missions.size() == 0) {
                         showToastMessage("There is no mission existed");
                     } else {
-                        DroneController droneController = mMapViewFragment.getDroneController();
-                        if (droneController != null) {
-                            droneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
-                        }
+//                        DroneController droneController = mMapViewFragment.getDroneController();
+//                        if (droneController != null) {
+//                            droneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
+//                        }
                         mLoadMissionProgressDialog.dismiss();
                     }
                 }
