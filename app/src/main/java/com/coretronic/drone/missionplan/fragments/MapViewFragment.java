@@ -141,7 +141,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private View mNotificationCenterPopWindowView;
     private int mGPSCounts;
     private int mGPSLockType;
-    private boolean mGPSLock;
+    private boolean mIsGPSLock;
     private View mPopdialogContainer;
     private ReturnToHomePopupDialogFragment mRTLPopupDialogFragment;
     private TakeOffPopupDialogFragment mTakeOffPopupDialogFragment;
@@ -205,7 +205,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mPopdialogContainer.setVisibility(View.GONE);
 
         mRTLPopupDialogFragment = new ReturnToHomePopupDialogFragment();
-        mTakeOffPopupDialogFragment = new TakeOffPopupDialogFragment();
 
         mRTLPopupDialogFragment.setPopDialogCallbackListener(new ReturnToHomePopupDialogFragment.PopupDialogCallback() {
             @Override
@@ -223,6 +222,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             }
         });
 
+        mTakeOffPopupDialogFragment = new TakeOffPopupDialogFragment();
         mTakeOffPopupDialogFragment.setPopDialogCallbackListener(new TakeOffPopupDialogFragment.PopupDialogCallback() {
             @Override
             public void onCancelButtonClick() {
@@ -711,7 +711,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
-        int droneControlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_PLANNING ? View.GONE : View.VISIBLE;
+        int droneControlButtonBarVisibility = fragmentType == FRAGMENT_TYPE_PLANNING | isTapAndGoMode ? View.VISIBLE : View.GONE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
         setEditOptionShow(false);
         setUndoAndMoreButtonVisibility(undoAndMoreButtonVisibility);
@@ -1104,7 +1104,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     public boolean isGPSLock() {
-        mGPSLock = mGPSCounts >= 6 && mGPSLockType > 2;
-        return mGPSLock;
+        return mGPSCounts >= 6 && mGPSLockType > 2;
     }
 }
