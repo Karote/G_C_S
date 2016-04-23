@@ -13,4 +13,5 @@ public class ConstantValue {
     public static final int SPEED_DEFAULT_VALUE = 3;
     public static final int SPEED_MIN_VALUE = 0;
     public static final int SPEED_MAX_VALUE = 20;
+    public static final String LOCATION_STRING_FORMAT = "%.5f";
 }

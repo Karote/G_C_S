@@ -8,6 +8,7 @@ import com.coretronic.drone.DroneStatus;
 import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
+import com.coretronic.drone.util.ConstantValue;
 import com.coretronic.drone.util.Utils;
 
 /**
@@ -96,8 +97,10 @@ public class MavInfoView implements StatusChangedListener {
         if (mDroneLatitudeTextView == null || mDroneLongitudeTextView == null) {
             return;
         }
-        mDroneLatitudeTextView.setText(String.format("%f,", droneLat));
-        mDroneLongitudeTextView.setText(String.format("%f",droneLng));
+        String latStrFormat = ConstantValue.LOCATION_STRING_FORMAT + ", ";
+        String lonStrFormat = ConstantValue.LOCATION_STRING_FORMAT;
+        mDroneLatitudeTextView.setText(String.format(latStrFormat, droneLat));
+        mDroneLongitudeTextView.setText(String.format(lonStrFormat, droneLng));
     }
 
     final private void onFlightTimeUpdate(int flightTimeInSeconds) {

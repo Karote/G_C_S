@@ -187,8 +187,8 @@ public class MissionItemDetailFragment extends Fragment {
         if (arguments != null) {
             int index = arguments.getInt(ARGUMENT_INDEX);
             mSerialNumberTextView.setText(String.valueOf(index));
-            mLatitudeTextView.setText(String.valueOf(arguments.getFloat(ARGUMENT_LATITUDE)));
-            mLongitudeTextView.setText(String.valueOf(arguments.getFloat(ARGUMENT_LONGITUDE)));
+            mLatitudeTextView.setText(String.format(ConstantValue.LOCATION_STRING_FORMAT, arguments.getFloat(ARGUMENT_LATITUDE)));
+            mLongitudeTextView.setText(String.format(ConstantValue.LOCATION_STRING_FORMAT, arguments.getFloat(ARGUMENT_LONGITUDE)));
 
             Mission.Type missionType = (Mission.Type) arguments.getSerializable(ARGUMENT_TYPE);
             mType.setSelection(typeToIndex(missionType));

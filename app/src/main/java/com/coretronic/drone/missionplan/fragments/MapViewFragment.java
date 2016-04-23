@@ -340,7 +340,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_ATTITUDE_UPDATE:
                 updateOnMapDrone(droneStatus);
-                mRecordItemBuilder.setHeading((int) droneStatus.getYaw());
+                mRecordItemBuilder.setHeading((int) droneStatus.getHeading());
                 break;
             case ON_GROUND_SPEED_UPDATE:
                 mRecordItemBuilder.setGroundSpeed(droneStatus.getGroundSpeed());
@@ -1044,7 +1044,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void updateOnMapDrone(DroneStatus droneStatus) {
-        mDroneMap.updateDroneLocation(droneStatus.getLatitude(), droneStatus.getLongitude(), droneStatus.getYaw());
+        mDroneMap.updateDroneLocation(droneStatus.getLatitude(), droneStatus.getLongitude(), droneStatus.getHeading());
     }
 
     @Override
