@@ -37,6 +37,11 @@
     <string name="flight_distance">DISTANCE</string>
     <string name="location_format">90.000000,180.000000</string>
     <string name="altitude">ALTITUDE</string>
+    <string name="altitude_for_takeoff">Altitude for Takeoff</string>
+    <string name="confirm">Confirm</string>
+    <string name="keep_going_the_mission">Keep going the mission</string>
+    <string name="stop_mission_to_rtl">Are you sure want to stop mission and return home directly?</string>
+    <string name="return_to_home">Return to Home</string>
 
     <!-- mission plan-->
     <string name="stay">Stay</string>

@@ -187,4 +187,9 @@
     <dimen name="welcom_text_size">28sp</dimen>
     <dimen name="login_status_bar_height">32dp</dimen>
 
+    <dimen name="popdialog_takeoff_spinner_wheel_width">392dp</dimen>
+    <dimen name="popdialog_takeoff_spinner_wheel_height">36dp</dimen>
+    <dimen name="popdialog_takeoff_spinner_wheel_focus_padding">156dp</dimen>
+    <dimen name="popdialog_takeoff_spinner_wheel_focus_width">80dp</dimen>
+
 </resources>
