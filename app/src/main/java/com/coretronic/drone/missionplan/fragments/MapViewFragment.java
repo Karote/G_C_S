@@ -98,6 +98,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private StatusView mStatusView = null;
     private MavInfoView mMavInfoView;
     private ControlBarView mControlBarView;
+    private TextView mCurrentFlightModeTextView;
 
     private View mMissionModeControlPanel = null;
     private View mEditOptionPanel = null;
@@ -197,6 +198,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mFPVContainer = view.findViewById(R.id.fpv_container);
         mWebViewContainer = view.findViewById(R.id.webview_container);
         mMissionPlanContainer = view.findViewById(R.id.mission_plan_container);
+
+        mCurrentFlightModeTextView = (TextView) view.findViewById(R.id.current_flight_mode_text);
 
         mPopdialogContainer = view.findViewById(R.id.popdialog_container);
         mPopdialogContainer.setVisibility(View.GONE);
@@ -466,34 +469,36 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         switch (droneMode) {
             case MANUAL:
-                ttsStr = "MANUAL";
+                ttsStr = "Manual Mode";
                 break;
             case ATTITUDE:
-                ttsStr = "ATTITUDE";
+                ttsStr = "Attitude Mode";
                 break;
             case GPS:
-                ttsStr = "GPS";
+                ttsStr = "GPS Mode";
                 break;
             case LAND:
-                ttsStr = "LAND";
+                ttsStr = "Land Mode";
                 break;
             case RTL:
-                ttsStr = "RTL";
+                ttsStr = "RTL Mode";
                 break;
             case ALT_HOLD:
-                ttsStr = "ALT HOLD";
+                ttsStr = "Altitude Hold Mode";
                 break;
             case AUTO:
-                ttsStr = "AUTO";
+                ttsStr = "Auto Mode";
                 break;
             case GUIDED:
-                ttsStr = "GUIDED";
+                ttsStr = "Guided Mode";
                 break;
             case OPTICAL_FLOW:
-                ttsStr = "OPTICAL FLOW";
+                ttsStr = "Optical FLOW";
                 break;
         }
-        mTtsSpeaker.speak(ttsStr + " Mode");
+        mTtsSpeaker.speak(ttsStr);
+
+        mCurrentFlightModeTextView.setText(ttsStr);
 
     }
 
