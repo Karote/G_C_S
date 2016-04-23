@@ -581,7 +581,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         if (mMissionItemAdapter.getItemCount() == 0) {
             mMissionItemAdapter.addFirstPoint(
                     mMissionBuilder.setLatitude(mDroneLat).setLongitude(mDroneLon).setType(Type.TAKEOFF).create(),
-//                    mMissionBuilder.setLatitude(24.767761f).setLongitude(121.027432f).setType(Type.TAKEOFF).create(),
                     mMissionBuilder.setLatitude(lat).setLongitude(lon).setType(DEFAULT_TYPE).create());
         } else {
             mMissionItemAdapter.add(mMissionBuilder.setLatitude(lat).setLongitude(lon).setType(DEFAULT_TYPE).create());
