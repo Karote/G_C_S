@@ -681,6 +681,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
         }
 
+        setFPVContainerVisibile(mCurrentFragmentType != FRAGMENT_TYPE_HISTORY);
+
         clearMissionList();
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -909,6 +911,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         mPopdialogContainer.setVisibility(View.VISIBLE);
     }
+
+    public void setFPVContainerVisibile(boolean isVisible) {
+        mFPVContainer.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
     public void hideFPVFragment() {
         mUndoButton.setEnabled(true);
         mMoreButton.setEnabled(true);

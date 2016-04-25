@@ -27,6 +27,7 @@ import com.coretronic.drone.uvc.USBCameraMonitor;
 import com.coretronic.drone.uvc.USBCameraMonitor.OnUVCCameraStatusChangedListener;
 import com.coretronic.drone.uvc.UVCCameraTextureView;
 import com.coretronic.drone.uvc.UsbCameraWrap;
+import com.coretronic.ibs.log.Logger;
 
 import java.util.Timer;
 
@@ -34,8 +35,9 @@ import java.util.Timer;
  * Created by Poming on 2015/10/21.
  */
 public class FirstPersonVisionFragment extends Fragment {
-    private final static int PWM_MAX = 2000;
-    private final static int PWM_MIN = 1000;
+    private final static int PWM_MAX = 100;
+    private final static int PWM_MIN = -100;
+    private static final float GIMBLE_PWM_THRESHOLD = 10f;
 
     private UVCCameraTextureView mCameraView;
     private USBCameraMonitor mUSBCameraMonitor;
@@ -121,7 +123,17 @@ public class FirstPersonVisionFragment extends Fragment {
             @Override
             public void onDrag(final float xOffset, final float yOffset) {
                 mGimbleYawPWM = pwmTransfer(xOffset);
-                mGimblePitchPWM = pwmTransfer(yOffset);
+                mGimblePitchPWM = pwmTransfer(-yOffset);
+
+                mGimbleYawPWM = Math.abs(mGimbleYawPWM) < GIMBLE_PWM_THRESHOLD ? 0 : mGimbleYawPWM;
+                mGimblePitchPWM = Math.abs(mGimblePitchPWM) < GIMBLE_PWM_THRESHOLD ? 0 : mGimblePitchPWM;
+
+
+                // FOR NAV SHOW DEMO
+                mGimbleYawPWM = mGimbleYawPWM < 0 ? PWM_MIN : (mGimbleYawPWM == 0 ? 0 : PWM_MAX);
+                mGimblePitchPWM = mGimblePitchPWM < 0 ? PWM_MIN : (mGimblePitchPWM == 0 ? 0 : PWM_MAX);
+                // FOR NAV SHOW DEMO
+
 
                 if (mSendPWMRunnable != null) {
                     return;
@@ -129,8 +141,8 @@ public class FirstPersonVisionFragment extends Fragment {
                 mSendPWMRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
-                        mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                        gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                        gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
                         mSendPWMHandler.postDelayed(mSendPWMRunnable, 100);
                     }
                 };
@@ -141,8 +153,8 @@ public class FirstPersonVisionFragment extends Fragment {
             public void onUp() {
                 mGimbleYawPWM = pwmTransfer(0);
                 mGimblePitchPWM = pwmTransfer(0);
-                mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
-                mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                gimbalControl(Parameters.GIMBAL_CONTROL_PITCH, mGimblePitchPWM);
+                gimbalControl(Parameters.GIMBAL_CONTROL_YAW, mGimbleYawPWM);
                 if (mSendPWMRunnable != null) {
                     mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
                     mSendPWMRunnable = null;
@@ -183,6 +195,12 @@ public class FirstPersonVisionFragment extends Fragment {
                     mCurrAngle = mCurrAngle > 90 ? 90 : mCurrAngle;
                     rotateAnimate(mPrevAngle, mCurrAngle, 0);
                     mGimbleRollPWM = pwmTransfer(mCurrAngle / 90);
+
+                    // FOR NAV SHOW DEMO
+                    mGimbleRollPWM = mGimbleRollPWM < 0 ? PWM_MIN : (mGimbleRollPWM == 0 ? 0 : PWM_MAX);
+                    // FOR NAV SHOW DEMO
+
+
                     mPrevAngle = mCurrAngle;
                     if (mSendPWMRunnable != null) {
                         break;
@@ -190,7 +208,7 @@ public class FirstPersonVisionFragment extends Fragment {
                     mSendPWMRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
+                            gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
                             mSendPWMHandler.postDelayed(mSendPWMRunnable, 100);
                         }
                     };
@@ -202,7 +220,7 @@ public class FirstPersonVisionFragment extends Fragment {
                     rotateAnimate(mPrevAngle, mCurrAngle, 1000);
 
                     mGimbleRollPWM = pwmTransfer(mCurrAngle);
-                    mDroneController.gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
+                    gimbalControl(Parameters.GIMBAL_CONTROL_ROLL, mGimbleRollPWM);
                     if (mSendPWMRunnable != null) {
                         mSendPWMHandler.removeCallbacks(mSendPWMRunnable);
                         mSendPWMRunnable = null;
@@ -212,6 +230,11 @@ public class FirstPersonVisionFragment extends Fragment {
             return true;
         }
     };
+
+    private void gimbalControl(int servo, float pwm) {
+        Logger.d("(servo, pwm):(" + servo + ", " + pwm + ")");
+        mDroneController.gimbalControl(servo, pwm);
+    }
 
     private void rotateAnimate(double fromDegrees, double toDegrees, long durationMillis) {
         final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
