@@ -240,7 +240,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
         });
 
         mAltitudeDefaultView = (SeekBarTextView) v.findViewById(R.id.settings_altitude_default);
-        mAltitudeDefaultView.setConfig(3, 10, 1, 3, 10);
+        mAltitudeDefaultView.setConfig(5, 200, 1, 5, 200);
         mAltitudeDefaultView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
             @Override
             public void onStopTrackingTouch(float value) {
@@ -341,10 +341,10 @@ public class GeneralSettingFragment extends SettingChildFragment {
                 mOpticalFlowRadioGroup.check(R.id.optical_flow_on_button);
             }
         }
-        mAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, 10);
+        mAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, 30);
         mAltitudeDefaultView.setValue(mAltitudeDefault);
 
-        mHorizontalSpeedDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, 3);
+        mHorizontalSpeedDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, 4);
         mHorizontalSpeedDefaultView.setValue(mHorizontalSpeedDefault);
 
         mShowFlightRoute = mSharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_SHOW_FLIGHT_ROUTE, true);

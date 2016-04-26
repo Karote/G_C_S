@@ -226,6 +226,11 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                                 }
                             });
                         }
+
+                        @Override
+                        public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
+
+                        }
                     });
                     showLoadProgressDialog("Loading", "Please wait...");
                     break;
@@ -328,6 +333,11 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                                 }
                             }
                         });
+                    }
+
+                    @Override
+                    public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
+
                     }
                 });
                 showLoadProgressDialog("Loading", "Please wait...");

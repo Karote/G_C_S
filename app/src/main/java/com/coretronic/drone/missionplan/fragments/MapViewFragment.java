@@ -128,6 +128,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private FirstPersonVisionFragment mFPVFragment;
     private float mDroneLat;
     private float mDroneLon;
+    private float mDroneAlt;
     private boolean mIsSpinnerTriggerByUser = true;
     private View mFPVContainer;
 
@@ -141,10 +142,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private View mNotificationCenterPopWindowView;
     private int mGPSCounts;
     private int mGPSLockType;
-    private boolean mGPSLock;
     private View mPopdialogContainer;
     private ReturnToHomePopupDialogFragment mRTLPopupDialogFragment;
     private TakeOffPopupDialogFragment mTakeOffPopupDialogFragment;
+
+    private DroneController mDroneController;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -158,6 +160,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDroneController = getDroneController();
         setUpLocationService();
         mTtsSpeaker = new Speaker(getActivity());
         mHandler = new Handler();
@@ -263,6 +266,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     @Override
     public void onStop() {
         super.onStop();
+        mStatusView.setStatusAlarmListener(null);
         if (mGoogleApiClient.isConnected()) {
             mFusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
@@ -321,6 +325,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mRecordItemBuilder.setBattery(droneStatus.getBattery());
                 break;
             case ON_ALTITUDE_UPDATE:
+                mDroneAlt = droneStatus.getAltitude();
                 mRecordItemBuilder.setAltitude(droneStatus.getAltitude());
                 break;
             case ON_LOCATION_UPDATE:
@@ -662,6 +667,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             return;
         }
         hideFPVFragment();
+        if (mCurrentFragmentType == FRAGMENT_TYPE_TAP_AND_GO && mDroneController != null) {
+            mDroneController.moveToLocation(mDroneLat, mDroneLon, mDroneAlt);
+        }
         mCurrentFragmentType = fragmentType;
         switch (fragmentType) {
             case FRAGMENT_TYPE_ACTIVATE:
@@ -675,6 +683,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
+                if (mDroneController != null) {
+                    mDroneController.startTapAndGo();
+                }
                 break;
             case FRAGMENT_TYPE_AERIAL_SURVEY:
                 mCurrentFragment = AerialSurveyFragment.newInstance();
@@ -710,7 +721,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
-        int droneControlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_PLANNING ? View.GONE : View.VISIBLE;
+        int droneControlButtonBarVisibility = fragmentType == FRAGMENT_TYPE_PLANNING | isTapAndGoMode ? View.VISIBLE : View.GONE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
         setEditOptionShow(false);
         setUndoAndMoreButtonVisibility(undoAndMoreButtonVisibility);
@@ -835,13 +846,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 setFragmentTransaction(FRAGMENT_TYPE_AERIAL_SURVEY);
                 return;
             case R.id.plan_go_button:
-                if (getDroneController() == null) {
+                if (mDroneController == null) {
                     return;
                 }
                 mControlBarView.showStopButton();
                 break;
             case R.id.plan_stop_button:
-                if (getDroneController() == null) {
+                if (mDroneController == null) {
                     return;
                 }
                 mControlBarView.showGoButton();
@@ -851,8 +862,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 showTakeOffPopupDialog();
                 return;
             case R.id.drone_landing_button:
-                if (getDroneController() != null) {
-                    getDroneController().land();
+                if (mDroneController != null) {
+                    mDroneController.land(mDroneLat, mDroneLon);
                 }
                 mControlBarView.showTakeoffButton();
                 mDroneMap.clearTapAndGoPlan();
@@ -861,13 +872,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 showRTLPopupDialog();
                 return;
             case R.id.plan_play_button:
-//                if (getDroneController() != null) {
-//                    getDroneController().resumeMission();
+//                if (mDroneController != null) {
+//                    mDroneController.resumeMission();
 //                }
                 mControlBarView.showPauseButton();
             case R.id.plan_pause_button:
-                if (getDroneController() != null) {
-                    getDroneController().pauseMission();
+                if (mDroneController != null) {
+                    mDroneController.pauseMission();
                 }
                 mControlBarView.showPlayButton();
                 return;
@@ -1103,7 +1114,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     public boolean isGPSLock() {
-        mGPSLock = mGPSCounts >= 6 && mGPSLockType > 2;
-        return mGPSLock;
+        return mGPSCounts >= 6 && mGPSLockType > 2;
     }
 }
