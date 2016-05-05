@@ -64,6 +64,41 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/range_max_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/range_max" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/range_max_title"
+                    android:text="@string/except_manual_mode" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_range_max"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_meter" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
                     android:id="@+id/vertical_speed_max_title"
                     style="@style/settings_title_lv_1"
                     android:layout_width="wrap_content"

@@ -14,6 +14,7 @@ import com.coretronic.ibs.drone.MavlinkLibBridge;
  * Created by karot.chuang on 2016/2/19.
  */
 public class GainSettingFragment extends SettingChildFragment {
+    private final static String ARGUMENT_ALL_READY = "ALL_READY";
     private final static String ARGUMENT_BASIC_GAIN_ROLL = "BASIC_GAIN_ROLL";
     private final static String ARGUMENT_BASIC_GAIN_PITCH = "BASIC_GAIN_PITCH";
     private final static String ARGUMENT_BASIC_GAIN_YAW = "BASIC_GAIN_YAW";
@@ -51,9 +52,17 @@ public class GainSettingFragment extends SettingChildFragment {
     private float mAttitudeGainPitch;
     private float mAttitudeGainYaw;
 
+    private boolean mIsAllReady = false;
+
     public static GainSettingFragment newInstance(MavlinkLibBridge.DroneParameter droneParameter) {
         GainSettingFragment fragment = new GainSettingFragment();
         Bundle args = new Bundle();
+
+        if (droneParameter == null) {
+            return fragment;
+        }
+
+        args.putBoolean(ARGUMENT_ALL_READY, droneParameter.isAllReady());
 
         args.putFloat(ARGUMENT_BASIC_GAIN_ROLL, droneParameter.getBasicGainRoll());
         args.putFloat(ARGUMENT_BASIC_GAIN_PITCH, droneParameter.getBasicGainPitch());
@@ -177,10 +186,28 @@ public class GainSettingFragment extends SettingChildFragment {
         });
     }
 
+    private void disableAllView() {
+        mBasicGainRollView.setViewEnabled(false);
+        mBasicGainPitchView.setViewEnabled(false);
+        mBasicGainYawView.setViewEnabled(false);
+        mAttitudeGainRollView.setViewEnabled(false);
+        mAttitudeGainPitchView.setViewEnabled(false);
+        mAttitudeGainYawView.setViewEnabled(false);
+    }
+
     private void initViewValue() {
         Bundle arguments = getArguments();
 
-        if (arguments != null) {
+        if (arguments == null) {
+            disableAllView();
+        } else {
+            mIsAllReady = arguments.getBoolean(ARGUMENT_ALL_READY);
+
+            if (!mIsAllReady) {
+                disableAllView();
+                return;
+            }
+
             mBasicGainRoll = arguments.getFloat(ARGUMENT_BASIC_GAIN_ROLL);
             mBasicGainPitch = arguments.getFloat(ARGUMENT_BASIC_GAIN_PITCH);
             mBasicGainYaw = arguments.getFloat(ARGUMENT_BASIC_GAIN_YAW);

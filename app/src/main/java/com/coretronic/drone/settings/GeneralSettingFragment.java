@@ -22,7 +22,9 @@ import com.coretronic.ibs.drone.MavlinkLibBridge;
  * Created by karot.chuang on 2016/2/19.
  */
 public class GeneralSettingFragment extends SettingChildFragment {
+    private final static String ARGUMENT_ALL_READY = "ALL_READY";
     private final static String ARGUMENT_ALTITUDE_MAX = "ALTITUDE_MAX";
+    private final static String ARGUMENT_RANGE_MAX = "RANGE_MAX";
     private final static String ARGUMENT_VERTICAL_SPEED_MAX = "VERTICAL_SPEED_MAX";
     private final static String ARGUMENT_HORIZONTAL_SPEED_MAX = "HORIZONTAL_SPEED_MAX";
     private final static String ARGUMENT_RTL_ALTITUDE = "RTL_ALTITUDE";
@@ -36,6 +38,11 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private final static float ALTITUDE_MAX_UI_GAP = 1;
     private final static float ALTITUDE_MAX_VALUE_MIN = 10;
     private final static float ALTITUDE_MAX_VALUE_MAX = 1000;
+    private final static float RANGE_MAX_UI_MIN = 30;
+    private final static float RANGE_MAX_UI_MAX = 10000;
+    private final static float RANGE_MAX_UI_GAP = 1;
+    private final static float RANGE_MAX_VALUE_MIN = 30;
+    private final static float RANGE_MAX_VALUE_MAX = 10000;
     private final static float VERTICAL_SPEED_MAX_UI_MIN = 0.5f;
     private final static float VERTICAL_SPEED_MAX_UI_MAX = 5;
     private final static float VERTICAL_SPEED_MAX_UI_GAP = 0.5f;
@@ -68,6 +75,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private final static float HORIZONTAL_SPEED_DEFAULT_VALUE_MAX = 20;
 
     private SeekBarTextView mAltitudeMaxView;
+    private SeekBarTextView mRangeMaxView;
     private SeekBarTextView mVerticalSpeedMaxView;
     private SeekBarTextView mHorizontalSpeedMaxView;
     private SeekBarTextView mRTLSpeedView;
@@ -85,6 +93,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private SharedPreferences mSharedPreferences;
 
     private float mAltitudeMax;
+    private float mRangeMax;
     private float mVerticalSpeedMax;
     private float mHorizontalSpeedMax;
     private float mRTLAltitude;
@@ -96,11 +105,22 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private int mOpticalFlow;
     private boolean mShowFlightRoute;
 
+    private boolean mIsAllReady = false;
+
+    private View mView;
+
     public static GeneralSettingFragment newInstance(MavlinkLibBridge.DroneParameter droneParameter) {
         GeneralSettingFragment fragment = new GeneralSettingFragment();
         Bundle args = new Bundle();
 
+        if (droneParameter == null) {
+            return fragment;
+        }
+
+        args.putBoolean(ARGUMENT_ALL_READY, droneParameter.isAllReady());
+
         args.putFloat(ARGUMENT_ALTITUDE_MAX, droneParameter.getAltitudeMax());
+        args.putFloat(ARGUMENT_RANGE_MAX, droneParameter.getRangeMax());
         args.putFloat(ARGUMENT_VERTICAL_SPEED_MAX, droneParameter.getVerticalSpeedMax());
         args.putFloat(ARGUMENT_HORIZONTAL_SPEED_MAX, droneParameter.getHorizontalSpeedMax());
         args.putFloat(ARGUMENT_RTL_ALTITUDE, droneParameter.getRTLAltitude());
@@ -127,6 +147,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mView = view;
         initView(view);
     }
 
@@ -149,6 +170,21 @@ public class GeneralSettingFragment extends SettingChildFragment {
             public void onStopTrackingTouch(float value) {
                 mAltitudeMax = value;
                 mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_FENCE_ALT_MAX.ordinal(), mAltitudeMax);
+            }
+        });
+
+        mRangeMaxView = (SeekBarTextView) v.findViewById(R.id.settings_range_max);
+        mRangeMaxView.setConfig(
+                RANGE_MAX_UI_MIN,
+                RANGE_MAX_UI_MAX,
+                RANGE_MAX_UI_GAP,
+                RANGE_MAX_VALUE_MIN,
+                RANGE_MAX_VALUE_MAX);
+        mRangeMaxView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
+            @Override
+            public void onStopTrackingTouch(float value) {
+                mRangeMax = value;
+                mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_FENCE_RADIUS.ordinal(), mRangeMax);
             }
         });
 
@@ -240,7 +276,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
         });
 
         mAltitudeDefaultView = (SeekBarTextView) v.findViewById(R.id.settings_altitude_default);
-        mAltitudeDefaultView.setConfig(3, 10, 1, 3, 10);
+        mAltitudeDefaultView.setConfig(5, 200, 1, 5, 200);
         mAltitudeDefaultView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
             @Override
             public void onStopTrackingTouch(float value) {
@@ -298,13 +334,40 @@ public class GeneralSettingFragment extends SettingChildFragment {
         });
     }
 
+    private void disableAllView() {
+        mAltitudeMaxView.setViewEnabled(false);
+        mRangeMaxView.setViewEnabled(false);
+        mVerticalSpeedMaxView.setViewEnabled(false);
+        mHorizontalSpeedMaxView.setViewEnabled(false);
+        mRTLSpeedView.setViewEnabled(false);
+        mRTLAltitudeView.setViewEnabled(false);
+        mView.findViewById(R.id.heading_direction_never_change_button).setEnabled(false);
+        mView.findViewById(R.id.heading_direction_next_waypoint_button).setEnabled(false);
+        mView.findViewById(R.id.rtl_heading_direction_front_button).setEnabled(false);
+        mView.findViewById(R.id.rtl_heading_direction_rear_button).setEnabled(false);
+        mThrottlePositionView.setViewEnabled(false);
+        mView.findViewById(R.id.optical_flow_on_button).setEnabled(false);
+        mView.findViewById(R.id.optical_flow_off_button).setEnabled(false);
+    }
+
 
     private void initViewValue() {
         Bundle arguments = getArguments();
 
-        if (arguments != null) {
+        if (arguments == null) {
+            disableAllView();
+        } else {
+            mIsAllReady = arguments.getBoolean(ARGUMENT_ALL_READY);
+
+            if (!mIsAllReady) {
+                disableAllView();
+                return;
+            }
             mAltitudeMax = arguments.getFloat(ARGUMENT_ALTITUDE_MAX);
             mAltitudeMaxView.setValue(mAltitudeMax);
+
+            mRangeMax = arguments.getFloat(ARGUMENT_RANGE_MAX);
+            mRangeMaxView.setValue(mRangeMax);
 
             mVerticalSpeedMax = arguments.getFloat(ARGUMENT_VERTICAL_SPEED_MAX);
             mVerticalSpeedMaxView.setValue(mVerticalSpeedMax);
@@ -341,10 +404,10 @@ public class GeneralSettingFragment extends SettingChildFragment {
                 mOpticalFlowRadioGroup.check(R.id.optical_flow_on_button);
             }
         }
-        mAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, 10);
+        mAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, 30);
         mAltitudeDefaultView.setValue(mAltitudeDefault);
 
-        mHorizontalSpeedDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, 3);
+        mHorizontalSpeedDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, 4);
         mHorizontalSpeedDefaultView.setValue(mHorizontalSpeedDefault);
 
         mShowFlightRoute = mSharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_SHOW_FLIGHT_ROUTE, true);

@@ -106,6 +106,7 @@ public class AircraftCompassWrapView {
     }
 
     public AircraftCompassWrapView setDroneRoll(float droneRoll) {
+        droneRoll *= -1;
         float degrees = (float) (180 * droneRoll / Math.PI);
         mLevelView.startAnimation(getRollAnimation(degrees));
         return this;

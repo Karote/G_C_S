@@ -128,4 +128,13 @@ public class FlightModeModel extends LinearLayout {
         this.mFlightModeModelButtonClickListener = listener;
         this.mResourceId = id;
     }
+
+    public void setViewEnable(boolean isEnable) {
+        this.findViewById(R.id.mode_type_button).setEnabled(isEnable);
+        if (!isEnable) {
+            ((Button) this.findViewById(R.id.mode_type_button)).setText("");
+        }
+        this.findViewById(R.id.heading_lock_button).setEnabled(isEnable);
+        this.findViewById(R.id.home_lock_button).setEnabled(isEnable);
+    }
 }

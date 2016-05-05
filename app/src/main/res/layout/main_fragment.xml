@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/status_bar"
@@ -18,7 +18,7 @@
             android:fontFamily="@string/font_roboto_medium"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/main_fragment_status_bar_clock_text_size"/>
+            android:textSize="@dimen/main_fragment_status_bar_clock_text_size" />
 
         <com.coretronic.drone.ui.StatusView
             android:id="@+id/status"
@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"/>
+            android:layout_marginLeft="4dp" />
 
 
         <Button
@@ -38,7 +38,7 @@
             android:layout_marginRight="4dp"
             android:background="@color/transparent"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -49,13 +49,18 @@
         android:layout_marginRight="@dimen/main_fragment_view_margin_left_right"
         android:layout_marginTop="@dimen/main_fragment_view_margin_top">
 
-        <Spinner
-            android:id="@+id/spinner_drone_device"
+        <ToggleButton
+            android:id="@+id/drone_connect_button"
             android:layout_width="@dimen/main_fragment_select_device_width"
             android:layout_height="@dimen/main_fragment_select_device_height"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@color/field_bg"/>
+            android:background="@drawable/drone_connect_button_bg"
+            android:enabled="false"
+            android:fontFamily="@string/font_roboto_condensed"
+            android:textColor="@drawable/drone_connect_button_text_color"
+            android:textOff="@string/connect_to_drone"
+            android:textOn="@string/disconnect"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_app_version"
@@ -66,7 +71,7 @@
             android:fontFamily="@string/font_roboto_medium"
             android:text="@string/version"
             android:textColor="@color/version_text"
-            android:textSize="@dimen/main_fragment_app_version_text_size"/>
+            android:textSize="@dimen/main_fragment_app_version_text_size" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -80,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/main_bg"/>
+                android:src="@drawable/main_bg" />
 
             <ImageView
                 android:id="@+id/btn_flight_setting"
@@ -122,7 +127,7 @@
                     android:text="@string/mission_plan"
                     android:textColor="@color/white"
                     android:textSize="@dimen/main_fragment_main_button_text_size"
-                    android:textStyle="bold|italic"/>
+                    android:textStyle="bold|italic" />
 
                 <Button
                     android:id="@+id/btn_flight_history"
@@ -135,7 +140,7 @@
                     android:text="@string/flight_history"
                     android:textColor="@color/white"
                     android:textSize="@dimen/main_fragment_main_button_text_size"
-                    android:textStyle="bold|italic"/>
+                    android:textStyle="bold|italic" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.coretronic.drone.DroneController;
 import com.coretronic.drone.missionplan.map.OnMapEventCallback;
 
 /**
@@ -12,11 +13,13 @@ import com.coretronic.drone.missionplan.map.OnMapEventCallback;
 public class MapChildFragment extends Fragment implements OnMapEventCallback {
 
     protected MapViewFragment mMapViewFragment;
+    protected DroneController mDroneController;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMapViewFragment = (MapViewFragment) getParentFragment();
+        mDroneController = mMapViewFragment.getDroneController();
     }
 
     public void onClick(View v) {
@@ -60,7 +63,7 @@ public class MapChildFragment extends Fragment implements OnMapEventCallback {
 
     }
 
-    public void updateDroneLocation(float droneLat, float droneLon){
+    public void updateDroneLocation(float droneLat, float droneLon) {
 
     }
 

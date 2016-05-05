@@ -233,7 +233,7 @@ public class FirstPersonVisionFragment extends Fragment {
 
     private void gimbalControl(int servo, float pwm) {
         Logger.d("(servo, pwm):(" + servo + ", " + pwm + ")");
-        mDroneController.gimbalControl(servo, pwm);
+        mDroneController.controlGimbal(servo, pwm);
     }
 
     private void rotateAnimate(double fromDegrees, double toDegrees, long durationMillis) {

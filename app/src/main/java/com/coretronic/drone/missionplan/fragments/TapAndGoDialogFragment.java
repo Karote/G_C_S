@@ -48,12 +48,12 @@ public class TapAndGoDialogFragment extends Fragment {
 
         mLocationTextView = (TextView) fragmentView.findViewById(R.id.tap_and_go_location_text);
         mAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.tap_and_go_altitude_wheel);
-        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.tap_and_go_altitude_spinner_wheel_text_layout, 0, 20, "%01d"));
+        mAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.tap_and_go_altitude_spinner_wheel_text_layout, 1, 200, "%01d"));
         mAltitudeWheel.setCyclic(false);
         mAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mMissionAltitude = newValue;
+                mMissionAltitude = newValue + 1;
             }
         });
         fragmentView.findViewById(R.id.tap_and_go_start_button).setOnClickListener(new View.OnClickListener() {
@@ -91,7 +91,7 @@ public class TapAndGoDialogFragment extends Fragment {
             mMissionLatitude = arguments.getFloat(ARGUMENT_LATITUDE);
             mMissionLongitude = arguments.getFloat(ARGUMENT_LONGITUDE);
 
-            mAltitudeWheel.setCurrentItem(mMissionAltitude);
+            mAltitudeWheel.setCurrentItem(mMissionAltitude - 1);
             String latStrFormat = ConstantValue.LOCATION_STRING_FORMAT + ", ";
             String lonStrFormat = ConstantValue.LOCATION_STRING_FORMAT;
             mLocationTextView.setText(String.format(latStrFormat, mMissionLatitude) + String.format(lonStrFormat, mMissionLongitude));

@@ -21,6 +21,7 @@ import com.coretronic.ibs.drone.MavlinkLibBridge;
  * Created by karot.chuang on 2016/2/19.
  */
 public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
+    private final static String ARGUMENT_ALL_READY = "ALL_READY";
     private final static String ARGUMENT_BATTERY_CAPACITY = "BATTERY_CAPACITY";
     private final static String ARGUMENT_BATTERY_REMAINING = "BATTERY_REMAINING";
     private final static String ARGUMENT_BATTERY_OPTION = "BATTERY_OPTION";
@@ -52,9 +53,19 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
     private int mGPSSignalLost;
     private int mGCSSignalLost;
 
+    private boolean mIsAllReady = false;
+
+    private View mView;
+
     public static BatteryAndFailsafeSettingFragment newInstance(MavlinkLibBridge.DroneParameter droneParameter) {
         BatteryAndFailsafeSettingFragment fragment = new BatteryAndFailsafeSettingFragment();
         Bundle args = new Bundle();
+
+        if (droneParameter == null) {
+            return fragment;
+        }
+
+        args.putBoolean(ARGUMENT_ALL_READY, droneParameter.isAllReady());
 
         args.putInt(ARGUMENT_BATTERY_CAPACITY, droneParameter.getBatteryCapacity());
         args.putInt(ARGUMENT_BATTERY_OPTION, droneParameter.getBatteryOption());
@@ -74,6 +85,7 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mView = view;
         initView(view);
     }
 
@@ -120,10 +132,40 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
         v.findViewById(R.id.gcs_signal_lost_land_button).setOnClickListener(onGCSSignalLostRadioButtonClickListener);
     }
 
+    private void disableAllView() {
+        mView.findViewById(R.id.battery_capacity_ten_thousand_mah_button).setEnabled(false);
+        mView.findViewById(R.id.battery_capacity_sixteen_thousand_mah_button).setEnabled(false);
+        mView.findViewById(R.id.battery_capacity_twenty_two_thousand_mah_button).setEnabled(false);
+
+        mView.findViewById(R.id.battery_option_none_button).setEnabled(false);
+        mView.findViewById(R.id.battery_option_rtl_button).setEnabled(false);
+        mView.findViewById(R.id.battery_option_land_button).setEnabled(false);
+
+        mView.findViewById(R.id.rc_signal_lost_none_button).setEnabled(false);
+        mView.findViewById(R.id.rc_signal_lost_rtl_button).setEnabled(false);
+        mView.findViewById(R.id.rc_signal_lost_land_button).setEnabled(false);
+
+        mView.findViewById(R.id.gps_signal_lost_none_button).setEnabled(false);
+        mView.findViewById(R.id.gps_signal_lost_land_button).setEnabled(false);
+
+        mView.findViewById(R.id.gcs_signal_lost_none_button).setEnabled(false);
+        mView.findViewById(R.id.gcs_signal_lost_rtl_button).setEnabled(false);
+        mView.findViewById(R.id.gcs_signal_lost_land_button).setEnabled(false);
+    }
+
     private void initViewValue() {
         Bundle arguments = getArguments();
 
-        if (arguments != null) {
+        if (arguments == null) {
+            disableAllView();
+        } else {
+            mIsAllReady = arguments.getBoolean(ARGUMENT_ALL_READY);
+
+            if (!mIsAllReady) {
+                disableAllView();
+                return;
+            }
+
             mBatteryCapacity = arguments.getInt(ARGUMENT_BATTERY_CAPACITY);
             if (mBatteryCapacity == Parameters.FS_BATTERY_CAPACITY_ONE) {
                 mBatteryCapacityRadioGroup.check(R.id.battery_capacity_ten_thousand_mah_button);

@@ -32,6 +32,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coretronic.drone.Drone;
+import com.coretronic.drone.Drone.CommandResultListener;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneDevice;
 import com.coretronic.drone.DroneDevice.OnDeviceChangedListener;
@@ -53,6 +55,7 @@ import com.coretronic.drone.ui.ControlBarView;
 import com.coretronic.drone.ui.MavInfoView;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.uvc.USBCameraMonitor;
+import com.coretronic.ibs.log.Logger;
 import com.coretronic.ttslib.Speaker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -74,7 +77,7 @@ import org.droidplanner.services.android.core.helpers.coordinates.Coord2D;
 import java.util.List;
 
 public class MapViewFragment extends Fragment implements OnClickListener, LocationListener, ConnectionCallbacks,
-        OnConnectionFailedListener, StatusChangedListener, OnDeviceChangedListener {
+        OnConnectionFailedListener, StatusChangedListener, OnDeviceChangedListener, CommandResultListener {
 
     private static final String ARGUMENT_INDEX_KEY = "fragment_index";
 
@@ -141,12 +144,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private View mNotificationCenterPopWindowView;
     private int mGPSCounts;
     private int mGPSLockType;
-    private boolean mIsGPSLock;
     private View mPopdialogContainer;
     private ReturnToHomePopupDialogFragment mRTLPopupDialogFragment;
     private TakeOffPopupDialogFragment mTakeOffPopupDialogFragment;
 
     private DroneController mDroneController;
+    private TextView mPilotBoardUsingText;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -173,6 +176,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         super.onActivityCreated(savedInstanceState);
         ((MainActivity) getActivity()).registerDeviceChangedListener(this);
         ((MainActivity) getActivity()).registerDroneStatusChangedListener(this);
+        ((MainActivity) getActivity()).registerCommandResultListener(this);
     }
 
     @Override
@@ -180,6 +184,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         super.onDestroyView();
         ((MainActivity) getActivity()).unregisterDroneStatusChangedListener(this);
         ((MainActivity) getActivity()).unregisterDeviceChangedListener(this);
+        ((MainActivity) getActivity()).unregisterCommandResultListener(this);
         mStatusView.onDisconnect();
         mDroneMap.onDestroy();
     }
@@ -235,12 +240,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             @Override
             public void onOKButtonClick(int takeOffAltitude) {
                 mPopdialogContainer.setVisibility(View.GONE);
-                mControlBarView.showLandingButton();
                 if (mDroneController != null) {
                     mDroneController.takeOff(mDroneLat, mDroneLon, takeOffAltitude);
                 }
             }
         });
+
+
+        mPilotBoardUsingText = (TextView) view.findViewById(R.id.pilot_board_using_text);
 
         return view;
     }
@@ -372,6 +379,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_HEARTBEAT:
                 mStatusView.updateCommunicateLight(droneStatus.getLastHeartbeatTime());
+                break;
+            case ON_PILOT_BOARD_USING:
+                mPilotBoardUsingText.setText("FC-" + droneStatus.getPilotBoardUsing());
                 break;
         }
 
@@ -848,13 +858,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 if (mDroneController == null) {
                     return;
                 }
-                mControlBarView.showStopButton();
                 break;
             case R.id.plan_stop_button:
                 if (mDroneController == null) {
                     return;
                 }
-                mControlBarView.showGoButton();
                 mDroneMap.clearTapAndGoPlan();
                 break;
             case R.id.drone_takeoff_button:
@@ -862,25 +870,23 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 return;
             case R.id.drone_landing_button:
                 if (mDroneController != null) {
-                    mDroneController.land();
+                    mDroneController.land(mDroneLat, mDroneLon);
                 }
-                mControlBarView.showTakeoffButton();
                 mDroneMap.clearTapAndGoPlan();
                 return;
             case R.id.drone_rtl_button:
                 showRTLPopupDialog();
                 return;
-            case R.id.plan_play_button:
-//                if (mDroneController != null) {
-//                    mDroneController.resumeMission();
-//                }
-                mControlBarView.showPauseButton();
             case R.id.plan_pause_button:
-                if (mDroneController != null) {
-                    mDroneController.pauseMission();
+                if (mDroneController == null) {
+                    return;
                 }
-                mControlBarView.showPlayButton();
-                return;
+                break;
+            case R.id.plan_play_button:
+                if (mDroneController == null) {
+                    return;
+                }
+                break;
             case R.id.my_location_button:
                 setMapToMyLocation();
                 return;
@@ -1114,5 +1120,74 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public boolean isGPSLock() {
         return mGPSCounts >= 6 && mGPSLockType > 2;
+    }
+
+    public void setGoButtonEnable(boolean isEnable) {
+        mControlBarView.showGoButton();
+        mControlBarView.setGoButtonEnable(isEnable);
+    }
+
+    @Override
+    public void onCommandResult(Event event, int commandResult) {
+        Logger.d("commandResult:" + commandResult);
+        if (commandResult != Drone.COMMAND_RESULT_SUCCESS) {
+            return;
+        }
+        switch (event) {
+            case ON_COMMAND_TAKE_OFF_RESULT:
+                mControlBarView.showLandingButton();
+                break;
+            case ON_COMMAND_LAND_RESULT:
+                mControlBarView.showTakeoffButton();
+                break;
+            case ON_COMMAND_RTL_RESULT:
+                mControlBarView.showTakeoffButton();
+                break;
+            case ON_COMMAND_START_MISSION_RESULT:
+                mControlBarView.showStopButton();
+                mControlBarView.setStopButtonEnable(true);
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(true);
+                break;
+            case ON_COMMAND_STOP_MISSION_RESULT:
+                mControlBarView.showGoButton();
+                mControlBarView.setGoButtonEnable(true);
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(false);
+                break;
+            case ON_COMMAND_PAUSE_MISSION_RESULT:
+                mControlBarView.showPlayButton();
+                break;
+            case ON_COMMAND_RESUME_MISSION_RESULT:
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(true);
+                break;
+            case ON_COMMAND_START_TAP_AND_GO:
+                mControlBarView.showStopButton();
+                mControlBarView.setStopButtonEnable(false);
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(false);
+                break;
+            case ON_COMMAND_STOP_TAP_AND_GO:
+                mControlBarView.showStopButton();
+                mControlBarView.setStopButtonEnable(false);
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(false);
+                break;
+            case ON_COMMAND_PAUSE_TAP_AND_GO:
+                mControlBarView.showPlayButton();
+                break;
+            case ON_COMMAND_RESUME_TAP_AND_GO:
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(true);
+                break;
+            case ON_COMMAND_MOVE_TO_LOCATION:
+                mControlBarView.showStopButton();
+                mControlBarView.setStopButtonEnable(true);
+                mControlBarView.showPauseButton();
+                mControlBarView.setPauseButtonEnable(true);
+                setTapGoPath();
+                break;
+        }
     }
 }

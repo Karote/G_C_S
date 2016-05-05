@@ -54,6 +54,23 @@
             android:layout_toEndOf="@id/back_to_main_button"
             android:layout_toRightOf="@id/back_to_main_button" />
 
+        <TextView
+            android:id="@+id/pilot_board_using_text"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/status"
+            android:layout_toRightOf="@id/status"
+            android:background="@color/white"
+            android:fontFamily="@string/font_roboto_regular"
+            android:gravity="center"
+            android:text="FC-1"
+            android:textColor="#383838"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
         <Spinner
             android:id="@+id/mission_plan_spinner"
             android:layout_width="@dimen/fragment_mission_plan_spinner_width"

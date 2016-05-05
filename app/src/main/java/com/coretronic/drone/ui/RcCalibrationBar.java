@@ -90,4 +90,8 @@ public class RcCalibrationBar extends PercentRelativeLayout {
     public void registerReverseButtonCheckedListener(onReverseButtonCheckedListener listener) {
         this.mOnReverseButtonCheckedListener = listener;
     }
+
+    public void setViewEnable(boolean isEnable) {
+        this.findViewById(R.id.reverse_button).setEnabled(isEnable);
+    }
 }
