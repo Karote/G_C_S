@@ -13,7 +13,7 @@ import com.coretronic.drone.R;
  */
 public class AircraftCompassWrapView {
 
-    private final static int ANIMATION_DURATION_IN_SECONDS = 1 * 1000;
+    private final static int ANIMATION_DURATION_IN_SECONDS = 500;   // 0.5 sec
 
     private final static int ANIMATION_TRANSLATE_X = 0;
     private final static int ANIMATION_TRANSLATE_X_DELTA = 0;
@@ -33,7 +33,7 @@ public class AircraftCompassWrapView {
     private float mDroneYaw;
     private float mUserDirection;
 
-    private int mAnimationDuration = ANIMATION_DURATION_IN_SECONDS;
+    private long mAnimationDuration = ANIMATION_DURATION_IN_SECONDS;
 
     public AircraftCompassWrapView(View view, int yawCircleId, int rollLevelId, int pitchRulerId, int userDirectionId) {
         mLevelView = view.findViewById(rollLevelId);
@@ -106,6 +106,7 @@ public class AircraftCompassWrapView {
     }
 
     public AircraftCompassWrapView setDroneRoll(float droneRoll) {
+        droneRoll *= -1;
         float degrees = (float) (180 * droneRoll / Math.PI);
         mLevelView.startAnimation(getRollAnimation(degrees));
         return this;

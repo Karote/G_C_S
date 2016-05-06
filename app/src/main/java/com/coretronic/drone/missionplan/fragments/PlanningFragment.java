@@ -200,6 +200,9 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 mSaveAndClearMissionFlag = !isEmpty;
                 mTopViewVisibility = isEmpty ? View.GONE : View.VISIBLE;
                 mWaypointListTopView.setVisibility(mTopViewVisibility);
+                if (mDroneController != null) {
+                    mMapViewFragment.setGoButtonEnable(!isEmpty);
+                }
             }
 
             @Override
@@ -339,9 +342,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     if (missions == null || missions.size() == 0) {
                         showToastMessage("There is no mission existed");
                     } else {
-//                        DroneController droneController = mMapViewFragment.getDroneController();
-//                        if (droneController != null) {
-//                            droneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
+//                        if (mDroneController != null) {
+//                            mDroneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
 //                        }
                         mLoadMissionProgressDialog.dismiss();
                     }
@@ -351,14 +353,15 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
 
         @Override
         public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
-            if (seq == total - 1 && isComplete) {
-                DroneController droneController = mMapViewFragment.getDroneController();
-                if (droneController != null) {
+            if (isComplete && seq == total - 1) {
+                mDroneController.unregisterMissionLoaderListener(missionLoaderListener);
+                if (mDroneController != null) {
                     List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
-                    droneController.startMission(droneMissionList.get(0).getLatitude(), droneMissionList.get(0).getLongitude(), droneMissionList.get(0).getAltitude());
+                    mDroneController.startMission(droneMissionList.get(0).getLatitude(), droneMissionList.get(0).getLongitude(), droneMissionList.get(0).getAltitude());
                 }
                 mLoadMissionProgressDialog.dismiss();
             } else if (isComplete && seq != total - 1) {
+                mDroneController.unregisterMissionLoaderListener(missionLoaderListener);
                 if (mLoadMissionProgressDialog != null) {
                     mLoadMissionProgressDialog.dismiss();
                     getActivity().runOnUiThread(new Runnable() {
@@ -431,8 +434,24 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 if (droneMissionList.get(droneMissionList.size() - 1).getType() != Type.RTL) {
                     showAutoRTLPopDialog();
                 } else {
-                    mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
+                    mDroneController.registerMissionLoaderListener(missionLoaderListener);
+                    mDroneController.writeMissions(droneMissionList);
                     showLoadProgressDialog("Writing Mission", "Please wait...");
+                }
+                break;
+            case R.id.plan_stop_button:
+                if (mDroneController != null) {
+                    mDroneController.stopMission();
+                }
+                break;
+            case R.id.plan_pause_button:
+                if (mDroneController != null) {
+                    mDroneController.pauseMission();
+                }
+                break;
+            case R.id.plan_play_button:
+                if (mDroneController != null) {
+                    mDroneController.resumeMission();
                 }
                 break;
         }
@@ -467,7 +486,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onDismiss(DialogInterface dialog) {
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
-                mMapViewFragment.getDroneController().writeMissions(droneMissionList, missionLoaderListener);
+                mDroneController.registerMissionLoaderListener(missionLoaderListener);
+                mDroneController.writeMissions(droneMissionList);
                 showLoadProgressDialog("Writing Mission", "Please wait...");
             }
         });
@@ -521,7 +541,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     }
 
     private void loadMissionFromDrone() {
-//        if (!mMapViewFragment.getDroneController().readMissions(this)) {
+//        if (!mDroneController.readMissions()) {
 //            return;
 //        }
 //        showLoadProgressDialog("Loading", "Please wait...");

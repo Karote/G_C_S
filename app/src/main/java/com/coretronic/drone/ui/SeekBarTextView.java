@@ -27,6 +27,7 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
     private DecimalFormat mDecimalFormat;
 
     private TextView tvValue;
+    private TextView tvUnit;
     private SeekBar seekBar;
 
     private SeekBarTextViewChangeListener seekBarTextViewChangeListener;
@@ -43,11 +44,12 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
     private void initView(Context context, AttributeSet attrs) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.custom_seek_bar, null);
         tvValue = (TextView) view.findViewById(R.id.tv_value);
+        tvUnit = (TextView) view.findViewById(R.id.tv_unit);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
 
         if (attrs != null) {
             final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarTextView, 0, 0);
-            ((TextView) view.findViewById(R.id.tv_unit)).setText(a.getString(R.styleable.SeekBarTextView_unit));
+            tvUnit.setText(a.getString(R.styleable.SeekBarTextView_unit));
             a.recycle();
         }
 
@@ -67,7 +69,7 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
 
         if (mUiGapValue < 1) {
             mDecimalFormat = new DecimalFormat("#.#");
-        }else {
+        } else {
             mDecimalFormat = new DecimalFormat("#");
         }
 
@@ -108,11 +110,15 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
 
     public void setViewEnabled(boolean flag) {
         tvValue.setEnabled(flag);
+        tvValue.setText("0");
         seekBar.setEnabled(flag);
+        seekBar.setProgress(0);
         if (flag) {
             tvValue.setTextColor(getResources().getColor(R.color.primary_color_normal));
+            tvUnit.setTextColor(getResources().getColor(R.color.primary_color_normal));
         } else {
             tvValue.setTextColor(getResources().getColor(R.color.gray));
+            tvUnit.setTextColor(getResources().getColor(R.color.gray));
         }
     }
 

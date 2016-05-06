@@ -43,6 +43,7 @@
 
     <color name="primary_color_normal">#34a7ff</color>
     <color name="primary_color_pressed">#7cc6ff</color>
+    <color name="secondary_color">#c4e5ff</color>
     <color name="route_properties_back_button_normal_color">#cdcdcd</color>
     <color name="route_properties_back_button_pressed_color">#aaaaaa</color>
     <color name="route_properties_ok_button_normal_color">#4c4c4c</color>

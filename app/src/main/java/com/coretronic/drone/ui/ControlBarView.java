@@ -43,6 +43,7 @@ public class ControlBarView {
         if (mPlanPauseButton != null) {
             mPlanPauseButton.setOnClickListener(onClickListener);
         }
+        mPlanPauseButton.setEnabled(false);
         mDroneControlBar.findViewById(R.id.drone_rtl_button).setOnClickListener(onClickListener);
 
         mMapControlBar = mControlMainPanel.findViewById(R.id.map_control_bar);
@@ -69,9 +70,17 @@ public class ControlBarView {
         mPlanGoButton.setVisibility(View.GONE);
     }
 
+    public void setStopButtonEnable(boolean isEnable) {
+        mPlanStopButton.setEnabled(isEnable);
+    }
+
     public void showGoButton() {
         mPlanStopButton.setVisibility(View.GONE);
         mPlanGoButton.setVisibility(View.VISIBLE);
+    }
+
+    public void setGoButtonEnable(boolean isEnable) {
+        mPlanGoButton.setEnabled(isEnable);
     }
 
     public void showLandingButton() {
@@ -87,6 +96,10 @@ public class ControlBarView {
     public void showPauseButton() {
         mPlanPauseButton.setVisibility(View.VISIBLE);
         mPlanPlayButton.setVisibility(View.GONE);
+    }
+
+    public void setPauseButtonEnable(boolean isEnable) {
+        mPlanPauseButton.setEnabled(isEnable);
     }
 
     public void showPlayButton() {

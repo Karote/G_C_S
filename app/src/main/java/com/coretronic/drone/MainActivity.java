@@ -15,17 +15,11 @@ import com.coretronic.drone.util.AppConfig;
 import java.util.List;
 
 public class MainActivity extends MiniDronesActivity {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String SETTING_NAME_2015 = "setting_2015";
-    private static final String SETTING_NAME_G2 = "setting_g2";
-    private static final String SETTINGS_VALUE = "settings_value";
-    private static final char DEGREE_SYMBOL = 0x00B0;   //º
     public static final int READ_DRONE_PARAMETERS_NONE = 0;
     public static final int READ_DRONE_PARAMETERS_READING = 1;
-    public static final int READ_DRONE_PARAMETERS_DONE = 2;
-    public static final int READ_DRONE_PARAMETERS_FAIL = 3;
-//    private final static DroneDevice DISCONNECTED_FAKE_DEVICE = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
+    public static final int READ_DRONE_PARAMETERS_RETRY = 2;
+    public static final int READ_DRONE_PARAMETERS_DONE = 3;
+    public static final int READ_DRONE_PARAMETERS_FAIL = 4;
 
     private DroneDevice.OnDeviceChangedListener mDeviceChangedListener;
 

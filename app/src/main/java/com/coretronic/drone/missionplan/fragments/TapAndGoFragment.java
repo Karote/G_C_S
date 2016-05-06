@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.coretronic.drone.DroneController;
 import com.coretronic.drone.R;
 import com.coretronic.drone.model.Mission;
 import com.coretronic.drone.model.Mission.Builder;
@@ -28,6 +27,7 @@ public class TapAndGoFragment extends MapChildFragment {
     private final static Type DEFAULT_TYPE = Type.WAY_POINT;
     private Mission.Builder mMissionBuilder;
     private int mLastAlt = 0;
+    private float mLastLat, mLastLng;
 
     private SharedPreferences mSharedPreferences;
 
@@ -52,12 +52,34 @@ public class TapAndGoFragment extends MapChildFragment {
     }
 
     public void executeTapAndGoMission(float lat, float lng, float alt) {
-        DroneController droneController = mMapViewFragment.getDroneController();
-        if (droneController != null) {
-            droneController.moveToLocation(lat, lng, alt);
-            mMapViewFragment.setTapGoPath();
-            mMapViewFragment.setDroneControlBarVisibility(View.VISIBLE);
+        if (mDroneController != null) {
+            mDroneController.moveToLocation(lat, lng, alt);
             mLastAlt = (int) alt;
+            mLastLat = lat;
+            mLastLng = lng;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.plan_play_button:
+                if(mDroneController != null) {
+                    mDroneController.resumeTapAndGo(mLastLat, mLastLng, mLastAlt);
+                }
+                return;
+            case R.id.plan_stop_button:
+                if (mDroneController != null) {
+                    mDroneController.stopTapAndGo();
+                }
+                return;
+            case R.id.plan_pause_button:
+                if (mDroneController != null) {
+                    mDroneController.pauseTapAndGo();
+                }
+                return;
+            default:
+                break;
         }
     }
 

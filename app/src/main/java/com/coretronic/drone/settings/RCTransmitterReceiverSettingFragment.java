@@ -31,6 +31,7 @@ import com.coretronic.ibs.drone.MavlinkLibBridge.DroneParameter;
  * Created by karot.chuang on 2016/2/19.
  */
 public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
+    private final static String ARGUMENT_ALL_READY = "ALL_READY";
     private final static String ARGUMENT_RC_TYPE = "RC_TYPE";
     private final static String ARGUMENT_RC_ROLL_MIN = "RC_ROLL_MIN";
     private final static String ARGUMENT_RC_ROLL_MAX = "RC_ROLL_MAX";
@@ -48,8 +49,6 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     private final static String ARGUMENT_RC_GEAR_MIN = "RC_GEAR_MIN";
     private final static String ARGUMENT_RC_GEAR_MAX = "RC_GEAR_MAX";
     private final static String ARGUMENT_RC_GEAR_REV = "RC_GEAR_REV";
-    private final static String ARGUMENT_RC_CAMERA_TRIGGER_MIN = "RC_CAMERA_TRIGGER_MIN";
-    private final static String ARGUMENT_RC_CAMERA_TRIGGER_MAX = "RC_CAMERA_TRIGGER_MAX";
     private final static String ARGUMENT_RC_CAMERA_TRIGGER_REV = "RC_CAMERA_TRIGGER_REV";
     private final static String ARGUMENT_RC_FLIGHT_MODE_ONE = "RC_FLIGHT_MODE_ONE";
     private final static String ARGUMENT_RC_FLIGHT_MODE_TWO = "RC_FLIGHT_MODE_TWO";
@@ -113,9 +112,19 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     private boolean mGearReverse;
     private boolean mCameraTriggerReverse;
 
+    private boolean mIsAllReady = false;
+
+    private View mView;
+
     public static RCTransmitterReceiverSettingFragment newInstance(DroneParameter droneParameter) {
         RCTransmitterReceiverSettingFragment fragment = new RCTransmitterReceiverSettingFragment();
         Bundle args = new Bundle();
+
+        if (droneParameter == null) {
+            return fragment;
+        }
+
+        args.putBoolean(ARGUMENT_ALL_READY, droneParameter.isAllReady());
 
         args.putInt(ARGUMENT_RC_TYPE, droneParameter.getRCType());
         args.putFloat(ARGUMENT_RC_ROLL_MIN, droneParameter.getRCRollMin());
@@ -134,8 +143,6 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         args.putFloat(ARGUMENT_RC_GEAR_MIN, droneParameter.getRCGearMin());
         args.putFloat(ARGUMENT_RC_GEAR_MAX, droneParameter.getRCGearMax());
         args.putInt(ARGUMENT_RC_GEAR_REV, droneParameter.getRCGearRev());
-        args.putFloat(ARGUMENT_RC_CAMERA_TRIGGER_MIN, droneParameter.getRCCameraTriggerMin());
-        args.putFloat(ARGUMENT_RC_CAMERA_TRIGGER_MAX, droneParameter.getRCCameraTriggerMax());
         args.putInt(ARGUMENT_RC_CAMERA_TRIGGER_REV, droneParameter.getRCCameraTriggerRev());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_ONE, droneParameter.getFlightModeOne());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_TWO, droneParameter.getFlightModeTwo());
@@ -158,6 +165,7 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mView = view;
         initView(view);
     }
 
@@ -470,10 +478,47 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         }
     };
 
+    private void disableAllView() {
+        mView.findViewById(R.id.receiver_type_futaba_button).setEnabled(false);
+        mView.findViewById(R.id.receiver_type_jr_button).setEnabled(false);
+        mView.findViewById(R.id.receiver_type_spektrum_button).setEnabled(false);
+        mView.findViewById(R.id.receiver_type_spektrum_button).setEnabled(false);
+        mFlightModePWMTextView.setText("PWM-0");
+        mFlightModeModel1.setViewEnable(false);
+        mFlightModeModel2.setViewEnable(false);
+        mFlightModeModel3.setViewEnable(false);
+        mFlightModeModel4.setViewEnable(false);
+        mFlightModeModel5.setViewEnable(false);
+        mFlightModeModel6.setViewEnable(false);
+        mView.findViewById(R.id.gear_retract_text_view).setEnabled(false);
+        mView.findViewById(R.id.gear_deploy_text_view).setEnabled(false);
+        mView.findViewById(R.id.camera_trigger_off_text_view).setEnabled(false);
+        mView.findViewById(R.id.camera_trigger_on_text_view).setEnabled(false);
+        mView.findViewById(R.id.tuning_throttle_button).setEnabled(false);
+        mView.findViewById(R.id.tuning_basic_button).setEnabled(false);
+        mView.findViewById(R.id.tuning_none_button).setEnabled(false);
+        mView.findViewById(R.id.gear_reverse_button).setEnabled(false);
+        mView.findViewById(R.id.camera_trigger_reverse_button).setEnabled(false);
+        mView.findViewById(R.id.rc_calibration_start_button).setEnabled(false);
+        mRCCalibrationBarRoll.setViewEnable(false);
+        mRCCalibrationBarPitch.setViewEnable(false);
+        mRCCalibrationBarYaw.setViewEnable(false);
+        mRCCalibrationBarThrottle.setViewEnable(false);
+    }
+
     private void initViewValue() {
         Bundle arguments = getArguments();
 
-        if (arguments != null) {
+        if (arguments == null) {
+            disableAllView();
+        } else {
+            mIsAllReady = arguments.getBoolean(ARGUMENT_ALL_READY);
+
+            if (!mIsAllReady) {
+                disableAllView();
+                return;
+            }
+
             mRCType = arguments.getInt(ARGUMENT_RC_TYPE);
             if (mRCType == RC_TYPE.RC_TYPE_FUTABA.ordinal()) {
                 mReceiverTypeRadioGroup.check(R.id.receiver_type_futaba_button);
@@ -518,9 +563,6 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
 
             mGearReverse = arguments.getInt(ARGUMENT_RC_GEAR_REV) < 0;
             mGearReverseButton.setChecked(mGearReverse);
-
-            arguments.getFloat(ARGUMENT_RC_CAMERA_TRIGGER_MIN);
-            arguments.getFloat(ARGUMENT_RC_CAMERA_TRIGGER_MAX);
 
             mCameraTriggerReverse = arguments.getInt(ARGUMENT_RC_CAMERA_TRIGGER_REV) < 0;
             mCameraTriggerReverseButton.setChecked(mCameraTriggerReverse);
