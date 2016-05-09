@@ -495,18 +495,15 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             final DroneDevice connectDevice;
-            Logger.d("isCheck:" + isChecked);
             if (isChecked) {
                 connectDevice = mDroneDevice;
                 if (mMainActivity.getDroneController() != SimpleDroneController.FAKE_DRONE) {
-                    Logger.d("NOT FAKE or NULL");
                     return;
                 }
             } else {
                 connectDevice = DroneDevice.FAKE_DRONE_DEVICE;
             }
 
-            Logger.d("DISCONNECT");
             mStatusView.onDisconnect();
             mMainActivity.setReadDroneParametersStatus(MainActivity.READ_DRONE_PARAMETERS_NONE);
             mMainActivity.selectDevice(connectDevice, new MiniDronesActivity.OnDroneConnectedListener() {

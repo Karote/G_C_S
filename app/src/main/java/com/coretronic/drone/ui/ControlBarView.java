@@ -70,7 +70,7 @@ public class ControlBarView {
         mPlanGoButton.setVisibility(View.GONE);
     }
 
-    public void setStopButtonEnable(boolean isEnable){
+    public void setStopButtonEnable(boolean isEnable) {
         mPlanStopButton.setEnabled(isEnable);
     }
 
@@ -79,7 +79,7 @@ public class ControlBarView {
         mPlanGoButton.setVisibility(View.VISIBLE);
     }
 
-    public void setGoButtonEnable(boolean isEnable){
+    public void setGoButtonEnable(boolean isEnable) {
         mPlanGoButton.setEnabled(isEnable);
     }
 
@@ -98,7 +98,7 @@ public class ControlBarView {
         mPlanPlayButton.setVisibility(View.GONE);
     }
 
-    public void setPauseButtonEnable(boolean isEnable){
+    public void setPauseButtonEnable(boolean isEnable) {
         mPlanPauseButton.setEnabled(isEnable);
     }
 

@@ -20,7 +20,6 @@ public class MainActivity extends MiniDronesActivity {
     public static final int READ_DRONE_PARAMETERS_RETRY = 2;
     public static final int READ_DRONE_PARAMETERS_DONE = 3;
     public static final int READ_DRONE_PARAMETERS_FAIL = 4;
-//    private final static DroneDevice DISCONNECTED_FAKE_DEVICE = new DroneDevice(DroneDevice.DRONE_TYPE_FAKE, null, 0);
 
     private DroneDevice.OnDeviceChangedListener mDeviceChangedListener;
 

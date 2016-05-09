@@ -208,30 +208,8 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                     if (mMapViewFragment.getDroneController() == null) {
                         return;
                     }
-                    mMapViewFragment.getDroneController().writeMissions(droneMissionList, new MissionLoaderListener() {
-                        @Override
-                        public void onLoadCompleted(final List<Mission> missions) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (missions == null || missions.size() == 0) {
-                                        showToastMessage("There is no mission existed");
-                                    } else {
-                                        DroneController droneController = mMapViewFragment.getDroneController();
-                                        if (droneController != null) {
-//                                            droneController.startMission();
-                                        }
-                                        mLoadMissionProgressDialog.dismiss();
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
-
-                        }
-                    });
+                    mDroneController.registerMissionLoaderListener(missionLoaderListener);
+                    mMapViewFragment.getDroneController().writeMissions(droneMissionList);
                     showLoadProgressDialog("Loading", "Please wait...");
                     break;
                 case R.id.route_edit_button:
@@ -316,30 +294,8 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                 if (mMapViewFragment.getDroneController() == null) {
                     return;
                 }
-                mMapViewFragment.getDroneController().writeMissions(droneMissionList, new MissionLoaderListener() {
-                    @Override
-                    public void onLoadCompleted(final List<Mission> missions) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (missions == null || missions.size() == 0) {
-                                    showToastMessage("There is no mission existed");
-                                } else {
-                                    DroneController droneController = mMapViewFragment.getDroneController();
-                                    if (droneController != null) {
-//                                        droneController.startMission();
-                                    }
-                                    mLoadMissionProgressDialog.dismiss();
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
-
-                    }
-                });
+                mDroneController.registerMissionLoaderListener(missionLoaderListener);
+                mMapViewFragment.getDroneController().writeMissions(droneMissionList);
                 showLoadProgressDialog("Loading", "Please wait...");
                 break;
         }
@@ -655,5 +611,32 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
         mPictureValue.setText("" + mAerialSurveyRouter.getCameraShutterCount());
         mStripsValue.setText("" + mAerialSurveyRouter.getNumberOfLines());
     }
+
+    private MissionLoaderListener missionLoaderListener = new MissionLoaderListener() {
+        @Override
+        public void onLoadCompleted(final List<Mission> missions) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (missions == null || missions.size() == 0) {
+                        showToastMessage("There is no mission existed");
+                    } else {
+                        DroneController droneController = mMapViewFragment.getDroneController();
+                        if (droneController != null) {
+//                            droneController.startMission();
+                        }
+                        mLoadMissionProgressDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
+            if(isComplete) {
+                mDroneController.unregisterMissionLoaderListener(missionLoaderListener);
+            }
+        }
+    };
 
 }

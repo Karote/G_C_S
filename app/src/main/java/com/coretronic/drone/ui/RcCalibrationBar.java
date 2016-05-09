@@ -16,7 +16,6 @@ import com.coretronic.drone.R;
  * Created by karot.chuang on 2016/2/17.
  */
 public class RcCalibrationBar extends PercentRelativeLayout {
-    private String mLabel;
     private SeekBar mCaliSeekBar;
     private ToggleButton mReverseButton;
     private TextView mPWMValueTextView;
@@ -49,8 +48,8 @@ public class RcCalibrationBar extends PercentRelativeLayout {
         if (attrs != null) {
             final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RcCalibrationBar, defStyle, 0);
 
-            mLabel = a.getString(R.styleable.RcCalibrationBar_label);
-            ((TextView) this.findViewById(R.id.rc_cali_label)).setText(mLabel);
+            String label = a.getString(R.styleable.RcCalibrationBar_label);
+            ((TextView) this.findViewById(R.id.rc_cali_label)).setText(label);
 
             a.recycle();
         }

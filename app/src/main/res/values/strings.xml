@@ -3,6 +3,7 @@
     <string name="app_name">Drone</string>
     <string-array name="mission_plan_menu">
         <item>MISSION PLAN</item>
+        <item>FOLLOW ME</item>
         <item>FLIGHT HISTORY</item>
     </string-array>
     <string name="delete_all">DELETE ALL</string>
@@ -59,6 +60,7 @@
     <!-- follow me-->
     <string name="follow_me_start">START FOLLOW</string>
     <string name="follow_me_stop">STOP FOLLOW</string>
+    <string name="radius">Radius</string>
 
     <!-- History-->
     <string name="flight_duration">TIME</string>

@@ -49,8 +49,6 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     private final static String ARGUMENT_RC_GEAR_MIN = "RC_GEAR_MIN";
     private final static String ARGUMENT_RC_GEAR_MAX = "RC_GEAR_MAX";
     private final static String ARGUMENT_RC_GEAR_REV = "RC_GEAR_REV";
-//    private final static String ARGUMENT_RC_CAMERA_TRIGGER_MIN = "RC_CAMERA_TRIGGER_MIN";
-//    private final static String ARGUMENT_RC_CAMERA_TRIGGER_MAX = "RC_CAMERA_TRIGGER_MAX";
     private final static String ARGUMENT_RC_CAMERA_TRIGGER_REV = "RC_CAMERA_TRIGGER_REV";
     private final static String ARGUMENT_RC_FLIGHT_MODE_ONE = "RC_FLIGHT_MODE_ONE";
     private final static String ARGUMENT_RC_FLIGHT_MODE_TWO = "RC_FLIGHT_MODE_TWO";
@@ -145,8 +143,6 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         args.putFloat(ARGUMENT_RC_GEAR_MIN, droneParameter.getRCGearMin());
         args.putFloat(ARGUMENT_RC_GEAR_MAX, droneParameter.getRCGearMax());
         args.putInt(ARGUMENT_RC_GEAR_REV, droneParameter.getRCGearRev());
-//        args.putFloat(ARGUMENT_RC_CAMERA_TRIGGER_MIN, droneParameter.getRCCameraTriggerMin());
-//        args.putFloat(ARGUMENT_RC_CAMERA_TRIGGER_MAX, droneParameter.getRCCameraTriggerMax());
         args.putInt(ARGUMENT_RC_CAMERA_TRIGGER_REV, droneParameter.getRCCameraTriggerRev());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_ONE, droneParameter.getFlightModeOne());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_TWO, droneParameter.getFlightModeTwo());
@@ -567,9 +563,6 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
 
             mGearReverse = arguments.getInt(ARGUMENT_RC_GEAR_REV) < 0;
             mGearReverseButton.setChecked(mGearReverse);
-
-//            arguments.getFloat(ARGUMENT_RC_CAMERA_TRIGGER_MIN);
-//            arguments.getFloat(ARGUMENT_RC_CAMERA_TRIGGER_MAX);
 
             mCameraTriggerReverse = arguments.getInt(ARGUMENT_RC_CAMERA_TRIGGER_REV) < 0;
             mCameraTriggerReverseButton.setChecked(mCameraTriggerReverse);

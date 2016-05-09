@@ -15,9 +15,6 @@ import com.coretronic.drone.util.Utils;
  * Created by Poming on 2015/10/26.
  */
 public class MavInfoView implements StatusChangedListener {
-
-    private final static int LOCATION_NORMALIZE = 10000000;
-
     private ProgressWithTextWrap mDroneAltitudeTextWrap;
     private ProgressWithTextWrap mDroneGroundSpeedTextWrap;
     private ProgressWithTextWrap mDroneClimbSpeedTextWrap;
@@ -127,7 +124,9 @@ public class MavInfoView implements StatusChangedListener {
                 onAltitudeUpdate(droneStatus.getAltitude());
                 break;
             case ON_LOCATION_UPDATE:
-                onLocationUpdate(droneStatus.getLatitude(), droneStatus.getLongitude());
+                if (droneStatus.getSatellites() >= 6 && droneStatus.getGPSLockType() > 2) {
+                    onLocationUpdate(droneStatus.getLatitude(), droneStatus.getLongitude());
+                }
                 break;
             case ON_ATTITUDE_UPDATE:
                 onAttitudeUpdate(droneStatus.getYaw(), droneStatus.getRoll(), droneStatus.getPitch());

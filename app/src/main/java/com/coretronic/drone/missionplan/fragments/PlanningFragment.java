@@ -354,12 +354,14 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         @Override
         public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
             if (isComplete && seq == total - 1) {
+                mDroneController.unregisterMissionLoaderListener(missionLoaderListener);
                 if (mDroneController != null) {
                     List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                     mDroneController.startMission(droneMissionList.get(0).getLatitude(), droneMissionList.get(0).getLongitude(), droneMissionList.get(0).getAltitude());
                 }
                 mLoadMissionProgressDialog.dismiss();
             } else if (isComplete && seq != total - 1) {
+                mDroneController.unregisterMissionLoaderListener(missionLoaderListener);
                 if (mLoadMissionProgressDialog != null) {
                     mLoadMissionProgressDialog.dismiss();
                     getActivity().runOnUiThread(new Runnable() {
@@ -432,7 +434,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 if (droneMissionList.get(droneMissionList.size() - 1).getType() != Type.RTL) {
                     showAutoRTLPopDialog();
                 } else {
-                    mDroneController.writeMissions(droneMissionList, missionLoaderListener);
+                    mDroneController.registerMissionLoaderListener(missionLoaderListener);
+                    mDroneController.writeMissions(droneMissionList);
                     showLoadProgressDialog("Writing Mission", "Please wait...");
                 }
                 break;
@@ -483,7 +486,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
             @Override
             public void onDismiss(DialogInterface dialog) {
                 List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
-                mDroneController.writeMissions(droneMissionList, missionLoaderListener);
+                mDroneController.registerMissionLoaderListener(missionLoaderListener);
+                mDroneController.writeMissions(droneMissionList);
                 showLoadProgressDialog("Writing Mission", "Please wait...");
             }
         });
@@ -537,7 +541,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     }
 
     private void loadMissionFromDrone() {
-//        if (!mDroneController.readMissions(this)) {
+//        if (!mDroneController.readMissions()) {
 //            return;
 //        }
 //        showLoadProgressDialog("Loading", "Please wait...");
