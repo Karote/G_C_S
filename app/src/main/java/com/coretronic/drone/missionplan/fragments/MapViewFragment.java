@@ -1159,6 +1159,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             Toast.makeText(getActivity(), "Command Fail.", Toast.LENGTH_LONG).show();
             return;
         }
+
         switch (event) {
             case ON_COMMAND_START_MISSION_RESULT:
                 mControlBarView.showStopButton();
@@ -1204,6 +1205,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mControlBarView.showPauseButton();
                 mControlBarView.setPauseButtonEnable(true);
                 setTapGoPath();
+                break;
+            case ON_COMMAND_STOP_FOLLOW_ME:
+                if(mCurrentFragmentType == FRAGMENT_TYPE_FOLLOW_ME){
+                    ((FollowMeFragment)mCurrentFragment).onStopFollowMe();
+                }
                 break;
         }
     }

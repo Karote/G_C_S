@@ -20,7 +20,7 @@ import com.coretronic.drone.util.ConstantValue;
 /**
  * Created by karot.chuang on 2015/7/21.
  */
-public class FollowMeFragment extends MapChildFragment implements DroneController.FollowMeStateListener, Drone.CommandResultListener {
+public class FollowMeFragment extends MapChildFragment implements DroneController.FollowMeStateListener {
     private final static int FOLLOW_ME_RADIUS_MIN = 3;
     private final static int FOLLOW_ME_RADIUS_MAX = 10;
     private final static int FOLLOW_ME_RADIUS_DEFAULT = 5;
@@ -33,6 +33,8 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
     private float mDroneLon;
     private FollowMeUpdater mFollowMeUpdater;
     private View mStopFollowMeButton;
+    private int mTargetAltitude = ConstantValue.ALTITUDE_DEFAULT_VALUE;
+    private int mTargetRadius = FOLLOW_ME_RADIUS_DEFAULT;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
 
             @Override
             public void onScrollingFinished(AbstractWheel wheel) {
-                mFollowMeUpdater.setTargetAltitude(mAltitudeWheel.getCurrentItem() + ConstantValue.ALTITUDE_MIN_VALUE);
+                mTargetAltitude = wheel.getCurrentItem() + ConstantValue.ALTITUDE_MIN_VALUE;
             }
         });
 
@@ -85,13 +87,15 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
 
             @Override
             public void onScrollingFinished(AbstractWheel wheel) {
-                mFollowMeUpdater.setTargetRadius(mRadiusWheel.getCurrentItem() + FOLLOW_ME_RADIUS_MIN);
+                mTargetRadius = wheel.getCurrentItem() + FOLLOW_ME_RADIUS_MIN;
             }
         });
 
         view.findViewById(R.id.tx_start_follow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFollowMeUpdater.setTargetAltitude(mTargetAltitude);
+                mFollowMeUpdater.setTargetRadius(mTargetRadius);
                 mFollowMeUpdater.startFollowMe();
             }
         });
@@ -137,17 +141,8 @@ public class FollowMeFragment extends MapChildFragment implements DroneControlle
         mDroneLon = droneLon;
     }
 
-    @Override
-    public void onCommandResult(Callback.Event event, int commandResult) {
-        if (commandResult != Drone.COMMAND_RESULT_SUCCESS) {
-            return;
-        }
-
-        switch (event) {
-            case ON_COMMAND_STOP_FOLLOW_ME:
-                mStopFollowMeButton.setVisibility(View.GONE);
-                mFollowMeDialog.setVisibility(View.VISIBLE);
-                break;
-        }
+    public void onStopFollowMe(){
+        mStopFollowMeButton.setVisibility(View.GONE);
+        mFollowMeDialog.setVisibility(View.VISIBLE);
     }
 }
