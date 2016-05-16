@@ -14,19 +14,20 @@
         android:text="@string/btn_go"
         android:textColor="@drawable/control_bar_go_button_text_color"
         android:textSize="@dimen/control_button_group_landing_button_text_size"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/plan_stop_button"
         android:layout_width="@dimen/drone_control_button_group_landing_button_width"
         android:layout_height="60dp"
         android:background="@drawable/btn_plan_white"
+        android:enabled="false"
         android:fontFamily="@string/font_roboto_regular"
         android:text="@string/drone_stop_button_text"
         android:textColor="@drawable/control_bar_stop_button_text_color"
         android:textSize="@dimen/control_button_group_landing_button_text_size"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -82,6 +83,7 @@
             android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+            android:enabled="false"
             android:src="@drawable/ico_plan_pause" />
 
         <View

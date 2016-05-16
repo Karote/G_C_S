@@ -88,10 +88,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private static final String NOTIFICATION_TEXT_DRONE_DISCONNECTED = "Drone disconnected due to signal lost";
 
     public static final int FRAGMENT_TYPE_PLANNING = 0;
-    public static final int FRAGMENT_TYPE_HISTORY = 1;
-    private static final int FRAGMENT_TYPE_ACTIVATE = 2;
-    private static final int FRAGMENT_TYPE_TAP_AND_GO = 3;
-    private static final int FRAGMENT_TYPE_AERIAL_SURVEY = 4;
+    private static final int FRAGMENT_TYPE_FOLLOW_ME = 1;
+    public static final int FRAGMENT_TYPE_HISTORY = 2;
+    private static final int FRAGMENT_TYPE_ACTIVATE = 3;
+    private static final int FRAGMENT_TYPE_TAP_AND_GO = 4;
+    private static final int FRAGMENT_TYPE_AERIAL_SURVEY = 5;
 
     public static final int GOOGLE_LOCATION_REQUEST_CODE = 1000;
     private static final long LOCATION_UPDATE_MIN_TIME = 1000;
@@ -624,6 +625,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                     case FRAGMENT_TYPE_HISTORY:
                         setFragmentTransaction(FRAGMENT_TYPE_HISTORY);
                         break;
+                    case FRAGMENT_TYPE_FOLLOW_ME:
+                        setFragmentTransaction(FRAGMENT_TYPE_FOLLOW_ME);
+                        break;
                     default:
                         break;
                 }
@@ -676,8 +680,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             return;
         }
         hideFPVFragment();
-        if (mCurrentFragmentType == FRAGMENT_TYPE_TAP_AND_GO && mDroneController != null) {
-            mDroneController.stopTapAndGo();
+        if (((mCurrentFragmentType == FRAGMENT_TYPE_TAP_AND_GO) || (mCurrentFragmentType == FRAGMENT_TYPE_FOLLOW_ME)) && mDroneController != null) {
+            mDroneController.stopGuided();
         }
         mCurrentFragmentType = fragmentType;
         switch (fragmentType) {
@@ -693,13 +697,21 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
                 if (mDroneController != null) {
-                    mDroneController.startTapAndGo();
+                    mDroneController.startGuided();
                 }
                 break;
             case FRAGMENT_TYPE_AERIAL_SURVEY:
                 mCurrentFragment = AerialSurveyFragment.newInstance();
                 break;
+            case FRAGMENT_TYPE_FOLLOW_ME:
+                mCurrentFragment = new FollowMeFragment();
+                if (mDroneController != null) {
+                    mDroneController.startGuided();
+                }
+                break;
         }
+
+        setDroneControlBarStatus(mCurrentFragmentType);
 
         setFPVContainerVisibile(mCurrentFragmentType != FRAGMENT_TYPE_HISTORY);
 
@@ -727,7 +739,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         boolean isTapAndGoMode = fragmentType == FRAGMENT_TYPE_TAP_AND_GO;
         boolean canAddMarker = fragmentType != FRAGMENT_TYPE_HISTORY;
         int undoAndMoreButtonVisibility = fragmentType == FRAGMENT_TYPE_PLANNING ? View.VISIBLE : View.GONE;
-        int modeControlPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
+        int modeControlPanelVisibility = fragmentType == FRAGMENT_TYPE_HISTORY || fragmentType == FRAGMENT_TYPE_FOLLOW_ME ? View.GONE : View.VISIBLE;
         int mavInfoPanelVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int droneControlButtonBarVisibility = fragmentType == FRAGMENT_TYPE_PLANNING | isTapAndGoMode ? View.VISIBLE : View.GONE;
@@ -1162,7 +1174,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mControlBarView.showPauseButton();
                 mControlBarView.setPauseButtonEnable(true);
                 break;
-            case ON_COMMAND_START_TAP_AND_GO:
+            case ON_COMMAND_START_GUIDED:
                 mControlBarView.showStopButton();
                 mControlBarView.setStopButtonEnable(false);
                 mControlBarView.showPauseButton();
@@ -1188,6 +1200,26 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mControlBarView.setPauseButtonEnable(true);
                 setTapGoPath();
                 break;
+            case ON_COMMAND_STOP_FOLLOW_ME:
+                if (mCurrentFragmentType == FRAGMENT_TYPE_FOLLOW_ME) {
+                    ((FollowMeFragment) mCurrentFragment).onStopFollowMe();
+                }
+                break;
         }
+    }
+
+    private void setDroneControlBarStatus(int currentFragmentType) {
+        switch (currentFragmentType) {
+            case FRAGMENT_TYPE_PLANNING:
+                mControlBarView.showGoButton();
+                mControlBarView.setGoButtonEnable(false);
+                break;
+            case FRAGMENT_TYPE_TAP_AND_GO:
+                mControlBarView.showStopButton();
+                mControlBarView.setStopButtonEnable(false);
+                break;
+        }
+        mControlBarView.showPauseButton();
+        mControlBarView.setPauseButtonEnable(false);
     }
 }

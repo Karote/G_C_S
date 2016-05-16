@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/layout_follow_me"
         layout="@layout/fragment_follow_me_dialog"
-        android:layout_width="228dp"
-        android:layout_height="110dp"
+        android:layout_width="258dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="84dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/follow_me_stop_button"
+        android:layout_width="180dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="56dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/follow_me_dialog_stop_follow_me_button_bg"
+        android:fontFamily="@string/font_roboto_regular"
+        android:gravity="center"
+        android:text="@string/stop"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 </RelativeLayout>
