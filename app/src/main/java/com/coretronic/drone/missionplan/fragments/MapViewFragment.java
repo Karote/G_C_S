@@ -384,6 +384,13 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case ON_HEARTBEAT:
                 mStatusView.updateCommunicateLight(droneStatus.getLastHeartbeatTime());
                 break;
+            case ON_DRONE_IS_FLYING_UPDATE:
+                if (droneStatus.isFlying()) {
+                    mControlBarView.showLandingButton();
+                } else {
+                    mControlBarView.showTakeoffButton();
+                }
+                break;
             case ON_PILOT_BOARD_USING:
                 mPilotBoardUsingText.setText("FC-" + droneStatus.getPilotBoardUsing());
                 break;
@@ -1148,18 +1155,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     public void onCommandResult(Event event, int commandResult) {
         Logger.d("commandResult:" + commandResult);
         if (commandResult != Drone.COMMAND_RESULT_SUCCESS) {
+            if (event == Event.ON_COMMAND_MOVE_TO_LOCATION) {
+                clearTapMarker();
+            }
+            Toast.makeText(getActivity(), "Command Fail.", Toast.LENGTH_LONG).show();
             return;
         }
+
         switch (event) {
-            case ON_COMMAND_TAKE_OFF_RESULT:
-                mControlBarView.showLandingButton();
-                break;
-            case ON_COMMAND_LAND_RESULT:
-                mControlBarView.showTakeoffButton();
-                break;
-            case ON_COMMAND_RTL_RESULT:
-                mControlBarView.showTakeoffButton();
-                break;
             case ON_COMMAND_START_MISSION_RESULT:
                 mControlBarView.showStopButton();
                 mControlBarView.setStopButtonEnable(true);
