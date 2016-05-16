@@ -336,6 +336,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mRecordItemBuilder.setAltitude(droneStatus.getAltitude());
                 break;
             case ON_LOCATION_UPDATE:
+                if (!isGPSLock()) {
+                    return;
+                }
                 mDroneLat = droneStatus.getLatitude();
                 mDroneLon = droneStatus.getLongitude();
                 updateOnMapDrone(droneStatus);
@@ -903,7 +906,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 setMapToMyLocation();
                 return;
             case R.id.drone_location_button:
-                setMapToDrone();
+                if (isGPSLock()) {
+                    setMapToDrone();
+                }
                 return;
             case R.id.fit_map_button:
                 fitMapShowAll();
