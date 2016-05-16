@@ -128,13 +128,6 @@ public class FirstPersonVisionFragment extends Fragment {
                 mGimbleYawPWM = Math.abs(mGimbleYawPWM) < GIMBLE_PWM_THRESHOLD ? 0 : mGimbleYawPWM;
                 mGimblePitchPWM = Math.abs(mGimblePitchPWM) < GIMBLE_PWM_THRESHOLD ? 0 : mGimblePitchPWM;
 
-
-                // FOR NAV SHOW DEMO
-                mGimbleYawPWM = mGimbleYawPWM < 0 ? PWM_MIN : (mGimbleYawPWM == 0 ? 0 : PWM_MAX);
-                mGimblePitchPWM = mGimblePitchPWM < 0 ? PWM_MIN : (mGimblePitchPWM == 0 ? 0 : PWM_MAX);
-                // FOR NAV SHOW DEMO
-
-
                 if (mSendPWMRunnable != null) {
                     return;
                 }
@@ -195,11 +188,6 @@ public class FirstPersonVisionFragment extends Fragment {
                     mCurrAngle = mCurrAngle > 90 ? 90 : mCurrAngle;
                     rotateAnimate(mPrevAngle, mCurrAngle, 0);
                     mGimbleRollPWM = pwmTransfer(mCurrAngle / 90);
-
-                    // FOR NAV SHOW DEMO
-                    mGimbleRollPWM = mGimbleRollPWM < 0 ? PWM_MIN : (mGimbleRollPWM == 0 ? 0 : PWM_MAX);
-                    // FOR NAV SHOW DEMO
-
 
                     mPrevAngle = mCurrAngle;
                     if (mSendPWMRunnable != null) {
