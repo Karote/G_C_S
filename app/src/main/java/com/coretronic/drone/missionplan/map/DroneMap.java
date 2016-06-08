@@ -259,6 +259,14 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:updateDroneLocation(" + latitude + "," + longitude + "," + heading + ")");
     }
 
+    public void updateTakeOffPoint(float takeOffLat, float takeOffLon) {
+        mMapWebView.loadUrl("javascript:updateTakeOffPoint(" + takeOffLat + "," + takeOffLon + ")");
+    }
+
+    public void updateDroneHomeLocation(float homeLat, float homeLon) {
+        mMapWebView.loadUrl("javascript:updateHomePoint(" + homeLat + "," + homeLon + ")");
+    }
+
     public void setAddMarkerEnable(boolean isAddMarkerEnable) {
         mCanAddMarker = isAddMarkerEnable;
         mMapWebView.loadUrl("javascript:setMapClickable(" + isAddMarkerEnable + ")");

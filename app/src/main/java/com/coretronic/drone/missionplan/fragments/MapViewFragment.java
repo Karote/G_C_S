@@ -132,6 +132,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private FirstPersonVisionFragment mFPVFragment;
     private float mDroneLat;
     private float mDroneLon;
+    private float mDroneHomeLat = Float.MAX_VALUE;
+    private float mDroneHomeLon = Float.MAX_VALUE;
     private boolean mIsSpinnerTriggerByUser = true;
     private View mFPVContainer;
 
@@ -344,20 +346,29 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 updateOnMapDrone(droneStatus);
                 mRecordItemBuilder.setLatitude(droneStatus.getLatitude());
                 mRecordItemBuilder.setLongitude(droneStatus.getLongitude());
-                if (isMultiMissionPlanMode()) {
+                if (isMultiMissionPlanMode() && !mMissionOnGo) {
                     mCurrentFragment.updateDroneLocation(mDroneLat, mDroneLon);
+                    mDroneMap.updateTakeOffPoint(mDroneLat, mDroneLon);
                 }
                 break;
             case ON_SATELLITE_UPDATE:
                 mGPSCounts = droneStatus.getSatellites();
                 mStatusView.setGpsStatus(mGPSCounts);
                 mRecordItemBuilder.setSatellites(mGPSCounts);
+                if (isGPSLock()) {
+                    updateDroneHomeLocation();
+                }
                 break;
             case ON_GPS_LOCK_TYPE_UPDATE:
                 mGPSLockType = droneStatus.getGPSLockType();
+                if (isGPSLock()) {
+                    updateDroneHomeLocation();
+                }
                 break;
             case ON_ATTITUDE_UPDATE:
-                updateOnMapDrone(droneStatus);
+                if (isGPSLock()) {
+                    updateOnMapDrone(droneStatus);
+                }
                 mRecordItemBuilder.setHeading((int) droneStatus.getHeading());
                 break;
             case ON_GROUND_SPEED_UPDATE:
@@ -393,6 +404,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_PILOT_BOARD_USING:
                 mPilotBoardUsingText.setText("FC-" + droneStatus.getPilotBoardUsing());
+                break;
+            case ON_HOME_LOCATED:
+                mDroneHomeLat = droneStatus.getHomeLatitude();
+                mDroneHomeLon = droneStatus.getHomeLongitude();
+                updateDroneHomeLocation();
                 break;
         }
 
@@ -1144,6 +1160,16 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public boolean isGPSLock() {
         return mGPSCounts >= 6 && mGPSLockType > 2;
+    }
+
+    private void updateDroneHomeLocation() {
+        if (mDroneHomeLat == Float.MAX_VALUE || mDroneHomeLon == Float.MAX_VALUE) {
+            if (mDroneController != SimpleDroneController.FAKE_DRONE) {
+                mDroneController.queryHomeLocation();
+            }
+        } else {
+            mDroneMap.updateDroneHomeLocation(mDroneHomeLat, mDroneHomeLon);
+        }
     }
 
     public void setGoButtonEnable(boolean isEnable) {
