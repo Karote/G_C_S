@@ -1,6 +1,7 @@
 package com.coretronic.drone;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.coretronic.cloudstorage.CloudManager;
 import com.coretronic.drone.util.AppConfig;
 
 public class LoginFragment extends Fragment {
@@ -22,6 +24,8 @@ public class LoginFragment extends Fragment {
     private CheckBox mIsStayLoginCheckBox;
     private SharedPreferences mSharedPreferences;
     private MainActivity mMainActivity;
+
+    private ProgressDialog mLogInProgressDialog;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -57,11 +61,7 @@ public class LoginFragment extends Fragment {
                 String userPassword = mUserPasswordEditText.getText().toString();
 
                 if (checkInputDataValid(userEmail, userPassword)) {
-                    mSharedPreferences.edit().putString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, userEmail)
-                            .putString(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, userPassword)
-                            .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mIsStayLoginCheckBox.isChecked())
-                            .apply();
-                    mMainActivity.switchToMainFragment();
+                    tryLogIn(userEmail, userPassword);
                 }
             }
         });
@@ -100,6 +100,37 @@ public class LoginFragment extends Fragment {
 
         return true;
     }
+
+    private void tryLogIn(String userName, String userPassword) {
+        if (mLogInProgressDialog == null) {
+            mLogInProgressDialog = new ProgressDialog(getActivity());
+            mLogInProgressDialog.setCancelable(false);
+        } else {
+            mLogInProgressDialog.dismiss();
+        }
+        mLogInProgressDialog.setTitle("Login");
+        mLogInProgressDialog.setMessage("Use " + userName + "login...");
+        mLogInProgressDialog.show();
+
+        mMainActivity.auth(userName.replace("@", "_").replace(".", "_").toLowerCase(), userPassword, onAuthCallback);
+    }
+
+    CloudManager.OnAuthCallback onAuthCallback = new CloudManager.OnAuthCallback() {
+        @Override
+        public void onAuthCompletion(CloudManager.AuthResult result) {
+            if (result == CloudManager.AuthResult.SUCCESS) {
+                mLogInProgressDialog.dismiss();
+                mSharedPreferences.edit().putString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, mUserMailEditText.getText().toString())
+                        .putString(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mUserPasswordEditText.getText().toString())
+                        .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mIsStayLoginCheckBox.isChecked())
+                        .apply();
+                mMainActivity.switchToMainFragment();
+            } else {
+                mLogInProgressDialog.dismiss();
+                showWarningToast("Drone Cloud login error.");
+            }
+        }
+    };
 
     private void showWarningToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
