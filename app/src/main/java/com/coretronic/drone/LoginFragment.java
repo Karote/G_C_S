@@ -65,6 +65,17 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+
+        view.findViewById(R.id.btn_skip).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSharedPreferences.edit().putString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "GUEST")
+                        .putString(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, "GUEST")
+                        .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mIsStayLoginCheckBox.isChecked())
+                        .apply();
+                mMainActivity.switchToMainFragment();
+            }
+        });
     }
 
     private boolean checkInputDataValid(String mail, String password) {
