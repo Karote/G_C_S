@@ -36,6 +36,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
     private LimitedStack<List<Mission>> mUndoLists;
     private Context mContext;
     private SparseBooleanArray mSelectedItems;
+    private boolean mItemClickable = true;
 
     public MissionListUndoableAdapter() {
         this.mMissionList = new ArrayList<>();
@@ -53,13 +54,18 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         }
         mUndoLists.push(new ArrayList<>(mMissionList));
         mMissionList.remove(mFocusIndex);
+        if (mMissionList.size() == 1) { // Only left the first point
+            mMissionList.clear();
+        }
         mItemClickListener.onAdapterListIsEmptyOrNot(mMissionList.isEmpty());
         mFocusIndex = -1;
         notifyDataSetChanged();
     }
 
     public void updateMissionItemLocation(int index, float lat, float lon) {
-        mUndoLists.push(cloneMissions());
+        if (index != 0) {   // Takeoff point (index == 0) updating do not stack undo list.
+            mUndoLists.push(cloneMissions());
+        }
         Mission mission = getMission(index).clone();
         mission.setLatitude(lat);
         mission.setLongitude(lon);
@@ -115,7 +121,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         notifyDataSetChanged();
     }
 
-    public void updateLastItemToRTL(){
+    public void updateLastItemToRTL() {
         int lastIndex = mMissionList.size() - 1;
         mUndoLists.push(cloneMissions());
         Mission mission = getMission(lastIndex).clone();
@@ -189,9 +195,9 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         }
 
         if (mIsSelectLayoutVisible) {
-            if(position == 0){
+            if (position == 0) {
                 hideHomePoint(viewHolder);
-            }else {
+            } else {
                 showHomePoint(viewHolder);
 
                 viewHolder.serialNumberTextView.setVisibility(View.VISIBLE);
@@ -199,10 +205,10 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             }
             showSelectLayout(viewHolder, position);
         } else {
-            if(position == 0){
+            if (position == 0) {
                 viewHolder.serialNumberTextView.setVisibility(View.GONE);
                 viewHolder.takeOffView.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 viewHolder.serialNumberTextView.setVisibility(View.VISIBLE);
                 viewHolder.takeOffView.setVisibility(View.GONE);
             }
@@ -214,6 +220,10 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         viewHolder.rowItemLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!mItemClickable) {
+                    return;
+                }
+
                 if (mIsSelectLayoutVisible) {
                     viewHolder.selectCheck.performClick();
                 } else {
@@ -458,8 +468,8 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
         mMissionList = mUndoLists.pop();
     }
 
-    public void finishMissionListEditMode(){
-        if(mMissionList.size() == 1){
+    public void finishMissionListEditMode() {
+        if (mMissionList.size() == 1) {
             mMissionList.clear();
             mItemClickListener.onAdapterListIsEmptyOrNot(true);
             notifyDataSetChanged();
@@ -483,6 +493,11 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
             mItemClickListener.onUndoListIsEmptyOrNot(mUndoLists.isEmpty());
             return object;
         }
+    }
+
+
+    public void setItemClickable(boolean clickable) {
+        mItemClickable = clickable;
     }
 
 }

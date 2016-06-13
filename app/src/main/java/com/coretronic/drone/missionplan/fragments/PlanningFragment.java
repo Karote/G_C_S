@@ -29,6 +29,7 @@ import android.widget.ToggleButton;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneController.MissionLoaderListener;
 import com.coretronic.drone.R;
+import com.coretronic.drone.controller.SimpleDroneController;
 import com.coretronic.drone.missionplan.adapter.LoadPlanningListAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter;
 import com.coretronic.drone.missionplan.adapter.MissionListUndoableAdapter.OnListStateChangedListener;
@@ -64,6 +65,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     private View mWaypointListEditHeaderPanel;
     private View mWaypointListHeaderPanel;
     private TextView mWaypointListHeaderCountText;
+    private TextView mWaypointListEditButton;
     private ToggleButton mWaypointListHeaderSelectAllToggleButton;
     private View mWaypointListHeaderDeleteButton;
     private View mWaypointListHeaderSettingButton;
@@ -153,7 +155,8 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 }
             }
         });
-        mWaypointListTopView.findViewById(R.id.waypoint_list_header_edit_text).setOnClickListener(missionListEditFunctionListener);
+        mWaypointListEditButton = (TextView) mWaypointListTopView.findViewById(R.id.waypoint_list_header_edit_text);
+        mWaypointListEditButton.setOnClickListener(missionListEditFunctionListener);
         mWaypointListHeaderDeleteButton = mWaypointListTopView.findViewById(R.id.waypoint_list_header_delete_button);
         mWaypointListHeaderDeleteButton.setEnabled(false);
         mWaypointListHeaderDeleteButton.setOnClickListener(missionListEditFunctionListener);
@@ -200,7 +203,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 mSaveAndClearMissionFlag = !isEmpty;
                 mTopViewVisibility = isEmpty ? View.GONE : View.VISIBLE;
                 mWaypointListTopView.setVisibility(mTopViewVisibility);
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mMapViewFragment.setGoButtonEnable(!isEmpty);
                 }
             }
@@ -342,9 +345,9 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                     if (missions == null || missions.size() == 0) {
                         showToastMessage("There is no mission existed");
                     } else {
-//                        if (mDroneController != null) {
-//                            mDroneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
-//                        }
+                        if (mDroneController != SimpleDroneController.FAKE_DRONE) {
+                            mDroneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
+                        }
                         mLoadMissionProgressDialog.dismiss();
                     }
                 }
@@ -355,7 +358,7 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         public void onWriteMissionStatusUpdate(int seq, int total, boolean isComplete) {
             if (isComplete && seq == total - 1) {
                 mDroneController.unregisterMissionLoaderListener(missionLoaderListener);
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     List<Mission> droneMissionList = mMissionItemAdapter.getMissions();
                     mDroneController.startMission(droneMissionList.get(0).getLatitude(), droneMissionList.get(0).getLongitude(), droneMissionList.get(0).getAltitude());
                 }
@@ -440,17 +443,17 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
                 }
                 break;
             case R.id.plan_stop_button:
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.stopMission();
                 }
                 break;
             case R.id.plan_pause_button:
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.pauseMission();
                 }
                 break;
             case R.id.plan_play_button:
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.resumeMission();
                 }
                 break;
@@ -690,6 +693,17 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
     public void updateDroneLocation(float droneLat, float droneLon) {
         mDroneLat = droneLat;
         mDroneLon = droneLon;
+        if (mMissionItemAdapter.getItemCount() != 0) {
+            mMissionItemAdapter.updateMissionItemLocation(0, droneLat, droneLon);
+        }
     }
 
+    public void setMissionListEditable(boolean editable) {
+        mWaypointListEditButton.setEnabled(editable);
+        mMissionItemAdapter.setItemClickable(editable);
+        if (mWayPointDetailPanel.getVisibility() == View.VISIBLE) {
+            mMissionItemAdapter.onNothingSelected();
+            mWayPointDetailPanel.setVisibility(View.GONE);
+        }
+    }
 }
