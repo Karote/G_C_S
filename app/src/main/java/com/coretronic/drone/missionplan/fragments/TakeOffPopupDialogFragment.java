@@ -30,7 +30,7 @@ public class TakeOffPopupDialogFragment extends Fragment {
     private PopupDialogCallback mPopupDialogCallback;
     private Dialog mNumberPadPopupDialog;
 
-    private int mTakeOffAltitude;
+    private int mTakeOffAltitude = ConstantValue.ALTITUDE_DEFAULT_VALUE;
 
     public interface PopupDialogCallback {
         void onCancelButtonClick();
@@ -54,11 +54,11 @@ public class TakeOffPopupDialogFragment extends Fragment {
         mTakeOffAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.takeoff_altitude_wheel);
         mTakeOffAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.ALTITUDE_MIN_VALUE, ConstantValue.ALTITUDE_MAX_VALUE, "%01d"));
         mTakeOffAltitudeWheel.setCyclic(false);
-        mTakeOffAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE);
+        mTakeOffAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE - ConstantValue.ALTITUDE_MIN_VALUE);
         mTakeOffAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mTakeOffAltitude = newValue;
+                mTakeOffAltitude = newValue - ConstantValue.ALTITUDE_MIN_VALUE;
             }
         });
 

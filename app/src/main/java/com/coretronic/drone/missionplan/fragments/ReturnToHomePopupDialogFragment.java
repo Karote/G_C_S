@@ -21,9 +21,9 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
     private AbstractWheel mRTLStayWheel;
     private AbstractWheel mRTLSpeedWheel;
 
-    private int mRTLAltitude;
-    private int mRTLStay;
-    private int mRTLSpeed;
+    private int mRTLAltitude = ConstantValue.ALTITUDE_DEFAULT_VALUE;
+    private int mRTLStay = ConstantValue.STAY_DEFAULT_VALUE;
+    private int mRTLSpeed = ConstantValue.SPEED_DEFAULT_VALUE;
 
     private PopupDialogCallback mPopupDialogCallback;
 
@@ -49,33 +49,33 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
         mRTLAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.rtl_altitude_wheel);
         mRTLAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.ALTITUDE_MIN_VALUE, ConstantValue.ALTITUDE_MAX_VALUE, "%01d"));
         mRTLAltitudeWheel.setCyclic(false);
-        mRTLAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE);
+        mRTLAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE - ConstantValue.ALTITUDE_MIN_VALUE);
         mRTLAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mRTLAltitude = newValue;
+                mRTLAltitude = newValue - ConstantValue.ALTITUDE_MIN_VALUE;
             }
         });
 
         mRTLStayWheel = (AbstractWheel) fragmentView.findViewById(R.id.rtl_stay_wheel);
         mRTLStayWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.STAY_MIN_VALUE, ConstantValue.STAY_MAX_VALUE, "%01d"));
         mRTLStayWheel.setCyclic(false);
-        mRTLStayWheel.setCurrentItem(ConstantValue.STAY_DEFAULT_VALUE);
+        mRTLStayWheel.setCurrentItem(ConstantValue.STAY_DEFAULT_VALUE - ConstantValue.STAY_MIN_VALUE);
         mRTLStayWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mRTLStay = newValue;
+                mRTLStay = newValue - ConstantValue.STAY_MIN_VALUE;
             }
         });
 
         mRTLSpeedWheel = (AbstractWheel) fragmentView.findViewById(R.id.rtl_speed_wheel);
         mRTLSpeedWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.SPEED_MIN_VALUE, ConstantValue.SPEED_MAX_VALUE, "%01d"));
         mRTLSpeedWheel.setCyclic(false);
-        mRTLSpeedWheel.setCurrentItem(ConstantValue.SPEED_DEFAULT_VALUE);
+        mRTLSpeedWheel.setCurrentItem(ConstantValue.SPEED_DEFAULT_VALUE - ConstantValue.SPEED_MIN_VALUE);
         mRTLSpeedWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-                mRTLSpeed = newValue;
+                mRTLSpeed = newValue - ConstantValue.SPEED_MIN_VALUE;
             }
         });
 
