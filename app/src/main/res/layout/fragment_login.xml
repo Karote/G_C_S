@@ -96,32 +96,18 @@
 
 
             <Button
-                android:id="@+id/btn_sign_up"
+                android:id="@+id/btn_skip"
                 android:layout_width="@dimen/btn_sign_up_width"
                 android:layout_height="@dimen/btn_sign_up_height"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/btn_sign_up_top_margin"
                 android:background="@drawable/btn_sign_up_background"
                 android:fontFamily="@string/font_roboto_medium"
-                android:text="Sign Up"
+                android:text="Skip"
                 android:textColor="#C6C6C6"
                 android:textSize="@dimen/btn_sign_up_text_size"
                 android:textStyle="bold" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_login_with_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/btn_login_with_fb_top_margin"
-            android:background="@drawable/btn_login_facebook"
-            android:fontFamily="@string/font_roboto_regular"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/btn_login_with_fb_text_left_padding"
-            android:text="Log in with Facebook"
-            android:textColor="@color/white"
-            android:textSize="@dimen/btn_login_with_fb_text_size"
-            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>

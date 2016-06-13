@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -54,6 +55,7 @@ import com.coretronic.drone.survey.SurveyRouter;
 import com.coretronic.drone.ui.ControlBarView;
 import com.coretronic.drone.ui.MavInfoView;
 import com.coretronic.drone.ui.StatusView;
+import com.coretronic.drone.util.AppConfig;
 import com.coretronic.drone.uvc.USBCameraMonitor;
 import com.coretronic.ibs.log.Logger;
 import com.coretronic.ttslib.Speaker;
@@ -153,6 +155,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     private DroneController mDroneController;
     private TextView mPilotBoardUsingText;
+    private SharedPreferences mSharedPreferences;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -180,6 +183,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         ((MainActivity) getActivity()).registerDeviceChangedListener(this);
         ((MainActivity) getActivity()).registerDroneStatusChangedListener(this);
         ((MainActivity) getActivity()).registerCommandResultListener(this);
+        mSharedPreferences = ((MainActivity) getActivity()).getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -374,20 +378,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             case ON_GROUND_SPEED_UPDATE:
                 mRecordItemBuilder.setGroundSpeed(droneStatus.getGroundSpeed());
                 break;
-            case ON_FLIGHT_DURATION_UPDATE:
-                break;
             case ON_RADIO_SIGNAL_UPDATE:
                 mStatusView.setRFStatus(droneStatus.getRadioSignal());
-                break;
-            case ON_MISSION_STATE_UPDATE:
-                notificationWithTTS(droneStatus.getMissionPlanState());
-                if (MissionStatus.START == droneStatus.getMissionPlanState()) {
-                    mControlBarView.showStopButton();
-                }
-                if (!isMultiMissionPlanMode()) {
-                    return;
-                }
-                triggerMissionRecord(droneStatus.getMissionPlanState());
                 break;
             case ON_MODE_UPDATE:
                 notificationWithTTS(droneStatus.getMode());
@@ -600,6 +592,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             return;
         }
 
+        if (mSharedPreferences.getString(AppConfig.SHARED_PREFERENCE_USER_MAIL_KEY, "").equals("GUEST")) {
+            return;
+        }
+
         mFlightHistory = ((MainActivity) getActivity()).createFlightHistory(mCurrentMissionList);
         mSaveFlag = true;
         mFlightRecordRunnable = new Runnable() {
@@ -617,10 +613,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     public List<Mission> getMissionList() {
         return mCurrentMissionList;
-    }
-
-    private void clearMissionList() {
-        mCurrentMissionList = null;
     }
 
     private void initSpinner(View view) {
@@ -740,8 +732,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         setDroneControlBarStatus(mCurrentFragmentType);
 
         setFPVContainerVisibile(mCurrentFragmentType != FRAGMENT_TYPE_HISTORY);
-
-        clearMissionList();
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mission_plan_container, mCurrentFragment, null).commit();
