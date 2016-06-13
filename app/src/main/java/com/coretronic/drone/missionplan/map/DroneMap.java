@@ -315,4 +315,16 @@ public class DroneMap implements OnMapEventCallback {
         mMapWebView.loadUrl("javascript:updatePolygon(" + transMissionToJson(polygonPoints) + ")");
     }
 
+    public void startUpdateFlightRoute() {
+        mMapWebView.loadUrl("javascript:startUpdateFlightRoute()");
+    }
+
+    public void stopUpdateFlightRoute() {
+        mMapWebView.loadUrl("javascript:stopUpdateFlightRoute()");
+    }
+
+    public void clearFlightRoute() {
+        mMapWebView.loadUrl("javascript:clearFlightRoute()");
+    }
+
 }

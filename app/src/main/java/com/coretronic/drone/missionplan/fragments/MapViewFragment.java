@@ -2,9 +2,11 @@ package com.coretronic.drone.missionplan.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -45,6 +47,7 @@ import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
+import com.coretronic.drone.controller.SimpleDroneController;
 import com.coretronic.drone.missionplan.adapter.NotificationCenterListAdapter;
 import com.coretronic.drone.missionplan.map.DroneMap;
 import com.coretronic.drone.missionplan.model.Notification;
@@ -156,6 +159,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private DroneController mDroneController;
     private TextView mPilotBoardUsingText;
     private SharedPreferences mSharedPreferences;
+    private boolean mMissionOnGo = false;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -193,6 +197,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         ((MainActivity) getActivity()).unregisterDeviceChangedListener(this);
         ((MainActivity) getActivity()).unregisterCommandResultListener(this);
         mStatusView.onDisconnect();
+        mDroneMap.clearFlightRoute();
         mDroneMap.onDestroy();
     }
 
@@ -230,7 +235,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             @Override
             public void onConfirmButtonClick(float altitude, float stay, float speed) {
                 mPopdialogContainer.setVisibility(View.GONE);
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.returnToLaunch(altitude, stay, speed);
                 }
                 mDroneMap.clearTapAndGoPlan();
@@ -247,7 +252,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             @Override
             public void onOKButtonClick(int takeOffAltitude) {
                 mPopdialogContainer.setVisibility(View.GONE);
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.takeOff(mDroneLat, mDroneLon, takeOffAltitude);
                 }
             }
@@ -541,16 +546,18 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 ttsStr = "RTL Mode";
                 break;
             case ALT_HOLD:
-                ttsStr = "Altitude Hold Mode";
-                break;
+//                ttsStr = "Altitude Hold Mode";
+//                break;
+                return;
             case AUTO:
                 ttsStr = "Auto Mode";
                 break;
             case GUIDED:
-                ttsStr = "Guided Mode";
-                break;
+//                ttsStr = "Guided Mode";
+//                break;
+                return;
             case OPTICAL_FLOW:
-                ttsStr = "Optical FLOW";
+                ttsStr = "Optical FLOW Mode";
                 break;
         }
         mTtsSpeaker.speak(ttsStr);
@@ -722,7 +729,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             return;
         }
         hideFPVFragment();
-        if (((mCurrentFragmentType == FRAGMENT_TYPE_TAP_AND_GO) || (mCurrentFragmentType == FRAGMENT_TYPE_FOLLOW_ME)) && mDroneController != null) {
+        if (((mCurrentFragmentType == FRAGMENT_TYPE_TAP_AND_GO) || (mCurrentFragmentType == FRAGMENT_TYPE_FOLLOW_ME)) && mDroneController != SimpleDroneController.FAKE_DRONE) {
             mDroneController.stopGuided();
         }
         mCurrentFragmentType = fragmentType;
@@ -738,7 +745,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_TAP_AND_GO:
                 mCurrentFragment = new TapAndGoFragment();
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.startGuided();
                 }
                 break;
@@ -747,7 +754,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case FRAGMENT_TYPE_FOLLOW_ME:
                 mCurrentFragment = new FollowMeFragment();
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.startGuided();
                 }
                 break;
@@ -784,6 +791,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         int controlButtonBarVisibility = fragmentType != FRAGMENT_TYPE_HISTORY ? View.VISIBLE : View.GONE;
         int droneControlButtonBarVisibility = fragmentType == FRAGMENT_TYPE_PLANNING | isTapAndGoMode ? View.VISIBLE : View.GONE;
         mDroneMap.init(isTapAndGoMode, canAddMarker);
+        if (mSharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_SHOW_FLIGHT_ROUTE, true)) {
+            mDroneMap.startUpdateFlightRoute();
+        } else {
+            mDroneMap.stopUpdateFlightRoute();
+        }
         setEditOptionShow(false);
         setUndoAndMoreButtonVisibility(undoAndMoreButtonVisibility);
         mMissionModeControlPanel.setVisibility(modeControlPanelVisibility);
@@ -907,12 +919,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 setFragmentTransaction(FRAGMENT_TYPE_AERIAL_SURVEY);
                 return;
             case R.id.plan_go_button:
-                if (mDroneController == null) {
+                if (mDroneController == SimpleDroneController.FAKE_DRONE) {
                     return;
                 }
                 break;
             case R.id.plan_stop_button:
-                if (mDroneController == null) {
+                if (mDroneController == SimpleDroneController.FAKE_DRONE) {
                     return;
                 }
                 mDroneMap.clearTapAndGoPlan();
@@ -921,7 +933,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 showTakeOffPopupDialog();
                 return;
             case R.id.drone_landing_button:
-                if (mDroneController != null) {
+                if (mDroneController != SimpleDroneController.FAKE_DRONE) {
                     mDroneController.land(mDroneLat, mDroneLon);
                 }
                 mDroneMap.clearTapAndGoPlan();
@@ -930,12 +942,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 showRTLPopupDialog();
                 return;
             case R.id.plan_pause_button:
-                if (mDroneController == null) {
+                if (mDroneController == SimpleDroneController.FAKE_DRONE) {
                     return;
                 }
                 break;
             case R.id.plan_play_button:
-                if (mDroneController == null) {
+                if (mDroneController == SimpleDroneController.FAKE_DRONE) {
                     return;
                 }
                 break;
@@ -959,6 +971,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 } else {
                     showFPVFragment();
                 }
+                break;
         }
 
         if (mCurrentFragment == null) {
@@ -1208,19 +1221,31 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mControlBarView.setStopButtonEnable(true);
                 mControlBarView.showPauseButton();
                 mControlBarView.setPauseButtonEnable(true);
+                setMissionListEditable(false);
+                mMissionOnGo = true;
+                notificationWithTTS(MissionStatus.START);
+                triggerMissionRecord(MissionStatus.START);
                 break;
             case ON_COMMAND_STOP_MISSION_RESULT:
                 mControlBarView.showGoButton();
                 mControlBarView.setGoButtonEnable(true);
                 mControlBarView.showPauseButton();
                 mControlBarView.setPauseButtonEnable(false);
+                setMissionListEditable(true);
+                mMissionOnGo = false;
+                notificationWithTTS(MissionStatus.FINISHED);
+                triggerMissionRecord(MissionStatus.FINISHED);
                 break;
             case ON_COMMAND_PAUSE_MISSION_RESULT:
                 mControlBarView.showPlayButton();
+                notificationWithTTS(MissionStatus.PAUSE);
+                triggerMissionRecord(MissionStatus.PAUSE);
                 break;
             case ON_COMMAND_RESUME_MISSION_RESULT:
                 mControlBarView.showPauseButton();
                 mControlBarView.setPauseButtonEnable(true);
+                notificationWithTTS(MissionStatus.START);
+                triggerMissionRecord(MissionStatus.START);
                 break;
             case ON_COMMAND_START_GUIDED:
                 mControlBarView.showStopButton();
@@ -1269,5 +1294,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
         mControlBarView.showPauseButton();
         mControlBarView.setPauseButtonEnable(false);
+    }
+
+    private void setMissionListEditable(boolean editable) {
+        ((PlanningFragment) mCurrentFragment).setMissionListEditable(editable);
+        mDroneMap.setAddMarkerEnable(editable);
     }
 }
