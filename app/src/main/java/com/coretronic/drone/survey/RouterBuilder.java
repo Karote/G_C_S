@@ -44,7 +44,7 @@ public class RouterBuilder {
         SurveyRouter reverseSurveyRouter;
         SurveyBuilderException throwException = null;
         try {
-            orderSurveyRouter = createRouter(false);
+            orderSurveyRouter = createRouter(true);
         } catch (GridTooManyLinesException e) {
             throwException = e;
             orderSurveyRouter = null;
