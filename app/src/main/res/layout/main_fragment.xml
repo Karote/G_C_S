@@ -49,16 +49,15 @@
         android:layout_marginRight="@dimen/main_fragment_view_margin_left_right"
         android:layout_marginTop="@dimen/main_fragment_view_margin_top">
 
-        <ToggleButton
+        <Button
             android:id="@+id/drone_connect_button"
             android:layout_width="@dimen/main_fragment_select_device_width"
             android:layout_height="@dimen/main_fragment_select_device_height"
             android:background="@drawable/drone_connect_button_bg"
             android:enabled="false"
             android:fontFamily="@string/font_roboto_condensed"
+            android:text="@string/disconnect"
             android:textColor="@drawable/drone_connect_button_text_color"
-            android:textOff="@string/connect_to_drone"
-            android:textOn="@string/disconnect"
             android:textSize="20sp"
             android:textStyle="bold" />
 

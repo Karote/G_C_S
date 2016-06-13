@@ -18,14 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.coretronic.drone.DroneController.ParameterLoaderListener;
 import com.coretronic.drone.DroneStatus.StatusChangedListener;
@@ -38,18 +33,20 @@ import com.coretronic.drone.settings.PreflightCheckDialogFragment;
 import com.coretronic.drone.settings.SettingsFragment;
 import com.coretronic.drone.ui.StatusView;
 import com.coretronic.drone.util.AppConfig;
+import com.coretronic.ibs.drone.MavlinkLibBridge;
 import com.coretronic.ibs.drone.MavlinkLibBridge.DroneParameter;
 import com.coretronic.ibs.log.Logger;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 public class MainFragment extends UnBindDrawablesFragment implements View.OnClickListener, DroneDevice.OnDeviceChangedListener, StatusChangedListener, ParameterLoaderListener {
 
-    private static final String G2_IP = "192.168.42.1";
-
     private final static int UPDATE_TIME_OUT = 3 * 1000;
     private final static int UPDATE_PERIOD = 1 * 1000;
+
+    public final static int PREFLIGHT_CHECK_REQUEST_CODE = 2;
+    public final static int HEARTBEAT_TIMESTAMP_RESULT_CODE = 1;
+    public final static String HEARTBEAT_TIMESTAMP_BUNDLE_KEY = "heartbeat_timestamp";
 
     private StatusView mStatusView;
     private MainActivity mMainActivity;
@@ -64,8 +61,11 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
 
     private final int TTS_RESULT_CODE = 0x1;
     private Dialog mRetryOrAbortDialog;
-    private ToggleButton mDroneConnectButton;
+    private Button mDroneConnectButton;
     private DroneDevice mDroneDevice;
+
+    private boolean mIsConnect;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,8 +88,10 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
         mStatusView = (StatusView) view.findViewById(R.id.status);
         mStatusView.setStatusAlarmListener(mStatusAlarmListener);
 
-        mDroneConnectButton = (ToggleButton) view.findViewById(R.id.drone_connect_button);
-        mDroneConnectButton.setOnCheckedChangeListener(onDroneConnectCheckedChangeListener);
+        mDroneConnectButton = (Button) view.findViewById(R.id.drone_connect_button);
+        mDroneConnectButton.setOnClickListener(onDroneConnectButtonClickListener);
+        mIsConnect = ((MainActivity) getActivity()).getDroneController() != SimpleDroneController.FAKE_DRONE;
+        mDroneConnectButton.setText(mIsConnect ? getResources().getText(R.string.disconnect) : getResources().getText(R.string.connect_to_drone));
     }
 
     @Override
@@ -139,6 +141,7 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
     @Override
     public void onDeviceRemoved(final DroneDevice droneDevice) {
         mDroneDevice = DroneDevice.FAKE_DRONE_DEVICE;
+        mDroneConnectButton.setText(getResources().getText(R.string.connect_to_drone));
         mDroneConnectButton.setEnabled(false);
     }
 
@@ -146,6 +149,7 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
     public void onConnectingDeviceRemoved(DroneDevice droneDevice) {
         mStatusView.onDisconnect();
         mDroneDevice = DroneDevice.FAKE_DRONE_DEVICE;
+        mDroneConnectButton.setText(getResources().getText(R.string.connect_to_drone));
         mDroneConnectButton.setEnabled(false);
     }
 
@@ -260,7 +264,9 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
                                         if (mReadParameterProgressDialog != null) {
                                             mReadParameterProgressDialog.dismiss();
                                         }
-                                        mDroneConnectButton.setChecked(false);
+                                        mDroneConnectButton.setText(getResources().getText(R.string.connect_to_drone));
+                                        mIsConnect = false;
+                                        performConnection();
                                         showRetryOrAbortDialog();
                                     }
                                 });
@@ -309,7 +315,9 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
         mRetryOrAbortDialog.findViewById(R.id.retry_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDroneConnectButton.setChecked(true);
+                mDroneConnectButton.setText(getResources().getText(R.string.disconnect));
+                mIsConnect = true;
+                performConnection();
                 mRetryOrAbortDialog.dismiss();
             }
         });
@@ -321,7 +329,7 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
         for (Field field : paramField) {
             field.setAccessible(true);
             try {
-                if (field.getType() != boolean.class && ((Number) field.get(droneParameter)).intValue() == Integer.MAX_VALUE) {
+                if (field.getType() != boolean.class && ((Number) field.get(droneParameter)).intValue() == MavlinkLibBridge.PARAM_UNSET) {
                     Logger.d(field.getName());
                     int paramId = getParameterID(field.getName());
                     mMainActivity.getDroneController().readParameter(paramId);
@@ -491,35 +499,47 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
         return paramId;
     }
 
-    private ToggleButton.OnCheckedChangeListener onDroneConnectCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+    private Button.OnClickListener onDroneConnectButtonClickListener = new View.OnClickListener() {
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            final DroneDevice connectDevice;
-            if (isChecked) {
-                connectDevice = mDroneDevice;
-                if (mMainActivity.getDroneController() != SimpleDroneController.FAKE_DRONE) {
-                    return;
-                }
+        public void onClick(View v) {
+            mIsConnect = !mIsConnect;
+            if (mIsConnect) {
+                mDroneConnectButton.setText(getResources().getText(R.string.disconnect));
             } else {
-                connectDevice = DroneDevice.FAKE_DRONE_DEVICE;
+                mDroneConnectButton.setText(getResources().getText(R.string.connect_to_drone));
             }
 
-            mStatusView.onDisconnect();
-            mMainActivity.setReadDroneParametersStatus(MainActivity.READ_DRONE_PARAMETERS_NONE);
-            mMainActivity.selectDevice(connectDevice, new MiniDronesActivity.OnDroneConnectedListener() {
-                @Override
-                public void onConnected() {
-                    Toast.makeText(getActivity(), "Init controller" + connectDevice.getName(), Toast.LENGTH_LONG).show();
-                    mMainActivity.initialSetting(connectDevice);
-                }
-
-                @Override
-                public void onConnectFail() {
-                    Toast.makeText(getActivity(), "Init controller error", Toast.LENGTH_LONG).show();
-                }
-            });
+            performConnection();
         }
     };
+
+    private void performConnection() {
+        final DroneDevice connectDevice;
+
+        if (mIsConnect) {
+            connectDevice = mDroneDevice;
+            if (mMainActivity.getDroneController() != SimpleDroneController.FAKE_DRONE) {
+                return;
+            }
+        } else {
+            connectDevice = DroneDevice.FAKE_DRONE_DEVICE;
+        }
+
+        mStatusView.onDisconnect();
+        mMainActivity.setReadDroneParametersStatus(MainActivity.READ_DRONE_PARAMETERS_NONE);
+        mMainActivity.selectDevice(connectDevice, new MiniDronesActivity.OnDroneConnectedListener() {
+            @Override
+            public void onConnected() {
+                Toast.makeText(getActivity(), "Init controller" + connectDevice.getName(), Toast.LENGTH_LONG).show();
+                mMainActivity.initialSetting(connectDevice);
+            }
+
+            @Override
+            public void onConnectFail() {
+                Toast.makeText(getActivity(), "Init controller error", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void clearUserInfo() {
 
@@ -565,6 +585,7 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
                 break;
             case R.id.btn_preflight:
                 PreflightCheckDialogFragment preflightCheckDialog = new PreflightCheckDialogFragment();
+                preflightCheckDialog.setTargetFragment(MainFragment.this, PREFLIGHT_CHECK_REQUEST_CODE);
                 preflightCheckDialog.registerDialogFragmentDismissListener(new PreflightCheckDialogFragment.onDialgoFragmentDismissListener() {
                     @Override
                     public void onDialogFragmentDismiss() {
@@ -597,89 +618,10 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
             installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
             startActivity(installIntent);
         }
-    }
 
-    public class DeviceAdapter extends ArrayAdapter<DroneDevice> {
-
-        private List<DroneDevice> droneDevices;
-
-        public DeviceAdapter(Activity context, int resource, List<DroneDevice> droneDevices) {
-            super(context, resource, droneDevices);
-            this.droneDevices = droneDevices;
+        if (requestCode == PREFLIGHT_CHECK_REQUEST_CODE && resultCode == HEARTBEAT_TIMESTAMP_RESULT_CODE) {
+            mStatusView.updateCommunicateLight(data.getLongExtra(HEARTBEAT_TIMESTAMP_BUNDLE_KEY, 0));
         }
-
-        public boolean contains(DroneDevice droneDevice) {
-            return droneDevices.contains(droneDevice);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.main_fragment_select_device_spinner, parent, false);
-                holder = new ViewHolder();
-                holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            holder.textView.setText(getItem(position).getName());
-            return convertView;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mMainActivity).inflate(R.layout.main_fragment_select_device_spinner_item, parent, false);
-                holder = new ViewHolder();
-                holder.textView = (TextView) convertView.findViewById(R.id.spinner_item_tv);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            holder.textView.setText(getItem(position).getName());
-            return convertView;
-        }
-
-        private class ViewHolder {
-            public TextView textView;
-        }
-    }
-
-    private void showAddNewDroneDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        alertDialog.setTitle("Add Device");
-        alertDialog.setMessage("Enter Device ip");
-
-        final EditText input = new EditText(getActivity());
-        input.setText(G2_IP);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertDialog.setView(input);
-
-        alertDialog.setPositiveButton("Add",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String deviceIp = input.getText().toString();
-                        if (deviceIp.trim().length() <= 0) {
-                            return;
-                        }
-                        mMainActivity.addDevice(deviceIp);
-                    }
-
-                });
-
-        alertDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        alertDialog.show();
     }
 
     private StatusView.StatusAlarmListener mStatusAlarmListener = new StatusView.StatusAlarmListener() {

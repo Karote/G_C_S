@@ -2,6 +2,7 @@ package com.coretronic.drone.settings;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.coretronic.drone.DroneController;
 import com.coretronic.drone.DroneStatus;
 import com.coretronic.drone.MainActivity;
+import com.coretronic.drone.MainFragment;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback;
 
@@ -253,6 +255,11 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
                 mSonarStatusText.setText(textSetString);
                 mSonarStatusText.setTextColor(getResources().getColor(textColorId));
                 mSonarStatusImage.setImageResource(imageResourceId);
+                break;
+            case ON_HEARTBEAT:
+                Intent intent = new Intent();
+                intent.putExtra(MainFragment.HEARTBEAT_TIMESTAMP_BUNDLE_KEY, droneStatus.getLastHeartbeatTime());
+                getTargetFragment().onActivityResult(getTargetRequestCode(), MainFragment.HEARTBEAT_TIMESTAMP_RESULT_CODE, intent);
                 break;
         }
     }
