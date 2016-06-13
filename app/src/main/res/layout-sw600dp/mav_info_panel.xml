@@ -48,7 +48,7 @@
         android:clickable="true" />
 
     <TextView
-        android:id="@+id/flight_duration"
+        android:id="@+id/from_home_title"
         style="@style/mav_info_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,28 +56,6 @@
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:text="@string/flight_duration" />
-
-    <TextView
-        android:id="@+id/flight_time_text"
-        style="@style/mav_info_value_text_view"
-        android:layout_width="52dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_duration"
-        android:layout_toEndOf="@id/flight_duration"
-        android:layout_toRightOf="@id/flight_duration"
-        android:text="@string/duration_hint" />
-
-    <TextView
-        android:id="@+id/from_home_title"
-        style="@style/mav_info_title_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_toEndOf="@id/flight_time_text"
-        android:layout_toRightOf="@id/flight_time_text"
         android:text="@string/from_home" />
 
     <TextView
@@ -85,7 +63,7 @@
         style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
+        android:layout_alignBaseline="@id/from_home_title"
         android:layout_toEndOf="@id/from_home_title"
         android:layout_toRightOf="@id/from_home_title"
         android:gravity="start"
@@ -97,7 +75,7 @@
         style="@style/mav_info_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
+        android:layout_alignBaseline="@id/from_home_title"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_toEndOf="@id/from_home_distance_text"
@@ -109,7 +87,7 @@
         style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
+        android:layout_alignBaseline="@id/from_home_title"
         android:layout_toEndOf="@id/target_title"
         android:layout_toRightOf="@id/target_title"
         android:gravity="start"
@@ -138,7 +116,7 @@
         android:padding="12dp"
         app:arcColor="@color/white_transparent_40"
         app:arcWidth="12dp"
-        app:max="1000"
+        app:max="2000"
         app:progressColor="@color/blue_sky"
         app:progressWidth="12dp"
         app:rotation="180"
@@ -271,7 +249,7 @@
         android:padding="12dp"
         app:arcColor="@color/white_transparent_40"
         app:arcWidth="12dp"
-        app:max="500"
+        app:max="300"
         app:progressColor="@color/blue_sky"
         app:progressWidth="12dp"
         app:rotation="180"
@@ -330,7 +308,7 @@
         style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
+        android:layout_alignBaseline="@id/from_home_title"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
@@ -343,7 +321,7 @@
         style="@style/mav_info_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/flight_time_text"
+        android:layout_alignBaseline="@id/from_home_title"
         android:layout_toLeftOf="@id/location_lng_text"
         android:layout_toStartOf="@id/location_lng_text"
         android:text="@string/latitude_hint" />

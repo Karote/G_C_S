@@ -1196,6 +1196,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             }
         } else {
             mDroneMap.updateDroneHomeLocation(mDroneHomeLat, mDroneHomeLon);
+            mMavInfoView.onHomePointUpdate(mDroneHomeLat, mDroneHomeLon);
         }
     }
 

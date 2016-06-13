@@ -210,11 +210,11 @@
     <string name="speed_hint">0</string>
     <string name="speed_unit">m/s</string>
     <string name="target">TARGET</string>
-    <string name="target_hint">0 m</string>
+    <string name="target_hint">-- m</string>
     <string name="from_home">FROM HOME</string>
-    <string name="from_home_hint">0.0 m</string>
-    <string name="latitude_hint">-90.0000000,</string>
-    <string name="longitude_hint">-180.0000000</string>
+    <string name="from_home_hint">-- m</string>
+    <string name="latitude_hint">-90.00000,</string>
+    <string name="longitude_hint">-180.00000</string>
     <string name="mission_id_hint">44</string>
     <string name="wheel_text_hint">22</string>
     <string name="drone_stop_button_text">STOP</string>

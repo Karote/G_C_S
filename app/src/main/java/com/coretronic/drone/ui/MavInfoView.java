@@ -1,5 +1,6 @@
 package com.coretronic.drone.ui;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -9,7 +10,6 @@ import com.coretronic.drone.DroneStatus.StatusChangedListener;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback.Event;
 import com.coretronic.drone.util.ConstantValue;
-import com.coretronic.drone.util.Utils;
 
 /**
  * Created by Poming on 2015/10/26.
@@ -21,24 +21,34 @@ public class MavInfoView implements StatusChangedListener {
 
     private TextView mDroneLatitudeTextView;
     private TextView mDroneLongitudeTextView;
-    private TextView mDroneFlightTimeTextView;
+    private TextView mDroneFromHomeTextView;
+    private TextView mDroneNextTargetTextView;
     private AircraftCompassWrapView mAircraftCompassWrapView;
     final private View mMavInfoView;
+
+    private Location mDroneLocation;
+    private Location mHomeLocation;
+    private Location mTargetLocation;
 
     public MavInfoView(View view, int mavInfoPanelId) {
         mMavInfoView = view.findViewById(mavInfoPanelId);
         initAltitudeView(R.id.altitude_text, R.id.altitude_progress_bar);
         initGroundSpeedView(R.id.ground_speed_text, R.id.ground_speed_progress_bar);
         initClimbSpeedView(R.id.climb_speed_text, R.id.climb_speed_progress_bar);
-        initMavInfoView(R.id.location_lat_text, R.id.location_lng_text, R.id.flight_time_text);
+        initMavInfoView(R.id.location_lat_text, R.id.location_lng_text, R.id.from_home_distance_text, R.id.target_distance_text);
     }
 
-    private void initMavInfoView(int flightTimeViewId, int latitudeViewId, int longitudeViewId) {
+    private void initMavInfoView(int flightTimeViewId, int latitudeViewId, int fromHomeViewId, int nextTargetViewId) {
         mDroneLatitudeTextView = (TextView) mMavInfoView.findViewById(flightTimeViewId);
         mDroneLongitudeTextView = (TextView) mMavInfoView.findViewById(latitudeViewId);
-        mDroneFlightTimeTextView = (TextView) mMavInfoView.findViewById(longitudeViewId);
+        mDroneFromHomeTextView = (TextView) mMavInfoView.findViewById(fromHomeViewId);
+        mDroneNextTargetTextView = (TextView) mMavInfoView.findViewById(nextTargetViewId);
         mAircraftCompassWrapView = new AircraftCompassWrapView(mMavInfoView, R.id.compass_circle, R.id.compass_level, R.id.compass_ruler,
                 R.id.compass_direction);
+
+        mDroneLocation = new Location("drone location");
+        mHomeLocation = new Location("home location");
+        mTargetLocation = new Location("target location");
 
     }
 
@@ -66,7 +76,6 @@ public class MavInfoView implements StatusChangedListener {
         onGroundSpeedUpdate(0);
         onClimbSpeedUpdate(0);
         onLocationUpdate(0, 0);
-        onFlightTimeUpdate(0);
     }
 
     final private void onAltitudeUpdate(float altitude) {
@@ -98,13 +107,34 @@ public class MavInfoView implements StatusChangedListener {
         String lonStrFormat = ConstantValue.LOCATION_STRING_FORMAT;
         mDroneLatitudeTextView.setText(String.format(latStrFormat, droneLat));
         mDroneLongitudeTextView.setText(String.format(lonStrFormat, droneLng));
+
+        mDroneLocation.setLatitude(droneLat);
+        mDroneLocation.setLongitude(droneLng);
+
+        updateFromHomeDistance();
+        updateNextTargetDistance();
     }
 
-    final private void onFlightTimeUpdate(int flightTimeInSeconds) {
-        if (mDroneFlightTimeTextView == null || flightTimeInSeconds < 0) {
-            return;
+    public void onHomePointUpdate(float homeLat, float homeLng) {
+        mHomeLocation.setLatitude(homeLat);
+        mHomeLocation.setLongitude(homeLng);
+        mHomeLocation.setAccuracy(100.0f);
+    }
+
+    public void onTargetPointUpdate(float targetLat, float targetLng) {
+        mTargetLocation.setLatitude(targetLat);
+        mTargetLocation.setLongitude(targetLng);
+    }
+
+    private void updateFromHomeDistance() {
+        if (mHomeLocation.hasAccuracy()) {
+            float distance = mDroneLocation.distanceTo(mHomeLocation);
+            mDroneFromHomeTextView.setText(String.format("%.1f", distance));
         }
-        mDroneFlightTimeTextView.setText(Utils.getDurationInHMSFormat(flightTimeInSeconds));
+    }
+
+    private void updateNextTargetDistance() {
+
     }
 
     final private void onAttitudeUpdate(float yaw, float roll, float pitch) {
@@ -137,9 +167,6 @@ public class MavInfoView implements StatusChangedListener {
             case ON_CLIMB_SPEED_UPDATE:
                 onClimbSpeedUpdate(droneStatus.getClimbSpeed());
                 break;
-            case ON_FLIGHT_DURATION_UPDATE:
-                onFlightTimeUpdate(droneStatus.getDuration());
-                break;
         }
     }
 
@@ -163,7 +190,7 @@ public class MavInfoView implements StatusChangedListener {
                 mTextView.setText(String.format("%.1f", value));
             }
             if (mSeekArc != null) {
-                mSeekArc.updateProgress((int) (value * 10));
+                mSeekArc.updateProgress((int) (Math.abs(value) * 10));
             }
         }
     }
