@@ -75,7 +75,7 @@ public class MavInfoView implements StatusChangedListener {
         onAltitudeUpdate(0);
         onGroundSpeedUpdate(0);
         onClimbSpeedUpdate(0);
-        onLocationUpdate(0, 0);
+        onLocationUpdate(Float.MAX_VALUE, Float.MAX_VALUE);
     }
 
     final private void onAltitudeUpdate(float altitude) {
@@ -103,10 +103,19 @@ public class MavInfoView implements StatusChangedListener {
         if (mDroneLatitudeTextView == null || mDroneLongitudeTextView == null) {
             return;
         }
-        String latStrFormat = ConstantValue.LOCATION_STRING_FORMAT + ", ";
-        String lonStrFormat = ConstantValue.LOCATION_STRING_FORMAT;
-        mDroneLatitudeTextView.setText(String.format(latStrFormat, droneLat));
-        mDroneLongitudeTextView.setText(String.format(lonStrFormat, droneLng));
+        String latStrFormat;
+        String lonStrFormat;
+        if (droneLat == Float.MAX_VALUE || droneLng == Float.MAX_VALUE) {
+            latStrFormat = "--.-----, ";
+            lonStrFormat = "--,-----";
+            mDroneLatitudeTextView.setText(latStrFormat);
+            mDroneLongitudeTextView.setText(lonStrFormat);
+        } else {
+            latStrFormat = ConstantValue.LOCATION_STRING_FORMAT + ", ";
+            lonStrFormat = ConstantValue.LOCATION_STRING_FORMAT;
+            mDroneLatitudeTextView.setText(String.format(latStrFormat, droneLat));
+            mDroneLongitudeTextView.setText(String.format(lonStrFormat, droneLng));
+        }
 
         mDroneLocation.setLatitude(droneLat);
         mDroneLocation.setLongitude(droneLng);
