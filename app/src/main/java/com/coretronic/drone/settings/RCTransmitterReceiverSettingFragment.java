@@ -395,6 +395,7 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
 
         mFlightModeTypePopupDialog.findViewById(R.id.altitude_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.manual_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
+        mFlightModeTypePopupDialog.findViewById(R.id.auto_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.gps_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.rtl_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.land_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
