@@ -93,6 +93,8 @@
     <string name="gain">GAIN</string>
     <string name="battery_and_failsafe">BATTERY &amp; FAILSAFE</string>
     <string name="general">GENERAL</string>
+    <string name="frame_type_all_cap">FRAME TYPE</string>
+    <string name="frame_type">Frame Type</string>
     <string name="rc_disconnected">RC Disconnected</string>
     <string name="rc_connected">RC Connected</string>
     <string name="drone_disconnected">Drone Disconnected</string>

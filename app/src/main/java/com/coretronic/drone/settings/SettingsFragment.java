@@ -3,7 +3,6 @@ package com.coretronic.drone.settings;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +30,18 @@ public class SettingsFragment extends UnBindDrawablesFragment {
     private final static int SETTINGS_PAGE_GAIN = 2;
     private final static int SETTINGS_PAGE_BATTERY_AND_FAILSAFE = 3;
     private final static int SETTINGS_PAGE_GENERAL = 4;
+    private final static int SETTINGS_PAGE_AIRCRAFT_TYPE = 5;
 
     private View mFocusBar;
-    private TextView mRcTxRxTextView;
+    private TextView mRCTransmitterReceiverTextView;
     private TextView mGainTextView;
     private TextView mBatteryFailsafeTextView;
     private TextView mGeneralTextView;
+    private TextView mAircraftTypeTextView;
+
     private TextView mRCConnectedIndicatorTextView;
     private TextView mDroneConnectedIndicatorTextView;
-    private Fragment mCurrentFragment;
+    private SettingChildFragment mCurrentFragment;
     private int mCurrentPage;
 
     private Handler mHeartbeatHandler;
@@ -80,7 +82,7 @@ public class SettingsFragment extends UnBindDrawablesFragment {
 
         mDroneParameter = ((MainActivity) getActivity()).getDroneController().getAllParameters();
         initView(view);
-        mRcTxRxTextView.performClick();
+        mRCTransmitterReceiverTextView.performClick();
         changePage(mCurrentPage);
     }
 
@@ -103,14 +105,16 @@ public class SettingsFragment extends UnBindDrawablesFragment {
             }
         });
 
-        mRcTxRxTextView = (TextView) view.findViewById(R.id.rc_transmistter_receiver);
-        mRcTxRxTextView.setOnClickListener(onLabelClickListener);
+        mRCTransmitterReceiverTextView = (TextView) view.findViewById(R.id.rc_transmistter_receiver);
+        mRCTransmitterReceiverTextView.setOnClickListener(onLabelClickListener);
         mGainTextView = (TextView) view.findViewById(R.id.gain);
         mGainTextView.setOnClickListener(onLabelClickListener);
         mBatteryFailsafeTextView = (TextView) view.findViewById(R.id.battery_and_failsafe);
         mBatteryFailsafeTextView.setOnClickListener(onLabelClickListener);
         mGeneralTextView = (TextView) view.findViewById(R.id.general);
         mGeneralTextView.setOnClickListener(onLabelClickListener);
+        mAircraftTypeTextView = (TextView) view.findViewById(R.id.aircraft_type);
+        mAircraftTypeTextView.setOnClickListener(onLabelClickListener);
 
         mRCConnectedIndicatorTextView = (TextView) view.findViewById(R.id.rc_connected_indicator_text);
         mDroneConnectedIndicatorTextView = (TextView) view.findViewById(R.id.drone_connected_indicator_text);
@@ -137,6 +141,9 @@ public class SettingsFragment extends UnBindDrawablesFragment {
                     changeTo = SETTINGS_PAGE_GENERAL;
                     mCurrentFragment = GeneralSettingFragment.newInstance(mDroneParameter);
                     break;
+                case R.id.aircraft_type:
+                    changeTo = SETTINGS_PAGE_AIRCRAFT_TYPE;
+                    mCurrentFragment = AircraftTypeSettingFragment.newInstance(mDroneParameter);
             }
             if (mCurrentPage == changeTo) {
                 return;
@@ -149,15 +156,16 @@ public class SettingsFragment extends UnBindDrawablesFragment {
         float y = 0;
         mCurrentPage = changeTo;
 
-        mRcTxRxTextView.setTextColor(getResources().getColor(R.color.settings_main_title_text_normal_color));
+        mRCTransmitterReceiverTextView.setTextColor(getResources().getColor(R.color.settings_main_title_text_normal_color));
         mGainTextView.setTextColor(getResources().getColor(R.color.settings_main_title_text_normal_color));
         mBatteryFailsafeTextView.setTextColor(getResources().getColor(R.color.settings_main_title_text_normal_color));
         mGeneralTextView.setTextColor(getResources().getColor(R.color.settings_main_title_text_normal_color));
+        mAircraftTypeTextView.setTextColor(getResources().getColor(R.color.settings_main_title_text_normal_color));
 
         switch (mCurrentPage) {
             case SETTINGS_PAGE_RC_TXRX:
-                mRcTxRxTextView.setTextColor(getResources().getColor(R.color.white));
-                y = mRcTxRxTextView.getTop();
+                mRCTransmitterReceiverTextView.setTextColor(getResources().getColor(R.color.white));
+                y = mRCTransmitterReceiverTextView.getTop();
                 break;
             case SETTINGS_PAGE_GAIN:
                 mGainTextView.setTextColor(getResources().getColor(R.color.white));
@@ -170,6 +178,10 @@ public class SettingsFragment extends UnBindDrawablesFragment {
             case SETTINGS_PAGE_GENERAL:
                 mGeneralTextView.setTextColor(getResources().getColor(R.color.white));
                 y = mGeneralTextView.getTop();
+                break;
+            case SETTINGS_PAGE_AIRCRAFT_TYPE:
+                mAircraftTypeTextView.setTextColor(getResources().getColor(R.color.white));
+                y = mAircraftTypeTextView.getTop();
                 break;
         }
 
