@@ -275,6 +275,12 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mGoogleApiClient.connect();
         mSaveFlag = true;
         mDroneMap.onStart();
+
+        if (mDroneController == SimpleDroneController.FAKE_DRONE) {
+            Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_DRONE, NOTIFICATION_TEXT_DRONE_UNCONNECTED, System.currentTimeMillis());
+            mNotificationCenterListAdapter.updateList(newAlarm);
+            showNotificationToast(R.drawable.icon_noti_drone, NOTIFICATION_TEXT_DRONE_UNCONNECTED);
+        }
     }
 
     @Override
@@ -429,7 +435,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         @Override
         public void onRemoteControllerDisconnect() {
-
+            Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_REMOTE_CONTROL, NOTIFICATION_TEXT_REMOTE_CONTROLLER_UNCONNECTED, System.currentTimeMillis());
+            mNotificationCenterListAdapter.updateList(newAlarm);
+            showNotificationToast(R.drawable.icon_noti_rc, NOTIFICATION_TEXT_REMOTE_CONTROLLER_UNCONNECTED);
         }
 
         @Override
@@ -437,6 +445,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_DRONE, NOTIFICATION_TEXT_DRONE_DISCONNECTED, System.currentTimeMillis());
             mNotificationCenterListAdapter.updateList(newAlarm);
             showNotificationToast(R.drawable.icon_noti_drone, NOTIFICATION_TEXT_DRONE_DISCONNECTED);
+            mStatusView.onDisconnect();
         }
     };
 
@@ -453,6 +462,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     };
 
     private void showNotificationPopDialog(String notificationText) {
+        if (mNotificationPopDialog != null) {
+            mNotificationPopDialog.dismiss();
+        }
         mNotificationPopDialog = new Dialog(getActivity());
         mNotificationPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mNotificationPopDialog.setCanceledOnTouchOutside(false);
@@ -467,6 +479,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mNotificationPopDialog.dismiss();
             }
         });
+
+        if (mTtsSpeaker != null) {
+            mTtsSpeaker.speak(notificationText);
+        }
     }
 
     private void showNotificationToast(int iconResourceId, String notificationText) {
@@ -474,11 +490,19 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         ((TextView) mNotificationToastView.findViewById(R.id.notification_toast_text)).setText(notificationText);
 
         Toast notificationToast = new Toast(getActivity().getBaseContext());
-        notificationToast.setGravity(Gravity.TOP | Gravity.START, getResources().getDimensionPixelOffset(R.dimen.notification_toast_position_x), getResources().getDimensionPixelOffset(R.dimen.notification_toast_position_y));
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        int statusBarHeight = resources.getDimensionPixelSize(resourceId);
+        int xOffset = getResources().getDimensionPixelOffset(R.dimen.notification_toast_position_x);
+        int yOffset = getResources().getDimensionPixelOffset(R.dimen.notification_toast_position_y) - statusBarHeight;
+        notificationToast.setGravity(Gravity.TOP | Gravity.START, xOffset, yOffset);
         notificationToast.setView(mNotificationToastView);
         notificationToast.setDuration(Toast.LENGTH_LONG);
         notificationToast.show();
 
+        if (mTtsSpeaker != null) {
+            mTtsSpeaker.speak(notificationText);
+        }
     }
 
     private void showNotificationCenterPopwindow() {

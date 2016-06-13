@@ -22,7 +22,7 @@ public class StatusView extends LinearLayout {
     private final static int GPS_UPDATE_GAP_NO_SIGNAL = 5 * 1000;
     private final static int GPS_UPDATE_PERIOD = 1 * 1000;
 
-    private final static int[] DRONE_BATTERY_LOW_THRESHOLD_ARRAY = {20, 10, 5, 1, 0};
+    private final static int[] DRONE_BATTERY_LOW_THRESHOLD_ARRAY = {21, 11, 6, 2, 1};
 
     private final static int GPS_LEVEL_0_SATELLITE_COUNT = 0;
     private final static int GPS_LEVEL_1_SATELLITE_COUNT = 4;
