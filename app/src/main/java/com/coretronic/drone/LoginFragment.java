@@ -80,16 +80,16 @@ public class LoginFragment extends Fragment {
 
     private boolean checkInputDataValid(String mail, String password) {
         if (mail.trim().length() == 0) {
-            showWarningToast("Email is null");
+            showWarningToast("Password or Email is invalid");
             return false;
         }
         if (password.trim().length() == 0) {
-            showWarningToast("Passwd is null");
+            showWarningToast("Password or Email is invalid");
             return false;
         }
 
         if (!isValidEmail(mail)) {
-            showWarningToast("Email format error");
+            showWarningToast("Password or Email is invalid");
             return false;
         }
 
@@ -101,11 +101,11 @@ public class LoginFragment extends Fragment {
         }
 
         if (!mail.equals(oldUserMail)) {
-            showWarningToast("Email error");
+            showWarningToast("Password or Email is invalid");
             return false;
         }
         if (!password.equals(oldUserPassword)) {
-            showWarningToast("Password error");
+            showWarningToast("Password or Email is invalid");
             return false;
         }
 
@@ -136,9 +136,12 @@ public class LoginFragment extends Fragment {
                         .putBoolean(AppConfig.SHARED_PREFERENCE_USER_STAY_LOGIN_KEY, mIsStayLoginCheckBox.isChecked())
                         .apply();
                 mMainActivity.switchToMainFragment();
+            } else if (result == CloudManager.AuthResult.SERVER_UNAVAILABLE) {
+                mLogInProgressDialog.dismiss();
+                showWarningToast("Network is unavailable");
             } else {
                 mLogInProgressDialog.dismiss();
-                showWarningToast("Drone Cloud login error.");
+                showWarningToast("Password or Email is invalid");
             }
         }
     };
