@@ -107,7 +107,7 @@ public class MavInfoView implements StatusChangedListener {
         String lonStrFormat;
         if (droneLat == Float.MAX_VALUE || droneLng == Float.MAX_VALUE) {
             latStrFormat = "--.-----, ";
-            lonStrFormat = "--,-----";
+            lonStrFormat = "--.-----";
             mDroneLatitudeTextView.setText(latStrFormat);
             mDroneLongitudeTextView.setText(lonStrFormat);
         } else {

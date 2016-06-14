@@ -160,6 +160,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private TextView mPilotBoardUsingText;
     private SharedPreferences mSharedPreferences;
     private boolean mMissionOnGo = false;
+    private String mPreText;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -468,14 +469,18 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
     private void showNotificationPopDialog(String notificationText) {
         if (mNotificationPopDialog != null) {
+            mPreText = mPreText + "\n";
             mNotificationPopDialog.dismiss();
+        } else {
+            mPreText = "";
         }
         mNotificationPopDialog = new Dialog(getActivity());
         mNotificationPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mNotificationPopDialog.setCanceledOnTouchOutside(false);
         mNotificationPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mNotificationPopDialog.setContentView(R.layout.popdialog_notification);
-        ((TextView) mNotificationPopDialog.findViewById(R.id.notification_dialog_title_text)).setText(notificationText);
+        mPreText = mPreText + notificationText;
+        ((TextView) mNotificationPopDialog.findViewById(R.id.notification_dialog_title_text)).setText(mPreText);
         mNotificationPopDialog.show();
 
         mNotificationPopDialog.findViewById(R.id.notification_dialog_dismiss_button).setOnClickListener(new OnClickListener() {

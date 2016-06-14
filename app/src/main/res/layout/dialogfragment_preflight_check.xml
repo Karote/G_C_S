@@ -255,7 +255,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@string/font_roboto_medium"
                     android:singleLine="true"
-                    android:text="@string/twenty_two_thousand_mah"
+                    android:text="@string/zero_mah"
                     android:textColor="#474747"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -302,7 +302,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@string/font_roboto_medium"
                     android:singleLine="true"
-                    android:text="@string/twenty_two_thousand_mah"
+                    android:text="@string/zero_mah"
                     android:textColor="#474747"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -349,7 +349,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@string/font_roboto_medium"
                     android:singleLine="true"
-                    android:text="@string/twenty_two_thousand_mah"
+                    android:text="@string/zero_mah"
                     android:textColor="#474747"
                     android:textSize="12sp" />
             </RelativeLayout>
