@@ -46,6 +46,7 @@
             android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginRight="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+            android:enabled="false"
             android:src="@drawable/ico_plan_takeoff" />
 
         <ImageView
@@ -99,6 +100,7 @@
             android:layout_marginLeft="@dimen/drone_control_button_group_divider_h_margin"
             android:layout_marginRight="@dimen/drone_control_button_group_end_margin"
             android:layout_marginStart="@dimen/drone_control_button_group_divider_h_margin"
+            android:enabled="false"
             android:src="@drawable/drone_control_group_drone_rtl_button_icon" />
     </LinearLayout>
 

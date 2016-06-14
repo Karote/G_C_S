@@ -161,6 +161,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     private SharedPreferences mSharedPreferences;
     private boolean mMissionOnGo = false;
     private String mPreText;
+    private Dialog mLandingPopDialog;
 
     public static Fragment newInstance(int fragmentTypePlanning) {
 
@@ -939,7 +940,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 return;
             case R.id.drone_landing_button:
                 if (mDroneController != SimpleDroneController.FAKE_DRONE) {
-                    mDroneController.land(mDroneLat, mDroneLon);
+                    showLandingPopupDialog();
                 }
                 mDroneMap.clearTapAndGoPlan();
                 return;
@@ -984,6 +985,30 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
         mCurrentFragment.onClick(v);
 
+    }
+
+    private void showLandingPopupDialog() {
+        mLandingPopDialog = new Dialog(getActivity());
+        mLandingPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mLandingPopDialog.setCanceledOnTouchOutside(false);
+        mLandingPopDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mLandingPopDialog.setContentView(R.layout.popdialog_landing);
+        mLandingPopDialog.show();
+
+        mLandingPopDialog.findViewById(R.id.no_landing_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLandingPopDialog.dismiss();
+            }
+        });
+
+        mLandingPopDialog.findViewById(R.id.yes_landing_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDroneController.land(mDroneLat, mDroneLon);
+                mLandingPopDialog.dismiss();
+            }
+        });
     }
 
     private void showTakeOffPopupDialog() {
@@ -1300,6 +1325,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
         mControlBarView.showPauseButton();
         mControlBarView.setPauseButtonEnable(false);
+
+        if (mDroneController != SimpleDroneController.FAKE_DRONE) {
+            mControlBarView.setTakeoffButtonEnable(true);
+            mControlBarView.setRTLButtonEnable(true);
+        } else {
+            mControlBarView.setTakeoffButtonEnable(false);
+            mControlBarView.setRTLButtonEnable(false);
+        }
     }
 
     private void setMissionListEditable(boolean editable) {

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_activated="true" android:drawable="@drawable/ico_plan_home_n" />
-    <item android:state_pressed="true" android:drawable="@drawable/ico_plan_home_p" />
+    <item android:state_enabled="false">
+        <layer-list>
+            <item>
+                <bitmap android:alpha="0.35" android:gravity="center" android:src="@drawable/ico_plan_home_n" />
+            </item>
+        </layer-list>
+    </item>
+    <item android:drawable="@drawable/ico_plan_home_n" android:state_activated="true" />
+    <item android:drawable="@drawable/ico_plan_home_p" android:state_pressed="true" />
     <item android:drawable="@drawable/ico_plan_home_n" />
 </selector>

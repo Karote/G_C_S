@@ -56,6 +56,7 @@
     <string name="auto_rtl_request">Do you want to return home when mission is completed?</string>
     <string name="go_without_rtl">Go and not Return Home</string>
     <string name="go_with_rtl">Yes and Go</string>
+    <string name="landing_request">Are you sure want to Landing now?</string>
 
     <!-- follow me-->
     <string name="follow_me_start">START FOLLOW</string>

@@ -19,6 +19,7 @@ public class ControlBarView {
     private final View mPlanPlayButton;
     private final View mPlanPauseButton;
     private final View mFPVAndMapSwitchButton;
+    private final View mRTLButton;
 
     public ControlBarView(View view, int controlBarId, OnClickListener onClickListener) {
 
@@ -32,6 +33,7 @@ public class ControlBarView {
         mDroneTakeoffButton = mDroneControlBar.findViewById(R.id.drone_takeoff_button);
         if (mDroneTakeoffButton != null) {
             mDroneTakeoffButton.setOnClickListener(onClickListener);
+            mDroneTakeoffButton.setEnabled(false);
         }
         mDroneLandingButton = mDroneControlBar.findViewById(R.id.drone_landing_button);
         mDroneLandingButton.setOnClickListener(onClickListener);
@@ -42,9 +44,11 @@ public class ControlBarView {
         mPlanPauseButton = mDroneControlBar.findViewById(R.id.plan_pause_button);
         if (mPlanPauseButton != null) {
             mPlanPauseButton.setOnClickListener(onClickListener);
+            mPlanPauseButton.setEnabled(false);
         }
-        mPlanPauseButton.setEnabled(false);
-        mDroneControlBar.findViewById(R.id.drone_rtl_button).setOnClickListener(onClickListener);
+        mRTLButton = mDroneControlBar.findViewById(R.id.drone_rtl_button);
+        mRTLButton.setOnClickListener(onClickListener);
+        mRTLButton.setEnabled(false);
 
         mMapControlBar = mControlMainPanel.findViewById(R.id.map_control_bar);
         mMapControlBar.findViewById(R.id.my_location_button).setOnClickListener(onClickListener);
@@ -93,6 +97,10 @@ public class ControlBarView {
         mDroneTakeoffButton.setVisibility(View.VISIBLE);
     }
 
+    public void setTakeoffButtonEnable(boolean isEnable) {
+        mDroneTakeoffButton.setEnabled(isEnable);
+    }
+
     public void showPauseButton() {
         mPlanPauseButton.setVisibility(View.VISIBLE);
         mPlanPlayButton.setVisibility(View.GONE);
@@ -100,6 +108,10 @@ public class ControlBarView {
 
     public void setPauseButtonEnable(boolean isEnable) {
         mPlanPauseButton.setEnabled(isEnable);
+    }
+
+    public void setRTLButtonEnable(boolean isEnable) {
+        mRTLButton.setEnabled(isEnable);
     }
 
     public void showPlayButton() {
