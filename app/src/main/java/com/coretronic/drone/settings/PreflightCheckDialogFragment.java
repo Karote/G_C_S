@@ -20,6 +20,7 @@ import com.coretronic.drone.MainActivity;
 import com.coretronic.drone.MainFragment;
 import com.coretronic.drone.R;
 import com.coretronic.drone.annotation.Callback;
+import com.coretronic.drone.model.Parameters;
 
 /**
  * Created by karot.chuang on 2016/2/24.
@@ -73,6 +74,20 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
     private long mGpsCheckTimestamp;
 
     private onDialgoFragmentDismissListener mOnDialgoFragmentDismissListener;
+
+    private View mMotorTestButton1;
+    private View mMotorTestButton2;
+    private View mMotorTestButton3;
+    private View mMotorTestButton4;
+    private View mMotorTestButton5;
+    private View mMotorTestButton6;
+    private View mMotorTestButton7;
+    private View mMotorTestButton8;
+    private View mMotorTestButton9;
+    private View mMotorTestButton10;
+    private View mMotorTestButton11;
+    private View mMotorTestButton12;
+    private int mRotorType;
 
     public interface onDialgoFragmentDismissListener {
         void onDialogFragmentDismiss();
@@ -136,18 +151,33 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
             }
         });
 
-        v.findViewById(R.id.motor_test_button_1).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_2).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_3).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_4).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_5).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_6).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_7).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_8).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_9).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_10).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_11).setOnClickListener(onMotorTestButtonClickListener);
-        v.findViewById(R.id.motor_test_button_12).setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton1 = v.findViewById(R.id.motor_test_button_1);
+        mMotorTestButton2 = v.findViewById(R.id.motor_test_button_2);
+        mMotorTestButton3 = v.findViewById(R.id.motor_test_button_3);
+        mMotorTestButton4 = v.findViewById(R.id.motor_test_button_4);
+        mMotorTestButton5 = v.findViewById(R.id.motor_test_button_5);
+        mMotorTestButton6 = v.findViewById(R.id.motor_test_button_6);
+        mMotorTestButton7 = v.findViewById(R.id.motor_test_button_7);
+        mMotorTestButton8 = v.findViewById(R.id.motor_test_button_8);
+        mMotorTestButton9 = v.findViewById(R.id.motor_test_button_9);
+        mMotorTestButton10 = v.findViewById(R.id.motor_test_button_10);
+        mMotorTestButton11 = v.findViewById(R.id.motor_test_button_11);
+        mMotorTestButton12 = v.findViewById(R.id.motor_test_button_12);
+
+        setAllMotorTestButtonEnable(false);
+
+        mMotorTestButton1.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton2.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton3.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton4.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton5.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton6.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton7.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton8.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton9.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton10.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton11.setOnClickListener(onMotorTestButtonClickListener);
+        mMotorTestButton12.setOnClickListener(onMotorTestButtonClickListener);
 
         mBatteryFirstImage = (ImageView) v.findViewById(R.id.battery_check_icon_1);
         mBatterySecondImage = (ImageView) v.findViewById(R.id.battery_check_icon_2);
@@ -177,6 +207,80 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
 
         mSonarStatusImage = (ImageView) v.findViewById(R.id.sonar_check_icon);
         mSonarStatusText = (TextView) v.findViewById(R.id.sonar_check_text);
+    }
+
+    private void setAllMotorTestButtonEnable(boolean enable) {
+        mMotorTestButton1.setEnabled(enable);
+        mMotorTestButton2.setEnabled(enable);
+        mMotorTestButton3.setEnabled(enable);
+        mMotorTestButton4.setEnabled(enable);
+        mMotorTestButton5.setEnabled(enable);
+        mMotorTestButton6.setEnabled(enable);
+        mMotorTestButton7.setEnabled(enable);
+        mMotorTestButton8.setEnabled(enable);
+        mMotorTestButton9.setEnabled(enable);
+        mMotorTestButton10.setEnabled(enable);
+        mMotorTestButton11.setEnabled(enable);
+        mMotorTestButton12.setEnabled(enable);
+    }
+
+    private void initMotorTestButton(int aircraftType) {
+        int motorNum;
+        switch (aircraftType) {
+            case Parameters.ROTOR_TYPE_QUADROTOR_I:
+            case Parameters.ROTOR_TYPE_QUADROTOR:
+                motorNum = 4;
+                break;
+            case Parameters.ROTOR_TYPE_HEXAROTOR_I:
+            case Parameters.ROTOR_TYPE_HEXAROTOR:
+                motorNum = 6;
+                break;
+            case Parameters.ROTOR_TYPE_OCTOROTOR_I:
+            case Parameters.ROTOR_TYPE_OCTOROTOR:
+            case Parameters.ROTOR_TYPE_DUO_QUADROTOR:
+                motorNum = 8;
+                break;
+            case Parameters.ROTOR_TYPE_DUO_HEXAROTOR_I:
+            case Parameters.ROTOR_TYPE_DUO_HEXAROTOR:
+                motorNum = 12;
+                break;
+            default:
+                motorNum = 0;
+                break;
+        }
+
+        if (motorNum > 0) {
+            mMotorTestButton1.setEnabled(true);
+            mMotorTestButton2.setEnabled(true);
+            mMotorTestButton3.setEnabled(true);
+            mMotorTestButton4.setEnabled(true);
+            mMotorTestButton1.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+            mMotorTestButton2.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+            mMotorTestButton3.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+            mMotorTestButton4.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+            if (motorNum > 4) {
+                mMotorTestButton5.setEnabled(true);
+                mMotorTestButton6.setEnabled(true);
+                mMotorTestButton5.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                mMotorTestButton6.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                if (motorNum > 6) {
+                    mMotorTestButton7.setEnabled(true);
+                    mMotorTestButton8.setEnabled(true);
+                    mMotorTestButton7.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                    mMotorTestButton8.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                    if (motorNum > 8) {
+                        mMotorTestButton9.setEnabled(true);
+                        mMotorTestButton10.setEnabled(true);
+                        mMotorTestButton11.setEnabled(true);
+                        mMotorTestButton12.setEnabled(true);
+                        mMotorTestButton9.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                        mMotorTestButton10.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                        mMotorTestButton11.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                        mMotorTestButton12.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_normal_color));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -261,6 +365,19 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
                 intent.putExtra(MainFragment.HEARTBEAT_TIMESTAMP_BUNDLE_KEY, droneStatus.getLastHeartbeatTime());
                 getTargetFragment().onActivityResult(getTargetRequestCode(), MainFragment.HEARTBEAT_TIMESTAMP_RESULT_CODE, intent);
                 break;
+            case ON_ROTO_TYPE_UPDATE:
+                mRotorType = droneStatus.getRotoType();
+                if (!droneStatus.isFlying()) {
+                    initMotorTestButton(mRotorType);
+                }
+                break;
+            case ON_DRONE_IS_FLYING_UPDATE:
+                if (droneStatus.isFlying()) {
+                    setAllMotorTestButtonEnable(false);
+                } else {
+                    initMotorTestButton(mRotorType);
+                }
+                break;
         }
     }
 
@@ -337,47 +454,81 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
     private View.OnClickListener onMotorTestButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            setAllMotorTestButtonEnable(false);
+
             int motorNum = 0;
             switch (v.getId()) {
                 case R.id.motor_test_button_1:
                     motorNum = 1;
+                    mMotorTestButton1.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_2:
                     motorNum = 2;
+                    mMotorTestButton2.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_3:
                     motorNum = 3;
+                    mMotorTestButton3.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_4:
                     motorNum = 4;
+                    mMotorTestButton4.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_5:
                     motorNum = 5;
+                    mMotorTestButton5.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_6:
                     motorNum = 6;
+                    mMotorTestButton6.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_7:
                     motorNum = 7;
+                    mMotorTestButton7.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_8:
                     motorNum = 8;
+                    mMotorTestButton8.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_9:
                     motorNum = 9;
+                    mMotorTestButton9.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_10:
                     motorNum = 10;
+                    mMotorTestButton10.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_11:
                     motorNum = 11;
+                    mMotorTestButton11.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
                 case R.id.motor_test_button_12:
                     motorNum = 12;
+                    mMotorTestButton12.setBackgroundColor(getResources().getColor(R.color.preflight_check_motor_test_button_pressed_color));
                     break;
             }
 
             mDroneController.motorTest(motorNum);
+
+            Thread sleepThread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            initMotorTestButton(mRotorType);
+                        }
+                    });
+                }
+            };
+            sleepThread.start();
         }
     };
 }

@@ -59,4 +59,6 @@
 
     <color name="preflight_check_status_text_normal_color">#acabab</color>
     <color name="preflight_check_status_text_alart_color">#ff6767</color>
+    <color name="preflight_check_motor_test_button_pressed_color">#d3d3d3</color>
+    <color name="preflight_check_motor_test_button_normal_color">#F0F0F0</color>
 </resources>

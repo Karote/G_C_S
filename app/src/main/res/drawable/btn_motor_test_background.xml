@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/preflight_check_motor_test_button_normal_color" />
+        </shape>
+    </item>
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="#d3d3d3"/>
+            <solid android:color="@color/preflight_check_motor_test_button_pressed_color" />
         </shape>
     </item>
     <item>
         <shape>
-            <solid android:color="#f0f0f0"/>
+            <solid android:color="@color/preflight_check_motor_test_button_normal_color" />
         </shape>
     </item>
 </selector>
