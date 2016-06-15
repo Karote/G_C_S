@@ -415,6 +415,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 mDroneHomeLon = droneStatus.getHomeLongitude();
                 updateDroneHomeLocation();
                 break;
+            case ON_CURRENT_MISSION_POINT_UPDATE:
+                if (mTtsSpeaker != null) {
+                    mTtsSpeaker.speak("Current Waypoint " + droneStatus.getCurrentMissionPoint());
+                }
+                break;
         }
 
     }
