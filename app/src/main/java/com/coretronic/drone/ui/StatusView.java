@@ -2,6 +2,7 @@ package com.coretronic.drone.ui;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ public class StatusView extends LinearLayout {
 
     private ImageView mGpsStatus;
     private ImageView mRfStatusImageView;
+    private View mBatteryFrameView;
     private ProgressBar mBatteryProgressBar;
     private TextView mBatteryTextView;
     private TextView mGpsCountTextView;
@@ -70,6 +72,7 @@ public class StatusView extends LinearLayout {
         mGpsStatus = (ImageView) view.findViewById(R.id.iv_gps);
         mGpsCountTextView = (TextView) view.findViewById(R.id.tv_gps);
         mRfStatusImageView = (ImageView) view.findViewById(R.id.iv_rf);
+        mBatteryFrameView = view.findViewById(R.id.progress_battery_frame);
         mBatteryProgressBar = (ProgressBar) view.findViewById(R.id.progress_battery);
         mBatteryTextView = (TextView) view.findViewById(R.id.tv_battery);
         mCommunicateLightState = new CommunicateLightState((ImageView) view.findViewById(R.id.iv_communication_light));
@@ -135,7 +138,8 @@ public class StatusView extends LinearLayout {
         mGpsAlarmHandler.postDelayed(mGpsAlarmRunnable, GPS_UPDATE_PERIOD);
     }
 
-    public void setBatteryStatus(final int progress) {
+    public void setBatteryRemainingPercentage(final int batteryRemainingPercentage) {
+        int progress = batteryRemainingPercentage < 0 ? 0 : batteryRemainingPercentage;
         mBatteryTextView.setText(progress + "%");
         mBatteryProgressBar.setProgress(progress);
 
@@ -147,8 +151,16 @@ public class StatusView extends LinearLayout {
             if (mStatusAlarmListener != null) {
                 mStatusAlarmListener.onBatteryLowAlarm(progress);
             }
+            if (progress < 10 && batteryRemainingPercentage >= 0) {
+                setBatteryViewWarning();
+            }
             mDroneBatteryAlarmLevel++;
         }
+    }
+
+    private void setBatteryViewWarning() {
+        mBatteryFrameView.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.status_bar_battery_progress_frame_low_battery_drawable, null));
+        mBatteryFrameView.startAnimation(AnimationUtils.loadAnimation(mBatteryFrameView.getContext(), R.anim.fade_communicate_light));
     }
 
     private void initialDroneBatteryAlarmLevel(int initValue) {
@@ -177,7 +189,7 @@ public class StatusView extends LinearLayout {
         }
 
         mCommunicateLightState.onDisconnect();
-        setBatteryStatus(0);
+        setBatteryRemainingPercentage(-1);
         setGpsStatus(-1);
         setRFStatus(0);
     }
@@ -271,7 +283,7 @@ public class StatusView extends LinearLayout {
 
         void onGpsSignalRecover();
 
-        void onBatteryLowAlarm(int batteryRemainging);
+        void onBatteryLowAlarm(int batteryRemaining);
 
         void onRemoteControllerDisconnect();
 

@@ -42,15 +42,28 @@
         android:layout_marginStart="@dimen/status_bar_rf_left_margin"
         android:src="@drawable/status_bar_rf_status_level_list" />
 
-    <ProgressBar
-        android:id="@+id/progress_battery"
-        style="?android:attr/progressBarStyleHorizontal"
+    <FrameLayout
         android:layout_width="@dimen/status_bar_battery_progress_width"
         android:layout_height="@dimen/status_bar_battery_progress_height"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/status_bar_battery_progress_left_margin"
-        android:layout_marginStart="@dimen/status_bar_battery_progress_left_margin"
-        android:progressDrawable="@drawable/status_bar_battery_progress_drawable" />
+        android:layout_marginStart="@dimen/status_bar_battery_progress_left_margin">
+
+        <View
+            android:id="@+id/progress_battery_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/status_bar_battery_progress_frame_normal_drawable"/>
+
+
+        <ProgressBar
+            android:id="@+id/progress_battery"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:progressDrawable="@drawable/status_bar_battery_progress_drawable" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_battery"

@@ -157,7 +157,7 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
     public void onStatusUpdate(Event event, DroneStatus droneStatus) {
         switch (event) {
             case ON_BATTERY_UPDATE:
-                mStatusView.setBatteryStatus(droneStatus.getBattery());
+                mStatusView.setBatteryRemainingPercentage(droneStatus.getBattery());
                 break;
             case ON_SATELLITE_UPDATE:
                 mStatusView.setGpsStatus(droneStatus.getSatellites());
@@ -636,7 +636,7 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
         }
 
         @Override
-        public void onBatteryLowAlarm(int batteryRemainging) {
+        public void onBatteryLowAlarm(int batteryRemaining) {
 
         }
 

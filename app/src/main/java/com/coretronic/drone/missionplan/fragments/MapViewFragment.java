@@ -348,7 +348,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
 
         switch (event) {
             case ON_BATTERY_UPDATE:
-                mStatusView.setBatteryStatus(droneStatus.getBattery());
+                mStatusView.setBatteryRemainingPercentage(droneStatus.getBattery());
                 mRecordItemBuilder.setBattery(droneStatus.getBattery());
                 break;
             case ON_ALTITUDE_UPDATE:
@@ -438,8 +438,8 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         }
 
         @Override
-        public void onBatteryLowAlarm(int batteryRemainging) {
-            String notificationText = String.format(NOTIFICATION_TEXT_DRONE_BATTERY_LOW, batteryRemainging);
+        public void onBatteryLowAlarm(int batteryRemaining) {
+            String notificationText = String.format(NOTIFICATION_TEXT_DRONE_BATTERY_LOW, batteryRemaining);
             Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_DRONE_BATTERY, notificationText, System.currentTimeMillis());
             mNotificationCenterListAdapter.updateList(newAlarm);
             showNotificationPopDialog(notificationText);
@@ -457,7 +457,6 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
             Notification newAlarm = new Notification(NotificationCenterListAdapter.NOTIFICATION_TYPE_DRONE, NOTIFICATION_TEXT_DRONE_DISCONNECTED, System.currentTimeMillis());
             mNotificationCenterListAdapter.updateList(newAlarm);
             showNotificationToast(R.drawable.icon_noti_drone, NOTIFICATION_TEXT_DRONE_DISCONNECTED);
-            mStatusView.onDisconnect();
         }
     };
 
