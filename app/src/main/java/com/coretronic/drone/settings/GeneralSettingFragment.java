@@ -16,6 +16,7 @@ import com.coretronic.drone.model.Parameters.GS_OPTICAL_FLOW;
 import com.coretronic.drone.model.Parameters.PARAMETER_ID;
 import com.coretronic.drone.ui.SeekBarTextView;
 import com.coretronic.drone.util.AppConfig;
+import com.coretronic.drone.util.ConstantValue;
 import com.coretronic.ibs.drone.MavlinkLibBridge;
 
 /**
@@ -82,6 +83,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private SeekBarTextView mRTLAltitudeView;
     private SeekBarTextView mThrottlePositionView;
     private SeekBarTextView mAltitudeDefaultView;
+    private SeekBarTextView mTakeoffAltitudeDefaultView;
     private SeekBarTextView mHorizontalSpeedDefaultView;
     private RadioGroup mHeadingDirectionRadioGroup;
     private RadioGroup mRTLHeadingDirectionRadioGroup;
@@ -89,6 +91,9 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private RadioGroup mShowFlightRouteRadioGroup;
     private RadioButton mRTLHeadingDirectionFrontButton;
     private RadioButton mRTLHeadingDirectionRearButton;
+    private View mMagneticFieldDeviationButton;
+    private View mFlatTrimButton;
+    private View mFirmwareUpdateButton;
 
     private SharedPreferences mSharedPreferences;
 
@@ -101,6 +106,7 @@ public class GeneralSettingFragment extends SettingChildFragment {
     private int mHeadingDirection;
     private int mThrottlePosition;
     private int mAltitudeDefault;
+    private int mTakeoffAltitudeDefault;
     private int mHorizontalSpeedDefault;
     private int mOpticalFlow;
     private boolean mShowFlightRoute;
@@ -285,6 +291,16 @@ public class GeneralSettingFragment extends SettingChildFragment {
             }
         });
 
+        mTakeoffAltitudeDefaultView = (SeekBarTextView) v.findViewById(R.id.settings_takeoff_altitude_default);
+        mTakeoffAltitudeDefaultView.setConfig(5, 30, 1, 5, 30);
+        mTakeoffAltitudeDefaultView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
+            @Override
+            public void onStopTrackingTouch(float value) {
+                mTakeoffAltitudeDefault = (int) value;
+                mSharedPreferences.edit().putInt(AppConfig.SHARED_PREFERENCE_TAKEOFF_ALTITUDE_DEFAULT_FOR_WAYPOINT, mTakeoffAltitudeDefault).apply();
+            }
+        });
+
         mHorizontalSpeedDefaultView = (SeekBarTextView) v.findViewById(R.id.settings_horizontal_speed_default);
         mHorizontalSpeedDefaultView.setConfig(
                 HORIZONTAL_SPEED_DEFAULT_UI_MIN,
@@ -308,13 +324,15 @@ public class GeneralSettingFragment extends SettingChildFragment {
         mShowFlightRouteRadioGroup = (RadioGroup) v.findViewById(R.id.settings_show_flight_route_radio_group);
         mShowFlightRouteRadioGroup.setOnCheckedChangeListener(onShowFlightRouteCheckedChanged);
 
-        v.findViewById(R.id.settings_magnetic_field_deviation_auto_adjust_button).setOnClickListener(new View.OnClickListener() {
+        mMagneticFieldDeviationButton = v.findViewById(R.id.settings_magnetic_field_deviation_auto_adjust_button);
+        mMagneticFieldDeviationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TBD
             }
         });
-        v.findViewById(R.id.settings_flat_trim_execute_button).setOnClickListener(new View.OnClickListener() {
+        mFlatTrimButton = v.findViewById(R.id.settings_flat_trim_execute_button);
+        mFlatTrimButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TBD
@@ -323,10 +341,25 @@ public class GeneralSettingFragment extends SettingChildFragment {
         v.findViewById(R.id.settings_reset_to_default_reset_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TBD
+                mAltitudeDefault = ConstantValue.ALTITUDE_DEFAULT_VALUE;
+                mTakeoffAltitudeDefault = ConstantValue.TAKEOFF_ALTITUDE_DEFAULT_VALUE;
+                mHorizontalSpeedDefault = ConstantValue.SPEED_DEFAULT_VALUE;
+                mShowFlightRoute = true;
+
+                mSharedPreferences.edit().putInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, mAltitudeDefault).apply();
+                mSharedPreferences.edit().putInt(AppConfig.SHARED_PREFERENCE_TAKEOFF_ALTITUDE_DEFAULT_FOR_WAYPOINT, mTakeoffAltitudeDefault).apply();
+                mSharedPreferences.edit().putInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, mHorizontalSpeedDefault).apply();
+                mSharedPreferences.edit().putBoolean(AppConfig.SHARED_PREFERENCE_SHOW_FLIGHT_ROUTE, mShowFlightRoute).apply();
+
+                mAltitudeDefaultView.setValue(mAltitudeDefault);
+                mTakeoffAltitudeDefaultView.setValue(mTakeoffAltitudeDefault);
+                mHorizontalSpeedDefaultView.setValue(mHorizontalSpeedDefault);
+                mShowFlightRouteRadioGroup.check(R.id.show_flight_route_on_button);
+
             }
         });
-        v.findViewById(R.id.settings_firmware_update_check_button).setOnClickListener(new View.OnClickListener() {
+        mFirmwareUpdateButton = v.findViewById(R.id.settings_firmware_update_check_button);
+        mFirmwareUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TBD
@@ -335,19 +368,22 @@ public class GeneralSettingFragment extends SettingChildFragment {
     }
 
     private void disableAllView() {
-        mAltitudeMaxView.setViewEnabled(false);
-        mRangeMaxView.setViewEnabled(false);
-        mVerticalSpeedMaxView.setViewEnabled(false);
-        mHorizontalSpeedMaxView.setViewEnabled(false);
-        mRTLSpeedView.setViewEnabled(false);
-        mRTLAltitudeView.setViewEnabled(false);
+        mAltitudeMaxView.setViewDisable(ALTITUDE_MAX_VALUE_MAX);
+        mRangeMaxView.setViewDisable(RANGE_MAX_VALUE_MAX);
+        mVerticalSpeedMaxView.setViewDisable(VERTICAL_SPEED_MAX_VALUE_MAX);
+        mHorizontalSpeedMaxView.setViewDisable(HORIZONTAL_SPEED_MAX_VALUE_MAX);
+        mRTLSpeedView.setViewDisable(RTL_SPEED_VALUE_MAX);
+        mRTLAltitudeView.setViewDisable(RTL_ALTITUDE_VALUE_MAX);
         mView.findViewById(R.id.heading_direction_never_change_button).setEnabled(false);
         mView.findViewById(R.id.heading_direction_next_waypoint_button).setEnabled(false);
         mView.findViewById(R.id.rtl_heading_direction_front_button).setEnabled(false);
         mView.findViewById(R.id.rtl_heading_direction_rear_button).setEnabled(false);
-        mThrottlePositionView.setViewEnabled(false);
+        mThrottlePositionView.setViewDisable(THROTTLE_POSITION_VALUE_MIN + (THROTTLE_POSITION_VALUE_MAX - THROTTLE_POSITION_VALUE_MIN) / 2);
         mView.findViewById(R.id.optical_flow_on_button).setEnabled(false);
         mView.findViewById(R.id.optical_flow_off_button).setEnabled(false);
+        mMagneticFieldDeviationButton.setEnabled(false);
+        mFlatTrimButton.setEnabled(false);
+        mFirmwareUpdateButton.setEnabled(false);
     }
 
 
@@ -404,10 +440,13 @@ public class GeneralSettingFragment extends SettingChildFragment {
                 mOpticalFlowRadioGroup.check(R.id.optical_flow_on_button);
             }
         }
-        mAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, 30);
+        mAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.ALTITUDE_DEFAULT_VALUE);
         mAltitudeDefaultView.setValue(mAltitudeDefault);
 
-        mHorizontalSpeedDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, 4);
+        mTakeoffAltitudeDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_TAKEOFF_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.TAKEOFF_ALTITUDE_DEFAULT_VALUE);
+        mTakeoffAltitudeDefaultView.setValue(mTakeoffAltitudeDefault);
+
+        mHorizontalSpeedDefault = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, ConstantValue.SPEED_DEFAULT_VALUE);
         mHorizontalSpeedDefaultView.setValue(mHorizontalSpeedDefault);
 
         mShowFlightRoute = mSharedPreferences.getBoolean(AppConfig.SHARED_PREFERENCE_SHOW_FLIGHT_ROUTE, true);

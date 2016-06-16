@@ -108,18 +108,13 @@ public class SeekBarTextView extends FrameLayout implements SeekBar.OnSeekBarCha
         seekBar.setOnSeekBarChangeListener(this);
     }
 
-    public void setViewEnabled(boolean flag) {
-        tvValue.setEnabled(flag);
-        tvValue.setText("0");
-        seekBar.setEnabled(flag);
-        seekBar.setProgress(0);
-        if (flag) {
-            tvValue.setTextColor(getResources().getColor(R.color.primary_color_normal));
-            tvUnit.setTextColor(getResources().getColor(R.color.primary_color_normal));
-        } else {
-            tvValue.setTextColor(getResources().getColor(R.color.gray));
-            tvUnit.setTextColor(getResources().getColor(R.color.gray));
-        }
+    public void setViewDisable(float defaultValue) {
+        tvValue.setEnabled(false);
+        seekBar.setEnabled(false);
+        tvValue.setTextColor(getResources().getColor(R.color.gray));
+        tvUnit.setTextColor(getResources().getColor(R.color.gray));
+        tvValue.setText(mDecimalFormat.format(settingValueToUiValue(defaultValue)));
+        seekBar.setProgress(settingValueToProgressLevel(defaultValue));
     }
 
     @Override

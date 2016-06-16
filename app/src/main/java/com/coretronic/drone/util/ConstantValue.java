@@ -5,6 +5,7 @@ package com.coretronic.drone.util;
  */
 public class ConstantValue {
     public static final int ALTITUDE_DEFAULT_VALUE = 30;
+    public static final int TAKEOFF_ALTITUDE_DEFAULT_VALUE = 10;
     public static final int ALTITUDE_MIN_VALUE = 1;
     public static final int ALTITUDE_MAX_VALUE = 200;
     public static final int STAY_DEFAULT_VALUE = 0;

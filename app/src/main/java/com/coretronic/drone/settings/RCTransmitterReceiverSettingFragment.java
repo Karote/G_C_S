@@ -484,7 +484,7 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         mView.findViewById(R.id.receiver_type_jr_button).setEnabled(false);
         mView.findViewById(R.id.receiver_type_spektrum_button).setEnabled(false);
         mView.findViewById(R.id.receiver_type_spektrum_button).setEnabled(false);
-        mFlightModePWMTextView.setText("PWM-0");
+        mFlightModePWMTextView.setText("PWM-1100");
         mFlightModeModel1.setViewEnable(false);
         mFlightModeModel2.setViewEnable(false);
         mFlightModeModel3.setViewEnable(false);
@@ -501,10 +501,10 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         mView.findViewById(R.id.gear_reverse_button).setEnabled(false);
         mView.findViewById(R.id.camera_trigger_reverse_button).setEnabled(false);
         mView.findViewById(R.id.rc_calibration_start_button).setEnabled(false);
-        mRCCalibrationBarRoll.setViewEnable(false);
-        mRCCalibrationBarPitch.setViewEnable(false);
-        mRCCalibrationBarYaw.setViewEnable(false);
-        mRCCalibrationBarThrottle.setViewEnable(false);
+        mRCCalibrationBarRoll.setViewDisable();
+        mRCCalibrationBarPitch.setViewDisable();
+        mRCCalibrationBarYaw.setViewDisable();
+        mRCCalibrationBarThrottle.setViewDisable();
     }
 
     private void initViewValue() {

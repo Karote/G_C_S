@@ -1,5 +1,8 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
+import com.coretronic.drone.util.AppConfig;
 import com.coretronic.drone.util.ConstantValue;
 
 /**
@@ -27,10 +31,18 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
 
     private PopupDialogCallback mPopupDialogCallback;
 
+    private SharedPreferences mSharedPreferences;
+
     public interface PopupDialogCallback {
         void onCancelButtonClick();
 
         void onConfirmButtonClick(float altitude, float stay, float speed);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mSharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -49,7 +61,8 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
         mRTLAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.rtl_altitude_wheel);
         mRTLAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.ALTITUDE_MIN_VALUE, ConstantValue.ALTITUDE_MAX_VALUE, "%01d"));
         mRTLAltitudeWheel.setCyclic(false);
-        mRTLAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE - ConstantValue.ALTITUDE_MIN_VALUE);
+        mRTLAltitude = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.ALTITUDE_DEFAULT_VALUE);
+        mRTLAltitudeWheel.setCurrentItem(mRTLAltitude - ConstantValue.ALTITUDE_MIN_VALUE);
         mRTLAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
@@ -71,7 +84,8 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
         mRTLSpeedWheel = (AbstractWheel) fragmentView.findViewById(R.id.rtl_speed_wheel);
         mRTLSpeedWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.SPEED_MIN_VALUE, ConstantValue.SPEED_MAX_VALUE, "%01d"));
         mRTLSpeedWheel.setCyclic(false);
-        mRTLSpeedWheel.setCurrentItem(ConstantValue.SPEED_DEFAULT_VALUE - ConstantValue.SPEED_MIN_VALUE);
+        mRTLSpeed = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, ConstantValue.SPEED_DEFAULT_VALUE);
+        mRTLSpeedWheel.setCurrentItem(mRTLSpeed - ConstantValue.SPEED_MIN_VALUE);
         mRTLSpeedWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
@@ -83,6 +97,11 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mPopupDialogCallback.onCancelButtonClick();
+
+                mRTLAltitude = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.ALTITUDE_DEFAULT_VALUE);
+                mRTLAltitudeWheel.setCurrentItem(mRTLAltitude - ConstantValue.ALTITUDE_MIN_VALUE);
+                mRTLSpeed = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, ConstantValue.SPEED_DEFAULT_VALUE);
+                mRTLSpeedWheel.setCurrentItem(mRTLSpeed - ConstantValue.SPEED_MIN_VALUE);
             }
         });
 
@@ -90,6 +109,11 @@ public class ReturnToHomePopupDialogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mPopupDialogCallback.onConfirmButtonClick(mRTLAltitude, mRTLStay, mRTLSpeed);
+
+                mRTLAltitude = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.ALTITUDE_DEFAULT_VALUE);
+                mRTLAltitudeWheel.setCurrentItem(mRTLAltitude - ConstantValue.ALTITUDE_MIN_VALUE);
+                mRTLSpeed = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_HORIZONTAL_SPEED_DEFAULT_FOR_WAYPOINT, ConstantValue.SPEED_DEFAULT_VALUE);
+                mRTLSpeedWheel.setCurrentItem(mRTLSpeed - ConstantValue.SPEED_MIN_VALUE);
             }
         });
     }

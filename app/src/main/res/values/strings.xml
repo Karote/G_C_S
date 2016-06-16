@@ -172,6 +172,7 @@
     <string name="throttle_position">Throttle Position</string>
     <string name="for_hovering">For Hovering</string>
     <string name="altitude_default">Altitude Default</string>
+    <string name="takeoff_altitude_default">Takeoff Altitude Default</string>
     <string name="horizontal_speed_default">Horizontal Speed Default</string>
     <string name="for_waypoint">For Waypoint</string>
     <string name="optical_flow">Optical Flow</string>

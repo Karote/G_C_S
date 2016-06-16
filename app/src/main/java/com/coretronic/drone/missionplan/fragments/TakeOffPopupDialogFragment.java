@@ -1,7 +1,10 @@
 package com.coretronic.drone.missionplan.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,8 +20,8 @@ import com.coretronic.drone.R;
 import com.coretronic.drone.missionplan.spinnerWheel.AbstractWheel;
 import com.coretronic.drone.missionplan.spinnerWheel.OnWheelChangedListener;
 import com.coretronic.drone.missionplan.spinnerWheel.adapter.NumericWheelAdapter;
+import com.coretronic.drone.util.AppConfig;
 import com.coretronic.drone.util.ConstantValue;
-import com.coretronic.ibs.log.Logger;
 
 /**
  * Created by karot.chuang on 2016/4/12.
@@ -32,10 +35,18 @@ public class TakeOffPopupDialogFragment extends Fragment {
 
     private int mTakeOffAltitude = ConstantValue.ALTITUDE_DEFAULT_VALUE;
 
+    private SharedPreferences mSharedPreferences;
+
     public interface PopupDialogCallback {
         void onCancelButtonClick();
 
         void onOKButtonClick(int takeOffAltitude);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mSharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -54,7 +65,8 @@ public class TakeOffPopupDialogFragment extends Fragment {
         mTakeOffAltitudeWheel = (AbstractWheel) fragmentView.findViewById(R.id.takeoff_altitude_wheel);
         mTakeOffAltitudeWheel.setViewAdapter(new NumericWheelAdapter(getActivity().getBaseContext(), R.layout.text_wheel_number_for_one_key_popup_dialog, ConstantValue.ALTITUDE_MIN_VALUE, ConstantValue.ALTITUDE_MAX_VALUE, "%01d"));
         mTakeOffAltitudeWheel.setCyclic(false);
-        mTakeOffAltitudeWheel.setCurrentItem(ConstantValue.ALTITUDE_DEFAULT_VALUE - ConstantValue.ALTITUDE_MIN_VALUE);
+        mTakeOffAltitude = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_TAKEOFF_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.TAKEOFF_ALTITUDE_DEFAULT_VALUE);
+        mTakeOffAltitudeWheel.setCurrentItem(mTakeOffAltitude - ConstantValue.ALTITUDE_MIN_VALUE);
         mTakeOffAltitudeWheel.addChangingListener(new OnWheelChangedListener() {
             @Override
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
@@ -66,6 +78,8 @@ public class TakeOffPopupDialogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mPopupDialogCallback.onCancelButtonClick();
+                mTakeOffAltitude = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_TAKEOFF_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.TAKEOFF_ALTITUDE_DEFAULT_VALUE);
+                mTakeOffAltitudeWheel.setCurrentItem(mTakeOffAltitude - ConstantValue.ALTITUDE_MIN_VALUE);
             }
         });
 
@@ -73,6 +87,8 @@ public class TakeOffPopupDialogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mPopupDialogCallback.onOKButtonClick(mTakeOffAltitude);
+                mTakeOffAltitude = mSharedPreferences.getInt(AppConfig.SHARED_PREFERENCE_TAKEOFF_ALTITUDE_DEFAULT_FOR_WAYPOINT, ConstantValue.TAKEOFF_ALTITUDE_DEFAULT_VALUE);
+                mTakeOffAltitudeWheel.setCurrentItem(mTakeOffAltitude - ConstantValue.ALTITUDE_MIN_VALUE);
             }
         });
     }

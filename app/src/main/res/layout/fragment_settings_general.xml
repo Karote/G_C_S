@@ -383,6 +383,41 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/takeoff_altitude_default_title"
+                    style="@style/settings_title_lv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/takeoff_altitude_default" />
+
+                <TextView
+                    style="@style/settings_title_lv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/takeoff_altitude_default_title"
+                    android:text="@string/for_waypoint" />
+            </RelativeLayout>
+
+            <com.coretronic.drone.ui.SeekBarTextView
+                android:id="@+id/settings_takeoff_altitude_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:unit="@string/unit_in_meter" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_height"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent">
+
+                <TextView
                     android:id="@+id/horizontal_speed_default_title"
                     style="@style/settings_title_lv_1"
                     android:layout_width="wrap_content"

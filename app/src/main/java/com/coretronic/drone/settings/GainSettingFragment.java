@@ -187,12 +187,12 @@ public class GainSettingFragment extends SettingChildFragment {
     }
 
     private void disableAllView() {
-        mBasicGainRollView.setViewEnabled(false);
-        mBasicGainPitchView.setViewEnabled(false);
-        mBasicGainYawView.setViewEnabled(false);
-        mAttitudeGainRollView.setViewEnabled(false);
-        mAttitudeGainPitchView.setViewEnabled(false);
-        mAttitudeGainYawView.setViewEnabled(false);
+        mBasicGainRollView.setViewDisable(SETTING_GAIN_BASIC_ROLL_MIN + (SETTING_GAIN_BASIC_ROLL_MAX - SETTING_GAIN_BASIC_ROLL_MIN) / 2);
+        mBasicGainPitchView.setViewDisable(SETTING_GAIN_BASIC_PITCH_MIN + (SETTING_GAIN_BASIC_PITCH_MAX - SETTING_GAIN_BASIC_PITCH_MIN) / 2);
+        mBasicGainYawView.setViewDisable(SETTING_GAIN_BASIC_YAW_MIN + (SETTING_GAIN_BASIC_YAW_MAX - SETTING_GAIN_BASIC_YAW_MIN) / 2);
+        mAttitudeGainRollView.setViewDisable(SETTING_GAIN_ATTITUDE_ROLL_MIN + (SETTING_GAIN_ATTITUDE_ROLL_MAX - SETTING_GAIN_ATTITUDE_ROLL_MIN) / 2);
+        mAttitudeGainPitchView.setViewDisable(SETTING_GAIN_ATTITUDE_PITCH_MIN + (SETTING_GAIN_ATTITUDE_PITCH_MAX - SETTING_GAIN_ATTITUDE_PITCH_MIN) / 2);
+        mAttitudeGainYawView.setViewDisable(SETTING_GAIN_ATTITUDE_YAW_MIN + (SETTING_GAIN_ATTITUDE_YAW_MAX - SETTING_GAIN_ATTITUDE_YAW_MIN) / 2);
     }
 
     private void initViewValue() {

@@ -15,6 +15,7 @@ import com.coretronic.drone.annotation.Callback;
 import com.coretronic.drone.model.Parameters;
 import com.coretronic.drone.model.Parameters.FS_BATTERY_OPTION;
 import com.coretronic.drone.model.Parameters.PARAMETER_ID;
+import com.coretronic.drone.ui.SeekBarTextView;
 import com.coretronic.ibs.drone.MavlinkLibBridge;
 
 /**
@@ -40,6 +41,7 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
     private RadioGroup mRCSignalLostRadioGroup;
     private RadioGroup mGPSSignalLostRadioGroup;
     private RadioGroup mGCSSignalLostRadioGroup;
+    private SeekBarTextView mBatteryRemainingView;
     private ImageView mBatteryFirstImage;
     private ImageView mBatterySecondImage;
     private ImageView mBatteryThirdImage;
@@ -48,6 +50,7 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
     private TextView mBatteryThirdText;
 
     private int mBatteryCapacity;
+    private float mBatteryRemaining;
     private int mBatteryOption;
     private int mRCSignalLost;
     private int mGPSSignalLost;
@@ -108,6 +111,15 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
         mBatterySecondText = (TextView) v.findViewById(R.id.battery_2_current_text);
         mBatteryThirdText = (TextView) v.findViewById(R.id.battery_3_current_text);
 
+        mBatteryRemainingView = (SeekBarTextView) v.findViewById(R.id.battery_remaining_seekbar);
+        mBatteryRemainingView.setConfig(20, 50, 1, 20, 50);
+        mBatteryRemainingView.registerSeekBarTextViewChangeListener(new SeekBarTextView.SeekBarTextViewChangeListener() {
+            @Override
+            public void onStopTrackingTouch(float value) {
+                mBatteryRemaining = value;
+            }
+        });
+
         mBatteryOptionRadioGroup = (RadioGroup) v.findViewById(R.id.settings_failsafe_battery_option_radio_group);
         mBatteryOptionRadioGroup.setOnCheckedChangeListener(onBatteryOptionCheckedChangeListener);
         v.findViewById(R.id.battery_option_none_button).setOnClickListener(onBatteryOptionRadioButtonClickListener);
@@ -151,6 +163,12 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
         mView.findViewById(R.id.gcs_signal_lost_none_button).setEnabled(false);
         mView.findViewById(R.id.gcs_signal_lost_rtl_button).setEnabled(false);
         mView.findViewById(R.id.gcs_signal_lost_land_button).setEnabled(false);
+
+        mBatteryFirstText.setTextColor(getResources().getColor(R.color.gray));
+        mBatterySecondText.setTextColor(getResources().getColor(R.color.gray));
+        mBatteryThirdText.setTextColor(getResources().getColor(R.color.gray));
+
+        mBatteryRemainingView.setViewDisable(30);
     }
 
     private void initViewValue() {
@@ -174,6 +192,8 @@ public class BatteryAndFailsafeSettingFragment extends SettingChildFragment {
             } else if (mBatteryCapacity == Parameters.FS_BATTERY_CAPACITY_THREE) {
                 mBatteryCapacityRadioGroup.check(R.id.battery_capacity_twenty_two_thousand_mah_button);
             }
+
+            mBatteryRemainingView.setValue(30);
 
             mBatteryOption = arguments.getInt(ARGUMENT_BATTERY_OPTION);
             if (mBatteryOption == FS_BATTERY_OPTION.FS_BATT_DISABLE.ordinal()) {
