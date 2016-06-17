@@ -110,7 +110,7 @@
 
     <Button
         android:id="@+id/notification_center_button"
-        android:layout_width="280dp"
+        android:layout_width="328dp"
         android:layout_height="54dp"
         android:layout_marginLeft="48dp"
         android:layout_marginStart="48dp"

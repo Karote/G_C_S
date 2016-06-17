@@ -3,13 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <include
+        android:id="@+id/waypoint_list_top_view"
+        layout="@layout/waypoint_list_top_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/mission_item_recycler_view_right_margin"
+        android:layout_marginRight="@dimen/mission_item_recycler_view_right_margin"
+        android:layout_marginTop="16dp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mission_item_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/waypoint_list_top_view"
         android:layout_marginBottom="@dimen/mission_item_recycler_view_bottom_margin"
+        android:layout_marginEnd="@dimen/mission_item_recycler_view_right_margin"
+        android:layout_marginRight="@dimen/mission_item_recycler_view_right_margin"
         android:layout_marginTop="@dimen/mission_item_recycler_view_top_margin"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
@@ -57,7 +72,7 @@
             android:background="@color/transparent"
             android:fontFamily="@string/font_roboto_medium"
             android:text="@string/btn_go"
-            android:textColor="#669900"
+            android:textColor="@drawable/control_bar_go_button_text_color"
             android:textSize="18sp"
             android:textStyle="bold" />
 

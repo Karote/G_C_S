@@ -516,10 +516,6 @@ public class PlanningFragment extends MapChildFragment implements MissionLoaderL
         mClearMissionButton = (Button) mMoreFunctionPopupDialog.findViewById(R.id.clear_mission_button);
         mClearMissionButton.setOnClickListener(missionSaveLoadFunctionClickListener);
 
-        setSaveOrClearButtonEnable();
-    }
-
-    private void setSaveOrClearButtonEnable() {
         mSaveMissionButton.setEnabled(mSaveAndClearMissionFlag);
         mClearMissionButton.setEnabled(mSaveAndClearMissionFlag);
     }

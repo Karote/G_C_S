@@ -62,15 +62,14 @@ public class SurveyRouter {
         return mWayPoints.size() / 2;
     }
 
-    public List<Mission> toMissions() {
+    public List<Mission> toMissions(float droneLat, float droneLon) {
 
         List<Mission> missions = new ArrayList<>();
 
         mMissionBuilder.setAltitude((float) mSurveyData.getAltitude()).setAutoContinue(true).setWaitSeconds(0).setRadius(0);
-        Coord2D takeOffPoint = mWayPoints.get(0);
-        missions.add(mMissionBuilder.setType(Type.TAKEOFF).setLatitude((float) takeOffPoint.getLatitude()).setLongitude((float) takeOffPoint
-                .getLongitude()).create());
-        missions.add(mMissionBuilder.setType(Type.CAMERA_TRIGGER_DISTANCE).setLatitude((float) takeOffPoint.getLatitude()).setLongitude((float) takeOffPoint
+        Coord2D firstPoint = mWayPoints.get(0);
+        missions.add(mMissionBuilder.setType(Type.TAKEOFF).setLatitude(droneLat).setLongitude(droneLon).create());
+        missions.add(mMissionBuilder.setType(Type.CAMERA_TRIGGER_DISTANCE).setLatitude((float) firstPoint.getLatitude()).setLongitude((float) firstPoint
                 .getLongitude()).setShutterControl(new ShutterControl(Mode.DISTANCE, (int) (mSurveyData.getLongitudinalPictureDistance() * 10))).create());
 
         mMissionBuilder.setType(Type.WAY_POINT);

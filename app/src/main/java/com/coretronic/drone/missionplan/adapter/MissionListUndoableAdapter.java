@@ -466,6 +466,7 @@ public class MissionListUndoableAdapter extends RecyclerView.Adapter<MissionList
 
     public void exitMissionListEditMode() {
         mMissionList = mUndoLists.pop();
+        mItemClickListener.onUndoListIsEmptyOrNot(mUndoLists.isEmpty());
     }
 
     public void finishMissionListEditMode() {

@@ -1108,8 +1108,10 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         } else {
             mEditOptionPanel.setVisibility(View.GONE);
             mMissionPlanTypeRadioGroup.setVisibility(View.VISIBLE);
-            mMoreButton.setVisibility(View.VISIBLE);
-            mUndoButton.setVisibility(View.VISIBLE);
+            if (mCurrentFragmentType == FRAGMENT_TYPE_PLANNING) {
+                mMoreButton.setVisibility(View.VISIBLE);
+                mUndoButton.setVisibility(View.VISIBLE);
+            }
             mEditDoneButton.setEnabled(false);
         }
         mDroneMap.setAddMarkerEnable(!isShow);
@@ -1340,7 +1342,11 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void setMissionListEditable(boolean editable) {
-        ((PlanningFragment) mCurrentFragment).setMissionListEditable(editable);
+        if(mCurrentFragmentType == FRAGMENT_TYPE_PLANNING) {
+            ((PlanningFragment) mCurrentFragment).setMissionListEditable(editable);
+        }else if(mCurrentFragmentType == FRAGMENT_TYPE_AERIAL_SURVEY){
+            ((AerialSurveyFragment) mCurrentFragment).setMissionListEditable(editable);
+        }
         mDroneMap.setAddMarkerEnable(editable);
     }
 }
