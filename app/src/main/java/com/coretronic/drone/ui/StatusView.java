@@ -151,10 +151,12 @@ public class StatusView extends LinearLayout {
             if (mStatusAlarmListener != null) {
                 mStatusAlarmListener.onBatteryLowAlarm(progress);
             }
-            if (progress < 10 && batteryRemainingPercentage >= 0) {
-                setBatteryViewWarning();
+            if (mDroneBatteryAlarmLevel < 4) {
+                mDroneBatteryAlarmLevel++;
             }
-            mDroneBatteryAlarmLevel++;
+        }
+        if (progress <= 10 && batteryRemainingPercentage >= 0) {
+            setBatteryViewWarning();
         }
     }
 
@@ -164,16 +166,22 @@ public class StatusView extends LinearLayout {
     }
 
     private void initialDroneBatteryAlarmLevel(int initValue) {
-        if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[0]) {
+        if (initValue >= DRONE_BATTERY_LOW_THRESHOLD_ARRAY[0]) { // 100~21
             mDroneBatteryAlarmLevel = 0;
-        } else if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[1]) {
+        } else if (initValue >= DRONE_BATTERY_LOW_THRESHOLD_ARRAY[1]) { // 20~11
             mDroneBatteryAlarmLevel = 1;
-        } else if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[2]) {
+        } else if (initValue >= DRONE_BATTERY_LOW_THRESHOLD_ARRAY[2]) { // 10~6
             mDroneBatteryAlarmLevel = 2;
-        } else if (initValue > DRONE_BATTERY_LOW_THRESHOLD_ARRAY[3]) {
+        } else if (initValue >= DRONE_BATTERY_LOW_THRESHOLD_ARRAY[3]) { // 5~2
             mDroneBatteryAlarmLevel = 3;
         } else {
-            mDroneBatteryAlarmLevel = 4;
+            mDroneBatteryAlarmLevel = 4; // 1~0
+        }
+
+        if (mDroneBatteryAlarmLevel > 0 && initValue > 0) {
+            if (mStatusAlarmListener != null) {
+                mStatusAlarmListener.onBatteryLowAlarm(initValue);
+            }
         }
     }
 
@@ -187,7 +195,7 @@ public class StatusView extends LinearLayout {
             mGpsAlarmHandler.removeCallbacks(mGpsAlarmRunnable);
             mGpsAlarmRunnable = null;
         }
-
+        mDroneBatteryAlarmLevel = 4;
         mCommunicateLightState.onDisconnect();
         setBatteryRemainingPercentage(-1);
         setGpsStatus(-1);

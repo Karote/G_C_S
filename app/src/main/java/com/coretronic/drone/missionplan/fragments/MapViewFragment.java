@@ -491,6 +491,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
         mNotificationPopDialog.findViewById(R.id.notification_dialog_dismiss_button).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPreText = "";
                 mNotificationPopDialog.dismiss();
             }
         });
