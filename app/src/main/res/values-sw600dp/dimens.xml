@@ -8,7 +8,7 @@
     <dimen name="status_bar_gps_left_margin">12dp</dimen>
     <dimen name="status_bar_rf_left_margin">8dp</dimen>
     <dimen name="status_bar_battery_progress_width">80dp</dimen>
-    <dimen name="status_bar_battery_progress_height">12dp</dimen>
+    <dimen name="status_bar_battery_progress_height">8dp</dimen>
     <dimen name="status_bar_battery_progress_left_margin">20dp</dimen>
     <dimen name="status_bar_battery_text_left_margin">6dp</dimen>
     <dimen name="status_bar_battery_text_size">16sp</dimen>

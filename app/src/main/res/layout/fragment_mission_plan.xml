@@ -63,7 +63,7 @@
             android:layout_marginStart="12dp"
             android:layout_toEndOf="@id/status"
             android:layout_toRightOf="@id/status"
-            android:background="@color/white"
+            android:background="@color/white_transparent_35"
             android:fontFamily="@string/font_roboto_regular"
             android:gravity="center"
             android:text="FC-1"

@@ -409,6 +409,7 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 break;
             case ON_PILOT_BOARD_USING:
                 mPilotBoardUsingText.setText("FC-" + droneStatus.getPilotBoardUsing());
+                mPilotBoardUsingText.setBackgroundColor(getResources().getColor(R.color.white));
                 break;
             case ON_HOME_LOCATED:
                 mDroneHomeLat = droneStatus.getHomeLatitude();
