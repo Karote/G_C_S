@@ -1265,10 +1265,14 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
                 triggerMissionRecord(MissionStatus.START);
                 break;
             case ON_COMMAND_STOP_MISSION_RESULT:
-                mControlBarView.showGoButton();
-                mControlBarView.setGoButtonEnable(true);
-                mControlBarView.showPauseButton();
-                mControlBarView.setPauseButtonEnable(false);
+                if (mCurrentFragmentType == FRAGMENT_TYPE_AERIAL_SURVEY) {
+                    ((AerialSurveyFragment) mCurrentFragment).stopRouteMission();
+                } else {
+                    mControlBarView.showGoButton();
+                    mControlBarView.setGoButtonEnable(true);
+                    mControlBarView.showPauseButton();
+                    mControlBarView.setPauseButtonEnable(false);
+                }
                 setMissionListEditable(true);
                 mMissionOnGo = false;
                 notificationWithTTS(MissionStatus.FINISHED);
@@ -1343,9 +1347,9 @@ public class MapViewFragment extends Fragment implements OnClickListener, Locati
     }
 
     private void setMissionListEditable(boolean editable) {
-        if(mCurrentFragmentType == FRAGMENT_TYPE_PLANNING) {
+        if (mCurrentFragmentType == FRAGMENT_TYPE_PLANNING) {
             ((PlanningFragment) mCurrentFragment).setMissionListEditable(editable);
-        }else if(mCurrentFragmentType == FRAGMENT_TYPE_AERIAL_SURVEY){
+        } else if (mCurrentFragmentType == FRAGMENT_TYPE_AERIAL_SURVEY) {
             ((AerialSurveyFragment) mCurrentFragment).setMissionListEditable(editable);
         }
         mDroneMap.setAddMarkerEnable(editable);

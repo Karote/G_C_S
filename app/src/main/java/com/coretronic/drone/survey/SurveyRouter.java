@@ -73,7 +73,7 @@ public class SurveyRouter {
                 .getLongitude()).setShutterControl(new ShutterControl(Mode.DISTANCE, (int) (mSurveyData.getLongitudinalPictureDistance() * 10))).create());
 
         mMissionBuilder.setType(Type.WAY_POINT);
-        for (int index = 1; index < mWayPoints.size() - 1; index++) {
+        for (int index = 0; index < mWayPoints.size() - 1; index++) {
             Coord2D wayPoint = mWayPoints.get(index);
             missions.add(mMissionBuilder.setLatitude((float) wayPoint.getLatitude()).setLongitude((float) wayPoint.getLongitude()).create());
         }

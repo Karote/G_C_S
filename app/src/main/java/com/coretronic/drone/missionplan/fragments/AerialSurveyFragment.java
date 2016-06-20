@@ -686,7 +686,7 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
                     } else {
                         DroneController droneController = mMapViewFragment.getDroneController();
                         if (droneController != null) {
-//                            droneController.startMission();
+                            droneController.startMission(missions.get(0).getLatitude(), missions.get(0).getLongitude(), missions.get(0).getAltitude());
                         }
                         mLoadMissionProgressDialog.dismiss();
                     }
@@ -801,6 +801,10 @@ public class AerialSurveyFragment extends MapChildFragment implements SelectedMi
             mMissionItemAdapter.onNothingSelected();
             mWayPointDetailPanel.setVisibility(View.GONE);
         }
+    }
+
+    public void stopRouteMission() {
+        changeLayoutStatus(ROUTE_CREATED_STATUS);
     }
 
 }
