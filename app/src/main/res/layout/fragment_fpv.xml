@@ -116,4 +116,14 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/fpv_unconnect_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@string/font_roboto_black"
+        android:text="@string/fpv_unconnect"
+        android:textColor="@color/white_transparent_40"
+        android:textSize="18sp" />
+
 </RelativeLayout>

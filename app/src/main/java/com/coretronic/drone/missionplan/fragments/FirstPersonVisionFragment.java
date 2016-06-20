@@ -27,9 +27,6 @@ import com.coretronic.drone.uvc.USBCameraMonitor;
 import com.coretronic.drone.uvc.USBCameraMonitor.OnUVCCameraStatusChangedListener;
 import com.coretronic.drone.uvc.UVCCameraTextureView;
 import com.coretronic.drone.uvc.UsbCameraWrap;
-import com.coretronic.ibs.log.Logger;
-
-import java.util.Timer;
 
 /**
  * Created by Poming on 2015/10/21.
@@ -49,6 +46,7 @@ public class FirstPersonVisionFragment extends Fragment {
     private View mGimbleControl;
     private RelativeLayout mGimbleRollRotateView;
     private ImageView mGimbleRollButton;
+    private View mFPVUnconnectText;
 
     private int[] mGimbleRollRotateViewLocation = new int[2];
     private float mCurrAngle = 0;
@@ -57,10 +55,10 @@ public class FirstPersonVisionFragment extends Fragment {
 
     private Handler mSendPWMHandler;
     private Runnable mSendPWMRunnable;
-    private Timer timer;
     private float mGimbleRollPWM;
     private float mGimbleYawPWM;
     private float mGimblePitchPWM;
+    private boolean mIsFPVConnect;
 
     @Override
     public void onAttach(Activity activity) {
@@ -155,6 +153,8 @@ public class FirstPersonVisionFragment extends Fragment {
             }
         });
 
+        mFPVUnconnectText = view.findViewById(R.id.fpv_unconnect_text);
+
         return view;
     }
 
@@ -220,7 +220,6 @@ public class FirstPersonVisionFragment extends Fragment {
     };
 
     private void gimbalControl(int servo, float pwm) {
-        Logger.d("(servo, pwm):(" + servo + ", " + pwm + ")");
         mDroneController.controlGimbal(servo, pwm);
     }
 
@@ -251,6 +250,8 @@ public class FirstPersonVisionFragment extends Fragment {
         }
         mSurface = new Surface(surfaceTexture);
         mCameraHandler.startPreview(mSurface);
+        mIsFPVConnect = true;
+        mFPVUnconnectText.setVisibility(View.GONE);
     }
 
     private final OnUVCCameraStatusChangedListener mOnUVCCameraStatusChangedListener = new OnUVCCameraStatusChangedListener() {
@@ -267,6 +268,7 @@ public class FirstPersonVisionFragment extends Fragment {
             if (mCameraHandler != null) {
                 mCameraHandler.closeCamera();
             }
+            mIsFPVConnect = false;
         }
 
         @Override
@@ -313,10 +315,20 @@ public class FirstPersonVisionFragment extends Fragment {
     public void onFPVShow() {
         mShutterButton.setVisibility(View.VISIBLE);
         mGimbleControl.setVisibility(View.VISIBLE);
+        if (mIsFPVConnect) {
+            mFPVUnconnectText.setVisibility(View.GONE);
+        } else {
+            mFPVUnconnectText.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onFPVHide() {
         mShutterButton.setVisibility(View.GONE);
         mGimbleControl.setVisibility(View.GONE);
+        if (mIsFPVConnect) {
+            mFPVUnconnectText.setVisibility(View.GONE);
+        } else {
+            mFPVUnconnectText.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -220,6 +220,7 @@
     <string name="mission_id_hint">44</string>
     <string name="wheel_text_hint">22</string>
     <string name="drone_stop_button_text">STOP</string>
+    <string name="fpv_unconnect">UNCONNECT</string>
 
     <string name="aerial_survey_create_route">CREATE ROUTE</string>
     <string name="aerial_survey_footprint">FOOTPRINT</string>
