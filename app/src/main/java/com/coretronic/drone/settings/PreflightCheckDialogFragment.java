@@ -42,6 +42,17 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
     private final static int GPS_UPDATE_GAP_NO_SIGNAL = 5 * 1000;
     private final static int GPS_UPDATE_PERIOD = 1 * 1000;
 
+    private final static int FRAME_TYPE_LEVEL_1_I4 = 1;
+    private final static int FRAME_TYPE_LEVEL_2_X4 = 2;
+    private final static int FRAME_TYPE_LEVEL_3_I6 = 3;
+    private final static int FRAME_TYPE_LEVEL_4_V6 = 4;
+    private final static int FRAME_TYPE_LEVEL_5_I8 = 5;
+    private final static int FRAME_TYPE_LEVEL_6_V8 = 6;
+    private final static int FRAME_TYPE_LEVEL_7_X8 = 7;
+    private final static int FRAME_TYPE_LEVEL_8_I12 = 8;
+    private final static int FRAME_TYPE_LEVEL_9_V12 = 9;
+
+    private ImageView mRotorTypeIconImageView;
     private ImageView mBatteryFirstImage;
     private ImageView mBatterySecondImage;
     private ImageView mBatteryThirdImage;
@@ -144,6 +155,8 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
     }
 
     private void initView(View v) {
+        mRotorTypeIconImageView = (ImageView) v.findViewById(R.id.motor_type_icon);
+
         v.findViewById(R.id.preflight_check_ok_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -367,6 +380,7 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
                 break;
             case ON_ROTO_TYPE_UPDATE:
                 mRotorType = droneStatus.getRotoType();
+                mRotorTypeIconImageView.setImageLevel(calculateRotorType(mRotorType));
                 if (!droneStatus.isFlying()) {
                     initMotorTestButton(mRotorType);
                 }
@@ -378,6 +392,31 @@ public class PreflightCheckDialogFragment extends DialogFragment implements Dron
                     initMotorTestButton(mRotorType);
                 }
                 break;
+        }
+    }
+
+    private int calculateRotorType(int rotorType) {
+        switch (rotorType) {
+            case Parameters.ROTOR_TYPE_QUADROTOR_I:
+                return 1;
+            case Parameters.ROTOR_TYPE_QUADROTOR:
+                return 2;
+            case Parameters.ROTOR_TYPE_HEXAROTOR_I:
+                return 3;
+            case Parameters.ROTOR_TYPE_HEXAROTOR:
+                return 4;
+            case Parameters.ROTOR_TYPE_OCTOROTOR_I:
+                return 5;
+            case Parameters.ROTOR_TYPE_OCTOROTOR:
+                return 6;
+            case Parameters.ROTOR_TYPE_DUO_QUADROTOR:
+                return 7;
+            case Parameters.ROTOR_TYPE_DUO_HEXAROTOR_I:
+                return 8;
+            case Parameters.ROTOR_TYPE_DUO_HEXAROTOR:
+                return 9;
+            default:
+                return 0;
         }
     }
 

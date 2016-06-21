@@ -49,12 +49,13 @@
 
             <ImageView
                 android:id="@+id/motor_type_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="168dp"
+                android:layout_height="168dp"
                 android:layout_marginLeft="32dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/icon_motor_type06" />
+                android:scaleType="center"
+                android:src="@drawable/preflight_check_frame_type_list" />
 
             <TextView
                 android:id="@+id/motor_test_title"
@@ -233,7 +234,7 @@
                         android:id="@+id/battery_check_icon_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_battery_light_0" />
+                        android:src="@drawable/battery_remaining_light_level_list" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -280,7 +281,7 @@
                         android:id="@+id/battery_check_icon_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_battery_light_0" />
+                        android:src="@drawable/battery_remaining_light_level_list" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -327,7 +328,7 @@
                         android:id="@+id/battery_check_icon_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_battery_light_0" />
+                        android:src="@drawable/battery_remaining_light_level_list" />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/type_unconn_n" android:maxLevel="0"/>
+    <item android:drawable="@drawable/type_i4_n" android:maxLevel="1"/>
+    <item android:drawable="@drawable/type_x4_n" android:maxLevel="2"/>
+    <item android:drawable="@drawable/type_i6_n" android:maxLevel="3"/>
+    <item android:drawable="@drawable/type_v6_n" android:maxLevel="4"/>
+    <item android:drawable="@drawable/type_i8_n" android:maxLevel="5"/>
+    <item android:drawable="@drawable/type_v8_n" android:maxLevel="6"/>
+    <item android:drawable="@drawable/type_x8_n" android:maxLevel="7"/>
+    <item android:drawable="@drawable/type_i12_n" android:maxLevel="8"/>
+    <item android:drawable="@drawable/type_v12_n" android:maxLevel="9"/>
+</level-list>
