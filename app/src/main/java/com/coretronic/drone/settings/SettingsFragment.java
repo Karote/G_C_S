@@ -213,8 +213,10 @@ public class SettingsFragment extends UnBindDrawablesFragment {
     }
 
     public void updateHeartbeatTimeStamp(long heartbeatTimestamp) {
-        mLastHeartbeatTimestamp = heartbeatTimestamp;
-        setDroneConnectedIndicator(true);
+        if (mLastHeartbeatTimestamp != heartbeatTimestamp) {
+            mLastHeartbeatTimestamp = heartbeatTimestamp;
+            setDroneConnectedIndicator(true);
+        }
     }
 
     private void setDroneConnectedIndicator(boolean isConnected) {

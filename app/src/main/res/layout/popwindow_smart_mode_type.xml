@@ -8,42 +8,42 @@
     android:paddingRight="12dp">
 
     <Button
-        android:id="@+id/altitude_button"
+        android:id="@+id/smart_mode_off_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/popdialog_more_function_button_height"
         android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
         android:fontFamily="@string/font_roboto_medium"
-        android:text="@string/flight_altitude"
+        android:text="@string/smart_mode_off"
         android:textColor="@drawable/more_function_button_text_color"
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/manual_button"
+        android:id="@+id/smart_mode_cl_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/popdialog_more_function_button_height"
         android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
         android:fontFamily="@string/font_roboto_medium"
-        android:text="@string/manual"
+        android:text="@string/smart_mode_cl"
         android:textColor="@drawable/more_function_button_text_color"
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/gps_button"
+        android:id="@+id/smart_mode_hl_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/popdialog_more_function_button_height"
         android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
         android:fontFamily="@string/font_roboto_medium"
-        android:text="@string/gps"
+        android:text="@string/smart_mode_hl"
         android:textColor="@drawable/more_function_button_text_color"
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/optical_flow_button"
+        android:id="@+id/smart_mode_poi_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/popdialog_more_function_button_height"
         android:background="@drawable/fragment_mission_plan_spinner_dropdown_bg"
         android:fontFamily="@string/font_roboto_medium"
-        android:text="@string/optical_flow"
+        android:text="@string/smart_mode_poi"
         android:textColor="@drawable/more_function_button_text_color"
         android:textSize="18sp" />
 </LinearLayout>

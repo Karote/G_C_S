@@ -118,7 +118,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="28dp"
                 app:label="@string/flight_mode_1"
-                app:range="0-1230" />
+                app:range="1100-1366" />
         </RelativeLayout>
 
         <com.coretronic.drone.ui.FlightModeModel
@@ -127,7 +127,7 @@
             android:layout_height="48dp"
             android:layout_marginBottom="@dimen/setting_item_margin_bottom"
             app:label="@string/flight_mode_2"
-            app:range="1231-1360" />
+            app:range="1367-1633" />
 
         <com.coretronic.drone.ui.FlightModeModel
             android:id="@+id/flight_mode_3"
@@ -135,125 +135,29 @@
             android:layout_height="48dp"
             android:layout_marginBottom="@dimen/setting_item_margin_bottom"
             app:label="@string/flight_mode_3"
-            app:range="1361-1490" />
-
-        <com.coretronic.drone.ui.FlightModeModel
-            android:id="@+id/flight_mode_4"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
-            app:label="@string/flight_mode_4"
-            app:range="1491-1620" />
-
-        <com.coretronic.drone.ui.FlightModeModel
-            android:id="@+id/flight_mode_5"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
-            app:label="@string/flight_mode_5"
-            app:range="1621-1749" />
-
-        <com.coretronic.drone.ui.FlightModeModel
-            android:id="@+id/flight_mode_6"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="@dimen/setting_item_margin_bottom"
-            app:label="@string/flight_mode_6"
-            app:range="1750+" />
+            app:range="1634+" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_item_height"
+            android:layout_height="48dp"
             android:layout_marginBottom="@dimen/setting_item_margin_bottom">
 
             <TextView
-                android:id="@+id/tuning_title"
+                android:id="@+id/return_to_home_title"
                 style="@style/settings_title_lv_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tuning" />
+                android:text="@string/return_to_home" />
 
             <TextView
                 style="@style/settings_title_lv_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tuning_title"
+                android:layout_below="@id/return_to_home_title"
                 android:text="CH-6" />
 
-
-            <RadioGroup
-                android:id="@+id/settings_tuning_radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="212dp"
-                android:layout_marginStart="212dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/tuning_throttle_button"
-                    style="@style/settings_button_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/settings_button_bg"
-                    android:button="@android:color/transparent"
-                    android:checked="true"
-                    android:text="@string/throttle_position_for_hovering" />
-
-                <RadioButton
-                    android:id="@+id/tuning_basic_button"
-                    style="@style/settings_button_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginStart="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/settings_button_bg"
-                    android:button="@android:color/transparent"
-                    android:text="@string/basic_p_gain_roll_pitch" />
-
-                <RadioButton
-                    android:id="@+id/tuning_none_button"
-                    style="@style/settings_button_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginStart="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/settings_button_bg"
-                    android:button="@android:color/transparent"
-                    android:text="@string/none" />
-
-            </RadioGroup>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
-
-            <TextView
-                android:id="@+id/gear_title"
-                style="@style/settings_title_lv_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gear" />
-
-            <TextView
-                style="@style/settings_title_lv_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/gear_title"
-                android:text="CH-7" />
-
             <ToggleButton
-                android:id="@+id/gear_reverse_button"
+                android:id="@+id/return_to_home_reverse_button"
                 style="@style/settings_button_text"
                 android:layout_width="72dp"
                 android:layout_height="36dp"
@@ -270,26 +174,26 @@
                 android:layout_marginLeft="212dp"
                 android:layout_marginStart="212dp"
                 android:layout_marginTop="10dp"
-                android:layout_toLeftOf="@id/gear_reverse_button"
-                android:layout_toStartOf="@id/gear_reverse_button"
+                android:layout_toLeftOf="@id/return_to_home_reverse_button"
+                android:layout_toStartOf="@id/return_to_home_reverse_button"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/gear_retract_text_view"
+                    android:id="@+id/return_to_home_off_text_view"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
                     android:layout_weight="1"
                     android:background="@drawable/settings_focus_frame"
-                    android:text="@string/retract" />
+                    android:text="@string/switch_btn_off" />
 
                 <TextView
-                    android:id="@+id/gear_deploy_text_view"
+                    android:id="@+id/return_to_home_on_text_view"
                     style="@style/settings_button_text"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
                     android:layout_weight="1"
-                    android:text="@string/deploy" />
+                    android:text="@string/return_to_home" />
             </LinearLayout>
 
             <com.coretronic.drone.ui.PwmIndicatorBar
@@ -299,8 +203,237 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="212dp"
                 android:layout_marginStart="212dp"
-                android:layout_toLeftOf="@id/gear_reverse_button"
-                android:layout_toStartOf="@id/gear_reverse_button" />
+                android:layout_toLeftOf="@id/return_to_home_reverse_button"
+                android:layout_toStartOf="@id/return_to_home_reverse_button" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <TextView
+                android:id="@+id/smart_mode_title"
+                style="@style/settings_title_lv_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_mode" />
+
+            <TextView
+                style="@style/settings_title_lv_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/smart_mode_title"
+                android:layout_marginTop="4dp"
+                android:text="CH-7" />
+
+            <TextView
+                android:id="@+id/smart_mode_pwm_text"
+                style="@style/settings_title_lv_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="212dp"
+                android:layout_marginStart="212dp"
+                android:layout_marginTop="14dp"
+                android:text="PWM-1000" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="28dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="204dp"
+                    android:layout_height="match_parent"
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/settings_title_lv_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/smart_mode_1" />
+
+                    <TextView
+                        style="@style/settings_title_lv_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1100-1366" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/smart_mode_1_off_text"
+                    style="@style/settings_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/switch_btn_off" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <LinearLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_title_lv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/smart_mode_2" />
+
+                <TextView
+                    style="@style/settings_title_lv_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1367-1633" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/smart_mode_2_type_button"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/settings_button_bg"
+                android:drawableEnd="@drawable/icon_settings_down_arrow"
+                android:drawableRight="@drawable/icon_settings_down_arrow"
+                android:fontFamily="@string/font_roboto_medium"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="12dp"
+                android:paddingStart="12dp"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <LinearLayout
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_title_lv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/smart_mode_3" />
+
+                <TextView
+                    style="@style/settings_title_lv_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1634+" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/smart_mode_3_type_button"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/settings_button_bg"
+                android:drawableEnd="@drawable/icon_settings_down_arrow"
+                android:drawableRight="@drawable/icon_settings_down_arrow"
+                android:fontFamily="@string/font_roboto_medium"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="12dp"
+                android:paddingStart="12dp"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="@dimen/setting_item_margin_bottom">
+
+            <TextView
+                android:id="@+id/landing_gear_title"
+                style="@style/settings_title_lv_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/landing_gear" />
+
+            <TextView
+                style="@style/settings_title_lv_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/landing_gear_title"
+                android:text="CH-8" />
+
+            <ToggleButton
+                android:id="@+id/landing_gear_reverse_button"
+                style="@style/settings_button_text"
+                android:layout_width="72dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/settings_button_bg"
+                android:textOff="@string/reverse"
+                android:textOn="@string/reverse" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="212dp"
+                android:layout_marginStart="212dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/landing_gear_reverse_button"
+                android:layout_toStartOf="@id/landing_gear_reverse_button"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/landing_gear_close_text_view"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_focus_frame"
+                    android:text="@string/close" />
+
+                <TextView
+                    android:id="@+id/landing_gear_open_text_view"
+                    style="@style/settings_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:text="@string/open" />
+            </LinearLayout>
+
+            <com.coretronic.drone.ui.PwmIndicatorBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="212dp"
+                android:layout_marginStart="212dp"
+                android:layout_toLeftOf="@id/landing_gear_reverse_button"
+                android:layout_toStartOf="@id/landing_gear_reverse_button" />
 
         </RelativeLayout>
 
@@ -320,7 +453,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/camera_trigger_title"
-                android:text="CH-8" />
+                android:text="CH-9" />
 
             <ToggleButton
                 android:id="@+id/camera_trigger_reverse_button"

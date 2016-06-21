@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -45,57 +46,54 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     private final static String ARGUMENT_RC_THROTTLE_MIN = "RC_THROTTLE_MIN";
     private final static String ARGUMENT_RC_THROTTLE_MAX = "RC_THROTTLE_MAX";
     private final static String ARGUMENT_RC_THROTTLE_REV = "RC_THROTTLE_REV";
-    private final static String ARGUMENT_RC_TUNE = "RC_TUNE";
-    private final static String ARGUMENT_RC_GEAR_MIN = "RC_GEAR_MIN";
-    private final static String ARGUMENT_RC_GEAR_MAX = "RC_GEAR_MAX";
+    private final static String ARGUMENT_RC_RTL_REV = "RC_RTL_REV";
     private final static String ARGUMENT_RC_GEAR_REV = "RC_GEAR_REV";
     private final static String ARGUMENT_RC_CAMERA_TRIGGER_REV = "RC_CAMERA_TRIGGER_REV";
     private final static String ARGUMENT_RC_FLIGHT_MODE_ONE = "RC_FLIGHT_MODE_ONE";
-    private final static String ARGUMENT_RC_FLIGHT_MODE_TWO = "RC_FLIGHT_MODE_TWO";
     private final static String ARGUMENT_RC_FLIGHT_MODE_THREE = "RC_FLIGHT_MODE_THREE";
-    private final static String ARGUMENT_RC_FLIGHT_MODE_FOUR = "RC_FLIGHT_MODE_FOUR";
     private final static String ARGUMENT_RC_FLIGHT_MODE_FIVE = "RC_FLIGHT_MODE_FIVE";
-    private final static String ARGUMENT_RC_FLIGHT_MODE_SIX = "RC_FLIGHT_MODE_SIX";
-    private final static String ARGUMENT_RC_FLIGHT_MODE_SIMPLE = "RC_FLIGHT_MODE_SIMPLE";
-    private final static String ARGUMENT_RC_FLIGHT_MODE_SUPER_SIMPLE = "RC_FLIGHT_MODE_SUPER_SIMPLE";
+    private final static String ARGUMENT_RC_SMART_MODE_ONE = "RC_FLIGHT_MODE_ONE";
+    private final static String ARGUMENT_RC_SMART_MODE_TWO = "RC_FLIGHT_MODE_TWO";
 
-    private final static int FLIGHT_MODE2_PWM_THRESHOLD = 1231;
-    private final static int FLIGHT_MODE3_PWM_THRESHOLD = 1361;
-    private final static int FLIGHT_MODE4_PWM_THRESHOLD = 1491;
-    private final static int FLIGHT_MODE5_PWM_THRESHOLD = 1621;
-    private final static int FLIGHT_MODE6_PWM_THRESHOLD = 1750;
+    private final static int FLIGHT_MODE2_PWM_THRESHOLD = 1367;
+    private final static int FLIGHT_MODE3_PWM_THRESHOLD = 1634;
+
+    private final static int SMART_MODE2_PWM_THRESHOLD = 1367;
+    private final static int SMART_MODE3_PWM_THRESHOLD = 1634;
 
     private RadioGroup mReceiverTypeRadioGroup;
-    private RadioGroup mRCTuningRadioGroup;
-    private ToggleButton mGearReverseButton;
+    private ToggleButton mReturnHomeReverseButton;
+    private ToggleButton mLandingGearReverseButton;
     private ToggleButton mCameraTriggerReverseButton;
     private FlightModeModel mFlightModeModel1;
     private FlightModeModel mFlightModeModel2;
     private FlightModeModel mFlightModeModel3;
-    private FlightModeModel mFlightModeModel4;
-    private FlightModeModel mFlightModeModel5;
-    private FlightModeModel mFlightModeModel6;
     private RcCalibrationBar mRCCalibrationBarRoll;
     private RcCalibrationBar mRCCalibrationBarPitch;
     private RcCalibrationBar mRCCalibrationBarYaw;
     private RcCalibrationBar mRCCalibrationBarThrottle;
     private TextView mFlightModePWMTextView;
-    private TextView mGearRetractTextView;
-    private TextView mGearDeployTextView;
+    private TextView mReturnHomeOffTextView;
+    private TextView mReturnHomeOnTextView;
+    private TextView mSmartModePWMTextView;
+    private TextView mLandingGearCloseTextView;
+    private TextView mLandingGearOpenTextView;
     private TextView mCameraTriggerOffTextView;
     private TextView mCameraTriggerOnTextView;
+    private TextView mSmartMode1TypeOffText;
+    private Button mSmartMode2TypeButton;
+    private Button mSmartMode3TypeButton;
+
 
     private Dialog mFlightModeTypePopupDialog;
+    private Dialog mSmartModeTypePopupDialog;
 
-    private String mSimpleBinaryStr;
-    private String mSuperSimpleBinaryStr;
-    private int mFlightModeSimple;
-    private int mFlightModeSuperSimple;
     private int mFlightModeTypeSettingValue;
+    private int mSmartModeTypeSettingValue;
     private int mRCType;
-    private float mRCTuning;
+    private float mRCReturnHomePWM;
     private float mRCCameraTriggerPWM;
-    private float mRCGearPWM;
+    private float mRCLandingGearPWM;
     private float mRCRollPWMMin;
     private float mRCRollPWMMax;
     private boolean mRCRollReverse;
@@ -109,7 +107,8 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
     private float mRCThrottlePWMMax;
     private boolean mRCThrottleReverse;
     private boolean mRCCalibrationStart = false;
-    private boolean mGearReverse;
+    private boolean mRCReturnHomeReverse;
+    private boolean mLandingGearReverse;
     private boolean mCameraTriggerReverse;
 
     private boolean mIsAllReady = false;
@@ -139,19 +138,14 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         args.putFloat(ARGUMENT_RC_THROTTLE_MIN, droneParameter.getRCThrottleMin());
         args.putFloat(ARGUMENT_RC_THROTTLE_MAX, droneParameter.getRCThrottleMax());
         args.putInt(ARGUMENT_RC_THROTTLE_REV, droneParameter.getRCThrottleRev());
-        args.putFloat(ARGUMENT_RC_TUNE, droneParameter.getTune());
-        args.putFloat(ARGUMENT_RC_GEAR_MIN, droneParameter.getRCGearMin());
-        args.putFloat(ARGUMENT_RC_GEAR_MAX, droneParameter.getRCGearMax());
+        args.putInt(ARGUMENT_RC_RTL_REV, droneParameter.getRCRTLRev());
         args.putInt(ARGUMENT_RC_GEAR_REV, droneParameter.getRCGearRev());
         args.putInt(ARGUMENT_RC_CAMERA_TRIGGER_REV, droneParameter.getRCCameraTriggerRev());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_ONE, droneParameter.getFlightModeOne());
-        args.putInt(ARGUMENT_RC_FLIGHT_MODE_TWO, droneParameter.getFlightModeTwo());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_THREE, droneParameter.getFlightModeThree());
-        args.putInt(ARGUMENT_RC_FLIGHT_MODE_FOUR, droneParameter.getFlightModeFour());
         args.putInt(ARGUMENT_RC_FLIGHT_MODE_FIVE, droneParameter.getFlightModeFive());
-        args.putInt(ARGUMENT_RC_FLIGHT_MODE_SIX, droneParameter.getFlightModeSix());
-        args.putInt(ARGUMENT_RC_FLIGHT_MODE_SIMPLE, droneParameter.getFlightModeSimple());
-        args.putInt(ARGUMENT_RC_FLIGHT_MODE_SUPER_SIMPLE, droneParameter.getFlightModeSuperSimple());
+        args.putInt(ARGUMENT_RC_SMART_MODE_ONE, droneParameter.getSmartModeOne());
+        args.putInt(ARGUMENT_RC_SMART_MODE_TWO, droneParameter.getSmartModeTwo());
 
         fragment.setArguments(args);
         return fragment;
@@ -187,12 +181,18 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         mFlightModeModel1 = (FlightModeModel) v.findViewById(R.id.flight_mode_1);
         mFlightModeModel2 = (FlightModeModel) v.findViewById(R.id.flight_mode_2);
         mFlightModeModel3 = (FlightModeModel) v.findViewById(R.id.flight_mode_3);
-        mFlightModeModel4 = (FlightModeModel) v.findViewById(R.id.flight_mode_4);
-        mFlightModeModel5 = (FlightModeModel) v.findViewById(R.id.flight_mode_5);
-        mFlightModeModel6 = (FlightModeModel) v.findViewById(R.id.flight_mode_6);
 
-        mGearRetractTextView = (TextView) v.findViewById(R.id.gear_retract_text_view);
-        mGearDeployTextView = (TextView) v.findViewById(R.id.gear_deploy_text_view);
+        mReturnHomeOffTextView = (TextView) v.findViewById(R.id.return_to_home_off_text_view);
+        mReturnHomeOnTextView = (TextView) v.findViewById(R.id.return_to_home_on_text_view);
+
+        mSmartModePWMTextView = (TextView) v.findViewById(R.id.smart_mode_pwm_text);
+
+        mSmartMode1TypeOffText = (TextView) v.findViewById(R.id.smart_mode_1_off_text);
+        mSmartMode2TypeButton = (Button) v.findViewById(R.id.smart_mode_2_type_button);
+        mSmartMode3TypeButton = (Button) v.findViewById(R.id.smart_mode_3_type_button);
+
+        mLandingGearCloseTextView = (TextView) v.findViewById(R.id.landing_gear_close_text_view);
+        mLandingGearOpenTextView = (TextView) v.findViewById(R.id.landing_gear_open_text_view);
 
         mCameraTriggerOffTextView = (TextView) v.findViewById(R.id.camera_trigger_off_text_view);
         mCameraTriggerOnTextView = (TextView) v.findViewById(R.id.camera_trigger_on_text_view);
@@ -237,25 +237,29 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         mFlightModeModel1.registerFlightModeModelButtonClickListener(R.id.flight_mode_1, flightModeModelButtonClickListener);
         mFlightModeModel2.registerFlightModeModelButtonClickListener(R.id.flight_mode_2, flightModeModelButtonClickListener);
         mFlightModeModel3.registerFlightModeModelButtonClickListener(R.id.flight_mode_3, flightModeModelButtonClickListener);
-        mFlightModeModel4.registerFlightModeModelButtonClickListener(R.id.flight_mode_4, flightModeModelButtonClickListener);
-        mFlightModeModel5.registerFlightModeModelButtonClickListener(R.id.flight_mode_5, flightModeModelButtonClickListener);
-        mFlightModeModel6.registerFlightModeModelButtonClickListener(R.id.flight_mode_6, flightModeModelButtonClickListener);
 
-        mRCTuningRadioGroup = (RadioGroup) v.findViewById(R.id.settings_tuning_radio_group);
-        mRCTuningRadioGroup.setOnCheckedChangeListener(onTuningCheckedChangeListener);
-        v.findViewById(R.id.tuning_throttle_button).setOnClickListener(onTuningRadioButtonClickListener);
-        v.findViewById(R.id.tuning_basic_button).setOnClickListener(onTuningRadioButtonClickListener);
-        v.findViewById(R.id.tuning_none_button).setOnClickListener(onTuningRadioButtonClickListener);
-
-
-        mGearReverseButton = (ToggleButton) v.findViewById(R.id.gear_reverse_button);
-        mGearReverseButton.setOnClickListener(new View.OnClickListener() {
+        mReturnHomeReverseButton = (ToggleButton) v.findViewById(R.id.return_to_home_reverse_button);
+        mReturnHomeReverseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGearReverse = !mGearReverse;
-                mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_RC7_REV.ordinal(),
-                        mGearReverse ? Parameters.RC_REVERSE_REVERSED : Parameters.RC_REVERSE_NORMAL);
-                setGearView(mRCGearPWM);
+                mRCReturnHomeReverse = !mRCReturnHomeReverse;
+                mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_RC6_REV.ordinal(),
+                        mRCReturnHomeReverse ? Parameters.RC_REVERSE_REVERSED : Parameters.RC_REVERSE_NORMAL);
+                setReturnHomeView(mRCReturnHomePWM);
+            }
+        });
+
+        mSmartMode2TypeButton.setOnClickListener(smartModeButtonClickListener);
+        mSmartMode3TypeButton.setOnClickListener(smartModeButtonClickListener);
+
+        mLandingGearReverseButton = (ToggleButton) v.findViewById(R.id.landing_gear_reverse_button);
+        mLandingGearReverseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLandingGearReverse = !mLandingGearReverse;
+                mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_RC8_REV.ordinal(),
+                        mLandingGearReverse ? Parameters.RC_REVERSE_REVERSED : Parameters.RC_REVERSE_NORMAL);
+                setLandingGearView(mRCLandingGearPWM);
             }
         });
 
@@ -264,7 +268,7 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
             @Override
             public void onClick(View v) {
                 mCameraTriggerReverse = !mCameraTriggerReverse;
-                mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_RC8_REV.ordinal(),
+                mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_RC9_REV.ordinal(),
                         mCameraTriggerReverse ? Parameters.RC_REVERSE_REVERSED : Parameters.RC_REVERSE_NORMAL);
                 setCameraTriggerView(mRCCameraTriggerPWM);
             }
@@ -327,59 +331,7 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         public void onModeTypeButtonClick(int resourceId, int[] viewLocation) {
             showFlightModeTypePopupDialog(resourceId, viewLocation);
         }
-
-        @Override
-        public void onFlightModeLockTypeCheck(int resourceId, int type) {
-            StringBuilder simpleSettingString = new StringBuilder(mSimpleBinaryStr);
-            StringBuilder superSimpleSettingString = new StringBuilder(mSuperSimpleBinaryStr);
-
-            switch (resourceId) {
-                case R.id.flight_mode_1:
-                    simpleSettingString.setCharAt(5, flightModeSimpleTypeToBinaryString(type).charAt(0));
-                    superSimpleSettingString.setCharAt(5, flightModeSimpleTypeToBinaryString(type).charAt(1));
-                    break;
-                case R.id.flight_mode_2:
-                    simpleSettingString.setCharAt(4, flightModeSimpleTypeToBinaryString(type).charAt(0));
-                    superSimpleSettingString.setCharAt(4, flightModeSimpleTypeToBinaryString(type).charAt(1));
-                    break;
-                case R.id.flight_mode_3:
-                    simpleSettingString.setCharAt(3, flightModeSimpleTypeToBinaryString(type).charAt(0));
-                    superSimpleSettingString.setCharAt(3, flightModeSimpleTypeToBinaryString(type).charAt(1));
-                    break;
-                case R.id.flight_mode_4:
-                    simpleSettingString.setCharAt(2, flightModeSimpleTypeToBinaryString(type).charAt(0));
-                    superSimpleSettingString.setCharAt(2, flightModeSimpleTypeToBinaryString(type).charAt(1));
-                    break;
-                case R.id.flight_mode_5:
-                    simpleSettingString.setCharAt(1, flightModeSimpleTypeToBinaryString(type).charAt(0));
-                    superSimpleSettingString.setCharAt(1, flightModeSimpleTypeToBinaryString(type).charAt(1));
-                    break;
-                case R.id.flight_mode_6:
-                    simpleSettingString.setCharAt(0, flightModeSimpleTypeToBinaryString(type).charAt(0));
-                    superSimpleSettingString.setCharAt(0, flightModeSimpleTypeToBinaryString(type).charAt(1));
-                    break;
-            }
-            mFlightModeSimple = Integer.parseInt(simpleSettingString.toString(), 2);
-            mFlightModeSuperSimple = Integer.parseInt(superSimpleSettingString.toString(), 2);
-            mDroneController.setSimpleAndSuperSimpleMode(mFlightModeSimple, mFlightModeSuperSimple);
-        }
     };
-
-    private String flightModeSimpleTypeToBinaryString(int settingType) {
-        String binaryString = "00";
-        switch (settingType) {
-            case FlightModeModel.FLIGHT_MODE_LOCK_TYPE_NONE:
-                binaryString = "00";
-                break;
-            case FlightModeModel.FLIGHT_MODE_LOCK_TYPE_HEADING:
-                binaryString = "10";
-                break;
-            case FlightModeModel.FLIGHT_MODE_LOCK_TYPE_HOME:
-                binaryString = "01";
-                break;
-        }
-        return binaryString;
-    }
 
     private void showFlightModeTypePopupDialog(final int resourceId, int[] viewLocation) {
         mFlightModeTypePopupDialog = new Dialog(getActivity());
@@ -391,14 +343,12 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         wmlp.x = viewLocation[0] - getResources().getDimensionPixelOffset(R.dimen.popdialog_more_function_width);
         wmlp.y = viewLocation[1];
         mFlightModeTypePopupDialog.getWindow().setAttributes(wmlp);
+        mFlightModeTypeSettingValue = -1;
         mFlightModeTypePopupDialog.show();
 
         mFlightModeTypePopupDialog.findViewById(R.id.altitude_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.manual_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
-        mFlightModeTypePopupDialog.findViewById(R.id.auto_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.gps_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
-        mFlightModeTypePopupDialog.findViewById(R.id.rtl_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
-        mFlightModeTypePopupDialog.findViewById(R.id.land_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
         mFlightModeTypePopupDialog.findViewById(R.id.optical_flow_button).setOnClickListener(onFlightModeTypePopDialogButtonClickListener);
 
         mFlightModeTypePopupDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -424,17 +374,8 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
                 case R.id.manual_button:
                     mFlightModeTypeSettingValue = Parameters.FLTMODE_ACRO;
                     break;
-                case R.id.auto_button:
-                    mFlightModeTypeSettingValue = Parameters.FLTMODE_AUTO;
-                    break;
                 case R.id.gps_button:
                     mFlightModeTypeSettingValue = Parameters.FLTMODE_LOITER;
-                    break;
-                case R.id.rtl_button:
-                    mFlightModeTypeSettingValue = Parameters.FLTMODE_RTL;
-                    break;
-                case R.id.land_button:
-                    mFlightModeTypeSettingValue = Parameters.FLTMODE_LAND;
                     break;
                 case R.id.optical_flow_button:
                     mFlightModeTypeSettingValue = Parameters.FLTMODE_OF_LOITER;
@@ -444,38 +385,64 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         }
     };
 
-    private RadioGroup.OnCheckedChangeListener onTuningCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
+    private View.OnClickListener smartModeButtonClickListener = new View.OnClickListener() {
         @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId) {
-                case R.id.tuning_throttle_button:
-                    mRCTuning = Parameters.TUNE_THROTTLE_POSITION;
-                    break;
-                case R.id.tuning_basic_button:
-                    mRCTuning = Parameters.TUNE_PGAIN;
-                    break;
-                case R.id.tuning_none_button:
-                    mRCTuning = Parameters.TUNE_NONE;
-                    break;
-            }
+        public void onClick(View v) {
+            int viewLocation[] = new int[2];
+            v.getLocationOnScreen(viewLocation);
+            showSmartModeTypePopupDialog(v.getId(), viewLocation);
         }
     };
 
-    private RadioButton.OnClickListener onTuningRadioButtonClickListener = new RadioButton.OnClickListener() {
+    private void showSmartModeTypePopupDialog(final int resourceId, int[] viewLocation) {
+        mSmartModeTypePopupDialog = new Dialog(getActivity());
+        mSmartModeTypePopupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mSmartModeTypePopupDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mSmartModeTypePopupDialog.setContentView(R.layout.popwindow_smart_mode_type);
+        WindowManager.LayoutParams wmlp = mSmartModeTypePopupDialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.TOP | Gravity.START;
+        wmlp.x = viewLocation[0] - getResources().getDimensionPixelOffset(R.dimen.popdialog_more_function_width);
+        wmlp.y = viewLocation[1];
+        mSmartModeTypePopupDialog.getWindow().setAttributes(wmlp);
+        mSmartModeTypeSettingValue = -1;
+        mSmartModeTypePopupDialog.show();
+
+        mSmartModeTypePopupDialog.findViewById(R.id.smart_mode_off_button).setOnClickListener(onSmartModeTypePopDialogButtonClickListener);
+        mSmartModeTypePopupDialog.findViewById(R.id.smart_mode_cl_button).setOnClickListener(onSmartModeTypePopDialogButtonClickListener);
+        mSmartModeTypePopupDialog.findViewById(R.id.smart_mode_hl_button).setOnClickListener(onSmartModeTypePopDialogButtonClickListener);
+        mSmartModeTypePopupDialog.findViewById(R.id.smart_mode_poi_button).setOnClickListener(onSmartModeTypePopDialogButtonClickListener);
+
+        mSmartModeTypePopupDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (mSmartModeTypeSettingValue < 0) {
+                    return;
+                }
+                setSmartModeView(resourceId, mSmartModeTypeSettingValue);
+                setSmartModeParameter(resourceId, mSmartModeTypeSettingValue);
+                mSmartModeTypeSettingValue = -1;
+            }
+        });
+    }
+
+    private View.OnClickListener onSmartModeTypePopDialogButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.tuning_throttle_button:
-                    mRCTuning = Parameters.TUNE_THROTTLE_POSITION;
+                case R.id.smart_mode_off_button:
+                    mSmartModeTypeSettingValue = Parameters.SMART_MODE.SMART_MODE_OFF.ordinal();
                     break;
-                case R.id.tuning_basic_button:
-                    mRCTuning = Parameters.TUNE_PGAIN;
+                case R.id.smart_mode_cl_button:
+                    mSmartModeTypeSettingValue = Parameters.SMART_MODE.SMART_MODE_CL.ordinal();
                     break;
-                case R.id.tuning_none_button:
-                    mRCTuning = Parameters.TUNE_NONE;
+                case R.id.smart_mode_hl_button:
+                    mSmartModeTypeSettingValue = Parameters.SMART_MODE.SMART_MODE_HL.ordinal();
+                    break;
+                case R.id.smart_mode_poi_button:
+                    mSmartModeTypeSettingValue = Parameters.SMART_MODE.SMART_MODE_POI.ordinal();
                     break;
             }
-            mDroneController.setParameters(PARAMETER_ID.PARAMETER_ID_TUNE.ordinal(), mRCTuning);
+            mSmartModeTypePopupDialog.dismiss();
         }
     };
 
@@ -485,20 +452,23 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         mView.findViewById(R.id.receiver_type_spektrum_button).setEnabled(false);
         mView.findViewById(R.id.receiver_type_spektrum_button).setEnabled(false);
         mFlightModePWMTextView.setText("PWM-1100");
-        mFlightModeModel1.setViewEnable(false);
-        mFlightModeModel2.setViewEnable(false);
-        mFlightModeModel3.setViewEnable(false);
-        mFlightModeModel4.setViewEnable(false);
-        mFlightModeModel5.setViewEnable(false);
-        mFlightModeModel6.setViewEnable(false);
-        mView.findViewById(R.id.gear_retract_text_view).setEnabled(false);
-        mView.findViewById(R.id.gear_deploy_text_view).setEnabled(false);
+        mFlightModeModel1.setViewDisable();
+        mFlightModeModel2.setViewDisable();
+        mFlightModeModel3.setViewDisable();
+        mSmartModePWMTextView.setText("PWM-1100");
+        mSmartMode1TypeOffText.setTextColor(getResources().getColor(R.color.white_transparent_35));
+        mSmartMode2TypeButton.setEnabled(false);
+        mSmartMode2TypeButton.setText("");
+        mSmartMode3TypeButton.setEnabled(false);
+        mSmartMode3TypeButton.setText("");
+        mView.findViewById(R.id.return_to_home_off_text_view).setEnabled(false);
+        mView.findViewById(R.id.return_to_home_on_text_view).setEnabled(false);
+        mView.findViewById(R.id.landing_gear_close_text_view).setEnabled(false);
+        mView.findViewById(R.id.landing_gear_open_text_view).setEnabled(false);
         mView.findViewById(R.id.camera_trigger_off_text_view).setEnabled(false);
         mView.findViewById(R.id.camera_trigger_on_text_view).setEnabled(false);
-        mView.findViewById(R.id.tuning_throttle_button).setEnabled(false);
-        mView.findViewById(R.id.tuning_basic_button).setEnabled(false);
-        mView.findViewById(R.id.tuning_none_button).setEnabled(false);
-        mView.findViewById(R.id.gear_reverse_button).setEnabled(false);
+        mView.findViewById(R.id.return_to_home_reverse_button).setEnabled(false);
+        mView.findViewById(R.id.landing_gear_reverse_button).setEnabled(false);
         mView.findViewById(R.id.camera_trigger_reverse_button).setEnabled(false);
         mView.findViewById(R.id.rc_calibration_start_button).setEnabled(false);
         mRCCalibrationBarRoll.setViewDisable();
@@ -549,67 +519,22 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
             mRCThrottleReverse = arguments.getInt(ARGUMENT_RC_THROTTLE_REV) == Parameters.RC_REVERSE_REVERSED;
             mRCCalibrationBarThrottle.setCalibrationConfig(mRCThrottlePWMMin, mRCThrottlePWMMax, mRCThrottleReverse);
 
-            mRCTuning = arguments.getFloat(ARGUMENT_RC_TUNE);
-            if (mRCTuning == Parameters.TUNE_THROTTLE_POSITION) {
-                mRCTuningRadioGroup.check(R.id.tuning_throttle_button);
-            } else if (mRCTuning == Parameters.TUNE_PGAIN) {
-                mRCTuningRadioGroup.check(R.id.tuning_basic_button);
-            } else if (mRCTuning == Parameters.TUNE_NONE) {
-                mRCTuningRadioGroup.check(R.id.tuning_none_button);
-            }
+            mRCReturnHomeReverse = arguments.getInt(ARGUMENT_RC_RTL_REV) < 0;
+            mReturnHomeReverseButton.setChecked(mRCReturnHomeReverse);
 
-            arguments.getFloat(ARGUMENT_RC_GEAR_MIN);
-            arguments.getFloat(ARGUMENT_RC_GEAR_MAX);
-
-
-            mGearReverse = arguments.getInt(ARGUMENT_RC_GEAR_REV) < 0;
-            mGearReverseButton.setChecked(mGearReverse);
+            mLandingGearReverse = arguments.getInt(ARGUMENT_RC_GEAR_REV) < 0;
+            mLandingGearReverseButton.setChecked(mLandingGearReverse);
 
             mCameraTriggerReverse = arguments.getInt(ARGUMENT_RC_CAMERA_TRIGGER_REV) < 0;
             mCameraTriggerReverseButton.setChecked(mCameraTriggerReverse);
 
             setFlightModeView(R.id.flight_mode_1, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_ONE));
-            setFlightModeView(R.id.flight_mode_2, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_TWO));
-            setFlightModeView(R.id.flight_mode_3, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_THREE));
-            setFlightModeView(R.id.flight_mode_4, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_FOUR));
-            setFlightModeView(R.id.flight_mode_5, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_FIVE));
-            setFlightModeView(R.id.flight_mode_6, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_SIX));
+            setFlightModeView(R.id.flight_mode_2, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_THREE));
+            setFlightModeView(R.id.flight_mode_3, arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_FIVE));
 
-            mFlightModeSimple = arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_SIMPLE);
-            mFlightModeSuperSimple = arguments.getInt(ARGUMENT_RC_FLIGHT_MODE_SUPER_SIMPLE);
-            setFlightModeSimplesToViews(mFlightModeSimple, mFlightModeSuperSimple);
+            setSmartModeView(R.id.smart_mode_2_type_button, arguments.getInt(ARGUMENT_RC_SMART_MODE_ONE));
+            setSmartModeView(R.id.smart_mode_3_type_button, arguments.getInt(ARGUMENT_RC_SMART_MODE_TWO));
         }
-    }
-
-    private void setFlightModeSimplesToViews(int flightModeSimple, int flightModeSuperSimple) {
-        mSimpleBinaryStr = String.format("%6s", Integer.toBinaryString(flightModeSimple)).replace(' ', '0');
-        mSuperSimpleBinaryStr = String.format("%6s", Integer.toBinaryString(flightModeSuperSimple)).replace(' ', '0');
-
-        for (int i = 0, j = 6; i < 6; i++, j--) {
-            if (mSimpleBinaryStr.charAt(i) == '0' && mSuperSimpleBinaryStr.charAt(i) == '0') {
-                getFlightModeViewByIndex(j).setCheckStatus(FlightModeModel.FLIGHT_MODE_LOCK_TYPE_NONE);
-            } else if (mSimpleBinaryStr.charAt(i) == '1' && mSuperSimpleBinaryStr.charAt(i) == '0') {
-                getFlightModeViewByIndex(j).setCheckStatus(FlightModeModel.FLIGHT_MODE_LOCK_TYPE_HEADING);
-            } else if (mSimpleBinaryStr.charAt(i) == '0' && mSuperSimpleBinaryStr.charAt(i) == '1') {
-                getFlightModeViewByIndex(j).setCheckStatus(FlightModeModel.FLIGHT_MODE_LOCK_TYPE_HOME);
-            }
-        }
-    }
-
-    private FlightModeModel getFlightModeViewByIndex(int i) {
-        switch (i) {
-            case 1:
-                return mFlightModeModel1;
-            case 2:
-                return mFlightModeModel2;
-            case 3:
-                return mFlightModeModel3;
-            case 4:
-                return mFlightModeModel4;
-            case 5:
-                return mFlightModeModel5;
-        }
-        return mFlightModeModel6;
     }
 
     private void setFlightModeView(int flightModeViewId, int value) {
@@ -621,17 +546,8 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
             case Parameters.FLTMODE_ACRO:
                 typeText = getResources().getString(R.string.manual);
                 break;
-            case Parameters.FLTMODE_AUTO:
-                typeText = getResources().getString(R.string.auto);
-                break;
             case Parameters.FLTMODE_LOITER:
                 typeText = getResources().getString(R.string.gps);
-                break;
-            case Parameters.FLTMODE_RTL:
-                typeText = getResources().getString(R.string.rtl);
-                break;
-            case Parameters.FLTMODE_LAND:
-                typeText = getResources().getString(R.string.land);
                 break;
             case Parameters.FLTMODE_OF_LOITER:
                 typeText = getResources().getString(R.string.optical_flow);
@@ -646,17 +562,8 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
                 mFlightModeModel2.setModeTypeButtonText(typeText);
                 break;
             case R.id.flight_mode_3:
-                mFlightModeModel3.setModeTypeButtonText(typeText);
-                break;
-            case R.id.flight_mode_4:
-                mFlightModeModel4.setModeTypeButtonText(typeText);
-                break;
-            case R.id.flight_mode_5:
-                mFlightModeModel5.setModeTypeButtonText(typeText);
-                break;
-            case R.id.flight_mode_6:
             default:
-                mFlightModeModel6.setModeTypeButtonText(typeText);
+                mFlightModeModel3.setModeTypeButtonText(typeText);
                 break;
         }
     }
@@ -669,21 +576,42 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
                 paramID = PARAMETER_ID.PARAMETER_ID_FLTMODE1.ordinal();
                 break;
             case R.id.flight_mode_2:
-                paramID = PARAMETER_ID.PARAMETER_ID_FLTMODE2.ordinal();
-                break;
-            case R.id.flight_mode_3:
                 paramID = PARAMETER_ID.PARAMETER_ID_FLTMODE3.ordinal();
                 break;
-            case R.id.flight_mode_4:
-                paramID = PARAMETER_ID.PARAMETER_ID_FLTMODE4.ordinal();
-                break;
-            case R.id.flight_mode_5:
+            case R.id.flight_mode_3:
+            default:
                 paramID = PARAMETER_ID.PARAMETER_ID_FLTMODE5.ordinal();
                 break;
-            case R.id.flight_mode_6:
-            default:
-                paramID = PARAMETER_ID.PARAMETER_ID_FLTMODE6.ordinal();
-                break;
+        }
+
+        mDroneController.setParameters(paramID, value);
+    }
+
+    private void setSmartModeView(int smartModeViewId, int value) {
+        String typeText = "";
+        if (value == Parameters.SMART_MODE.SMART_MODE_OFF.ordinal()) {
+            typeText = getResources().getString(R.string.smart_mode_off);
+        } else if (value == Parameters.SMART_MODE.SMART_MODE_CL.ordinal()) {
+            typeText = getResources().getString(R.string.smart_mode_cl);
+        } else if (value == Parameters.SMART_MODE.SMART_MODE_HL.ordinal()) {
+            typeText = getResources().getString(R.string.smart_mode_hl);
+        } else if (value == Parameters.SMART_MODE.SMART_MODE_POI.ordinal()) {
+            typeText = getResources().getString(R.string.smart_mode_poi);
+        }
+
+        if (smartModeViewId == R.id.smart_mode_2_type_button) {
+            mSmartMode2TypeButton.setText(typeText);
+        } else {
+            mSmartMode3TypeButton.setText(typeText);
+        }
+    }
+
+    private void setSmartModeParameter(int smartModeViewId, int value) {
+        int paramID;
+        if (smartModeViewId == R.id.smart_mode_2_type_button) {
+            paramID = PARAMETER_ID.PARAMETER_ID_SMART_MODE1.ordinal();
+        } else {
+            paramID = PARAMETER_ID.PARAMETER_ID_SMART_MODE2.ordinal();
         }
 
         mDroneController.setParameters(paramID, value);
@@ -697,18 +625,17 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
                 mFlightModePWMTextView.setText(String.format("PWM-%d", (int) droneStatus.getRCFlightModePWM()));
                 setFlightModeOnFocus(droneStatus.getRCFlightModePWM());
                 break;
-            case ON_RC_TUNING_PWM_UPDATE:
-                if (droneStatus.getRCTuningPWM() == Parameters.TUNE_THROTTLE_POSITION) {
-                    mRCTuningRadioGroup.check(R.id.tuning_throttle_button);
-                } else if (droneStatus.getRCTuningPWM() == Parameters.TUNE_PGAIN) {
-                    mRCTuningRadioGroup.check(R.id.tuning_basic_button);
-                } else if (droneStatus.getRCTuningPWM() == Parameters.TUNE_NONE) {
-                    mRCTuningRadioGroup.check(R.id.tuning_none_button);
-                }
+            case ON_RC_RTL_PWM_UPDATE:
+                mRCReturnHomePWM = droneStatus.getRCRTLPWM();
+                setReturnHomeView(mRCReturnHomePWM);
+                break;
+            case ON_RC_SMART_MODE_PWM_UPDATE:
+                mSmartModePWMTextView.setText(String.format("PWM-%d", (int) droneStatus.getRCSmartModePWM()));
+                setSmartModeOnFocus(droneStatus.getRCSmartModePWM());
                 break;
             case ON_RC_GEAR_PWM_UPDATE:
-                mRCGearPWM = droneStatus.getRCGearPWM();
-                setGearView(mRCGearPWM);
+                mRCLandingGearPWM = droneStatus.getRCGearPWM();
+                setLandingGearView(mRCLandingGearPWM);
                 break;
             case ON_RC_CAMERA_TRIGGER_PWM_UPDATE:
                 mRCCameraTriggerPWM = droneStatus.getRCCameraTriggerPWM();
@@ -765,38 +692,59 @@ public class RCTransmitterReceiverSettingFragment extends SettingChildFragment {
         mFlightModeModel1.setModeTypeButtonOnFocus(false);
         mFlightModeModel2.setModeTypeButtonOnFocus(false);
         mFlightModeModel3.setModeTypeButtonOnFocus(false);
-        mFlightModeModel4.setModeTypeButtonOnFocus(false);
-        mFlightModeModel5.setModeTypeButtonOnFocus(false);
-        mFlightModeModel6.setModeTypeButtonOnFocus(false);
 
         if (flightModePWM < FLIGHT_MODE2_PWM_THRESHOLD) {
             mFlightModeModel1.setModeTypeButtonOnFocus(true);
         } else if (flightModePWM < FLIGHT_MODE3_PWM_THRESHOLD) {
             mFlightModeModel2.setModeTypeButtonOnFocus(true);
-        } else if (flightModePWM < FLIGHT_MODE4_PWM_THRESHOLD) {
-            mFlightModeModel3.setModeTypeButtonOnFocus(true);
-        } else if (flightModePWM < FLIGHT_MODE5_PWM_THRESHOLD) {
-            mFlightModeModel4.setModeTypeButtonOnFocus(true);
-        } else if (flightModePWM < FLIGHT_MODE6_PWM_THRESHOLD) {
-            mFlightModeModel5.setModeTypeButtonOnFocus(true);
         } else {
-            mFlightModeModel6.setModeTypeButtonOnFocus(true);
+            mFlightModeModel3.setModeTypeButtonOnFocus(true);
         }
     }
 
-    private void setGearView(float gearPWM) {
-        if (mGearReverse && gearPWM > 1490) {
-            mGearRetractTextView.setBackgroundResource(R.drawable.settings_focus_frame);
-            mGearDeployTextView.setBackgroundResource(R.color.transparent);
-        } else if (mGearReverse && gearPWM < 1490) {
-            mGearRetractTextView.setBackgroundResource(R.color.transparent);
-            mGearDeployTextView.setBackgroundResource(R.drawable.settings_focus_frame);
-        } else if (!mGearReverse && gearPWM < 1490) {
-            mGearRetractTextView.setBackgroundResource(R.drawable.settings_focus_frame);
-            mGearDeployTextView.setBackgroundResource(R.color.transparent);
+    private void setSmartModeOnFocus(float smartModePWM) {
+        mSmartMode1TypeOffText.setTextColor(getResources().getColor(R.color.white));
+        mSmartMode2TypeButton.setBackgroundResource(R.drawable.settings_button_bg);
+        mSmartMode3TypeButton.setBackgroundResource(R.drawable.settings_button_bg);
+
+        if (smartModePWM < SMART_MODE2_PWM_THRESHOLD) {
+            mSmartMode1TypeOffText.setTextColor(getResources().getColor(R.color.primary_color_normal));
+        } else if (smartModePWM < SMART_MODE3_PWM_THRESHOLD) {
+            mSmartMode2TypeButton.setBackgroundResource(R.color.primary_color_normal);
         } else {
-            mGearRetractTextView.setBackgroundResource(R.color.transparent);
-            mGearDeployTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+            mSmartMode3TypeButton.setBackgroundResource(R.color.primary_color_normal);
+        }
+    }
+
+    private void setReturnHomeView(float gearPWM) {
+        if (mRCReturnHomeReverse && gearPWM > 1490) {
+            mReturnHomeOffTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+            mReturnHomeOnTextView.setBackgroundResource(R.color.transparent);
+        } else if (mRCReturnHomeReverse && gearPWM < 1490) {
+            mReturnHomeOffTextView.setBackgroundResource(R.color.transparent);
+            mReturnHomeOnTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+        } else if (!mRCReturnHomeReverse && gearPWM < 1490) {
+            mReturnHomeOffTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+            mReturnHomeOnTextView.setBackgroundResource(R.color.transparent);
+        } else {
+            mReturnHomeOffTextView.setBackgroundResource(R.color.transparent);
+            mReturnHomeOnTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+        }
+    }
+
+    private void setLandingGearView(float gearPWM) {
+        if (mLandingGearReverse && gearPWM > 1490) {
+            mLandingGearCloseTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+            mLandingGearOpenTextView.setBackgroundResource(R.color.transparent);
+        } else if (mLandingGearReverse && gearPWM < 1490) {
+            mLandingGearCloseTextView.setBackgroundResource(R.color.transparent);
+            mLandingGearOpenTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+        } else if (!mLandingGearReverse && gearPWM < 1490) {
+            mLandingGearCloseTextView.setBackgroundResource(R.drawable.settings_focus_frame);
+            mLandingGearOpenTextView.setBackgroundResource(R.color.transparent);
+        } else {
+            mLandingGearCloseTextView.setBackgroundResource(R.color.transparent);
+            mLandingGearOpenTextView.setBackgroundResource(R.drawable.settings_focus_frame);
         }
     }
 

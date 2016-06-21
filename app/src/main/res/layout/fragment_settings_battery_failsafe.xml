@@ -428,7 +428,7 @@
                     android:background="@drawable/settings_button_bg"
                     android:button="@android:color/transparent"
                     android:checked="true"
-                    android:text="@string/none" />
+                    android:text="@string/hovering" />
 
                 <RadioButton
                     android:id="@+id/gps_signal_lost_land_button"

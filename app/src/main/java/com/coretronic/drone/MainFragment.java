@@ -387,44 +387,29 @@ public class MainFragment extends UnBindDrawablesFragment implements View.OnClic
             case "mRCYawRev":
                 paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC4_REV.ordinal();
                 break;
-            case "mRCGearMin":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC7_MIN.ordinal();
-                break;
-            case "mRCGearMax":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC7_MAX.ordinal();
+            case "mRCRTLRev":
+                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC6_REV.ordinal();
                 break;
             case "mRCGearRev":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC7_REV.ordinal();
+                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC8_REV.ordinal();
                 break;
             case "mRCCameraTriggerRev":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC8_REV.ordinal();
+                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RC9_REV.ordinal();
                 break;
             case "mFlightModeOne":
                 paramId = Parameters.PARAMETER_ID.PARAMETER_ID_FLTMODE1.ordinal();
                 break;
-            case "mFlightModeTwo":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_FLTMODE2.ordinal();
-                break;
             case "mFlightModeThree":
                 paramId = Parameters.PARAMETER_ID.PARAMETER_ID_FLTMODE3.ordinal();
-                break;
-            case "mFlightModeFour":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_FLTMODE4.ordinal();
                 break;
             case "mFlightModeFive":
                 paramId = Parameters.PARAMETER_ID.PARAMETER_ID_FLTMODE5.ordinal();
                 break;
-            case "mFlightModeSix":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_FLTMODE6.ordinal();
+            case "mSmartModeOne":
+                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_SMART_MODE1.ordinal();
                 break;
-            case "mFlightModeSimple":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_SIMPLE.ordinal();
-                break;
-            case "mFlightModeSuperSimple":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_SUPER_SIMPLE.ordinal();
-                break;
-            case "mTune":
-                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_TUNE.ordinal();
+            case "mSmartModeTwo":
+                paramId = Parameters.PARAMETER_ID.PARAMETER_ID_SMART_MODE2.ordinal();
                 break;
             case "mBasicGainRoll":
                 paramId = Parameters.PARAMETER_ID.PARAMETER_ID_RATE_RLL_P.ordinal();
